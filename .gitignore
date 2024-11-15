@@ -1,3 +1,9 @@
+# Ignore npz files
+*.npz
+
+# Ignore other storage or large files (adjust as needed)
+notebooks/OptimizationBasedModels/STORAGE/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
