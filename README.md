@@ -1,6 +1,9 @@
 # OTAF: Open Tolerance Analysis Framework
 
-![OTAF Logo](logo/logo.png)
+<div align="center">
+    <img src="logo/logo.png" alt="OTAF Logo" width="400px">
+</div>
+
 _A comprehensive framework for modeling 3D overconstrained mechanical assemblies and conducting statistical tolerance analysis._
 
 ---
@@ -88,6 +91,7 @@ results = otaf.run_analysis(input_data)
 
 ### Documentation
 Visit the [OTAF Documentation](https://github.com/Kramer84/otaf/wiki) for detailed guides, examples, and API references.
+[View Documentation](docs/_build/html/index.html)
 
 ---
 
