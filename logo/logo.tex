@@ -1,0 +1,49 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{lmodern}
+\usepackage{pgf}
+\usetikzlibrary{shapes.geometric, positioning, calc}
+
+\begin{document}
+
+\begin{tikzpicture}
+
+    %============================
+    % LOGO on the LEFT
+    %============================
+    \begin{scope}[shift={(-3.5, 0)}] % Position the logo on the left
+        % Outer gear-like circle
+        \draw[thick, blue] (0, 0) circle(2.5cm);
+        \foreach \angle in {0,15,...,345} {
+            \draw[thick, black]
+                ({cos(\angle)*2.4}, {sin(\angle)*2.4})
+                --
+                ({cos(\angle)*2.6}, {sin(\angle)*2.6});
+        }
+
+        % Inner decorative ring
+        \draw[thick, black!50] (0, 0) circle(1.8cm);
+
+        % Add compass-like cross
+        \foreach \angle in {0,90,180,270} {
+            \draw[thick, black] (0, 0) -- ({cos(\angle)*1.6}, {sin(\angle)*1.6});
+        }
+
+        % Add "OTAF" in the center
+        \node[align=center, text=blue, font=\bfseries\fontsize{28}{32}\selectfont] at (0, 0) {OTAF};
+    \end{scope}
+
+    %============================
+    % TEXT on the RIGHT
+    %============================
+    \begin{scope}[shift={(0, 0)}] % Position text on the right
+        % Add the main title
+        \node[align=center, text=blue, font=\bfseries\fontsize{24}{28}\selectfont] at (4, 0.8) {Open Tolerance};
+        \node[align=center, text=blue, font=\bfseries\fontsize{24}{28}\selectfont] at (4, 0) {Analysis Framework};
+
+        % Add a subtle tagline below the main title
+        \node[align=center, text=black!50, font=\fontsize{12}{14}\selectfont] at (4, -1.2) {Tools for statistical tolerance analysis of \\ overconstrained rigid assemblies.};
+    \end{scope}
+
+\end{tikzpicture}
+
+\end{document}

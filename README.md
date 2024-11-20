@@ -1,6 +1,6 @@
 # OTAF: Open Tolerance Analysis Framework
 
-![OTAF Logo](https://via.placeholder.com/800x200?text=OTAF+Logo)
+![OTAF Logo](logo/logo.png)
 _A comprehensive framework for modeling 3D overconstrained mechanical assemblies and conducting statistical tolerance analysis._
 
 ---
