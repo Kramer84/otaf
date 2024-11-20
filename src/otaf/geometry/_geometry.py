@@ -560,18 +560,25 @@ def point_to_segment_distance(
 
     Returns
     -------
-    Union[float, numpy.ndarray]
+    Union[float, np.ndarray]
         The shortest distance from the point(s) to the line segment. Returns a float for a single point
         or a NumPy array for multiple points.
-
-    Notes
-    -----
-    - The shortest distance is computed using the cross product to find the perpendicular component.
-    - The input can be a single point or an array of points.
     """
-    return np.linalg.norm(
-        np.cross(segment_end - segment_start, point - segment_start, axis=-1), axis=-1
-    ) / np.linalg.norm(segment_end - segment_start)
+    # Ensure all inputs are at least 2D for consistent broadcasting
+    point = np.atleast_2d(point)
+    segment_start = np.atleast_2d(segment_start)
+    segment_end = np.atleast_2d(segment_end)
+
+    # Compute segment and point vectors
+    segment_vector = segment_end - segment_start
+    point_vector = point - segment_start
+
+    # Compute the cross product and distances
+    cross_product = np.cross(segment_vector, point_vector)
+    distances = np.abs(cross_product) / np.linalg.norm(segment_vector, axis=1)
+
+    # If the input was a single point, return a scalar
+    return distances[0] if point.shape[0] == 1 else distances
 
 
 @beartype
@@ -615,7 +622,7 @@ def are_planes_coincident(
     ):
         return False
     distance = np.abs(np.dot(norm1, point2 - point1) / np.linalg.norm(norm1))
-    return distance < tolerance
+    return bool(distance < tolerance)
 
 
 @beartype
@@ -1117,7 +1124,7 @@ def do_bounding_boxes_overlap(bbox1: np.ndarray, bbox2: np.ndarray) -> bool:
     -----
     - Bounding boxes overlap if their intervals intersect in all dimensions.
     """
-    return np.all(np.maximum(bbox1[:, 0], bbox2[:, 0]) <= np.minimum(bbox1[:, 1], bbox2[:, 1]))
+    return bool(np.all(np.maximum(bbox1[:, 0], bbox2[:, 0]) <= np.minimum(bbox1[:, 1], bbox2[:, 1])))
 
 
 @beartype

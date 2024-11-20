@@ -310,15 +310,17 @@ def get_symbols_in_expressions(expr_list: List[sp.Expr]) -> Tuple[List[sp.Symbol
     )
 
     free_symbols = {symb for expr in expr_list for symb in expr.free_symbols}
-
-    deviation_symbols = sorted(
-        (symb for symb in free_symbols if "_d_" in str(symb)),
-        key=sort_key,  # otaf.sort_key_by_prefix_and_number
-    )
-    gap_symbols = sorted(
-        (symb for symb in free_symbols if "_g_" in str(symb)),
-        key=sort_key,  # otaf.sort_key_by_prefix_and_number
-    )
+    try :
+        deviation_symbols = sorted(
+            (symb for symb in free_symbols if "_d_" in str(symb)),
+            key=sort_key,  # otaf.sort_key_by_prefix_and_number
+        )
+        gap_symbols = sorted(
+            (symb for symb in free_symbols if "_g_" in str(symb)),
+            key=sort_key,  # otaf.sort_key_by_prefix_and_number
+        )
+    except ValueError :
+        raise ValueError("Symbols must follow naming guidelines")
 
     return deviation_symbols, gap_symbols
 

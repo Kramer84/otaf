@@ -4,13 +4,12 @@ import sympy as sp
 import logging
 import otaf
 from otaf import (
+    TransformationMatrix,
     I4,
     J4,
-    ROTATION_MATRIX_180_Z_AXIS,
-    GET_I4,
-    inverse_mstring,
-    is_affine_transformation_matrix,
 )
+from otaf.geometry import is_affine_transformation_matrix
+from otaf.common import inverse_mstring
 
 
 class TestMatrixOperations(unittest.TestCase):
@@ -18,25 +17,15 @@ class TestMatrixOperations(unittest.TestCase):
         i4 = I4()
         self.assertEqual(i4.TYPE, "I4")
         result = i4.get_matrix()
-        expected = GET_I4()
+        expected = np.identity(4)
         self.assertTrue(sp.Matrix(result).equals(expected))
 
     def test_J4(self):
         j4 = J4()
         self.assertEqual(j4.TYPE, "J4")
         result = j4.get_matrix()
-        expected = ROTATION_MATRIX_180_Z_AXIS()
-        self.assertTrue(sp.Matrix(result).equals(expected))
-
-    def test_ROTATION_MATRIX_180_Z_AXIS(self):
-        result = ROTATION_MATRIX_180_Z_AXIS()
         expected = np.array([[-1, 0, 0, 0], [0, -1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
-        self.assertTrue(sp.Matrix(result).equals(sp.Matrix(expected)))
-
-    def test_GET_I4(self):
-        result = GET_I4()
-        expected = np.identity(4)
-        self.assertTrue(sp.Matrix(result).equals(sp.Matrix(expected)))
+        self.assertTrue(sp.Matrix(result).equals(expected))
 
     def test_inverse_mstring(self):
         self.assertEqual(
@@ -63,7 +52,7 @@ class TestMatrixOperations(unittest.TestCase):
 
 class TestTransformationMatrix(unittest.TestCase):
     def test_change_of_basis_matrix(self):
-        tr = otaf.TransformationMatrix()
+        tr = TransformationMatrix()
 
         initial = np.identity(4)
         final = np.array([[1, 0, 0, 2], [0, 1, 0, 1], [0, 0, 1, 1], [0, 0, 0, 1]])
@@ -79,7 +68,7 @@ class TestTransformationMatrix(unittest.TestCase):
         )
 
     def test_get_matrix(self):
-        tr = otaf.TransformationMatrix()
+        tr = TransformationMatrix()
 
         initial = np.identity(4)
         final = np.array([[1, 0, 0, 2], [0, 1, 0, 1], [0, 0, 1, 1], [0, 0, 0, 1]])
@@ -98,7 +87,7 @@ class TestTransformationMatrix(unittest.TestCase):
         )
 
     def test_get_inverse(self):
-        tr = otaf.TransformationMatrix()
+        tr = TransformationMatrix()
 
         initial = np.identity(4)
         final = np.array([[1, 0, 0, 2], [0, 1, 0, 1], [0, 0, 1, 1], [0, 0, 0, 1]])
@@ -117,7 +106,7 @@ class TestTransformationMatrix(unittest.TestCase):
         )
 
     def test_non_global_orientation_same(self):
-        tr = otaf.TransformationMatrix()
+        tr = TransformationMatrix()
 
         initial = np.array([[0, 1, 0, 3], [1, 0, 0, 2], [0, 0, -1, 1], [0, 0, 0, 1]])
 
@@ -132,7 +121,7 @@ class TestTransformationMatrix(unittest.TestCase):
         )
 
     def test_different_rotation(self):
-        tr = otaf.TransformationMatrix()
+        tr = TransformationMatrix()
 
         initial = np.array([[0, 1, 0, 3], [1, 0, 0, 2], [0, 0, -1, 1], [0, 0, 0, 1]])
 
