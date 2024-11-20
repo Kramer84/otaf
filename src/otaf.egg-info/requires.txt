@@ -1,0 +1,14 @@
+numpy
+scipy
+sympy
+openturns
+matplotlib
+tqdm
+joblib
+torch
+torcheval
+scikit-learn
+trimesh
+beartype
+triangle
+pytransform3d[all]

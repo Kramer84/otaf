@@ -1,0 +1,1871 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="#" /><link rel="search" title="Search" href="search.html" />
+
+    <!-- Generated with Sphinx 7.4.7 and Furo 2024.08.06 --><title>Index - otaf 0.1 documentation</title>
+<link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=6258f10e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">otaf 0.1 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">otaf 0.1 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="source/modules.html">otaf</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of otaf</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="source/otaf.html">otaf package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of otaf package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="source/otaf.assembly_modeling.html">otaf.assembly_modeling package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/otaf.capabilities.html">otaf.capabilities package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/otaf.common.html">otaf.common package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/otaf.constants.html">otaf.constants package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/otaf.distribution.html">otaf.distribution package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/otaf.exceptions.html">otaf.exceptions package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/otaf.geometry.html">otaf.geometry package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/otaf.optimization.html">otaf.optimization package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/otaf.plotting.html">otaf.plotting package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/otaf.sampling.html">otaf.sampling package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/otaf.sensitivity.html">otaf.sensitivity package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/otaf.surrogate.html">otaf.surrogate package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/otaf.uncertainty.html">otaf.uncertainty package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="source/otaf.capabilities.html">otaf.capabilities package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/otaf.common.html">otaf.common package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/otaf.constants.html">otaf.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/otaf.distribution.html">otaf.distribution package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/otaf.exceptions.html">otaf.exceptions package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/otaf.geometry.html">otaf.geometry package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/otaf.optimization.html">otaf.optimization package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/otaf.plotting.html">otaf.plotting package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/otaf.sampling.html">otaf.sampling package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/otaf.sensitivity.html">otaf.sensitivity package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/otaf.surrogate.html">otaf.surrogate package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/otaf.uncertainty.html">otaf.uncertainty package</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          
+<section class="genindex-section">
+  <h1 id="index">Index</h1>
+  <div class="genindex-jumpbox"><a href="#_"><strong>_</strong></a> | <a href="#A"><strong>A</strong></a> | <a href="#B"><strong>B</strong></a> | <a href="#C"><strong>C</strong></a> | <a href="#D"><strong>D</strong></a> | <a href="#E"><strong>E</strong></a> | <a href="#F"><strong>F</strong></a> | <a href="#G"><strong>G</strong></a> | <a href="#H"><strong>H</strong></a> | <a href="#I"><strong>I</strong></a> | <a href="#J"><strong>J</strong></a> | <a href="#K"><strong>K</strong></a> | <a href="#L"><strong>L</strong></a> | <a href="#M"><strong>M</strong></a> | <a href="#N"><strong>N</strong></a> | <a href="#O"><strong>O</strong></a> | <a href="#P"><strong>P</strong></a> | <a href="#R"><strong>R</strong></a> | <a href="#S"><strong>S</strong></a> | <a href="#T"><strong>T</strong></a> | <a href="#U"><strong>U</strong></a> | <a href="#V"><strong>V</strong></a></div>
+</section>
+<section id="_" class="genindex-section">
+  <h2>_</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.SystemOfConstraintsAssemblyModel.__call__">__call__() (otaf.assembly_modeling.SystemOfConstraintsAssemblyModel method)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel.__call__">(otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.__call__">(otaf.SystemOfConstraintsAssemblyModel method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.CompatibilityLoopHandling.__init__">__init__() (otaf.assembly_modeling.CompatibilityLoopHandling method)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling.__init__">(otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling method)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.SystemOfConstraintsAssemblyModel.__init__">(otaf.assembly_modeling.SystemOfConstraintsAssemblyModel method)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel.__init__">(otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.CompatibilityLoopHandling.__init__">(otaf.CompatibilityLoopHandling method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.__init__">(otaf.SystemOfConstraintsAssemblyModel method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.CompatibilityLoopHandling._deviation_matrix_map">_deviation_matrix_map (otaf.assembly_modeling.CompatibilityLoopHandling attribute)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling._deviation_matrix_map">(otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling attribute)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.CompatibilityLoopHandling._deviation_matrix_map">(otaf.CompatibilityLoopHandling attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.CompatibilityLoopHandling._gap_matrix_map">_gap_matrix_map (otaf.assembly_modeling.CompatibilityLoopHandling attribute)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling._gap_matrix_map">(otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling attribute)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.CompatibilityLoopHandling._gap_matrix_map">(otaf.CompatibilityLoopHandling attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.CompatibilityLoopHandling._transformation_matrix_map">_transformation_matrix_map (otaf.assembly_modeling.CompatibilityLoopHandling attribute)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling._transformation_matrix_map">(otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling attribute)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.CompatibilityLoopHandling._transformation_matrix_map">(otaf.CompatibilityLoopHandling attribute)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="A" class="genindex-section">
+  <h2>A</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.LimitSpaceFocusedLoss.a">a (otaf.surrogate.LimitSpaceFocusedLoss attribute)</a>
+
+        <ul>
+          <li><a href="source/otaf.surrogate.html#otaf.surrogate.PositiveLimitSpaceFocusedLoss.a">(otaf.surrogate.PositiveLimitSpaceFocusedLoss attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.SystemOfConstraintsAssemblyModel.A_eq_Def">A_eq_Def (otaf.assembly_modeling.SystemOfConstraintsAssemblyModel attribute)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel.A_eq_Def">(otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel attribute)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.A_eq_Def">(otaf.SystemOfConstraintsAssemblyModel attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.SystemOfConstraintsAssemblyModel.A_eq_Gap">A_eq_Gap (otaf.assembly_modeling.SystemOfConstraintsAssemblyModel attribute)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel.A_eq_Gap">(otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel attribute)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.A_eq_Gap">(otaf.SystemOfConstraintsAssemblyModel attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.SystemOfConstraintsAssemblyModel.A_ub_Def">A_ub_Def (otaf.assembly_modeling.SystemOfConstraintsAssemblyModel attribute)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel.A_ub_Def">(otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel attribute)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.A_ub_Def">(otaf.SystemOfConstraintsAssemblyModel attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.SystemOfConstraintsAssemblyModel.A_ub_Gap">A_ub_Gap (otaf.assembly_modeling.SystemOfConstraintsAssemblyModel attribute)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel.A_ub_Gap">(otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel attribute)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.A_ub_Gap">(otaf.SystemOfConstraintsAssemblyModel attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.optimization.html#otaf.optimization.ModifiedBasinHopping.accept_test">accept_test() (otaf.optimization.ModifiedBasinHopping method)</a>
+</li>
+        <li><a href="source/otaf.optimization.html#otaf.optimization.AcceptTest">AcceptTest (class in otaf.optimization)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.GaussianSurrogateModel.acquisition_function">acquisition_function() (otaf.surrogate.GaussianSurrogateModel method)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.add_gaussian_noise">add_gaussian_noise() (in module otaf.surrogate)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.BinaryClassificationModel.add_new_data_points">add_new_data_points() (otaf.surrogate.BinaryClassificationModel method)</a>
+</li>
+        <li><a href="source/otaf.optimization.html#otaf.optimization.OptimizationStorage.add_point">add_point() (otaf.optimization.OptimizationStorage method)</a>
+
+        <ul>
+          <li><a href="source/otaf.surrogate.html#otaf.surrogate.GaussianSurrogateModel.add_point">(otaf.surrogate.GaussianSurrogateModel method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.AssemblyDataProcessor.add_surface_points">add_surface_points() (otaf.assembly_modeling.AssemblyDataProcessor method)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.add_surface_points">(otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.AssemblyDataProcessor.add_surface_points">(otaf.AssemblyDataProcessor method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.CompatibilityLoopHandling.ADP">ADP (otaf.assembly_modeling.CompatibilityLoopHandling attribute)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling.ADP">(otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling attribute)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.CompatibilityLoopHandling.ADP">(otaf.CompatibilityLoopHandling attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.common.html#otaf.common.alphabet_generator">alphabet_generator() (in module otaf.common)</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.angle_between_planes">angle_between_planes() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.angle_between_vectors">angle_between_vectors() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.optimization.html#otaf.optimization.OptimizationStorage.apply_checks_to_all">apply_checks_to_all() (otaf.optimization.OptimizationStorage method)</a>
+</li>
+        <li><a href="source/otaf.assembly_modeling.html#id13">apply_FO_matrix_expansion_to_matrix_loop_list() (otaf.assembly_modeling.CompatibilityLoopHandling method)</a>, <a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.CompatibilityLoopHandling.apply_FO_matrix_expansion_to_matrix_loop_list">[1]</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#id1">(otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling method)</a>, <a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling.apply_FO_matrix_expansion_to_matrix_loop_list">[1]</a>
+</li>
+          <li><a href="source/otaf.html#id1">(otaf.CompatibilityLoopHandling method)</a>, <a href="source/otaf.html#otaf.CompatibilityLoopHandling.apply_FO_matrix_expansion_to_matrix_loop_list">[1]</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.are_normals_aligned_and_facing">are_normals_aligned_and_facing() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.are_planes_coincident">are_planes_coincident() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.are_planes_facing">are_planes_facing() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.are_planes_parallel">are_planes_parallel() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.are_planes_perpendicular">are_planes_perpendicular() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.are_points_on_2d_plane">are_points_on_2d_plane() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.plotting.html#otaf.plotting.arrange_axes_in_grid">arrange_axes_in_grid() (in module otaf.plotting)</a>
+</li>
+        <li><a href="source/otaf.html#otaf.AssemblyDataProcessor">AssemblyDataProcessor (class in otaf)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.AssemblyDataProcessor">(class in otaf.assembly_modeling)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor">(class in otaf.assembly_modeling.assemblyDataProcessor)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="B" class="genindex-section">
+  <h2>B</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.LimitSpaceFocusedLoss.b">b (otaf.surrogate.LimitSpaceFocusedLoss attribute)</a>
+
+        <ul>
+          <li><a href="source/otaf.surrogate.html#otaf.surrogate.PositiveLimitSpaceFocusedLoss.b">(otaf.surrogate.PositiveLimitSpaceFocusedLoss attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.SocAssemblyAnalysisOptimized.binary_input_array_classification">binary_input_array_classification() (otaf.uncertainty.SocAssemblyAnalysisOptimized method)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.BinaryClassificationModel">BinaryClassificationModel (class in otaf.surrogate)</a>
+</li>
+        <li><a href="source/otaf.sampling.html#otaf.sampling.LagrangeConstraintSolver.bounds">bounds (otaf.sampling.LagrangeConstraintSolver attribute)</a>
+</li>
+        <li><a href="source/otaf.optimization.html#otaf.optimization.bounds_from_composed_distribution">bounds_from_composed_distribution() (in module otaf.optimization)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.DualNetworkPredictor.brute_force_probability_of_failure">brute_force_probability_of_failure() (otaf.surrogate.DualNetworkPredictor method)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="C" class="genindex-section">
+  <h2>C</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.PositiveLimitSpaceFocusedLoss.c">c (otaf.surrogate.PositiveLimitSpaceFocusedLoss attribute)</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.calculate_cylinder_surface_frame">calculate_cylinder_surface_frame() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.assembly_modeling.html#id14">calculate_nominal_gap_transform() (otaf.assembly_modeling.CompatibilityLoopHandling method)</a>, <a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.CompatibilityLoopHandling.calculate_nominal_gap_transform">[1]</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#id2">(otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling method)</a>, <a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling.calculate_nominal_gap_transform">[1]</a>
+</li>
+          <li><a href="source/otaf.html#id2">(otaf.CompatibilityLoopHandling method)</a>, <a href="source/otaf.html#otaf.CompatibilityLoopHandling.calculate_nominal_gap_transform">[1]</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.plotting.html#otaf.plotting.calculate_sample_in_deviation_domain">calculate_sample_in_deviation_domain() (in module otaf.plotting)</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.calculate_scalar_projection_factor">calculate_scalar_projection_factor() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.optimization.html#otaf.optimization.Callback">Callback (class in otaf.optimization)</a>
+</li>
+        <li><a href="source/otaf.optimization.html#otaf.optimization.ModifiedBasinHopping.callback">callback() (otaf.optimization.ModifiedBasinHopping method)</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.centroid">centroid() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.optimization.html#otaf.optimization.OptimizationStorage.check_bounds">check_bounds() (otaf.optimization.OptimizationStorage method)</a>
+</li>
+        <li><a href="source/otaf.optimization.html#otaf.optimization.check_constraint_with_tolerance">check_constraint_with_tolerance() (in module otaf.optimization)</a>
+</li>
+        <li><a href="source/otaf.optimization.html#otaf.optimization.OptimizationStorage.check_constraints">check_constraints() (otaf.optimization.OptimizationStorage method)</a>
+</li>
+        <li><a href="source/otaf.optimization.html#otaf.optimization.OptimizationStorage.clear_storage">clear_storage() (otaf.optimization.OptimizationStorage method)</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.closest_point_on_line">closest_point_on_line() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.closest_point_on_plane">closest_point_on_plane() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.plotting.html#otaf.plotting.compare_jacobians">compare_jacobians() (in module otaf.plotting)</a>
+</li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.CompatibilityLoopHandling.compatibility_expressions">compatibility_expressions (otaf.assembly_modeling.CompatibilityLoopHandling attribute)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling.compatibility_expressions">(otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling attribute)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.CompatibilityLoopHandling.compatibility_expressions">(otaf.CompatibilityLoopHandling attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#id12">compatibility_loops_expanded (otaf.assembly_modeling.AssemblyDataProcessor attribute)</a>, <a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.AssemblyDataProcessor.compatibility_loops_expanded">[1]</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#id0">(otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor attribute)</a>, <a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.compatibility_loops_expanded">[1]</a>
+</li>
+          <li><a href="source/otaf.html#id0">(otaf.AssemblyDataProcessor attribute)</a>, <a href="source/otaf.html#otaf.AssemblyDataProcessor.compatibility_loops_expanded">[1]</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.CompatibilityLoopHandling.compatibility_loops_FO_matrices">compatibility_loops_FO_matrices (otaf.assembly_modeling.CompatibilityLoopHandling attribute)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling.compatibility_loops_FO_matrices">(otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling attribute)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.CompatibilityLoopHandling.compatibility_loops_FO_matrices">(otaf.CompatibilityLoopHandling attribute)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.CompatibilityLoopHandling.compatibility_loops_matrices">compatibility_loops_matrices (otaf.assembly_modeling.CompatibilityLoopHandling attribute)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling.compatibility_loops_matrices">(otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling attribute)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.CompatibilityLoopHandling.compatibility_loops_matrices">(otaf.CompatibilityLoopHandling attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.html#otaf.CompatibilityLoopHandling">CompatibilityLoopHandling (class in otaf)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.CompatibilityLoopHandling">(class in otaf.assembly_modeling)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling">(class in otaf.assembly_modeling.compatibilityLoopHandling)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.sampling.html#otaf.sampling.compose_defects_with_lambdas">compose_defects_with_lambdas() (in module otaf.sampling)</a>
+</li>
+        <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.compute_adaptive_failure_probability">compute_adaptive_failure_probability() (in module otaf.uncertainty)</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.compute_bounding_box">compute_bounding_box() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.compute_failure_probability_basic">compute_failure_probability_basic() (in module otaf.uncertainty)</a>
+</li>
+        <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.compute_failure_probability_FORM">compute_failure_probability_FORM() (in module otaf.uncertainty)</a>
+</li>
+        <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.compute_failure_probability_NAIS">compute_failure_probability_NAIS() (in module otaf.uncertainty)</a>
+</li>
+        <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.compute_failure_probability_SUBSET">compute_failure_probability_SUBSET() (in module otaf.uncertainty)</a>
+</li>
+        <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.compute_failure_probability_subset_sampling">compute_failure_probability_subset_sampling() (in module otaf.uncertainty)</a>
+</li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.FirstOrderMatrixExpansion.compute_first_order_expansion">compute_first_order_expansion() (otaf.assembly_modeling.FirstOrderMatrixExpansion method)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.firstOrderMatrixExpansion.FirstOrderMatrixExpansion.compute_first_order_expansion">(otaf.assembly_modeling.firstOrderMatrixExpansion.FirstOrderMatrixExpansion method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.FirstOrderMatrixExpansion.compute_first_order_expansion">(otaf.FirstOrderMatrixExpansion method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.compute_gap_optimizations_on_sample">compute_gap_optimizations_on_sample() (in module otaf.uncertainty)</a>
+</li>
+        <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.compute_gap_optimizations_on_sample_batch">compute_gap_optimizations_on_sample_batch() (in module otaf.uncertainty)</a>
+</li>
+        <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.compute_gap_optimizations_on_sample_w_steps">compute_gap_optimizations_on_sample_w_steps() (in module otaf.uncertainty)</a>
+</li>
+        <li><a href="source/otaf.distribution.html#otaf.distribution.compute_sup_inf_distributions">compute_sup_inf_distributions() (in module otaf.distribution)</a>
+</li>
+        <li><a href="source/otaf.sampling.html#otaf.sampling.condition_lambda_sample">condition_lambda_sample() (in module otaf.sampling)</a>
+</li>
+        <li><a href="source/otaf.sampling.html#otaf.sampling.condition_sample_array">condition_sample_array() (in module otaf.sampling)</a>
+</li>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.ConflictingSurfaceDirectionsException">ConflictingSurfaceDirectionsException</a>
+</li>
+        <li><a href="source/otaf.optimization.html#otaf.optimization.create_constraint_checker">create_constraint_checker() (in module otaf.optimization)</a>
+</li>
+        <li><a href="source/otaf.plotting.html#otaf.plotting.create_open_cylinder">create_open_cylinder() (in module otaf.plotting)</a>
+</li>
+        <li><a href="source/otaf.plotting.html#otaf.plotting.create_surface_from_planar_contour">create_surface_from_planar_contour() (in module otaf.plotting)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="D" class="genindex-section">
+  <h2>D</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.SystemOfConstraintsAssemblyModel.deviation_symbols">deviation_symbols (otaf.assembly_modeling.SystemOfConstraintsAssemblyModel attribute)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel.deviation_symbols">(otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel attribute)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.deviation_symbols">(otaf.SystemOfConstraintsAssemblyModel attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.html#otaf.DeviationMatrix">DeviationMatrix (class in otaf)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.DeviationMatrix">(class in otaf.assembly_modeling)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix">(class in otaf.assembly_modeling.assemblyModelingBaseObjects)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.sampling.html#otaf.sampling.LagrangeConstraintSolver.dim">dim (otaf.sampling.LagrangeConstraintSolver attribute)</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.distance_between_planes">distance_between_planes() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.do_bounding_boxes_overlap">do_bounding_boxes_overlap() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.DualNetworkPredictor">DualNetworkPredictor (class in otaf.surrogate)</a>
+</li>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.DuplicatePointError">DuplicatePointError</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="E" class="genindex-section">
+  <h2>E</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.SystemOfConstraintsAssemblyModel.embedOptimizationVariable">embedOptimizationVariable() (otaf.assembly_modeling.SystemOfConstraintsAssemblyModel method)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel.embedOptimizationVariable">(otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.embedOptimizationVariable">(otaf.SystemOfConstraintsAssemblyModel method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.euclidean_distance">euclidean_distance() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.SocAssemblyAnalysisOptimized.evaluate_binary_classifier">evaluate_binary_classifier() (otaf.uncertainty.SocAssemblyAnalysisOptimized method)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.evaluate_binary_predictions">evaluate_binary_predictions() (in module otaf.surrogate)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.DualNetworkPredictor.evaluate_in_batches">evaluate_in_batches() (otaf.surrogate.DualNetworkPredictor method)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.BinaryClassificationModel.evaluate_model">evaluate_model() (otaf.surrogate.BinaryClassificationModel method)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.LPNeuralSurrogateTolereancing.evaluate_model_non_standard_space">evaluate_model_non_standard_space() (otaf.surrogate.LPNeuralSurrogateTolereancing method)</a>
+
+        <ul>
+          <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.evaluate_model_non_standard_space">(otaf.surrogate.NeuralRegressorNetwork method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.common.html#otaf.common.extract_expressions_with_variables">extract_expressions_with_variables() (in module otaf.common)</a>
+</li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.InterfaceLoopHandling.extract_unique_gap_matrices_from_expanded_loops">extract_unique_gap_matrices_from_expanded_loops() (otaf.assembly_modeling.InterfaceLoopHandling method)</a>
+
+        <ul>
+          <li><a href="source/otaf.html#otaf.InterfaceLoopHandling.extract_unique_gap_matrices_from_expanded_loops">(otaf.InterfaceLoopHandling method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.SystemOfConstraintsAssemblyModel.extractFreeGapAndDeviationVariables">extractFreeGapAndDeviationVariables() (otaf.assembly_modeling.SystemOfConstraintsAssemblyModel method)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel.extractFreeGapAndDeviationVariables">(otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.extractFreeGapAndDeviationVariables">(otaf.SystemOfConstraintsAssemblyModel method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="F" class="genindex-section">
+  <h2>F</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.InterfaceLoopHandling.facing_point_dictionary">facing_point_dictionary (otaf.assembly_modeling.InterfaceLoopHandling property)</a>
+
+        <ul>
+          <li><a href="source/otaf.html#otaf.InterfaceLoopHandling.facing_point_dictionary">(otaf.InterfaceLoopHandling property)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.InterfaceLoopHandling.filter_gap_matrices">filter_gap_matrices() (otaf.assembly_modeling.InterfaceLoopHandling method)</a>
+
+        <ul>
+          <li><a href="source/otaf.html#otaf.InterfaceLoopHandling.filter_gap_matrices">(otaf.InterfaceLoopHandling method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.optimization.html#otaf.optimization.OptimizationStorage.filter_points">filter_points() (otaf.optimization.OptimizationStorage method)</a>
+</li>
+        <li><a href="source/otaf.sampling.html#otaf.sampling.find_best_worst_quantile">find_best_worst_quantile() (in module otaf.sampling)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.GaussianSurrogateModel.find_global_minima">find_global_minima() (otaf.surrogate.GaussianSurrogateModel method)</a>
+</li>
+        <li><a href="source/otaf.html#otaf.FirstOrderMatrixExpansion">FirstOrderMatrixExpansion (class in otaf)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.FirstOrderMatrixExpansion">(class in otaf.assembly_modeling)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.firstOrderMatrixExpansion.FirstOrderMatrixExpansion">(class in otaf.assembly_modeling.firstOrderMatrixExpansion)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.GaussianSurrogateModel.fit_model">fit_model() (otaf.surrogate.GaussianSurrogateModel method)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.BinaryClassificationModel.forward">forward() (otaf.surrogate.BinaryClassificationModel method)</a>
+
+        <ul>
+          <li><a href="source/otaf.surrogate.html#otaf.surrogate.DualNetworkPredictor.forward">(otaf.surrogate.DualNetworkPredictor method)</a>
+</li>
+          <li><a href="source/otaf.surrogate.html#otaf.surrogate.LimitSpaceFocusedLoss.forward">(otaf.surrogate.LimitSpaceFocusedLoss method)</a>
+</li>
+          <li><a href="source/otaf.surrogate.html#otaf.surrogate.LPNeuralSurrogateTolereancing.forward">(otaf.surrogate.LPNeuralSurrogateTolereancing method)</a>
+</li>
+          <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.forward">(otaf.surrogate.NeuralRegressorNetwork method)</a>
+</li>
+          <li><a href="source/otaf.surrogate.html#otaf.surrogate.PositiveLimitSpaceFocusedLoss.forward">(otaf.surrogate.PositiveLimitSpaceFocusedLoss method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="G" class="genindex-section">
+  <h2>G</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.sampling.html#otaf.sampling.LagrangeConstraintSolver.g">g (otaf.sampling.LagrangeConstraintSolver attribute)</a>
+</li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.SystemOfConstraintsAssemblyModel.gap_symbols">gap_symbols (otaf.assembly_modeling.SystemOfConstraintsAssemblyModel attribute)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel.gap_symbols">(otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel attribute)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.gap_symbols">(otaf.SystemOfConstraintsAssemblyModel attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.html#otaf.GapMatrix">GapMatrix (class in otaf)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.GapMatrix">(class in otaf.assembly_modeling)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.GapMatrix">(class in otaf.assembly_modeling.assemblyModelingBaseObjects)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.GaussianSurrogateModel">GaussianSurrogateModel (class in otaf.surrogate)</a>
+</li>
+        <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.generate">generate() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.InterfaceLoopHandling.generate_all_gap_matrix_names">generate_all_gap_matrix_names() (otaf.assembly_modeling.InterfaceLoopHandling method)</a>
+
+        <ul>
+          <li><a href="source/otaf.html#otaf.InterfaceLoopHandling.generate_all_gap_matrix_names">(otaf.InterfaceLoopHandling method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.sampling.html#otaf.sampling.generate_and_transform_sequence">generate_and_transform_sequence() (in module otaf.sampling)</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.generate_circle_points">generate_circle_points() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.generate_circle_points_3d">generate_circle_points_3d() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.generate_corrected_binary_predictions">generate_corrected_binary_predictions() (in module otaf.surrogate)</a>
+</li>
+        <li><a href="source/otaf.distribution.html#otaf.distribution.generate_correlated_samples">generate_correlated_samples() (in module otaf.distribution)</a>
+</li>
+        <li><a href="source/otaf.assembly_modeling.html#id16">generate_deviation_matrix() (otaf.assembly_modeling.CompatibilityLoopHandling method)</a>, <a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.CompatibilityLoopHandling.generate_deviation_matrix">[1]</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#id4">(otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling method)</a>, <a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling.generate_deviation_matrix">[1]</a>
+</li>
+          <li><a href="source/otaf.html#id4">(otaf.CompatibilityLoopHandling method)</a>, <a href="source/otaf.html#otaf.CompatibilityLoopHandling.generate_deviation_matrix">[1]</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.AssemblyDataProcessor.generate_expanded_loops">generate_expanded_loops() (otaf.assembly_modeling.AssemblyDataProcessor method)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.generate_expanded_loops">(otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.AssemblyDataProcessor.generate_expanded_loops">(otaf.AssemblyDataProcessor method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#id15">generate_FO_loop_matrices() (otaf.assembly_modeling.CompatibilityLoopHandling method)</a>, <a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.CompatibilityLoopHandling.generate_FO_loop_matrices">[1]</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#id3">(otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling method)</a>, <a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling.generate_FO_loop_matrices">[1]</a>
+</li>
+          <li><a href="source/otaf.html#id3">(otaf.CompatibilityLoopHandling method)</a>, <a href="source/otaf.html#otaf.CompatibilityLoopHandling.generate_FO_loop_matrices">[1]</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#id17">generate_gap_matrix() (otaf.assembly_modeling.CompatibilityLoopHandling method)</a>, <a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.CompatibilityLoopHandling.generate_gap_matrix">[1]</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#id5">(otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling method)</a>, <a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling.generate_gap_matrix">[1]</a>
+</li>
+          <li><a href="source/otaf.html#id5">(otaf.CompatibilityLoopHandling method)</a>, <a href="source/otaf.html#otaf.CompatibilityLoopHandling.generate_gap_matrix">[1]</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.sampling.html#otaf.sampling.generate_imprecise_probabilistic_samples">generate_imprecise_probabilistic_samples() (in module otaf.sampling)</a>
+</li>
+        <li><a href="source/otaf.assembly_modeling.html#id18">generate_loop_id_to_matrix_list_dict() (otaf.assembly_modeling.CompatibilityLoopHandling method)</a>, <a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.CompatibilityLoopHandling.generate_loop_id_to_matrix_list_dict">[1]</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#id6">(otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling method)</a>, <a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling.generate_loop_id_to_matrix_list_dict">[1]</a>
+</li>
+          <li><a href="source/otaf.html#id6">(otaf.CompatibilityLoopHandling method)</a>, <a href="source/otaf.html#otaf.CompatibilityLoopHandling.generate_loop_id_to_matrix_list_dict">[1]</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#id19">generate_matrices_from_expanded_loop() (otaf.assembly_modeling.CompatibilityLoopHandling method)</a>, <a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.CompatibilityLoopHandling.generate_matrices_from_expanded_loop">[1]</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#id7">(otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling method)</a>, <a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling.generate_matrices_from_expanded_loop">[1]</a>
+</li>
+          <li><a href="source/otaf.html#id7">(otaf.CompatibilityLoopHandling method)</a>, <a href="source/otaf.html#otaf.CompatibilityLoopHandling.generate_matrices_from_expanded_loop">[1]</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.AssemblyDataProcessor.generate_points_for_surface">generate_points_for_surface() (otaf.assembly_modeling.AssemblyDataProcessor method)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.generate_points_for_surface">(otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.AssemblyDataProcessor.generate_points_for_surface">(otaf.AssemblyDataProcessor method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.sampling.html#otaf.sampling.generate_random_permutations_with_sampling">generate_random_permutations_with_sampling() (in module otaf.sampling)</a>
+</li>
+        <li><a href="source/otaf.sampling.html#otaf.sampling.generate_scaled_permutations">generate_scaled_permutations() (in module otaf.sampling)</a>
+</li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.AssemblyDataProcessor.generate_sphere_clouds">generate_sphere_clouds() (otaf.assembly_modeling.AssemblyDataProcessor method)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.generate_sphere_clouds">(otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.AssemblyDataProcessor.generate_sphere_clouds">(otaf.AssemblyDataProcessor method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#id20">generate_transformation_matrix() (otaf.assembly_modeling.CompatibilityLoopHandling method)</a>, <a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.CompatibilityLoopHandling.generate_transformation_matrix">[1]</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#id8">(otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling method)</a>, <a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling.generate_transformation_matrix">[1]</a>
+</li>
+          <li><a href="source/otaf.html#id8">(otaf.CompatibilityLoopHandling method)</a>, <a href="source/otaf.html#otaf.CompatibilityLoopHandling.generate_transformation_matrix">[1]</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.SystemOfConstraintsAssemblyModel.generateConstraintMatrices">generateConstraintMatrices() (otaf.assembly_modeling.SystemOfConstraintsAssemblyModel method)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel.generateConstraintMatrices">(otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.generateConstraintMatrices">(otaf.SystemOfConstraintsAssemblyModel method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.sampling.html#otaf.sampling.generateLHSExperiment">generateLHSExperiment() (in module otaf.sampling)</a>
+</li>
+        <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.generateWithWeights">generateWithWeights() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.GeometricConditionError">GeometricConditionError</a>
+</li>
+        <li><a href="source/otaf.optimization.html#otaf.optimization.OptimizationStorage.get_all_data">get_all_data() (otaf.optimization.OptimizationStorage method)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.get_base_relu_mlp_model">get_base_relu_mlp_model() (in module otaf.surrogate)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.get_base_tanh_mlp_model">get_base_tanh_mlp_model() (in module otaf.surrogate)</a>
+</li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix.get_change_of_basis_matrix">get_change_of_basis_matrix() (otaf.assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix method)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.TransformationMatrix.get_change_of_basis_matrix">(otaf.assembly_modeling.TransformationMatrix method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.TransformationMatrix.get_change_of_basis_matrix">(otaf.TransformationMatrix method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#id21">get_compatibility_expression_from_FO_matrices() (otaf.assembly_modeling.CompatibilityLoopHandling method)</a>, <a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.CompatibilityLoopHandling.get_compatibility_expression_from_FO_matrices">[1]</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#id9">(otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling method)</a>, <a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling.get_compatibility_expression_from_FO_matrices">[1]</a>
+</li>
+          <li><a href="source/otaf.html#id9">(otaf.CompatibilityLoopHandling method)</a>, <a href="source/otaf.html#otaf.CompatibilityLoopHandling.get_compatibility_expression_from_FO_matrices">[1]</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.distribution.html#otaf.distribution.get_composed_normal_defect_distribution">get_composed_normal_defect_distribution() (in module otaf.distribution)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.get_custom_mlp_layers">get_custom_mlp_layers() (in module otaf.surrogate)</a>
+</li>
+        <li><a href="source/otaf.optimization.html#otaf.optimization.Callback.get_data">get_data() (otaf.optimization.Callback method)</a>
+</li>
+        <li><a href="source/otaf.assembly_modeling.html#id22">get_deviation_matrix_by_id() (otaf.assembly_modeling.CompatibilityLoopHandling method)</a>, <a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.CompatibilityLoopHandling.get_deviation_matrix_by_id">[1]</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#id10">(otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling method)</a>, <a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling.get_deviation_matrix_by_id">[1]</a>
+</li>
+          <li><a href="source/otaf.html#id10">(otaf.CompatibilityLoopHandling method)</a>, <a href="source/otaf.html#otaf.CompatibilityLoopHandling.get_deviation_matrix_by_id">[1]</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.SystemOfConstraintsAssemblyModel.get_feature_indices_and_dimensions">get_feature_indices_and_dimensions() (otaf.assembly_modeling.SystemOfConstraintsAssemblyModel method)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel.get_feature_indices_and_dimensions">(otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.get_feature_indices_and_dimensions">(otaf.SystemOfConstraintsAssemblyModel method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#id23">get_gap_matrix_by_id() (otaf.assembly_modeling.CompatibilityLoopHandling method)</a>, <a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.CompatibilityLoopHandling.get_gap_matrix_by_id">[1]</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#id11">(otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling method)</a>, <a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.compatibilityLoopHandling.CompatibilityLoopHandling.get_gap_matrix_by_id">[1]</a>
+</li>
+          <li><a href="source/otaf.html#id11">(otaf.CompatibilityLoopHandling method)</a>, <a href="source/otaf.html#otaf.CompatibilityLoopHandling.get_gap_matrix_by_id">[1]</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.html#otaf.get_gap_symbol_bounds">get_gap_symbol_bounds() (in module otaf)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.get_gap_symbol_bounds">(in module otaf.assembly_modeling)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.get_gap_symbol_bounds">(in module otaf.assembly_modeling.systemOfConstraintsAssemblyModel)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.InterfaceLoopHandling.get_interface_loop_expressions">get_interface_loop_expressions() (otaf.assembly_modeling.InterfaceLoopHandling method)</a>
+
+        <ul>
+          <li><a href="source/otaf.html#otaf.InterfaceLoopHandling.get_interface_loop_expressions">(otaf.InterfaceLoopHandling method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix.get_inverse">get_inverse() (otaf.assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix method)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.GapMatrix.get_inverse">(otaf.assembly_modeling.assemblyModelingBaseObjects.GapMatrix method)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix.get_inverse">(otaf.assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix method)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.DeviationMatrix.get_inverse">(otaf.assembly_modeling.DeviationMatrix method)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.GapMatrix.get_inverse">(otaf.assembly_modeling.GapMatrix method)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.TransformationMatrix.get_inverse">(otaf.assembly_modeling.TransformationMatrix method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.DeviationMatrix.get_inverse">(otaf.DeviationMatrix method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.GapMatrix.get_inverse">(otaf.GapMatrix method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.TransformationMatrix.get_inverse">(otaf.TransformationMatrix method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix.get_matrix">get_matrix() (otaf.assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix method)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.GapMatrix.get_matrix">(otaf.assembly_modeling.assemblyModelingBaseObjects.GapMatrix method)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.I4.get_matrix">(otaf.assembly_modeling.assemblyModelingBaseObjects.I4 method)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.J4.get_matrix">(otaf.assembly_modeling.assemblyModelingBaseObjects.J4 method)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix.get_matrix">(otaf.assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix method)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.DeviationMatrix.get_matrix">(otaf.assembly_modeling.DeviationMatrix method)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.GapMatrix.get_matrix">(otaf.assembly_modeling.GapMatrix method)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.I4.get_matrix">(otaf.assembly_modeling.I4 method)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.J4.get_matrix">(otaf.assembly_modeling.J4 method)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.TransformationMatrix.get_matrix">(otaf.assembly_modeling.TransformationMatrix method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.DeviationMatrix.get_matrix">(otaf.DeviationMatrix method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.GapMatrix.get_matrix">(otaf.GapMatrix method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.I4.get_matrix">(otaf.I4 method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.J4.get_matrix">(otaf.J4 method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.TransformationMatrix.get_matrix">(otaf.TransformationMatrix method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix.get_matrix_inverse">get_matrix_inverse() (otaf.assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix method)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.GapMatrix.get_matrix_inverse">(otaf.assembly_modeling.assemblyModelingBaseObjects.GapMatrix method)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.I4.get_matrix_inverse">(otaf.assembly_modeling.assemblyModelingBaseObjects.I4 method)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.J4.get_matrix_inverse">(otaf.assembly_modeling.assemblyModelingBaseObjects.J4 method)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix.get_matrix_inverse">(otaf.assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix method)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.DeviationMatrix.get_matrix_inverse">(otaf.assembly_modeling.DeviationMatrix method)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.GapMatrix.get_matrix_inverse">(otaf.assembly_modeling.GapMatrix method)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.I4.get_matrix_inverse">(otaf.assembly_modeling.I4 method)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.J4.get_matrix_inverse">(otaf.assembly_modeling.J4 method)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.TransformationMatrix.get_matrix_inverse">(otaf.assembly_modeling.TransformationMatrix method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.DeviationMatrix.get_matrix_inverse">(otaf.DeviationMatrix method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.GapMatrix.get_matrix_inverse">(otaf.GapMatrix method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.I4.get_matrix_inverse">(otaf.I4 method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.J4.get_matrix_inverse">(otaf.J4 method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.TransformationMatrix.get_matrix_inverse">(otaf.TransformationMatrix method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.distribution.html#otaf.distribution.get_means_standards_composed_distribution">get_means_standards_composed_distribution() (in module otaf.distribution)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.get_model_as_openturns_function">get_model_as_openturns_function() (otaf.surrogate.NeuralRegressorNetwork method)</a>
+</li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.AssemblyDataProcessor.get_notebook_scene_sphere_clouds">get_notebook_scene_sphere_clouds() (otaf.assembly_modeling.AssemblyDataProcessor method)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.get_notebook_scene_sphere_clouds">(otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.AssemblyDataProcessor.get_notebook_scene_sphere_clouds">(otaf.AssemblyDataProcessor method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.optimization.html#otaf.optimization.OptimizationStorage.get_points_by_source">get_points_by_source() (otaf.optimization.OptimizationStorage method)</a>
+</li>
+        <li><a href="source/otaf.distribution.html#otaf.distribution.get_prob_below_threshold">get_prob_below_threshold() (in module otaf.distribution)</a>
+</li>
+        <li><a href="source/otaf.common.html#otaf.common.get_SE3_base">get_SE3_base() (in module otaf.common)</a>
+</li>
+        <li><a href="source/otaf.common.html#otaf.common.get_SE3_matrices_from_indices">get_SE3_matrices_from_indices() (in module otaf.common)</a>
+</li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.AssemblyDataProcessor.get_surface_points">get_surface_points() (otaf.assembly_modeling.AssemblyDataProcessor method)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.get_surface_points">(otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.AssemblyDataProcessor.get_surface_points">(otaf.AssemblyDataProcessor method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.common.html#otaf.common.get_symbol_coef_map">get_symbol_coef_map() (in module otaf.common)</a>
+</li>
+        <li><a href="source/otaf.common.html#otaf.common.get_symbols_in_expressions">get_symbols_in_expressions() (in module otaf.common)</a>
+</li>
+        <li><a href="source/otaf.common.html#otaf.common.get_tqdm_range">get_tqdm_range() (in module otaf.common)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.BinaryClassificationModel.get_train_test_data">get_train_test_data() (otaf.surrogate.BinaryClassificationModel method)</a>
+
+        <ul>
+          <li><a href="source/otaf.surrogate.html#otaf.surrogate.DualNetworkPredictor.get_train_test_data">(otaf.surrogate.DualNetworkPredictor method)</a>
+</li>
+          <li><a href="source/otaf.surrogate.html#otaf.surrogate.LPNeuralSurrogateTolereancing.get_train_test_data">(otaf.surrogate.LPNeuralSurrogateTolereancing method)</a>
+</li>
+          <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.get_train_test_data">(otaf.surrogate.NeuralRegressorNetwork method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.get_variable_size_sequential_linear_model">get_variable_size_sequential_linear_model() (in module otaf.surrogate)</a>
+</li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix.get_variables">get_variables() (otaf.assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix method)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.GapMatrix.get_variables">(otaf.assembly_modeling.assemblyModelingBaseObjects.GapMatrix method)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.DeviationMatrix.get_variables">(otaf.assembly_modeling.DeviationMatrix method)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.GapMatrix.get_variables">(otaf.assembly_modeling.GapMatrix method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.DeviationMatrix.get_variables">(otaf.DeviationMatrix method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.GapMatrix.get_variables">(otaf.GapMatrix method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getClassName">getClassName() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
+        <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getId">getId() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
+        <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getName">getName() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
+        <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getShadowedId">getShadowedId() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
+        <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getSize">getSize() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
+        <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getVisibility">getVisibility() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.gradient">gradient() (otaf.surrogate.NeuralRegressorNetwork method)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="H" class="genindex-section">
+  <h2>H</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.hasName">hasName() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
+        <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.hasUniformWeights">hasUniformWeights() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.hasVisibleName">hasVisibleName() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.hessian">hessian() (otaf.surrogate.NeuralRegressorNetwork method)</a>
+</li>
+        <li><a href="source/otaf.plotting.html#otaf.plotting.hex_to_rgba">hex_to_rgba() (in module otaf.plotting)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="I" class="genindex-section">
+  <h2>I</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.html#otaf.I4">I4 (class in otaf)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.I4">(class in otaf.assembly_modeling)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.I4">(class in otaf.assembly_modeling.assemblyModelingBaseObjects)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.initialize_model_weights">initialize_model_weights() (in module otaf.surrogate)</a>
+</li>
+        <li><a href="source/otaf.html#otaf.InterfaceLoopHandling">InterfaceLoopHandling (class in otaf)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.InterfaceLoopHandling">(class in otaf.assembly_modeling)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.intermediate_lambda_function">intermediate_lambda_function() (in module otaf.uncertainty)</a>
+</li>
+        <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.intermediate_lambda_function_derivative">intermediate_lambda_function_derivative() (in module otaf.uncertainty)</a>
+</li>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.InvalidAffineTransformException">InvalidAffineTransformException</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.InvalidGlobalConstraintError">InvalidGlobalConstraintError</a>
+</li>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.InvalidInteractionFormatError">InvalidInteractionFormatError</a>
+</li>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.InvalidPartLabelError">InvalidPartLabelError</a>
+</li>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.InvalidSurfaceDirectionError">InvalidSurfaceDirectionError</a>
+</li>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.InvalidSurfaceLabelError">InvalidSurfaceLabelError</a>
+</li>
+        <li><a href="source/otaf.common.html#otaf.common.inverse_mstring">inverse_mstring() (in module otaf.common)</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.is_affine_transformation_matrix">is_affine_transformation_matrix() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.is_bounding_box_within">is_bounding_box_within() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.common.html#otaf.common.is_running_in_notebook">is_running_in_notebook() (in module otaf.common)</a>
+</li>
+        <li><a href="source/otaf.optimization.html#otaf.optimization.OptimizationStorage.iter_points">iter_points() (otaf.optimization.OptimizationStorage method)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="J" class="genindex-section">
+  <h2>J</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.html#otaf.J4">J4 (class in otaf)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.J4">(class in otaf.assembly_modeling)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.J4">(class in otaf.assembly_modeling.assemblyModelingBaseObjects)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="K" class="genindex-section">
+  <h2>K</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.SystemOfConstraintsAssemblyModel.K_eq">K_eq (otaf.assembly_modeling.SystemOfConstraintsAssemblyModel attribute)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel.K_eq">(otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel attribute)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.K_eq">(otaf.SystemOfConstraintsAssemblyModel attribute)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.SystemOfConstraintsAssemblyModel.K_ub">K_ub (otaf.assembly_modeling.SystemOfConstraintsAssemblyModel attribute)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel.K_ub">(otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel attribute)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.K_ub">(otaf.SystemOfConstraintsAssemblyModel attribute)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="L" class="genindex-section">
+  <h2>L</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.LabelPatternError">LabelPatternError</a>
+</li>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.LabelPrefixError">LabelPrefixError</a>
+</li>
+        <li><a href="source/otaf.sampling.html#otaf.sampling.LagrangeConstraintSolver">LagrangeConstraintSolver (class in otaf.sampling)</a>
+</li>
+        <li><a href="source/otaf.optimization.html#otaf.optimization.lambda_constraint_dict_from_composed_distribution">lambda_constraint_dict_from_composed_distribution() (in module otaf.optimization)</a>
+</li>
+        <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.lambda_sample_composition">lambda_sample_composition() (in module otaf.uncertainty)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.LimitSpaceFocusedLoss">LimitSpaceFocusedLoss (class in otaf.surrogate)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.line_plane_intersection">line_plane_intersection() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.DualNetworkPredictor.load_best_weights">load_best_weights() (otaf.surrogate.DualNetworkPredictor method)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.BinaryClassificationModel.load_model">load_model() (otaf.surrogate.BinaryClassificationModel method)</a>
+
+        <ul>
+          <li><a href="source/otaf.surrogate.html#otaf.surrogate.LPNeuralSurrogateTolereancing.load_model">(otaf.surrogate.LPNeuralSurrogateTolereancing method)</a>
+</li>
+          <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.load_model">(otaf.surrogate.NeuralRegressorNetwork method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.LPNeuralSurrogateTolereancing">LPNeuralSurrogateTolereancing (class in otaf.surrogate)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="M" class="genindex-section">
+  <h2>M</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.InvalidAffineTransformException.matrix">matrix (otaf.exceptions.InvalidAffineTransformException attribute)</a>
+</li>
+        <li><a href="source/otaf.common.html#otaf.common.merge_with_checks">merge_with_checks() (in module otaf.common)</a>
+</li>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.InvalidAffineTransformException.message">message (otaf.exceptions.InvalidAffineTransformException attribute)</a>
+</li>
+        <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.milp_batch_sequential">milp_batch_sequential() (in module otaf.uncertainty)</a>
+</li>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.MissingKeyError">MissingKeyError</a>
+</li>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.MissingOriginPointError">MissingOriginPointError</a>
+</li>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.MissingSurfaceTypeKeyError">MissingSurfaceTypeKeyError</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.DualNetworkPredictor.model_defects_to_gaps">model_defects_to_gaps (otaf.surrogate.DualNetworkPredictor attribute)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.DualNetworkPredictor.model_gap_def_to_slack">model_gap_def_to_slack (otaf.surrogate.DualNetworkPredictor attribute)</a>
+</li>
+        <li><a href="source/otaf.optimization.html#otaf.optimization.ModifiedBasinHopping">ModifiedBasinHopping (class in otaf.optimization)</a>
+</li>
+        <li>
+    module
+
+        <ul>
+          <li><a href="source/otaf.html#module-otaf">otaf</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#module-otaf.assembly_modeling">otaf.assembly_modeling</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#module-otaf.assembly_modeling.assemblyDataProcessor">otaf.assembly_modeling.assemblyDataProcessor</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#module-otaf.assembly_modeling.assemblyModelingBaseObjects">otaf.assembly_modeling.assemblyModelingBaseObjects</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#module-otaf.assembly_modeling.compatibilityLoopHandling">otaf.assembly_modeling.compatibilityLoopHandling</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#module-otaf.assembly_modeling.firstOrderMatrixExpansion">otaf.assembly_modeling.firstOrderMatrixExpansion</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#module-otaf.assembly_modeling.systemOfConstraintsAssemblyModel">otaf.assembly_modeling.systemOfConstraintsAssemblyModel</a>
+</li>
+          <li><a href="source/otaf.capabilities.html#module-otaf.capabilities">otaf.capabilities</a>
+</li>
+          <li><a href="source/otaf.common.html#module-otaf.common">otaf.common</a>
+</li>
+          <li><a href="source/otaf.constants.html#module-otaf.constants">otaf.constants</a>
+</li>
+          <li><a href="source/otaf.distribution.html#module-otaf.distribution">otaf.distribution</a>
+</li>
+          <li><a href="source/otaf.exceptions.html#module-otaf.exceptions">otaf.exceptions</a>
+</li>
+          <li><a href="source/otaf.geometry.html#module-otaf.geometry">otaf.geometry</a>
+</li>
+          <li><a href="source/otaf.optimization.html#module-otaf.optimization">otaf.optimization</a>
+</li>
+          <li><a href="source/otaf.plotting.html#module-otaf.plotting">otaf.plotting</a>
+</li>
+          <li><a href="source/otaf.sampling.html#module-otaf.sampling">otaf.sampling</a>
+</li>
+          <li><a href="source/otaf.sensitivity.html#module-otaf.sensitivity">otaf.sensitivity</a>
+</li>
+          <li><a href="source/otaf.surrogate.html#module-otaf.surrogate">otaf.surrogate</a>
+</li>
+          <li><a href="source/otaf.uncertainty.html#module-otaf.uncertainty">otaf.uncertainty</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.monte_carlo_non_compliancy_rate_at_threshold_w_gradient">monte_carlo_non_compliancy_rate_at_threshold_w_gradient() (in module otaf.uncertainty)</a>
+</li>
+        <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.monte_carlo_non_compliancy_rate_gradient">monte_carlo_non_compliancy_rate_gradient() (in module otaf.uncertainty)</a>
+</li>
+        <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.monte_carlo_non_compliancy_rate_gradient_start_space">monte_carlo_non_compliancy_rate_gradient_start_space() (in module otaf.uncertainty)</a>
+</li>
+        <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.monte_carlo_non_compliancy_rate_w_gradient">monte_carlo_non_compliancy_rate_w_gradient() (in module otaf.uncertainty)</a>
+</li>
+        <li><a href="source/otaf.distribution.html#otaf.distribution.multiply_composed_distribution_standard_with_constants">multiply_composed_distribution_standard_with_constants() (in module otaf.distribution)</a>
+</li>
+        <li><a href="source/otaf.distribution.html#otaf.distribution.multiply_composed_distribution_with_constant">multiply_composed_distribution_with_constant() (in module otaf.distribution)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="N" class="genindex-section">
+  <h2>N</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.SystemOfConstraintsAssemblyModel.nC">nC (otaf.assembly_modeling.SystemOfConstraintsAssemblyModel attribute)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel.nC">(otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel attribute)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.nC">(otaf.SystemOfConstraintsAssemblyModel attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.SystemOfConstraintsAssemblyModel.nD">nD (otaf.assembly_modeling.SystemOfConstraintsAssemblyModel attribute)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel.nD">(otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel attribute)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.nD">(otaf.SystemOfConstraintsAssemblyModel attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork">NeuralRegressorNetwork (class in otaf.surrogate)</a>
+</li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.SystemOfConstraintsAssemblyModel.nG">nG (otaf.assembly_modeling.SystemOfConstraintsAssemblyModel attribute)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel.nG">(otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel attribute)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.nG">(otaf.SystemOfConstraintsAssemblyModel attribute)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.SystemOfConstraintsAssemblyModel.nI">nI (otaf.assembly_modeling.SystemOfConstraintsAssemblyModel attribute)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel.nI">(otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel attribute)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.nI">(otaf.SystemOfConstraintsAssemblyModel attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.NonConcentricCylindersException">NonConcentricCylindersException</a>
+</li>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.NonUniqueCoordinatesError">NonUniqueCoordinatesError</a>
+</li>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.NonUniqueLabelError">NonUniqueLabelError</a>
+</li>
+        <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.normal_score_mu">normal_score_mu() (in module otaf.uncertainty)</a>
+</li>
+        <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.normal_score_sigma">normal_score_sigma() (in module otaf.uncertainty)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="O" class="genindex-section">
+  <h2>O</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.sampling.html#otaf.sampling.LagrangeConstraintSolver.objective_function">objective_function() (otaf.sampling.LagrangeConstraintSolver method)</a>
+
+        <ul>
+          <li><a href="source/otaf.sampling.html#otaf.sampling.UniformSurfaceSampler.objective_function">(otaf.sampling.UniformSurfaceSampler method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.optimization.html#otaf.optimization.OptimizationStorage">OptimizationStorage (class in otaf.optimization)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.GaussianSurrogateModel.optimize_acquisition">optimize_acquisition() (otaf.surrogate.GaussianSurrogateModel method)</a>
+</li>
+        <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.SocAssemblyAnalysisOptimized.optimize_thresholds">optimize_thresholds() (otaf.uncertainty.SocAssemblyAnalysisOptimized method)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.optimize_thresholds_with_alpha">optimize_thresholds_with_alpha() (in module otaf.surrogate)</a>
+</li>
+        <li>
+    otaf
+
+        <ul>
+          <li><a href="source/otaf.html#module-otaf">module</a>
+</li>
+        </ul></li>
+        <li>
+    otaf.assembly_modeling
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#module-otaf.assembly_modeling">module</a>
+</li>
+        </ul></li>
+        <li>
+    otaf.assembly_modeling.assemblyDataProcessor
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#module-otaf.assembly_modeling.assemblyDataProcessor">module</a>
+</li>
+        </ul></li>
+        <li>
+    otaf.assembly_modeling.assemblyModelingBaseObjects
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#module-otaf.assembly_modeling.assemblyModelingBaseObjects">module</a>
+</li>
+        </ul></li>
+        <li>
+    otaf.assembly_modeling.compatibilityLoopHandling
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#module-otaf.assembly_modeling.compatibilityLoopHandling">module</a>
+</li>
+        </ul></li>
+        <li>
+    otaf.assembly_modeling.firstOrderMatrixExpansion
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#module-otaf.assembly_modeling.firstOrderMatrixExpansion">module</a>
+</li>
+        </ul></li>
+        <li>
+    otaf.assembly_modeling.systemOfConstraintsAssemblyModel
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#module-otaf.assembly_modeling.systemOfConstraintsAssemblyModel">module</a>
+</li>
+        </ul></li>
+        <li>
+    otaf.capabilities
+
+        <ul>
+          <li><a href="source/otaf.capabilities.html#module-otaf.capabilities">module</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li>
+    otaf.common
+
+        <ul>
+          <li><a href="source/otaf.common.html#module-otaf.common">module</a>
+</li>
+        </ul></li>
+        <li>
+    otaf.constants
+
+        <ul>
+          <li><a href="source/otaf.constants.html#module-otaf.constants">module</a>
+</li>
+        </ul></li>
+        <li>
+    otaf.distribution
+
+        <ul>
+          <li><a href="source/otaf.distribution.html#module-otaf.distribution">module</a>
+</li>
+        </ul></li>
+        <li>
+    otaf.exceptions
+
+        <ul>
+          <li><a href="source/otaf.exceptions.html#module-otaf.exceptions">module</a>
+</li>
+        </ul></li>
+        <li>
+    otaf.geometry
+
+        <ul>
+          <li><a href="source/otaf.geometry.html#module-otaf.geometry">module</a>
+</li>
+        </ul></li>
+        <li>
+    otaf.optimization
+
+        <ul>
+          <li><a href="source/otaf.optimization.html#module-otaf.optimization">module</a>
+</li>
+        </ul></li>
+        <li>
+    otaf.plotting
+
+        <ul>
+          <li><a href="source/otaf.plotting.html#module-otaf.plotting">module</a>
+</li>
+        </ul></li>
+        <li>
+    otaf.sampling
+
+        <ul>
+          <li><a href="source/otaf.sampling.html#module-otaf.sampling">module</a>
+</li>
+        </ul></li>
+        <li>
+    otaf.sensitivity
+
+        <ul>
+          <li><a href="source/otaf.sensitivity.html#module-otaf.sensitivity">module</a>
+</li>
+        </ul></li>
+        <li>
+    otaf.surrogate
+
+        <ul>
+          <li><a href="source/otaf.surrogate.html#module-otaf.surrogate">module</a>
+</li>
+        </ul></li>
+        <li>
+    otaf.uncertainty
+
+        <ul>
+          <li><a href="source/otaf.uncertainty.html#module-otaf.uncertainty">module</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="P" class="genindex-section">
+  <h2>P</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.plotting.html#otaf.plotting.pair_plot">pair_plot() (in module otaf.plotting)</a>
+</li>
+        <li><a href="source/otaf.common.html#otaf.common.parse_matrix_string">parse_matrix_string() (in module otaf.common)</a>
+</li>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.PartNotFoundError">PartNotFoundError</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.LPNeuralSurrogateTolereancing.pf_monte_carlo_bruteforce">pf_monte_carlo_bruteforce() (otaf.surrogate.LPNeuralSurrogateTolereancing method)</a>
+
+        <ul>
+          <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.pf_monte_carlo_bruteforce">(otaf.surrogate.NeuralRegressorNetwork method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.plane_parameters">plane_parameters() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.plotting.html#otaf.plotting.plot_best_worst_input_data">plot_best_worst_input_data() (in module otaf.plotting)</a>
+</li>
+        <li><a href="source/otaf.plotting.html#otaf.plotting.plot_best_worst_results">plot_best_worst_results() (in module otaf.plotting)</a>
+</li>
+        <li><a href="source/otaf.plotting.html#otaf.plotting.plot_combined_CDF">plot_combined_CDF() (in module otaf.plotting)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.plot_confusion_matrix">plot_confusion_matrix() (in module otaf.surrogate)</a>
+</li>
+        <li><a href="source/otaf.plotting.html#otaf.plotting.plot_deviated_surfs">plot_deviated_surfs() (in module otaf.plotting)</a>
+</li>
+        <li><a href="source/otaf.plotting.html#otaf.plotting.plot_deviation_domain">plot_deviation_domain() (in module otaf.plotting)</a>
+</li>
+        <li><a href="source/otaf.plotting.html#otaf.plotting.plot_points_3D">plot_points_3D() (in module otaf.plotting)</a>
+</li>
+        <li><a href="source/otaf.plotting.html#otaf.plotting.plot_rect_part">plot_rect_part() (in module otaf.plotting)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.BinaryClassificationModel.plot_results">plot_results() (otaf.surrogate.BinaryClassificationModel method)</a>
+
+        <ul>
+          <li><a href="source/otaf.surrogate.html#otaf.surrogate.DualNetworkPredictor.plot_results">(otaf.surrogate.DualNetworkPredictor method)</a>
+</li>
+          <li><a href="source/otaf.surrogate.html#otaf.surrogate.LPNeuralSurrogateTolereancing.plot_results">(otaf.surrogate.LPNeuralSurrogateTolereancing method)</a>
+</li>
+          <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.plot_results">(otaf.surrogate.NeuralRegressorNetwork method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.plotting.html#otaf.plotting.plot_single_transform">plot_single_transform() (in module otaf.plotting)</a>
+</li>
+        <li><a href="source/otaf.plotting.html#otaf.plotting.plot_transform_sequence">plot_transform_sequence() (in module otaf.plotting)</a>
+</li>
+        <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.plotSobolIndicesWithErr">plotSobolIndicesWithErr() (in module otaf.sensitivity)</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.point_dict_to_arrays">point_dict_to_arrays() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.point_in_hull">point_in_hull() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.point_plane_distance">point_plane_distance() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.point_to_segment_distance">point_to_segment_distance() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.PointDictionaryError">PointDictionaryError</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.points_in_cylinder">points_in_cylinder() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.points_in_cylinder_vect">points_in_cylinder_vect() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.PointsNotOnPlaneError">PointsNotOnPlaneError</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.PositiveLimitSpaceFocusedLoss">PositiveLimitSpaceFocusedLoss (class in otaf.surrogate)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.GaussianSurrogateModel.predict">predict() (otaf.surrogate.GaussianSurrogateModel method)</a>
+</li>
+        <li><a href="source/otaf.plotting.html#otaf.plotting.print_sample_in_deviation_domain">print_sample_in_deviation_domain() (in module otaf.plotting)</a>
+</li>
+        <li><a href="source/otaf.capabilities.html#otaf.capabilities.process_capability">process_capability() (in module otaf.capabilities)</a>
+</li>
+        <li><a href="source/otaf.sampling.html#otaf.sampling.project_samples_to_hyperplane">project_samples_to_hyperplane() (in module otaf.sampling)</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.project_vector_onto_plane">project_vector_onto_plane() (in module otaf.geometry)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="R" class="genindex-section">
+  <h2>R</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.DualNetworkPredictor.restore_start_weights">restore_start_weights() (otaf.surrogate.DualNetworkPredictor method)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.common.html#otaf.common.round_floats_in_expression">round_floats_in_expression() (in module otaf.common)</a>
+</li>
+        <li><a href="source/otaf.optimization.html#otaf.optimization.ModifiedBasinHopping.run">run() (otaf.optimization.ModifiedBasinHopping method)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="S" class="genindex-section">
+  <h2>S</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.sample_non_compliancy_at_threshold">sample_non_compliancy_at_threshold() (in module otaf.uncertainty)</a>
+</li>
+        <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.sample_non_compliancy_rate">sample_non_compliancy_rate() (in module otaf.uncertainty)</a>
+</li>
+        <li><a href="source/otaf.sampling.html#otaf.sampling.UniformSurfaceSampler.sample_surface">sample_surface() (otaf.sampling.UniformSurfaceSampler method)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.BinaryClassificationModel.save_model">save_model() (otaf.surrogate.BinaryClassificationModel method)</a>
+
+        <ul>
+          <li><a href="source/otaf.surrogate.html#otaf.surrogate.LPNeuralSurrogateTolereancing.save_model">(otaf.surrogate.LPNeuralSurrogateTolereancing method)</a>
+</li>
+          <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.save_model">(otaf.surrogate.NeuralRegressorNetwork method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.plotting.html#otaf.plotting.save_plot">save_plot() (in module otaf.plotting)</a>
+</li>
+        <li><a href="source/otaf.optimization.html#otaf.optimization.scaling">scaling() (in module otaf.optimization)</a>
+</li>
+        <li><a href="source/otaf.plotting.html#otaf.plotting.set_graph_legends">set_graph_legends() (in module otaf.plotting)</a>
+</li>
+        <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setComposedDistribution">setComposedDistribution() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
+        <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setName">setName() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
+        <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setShadowedId">setShadowedId() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
+        <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setSize">setSize() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
+        <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution">SobolIndicesExperimentWithComposedDistribution (class in otaf.sensitivity)</a>
+</li>
+        <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.SocAssemblyAnalysisOptimized.soc_optimization_sample">soc_optimization_sample() (otaf.uncertainty.SocAssemblyAnalysisOptimized method)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.SocAssemblyAnalysisOptimized">SocAssemblyAnalysisOptimized (class in otaf.uncertainty)</a>
+</li>
+        <li><a href="source/otaf.sampling.html#otaf.sampling.LagrangeConstraintSolver.solve">solve() (otaf.sampling.LagrangeConstraintSolver method)</a>
+
+        <ul>
+          <li><a href="source/otaf.sampling.html#otaf.sampling.UniformSurfaceSampler.solve">(otaf.sampling.UniformSurfaceSampler method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.plotting.html#otaf.plotting.spheres_from_point_cloud">spheres_from_point_cloud() (in module otaf.plotting)</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.LimitSpaceFocusedLoss.square">square (otaf.surrogate.LimitSpaceFocusedLoss attribute)</a>
+
+        <ul>
+          <li><a href="source/otaf.surrogate.html#otaf.surrogate.PositiveLimitSpaceFocusedLoss.square">(otaf.surrogate.PositiveLimitSpaceFocusedLoss attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.sampling.html#otaf.sampling.LagrangeConstraintSolver.starting_points">starting_points (otaf.sampling.LagrangeConstraintSolver attribute)</a>
+</li>
+        <li><a href="source/otaf.optimization.html#otaf.optimization.StepTaking">StepTaking (class in otaf.optimization)</a>
+</li>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.SurfaceNotFoundError">SurfaceNotFoundError</a>
+</li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.AssemblyDataProcessor.system_data">system_data (otaf.assembly_modeling.AssemblyDataProcessor attribute)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.system_data">(otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor attribute)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.AssemblyDataProcessor.system_data">(otaf.AssemblyDataProcessor attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel">SystemOfConstraintsAssemblyModel (class in otaf)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.SystemOfConstraintsAssemblyModel">(class in otaf.assembly_modeling)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel">(class in otaf.assembly_modeling.systemOfConstraintsAssemblyModel)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="T" class="genindex-section">
+  <h2>T</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.optimization.html#otaf.optimization.ModifiedBasinHopping.take_step">take_step() (otaf.optimization.ModifiedBasinHopping method)</a>
+</li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.tfrt">tfrt() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.common.html#otaf.common.threshold_for_percentile_positive_values_below">threshold_for_percentile_positive_values_below() (in module otaf.common)</a>
+</li>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.timeout">timeout() (in module otaf.exceptions)</a>
+</li>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.TimeoutError">TimeoutError</a>
+</li>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.BinaryClassificationModel.train_model">train_model() (otaf.surrogate.BinaryClassificationModel method)</a>
+
+        <ul>
+          <li><a href="source/otaf.surrogate.html#otaf.surrogate.DualNetworkPredictor.train_model">(otaf.surrogate.DualNetworkPredictor method)</a>
+</li>
+          <li><a href="source/otaf.surrogate.html#otaf.surrogate.LPNeuralSurrogateTolereancing.train_model">(otaf.surrogate.LPNeuralSurrogateTolereancing method)</a>
+</li>
+          <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.train_model">(otaf.surrogate.NeuralRegressorNetwork method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.surrogate.html#otaf.surrogate.BinaryClassificationModel.training_stopping_criterion">training_stopping_criterion() (otaf.surrogate.BinaryClassificationModel method)</a>
+
+        <ul>
+          <li><a href="source/otaf.surrogate.html#otaf.surrogate.LPNeuralSurrogateTolereancing.training_stopping_criterion">(otaf.surrogate.LPNeuralSurrogateTolereancing method)</a>
+</li>
+          <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.training_stopping_criterion">(otaf.surrogate.NeuralRegressorNetwork method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.geometry.html#otaf.geometry.transform_point">transform_point() (in module otaf.geometry)</a>
+</li>
+        <li><a href="source/otaf.html#otaf.TransformationMatrix">TransformationMatrix (class in otaf)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.TransformationMatrix">(class in otaf.assembly_modeling)</a>
+</li>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix">(class in otaf.assembly_modeling.assemblyModelingBaseObjects)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.plotting.html#otaf.plotting.trimesh_scene_as_notebook_scene">trimesh_scene_as_notebook_scene() (in module otaf.plotting)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="U" class="genindex-section">
+  <h2>U</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.sampling.html#otaf.sampling.UniformSurfaceSampler">UniformSurfaceSampler (class in otaf.sampling)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.UniqueLabelSuffixError">UniqueLabelSuffixError</a>
+</li>
+        <li><a href="source/otaf.exceptions.html#otaf.exceptions.UnsupportedSurfaceTypeError">UnsupportedSurfaceTypeError</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="V" class="genindex-section">
+  <h2>V</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.sampling.html#otaf.sampling.validate_and_extract_indices">validate_and_extract_indices() (in module otaf.sampling)</a>
+</li>
+        <li><a href="source/otaf.common.html#otaf.common.validate_dict_keys">validate_dict_keys() (in module otaf.common)</a>
+</li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.AssemblyDataProcessor.validate_point_dict">validate_point_dict() (otaf.assembly_modeling.AssemblyDataProcessor method)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.validate_point_dict">(otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.AssemblyDataProcessor.validate_point_dict">(otaf.AssemblyDataProcessor method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.AssemblyDataProcessor.validate_system_data_structure">validate_system_data_structure() (otaf.assembly_modeling.AssemblyDataProcessor method)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.validate_system_data_structure">(otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.AssemblyDataProcessor.validate_system_data_structure">(otaf.AssemblyDataProcessor method)</a>
+</li>
+        </ul></li>
+        <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.SystemOfConstraintsAssemblyModel.validateOptimizationResults">validateOptimizationResults() (otaf.assembly_modeling.SystemOfConstraintsAssemblyModel method)</a>
+
+        <ul>
+          <li><a href="source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel.validateOptimizationResults">(otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel method)</a>
+</li>
+          <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.validateOptimizationResults">(otaf.SystemOfConstraintsAssemblyModel method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, Kramer84
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=2709fde1"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo.js?v=5fa4622c"></script>
+    </body>
+</html>
