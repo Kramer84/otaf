@@ -23,6 +23,14 @@ extensions = [
 
 # HTML Theme
 html_theme = 'furo'  # Replace 'sphinx_rtd_theme' with 'furo'
+html_theme_options = {
+    "style_external_links": True,  # Ensure external links match the theme
+}
+# Use custom CSS if needed
+html_static_path = ['_static']
+html_css_files = [
+    'custom.css',
+]
 
 autodoc_default_options = {
     'members': True,         # Include class and module members
@@ -44,3 +52,4 @@ myst_enable_extensions = [
     "colon_fence",  # Enable ::: for block elements like admonitions
 ]
 myst_heading_anchors = 3  # Automatically generate anchors for headings up to level 3
+

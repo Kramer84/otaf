@@ -1,0 +1,38 @@
+/* Fix inverted color scheme for Markdown-rendered content */
+.markdown-body {
+    background-color: var(--bg-default); /* Match the theme's background */
+    color: var(--fg-default);           /* Match the theme's text color */
+}
+
+/* Ensure headings match the theme */
+.markdown-body h1, .markdown-body h2, .markdown-body h3 {
+    color: var(--fg-accent);
+}
+
+/* Style links */
+.markdown-body a {
+    color: var(--fg-link);
+}
+
+/* Adjust code blocks */
+.markdown-body pre, .markdown-body code {
+    background-color: var(--bg-secondary);
+    color: var(--fg-code);
+}
+/* Ensure consistent background for the main content area */
+.wy-nav-content, .content {
+    background-color: var(--bg-default) !important; /* Ensure it matches the theme */
+    filter: none !important; /* Remove any sepia or inversion */
+    opacity: 1 !important;  /* Ensure full visibility */
+}
+
+/* Adjust margins to fix zoom/viewport issues */
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+/* Fix other potential background conflicts */
+body {
+    background-color: var(--bg-default) !important;
+}
