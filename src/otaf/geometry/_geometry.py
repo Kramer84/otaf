@@ -50,19 +50,33 @@ import otaf
 @beartype
 def is_affine_transformation_matrix(M: np.ndarray, raise_exception=False) -> bool:
     """
-    Checks if the given 4x4 matrix is an affine transformation matrix with a valid rotation component.
+    Check if a 4x4 matrix is a valid affine transformation matrix with a valid rotation component.
 
-    Parameters:
-        M (np.ndarray): A 4x4 NumPy array representing the matrix to be checked.
-        raise_exception (bool): If True, raises an exception when the matrix is invalid.
-                                If False, returns False instead.
+    An affine transformation matrix must meet the following criteria:
+    - It is a 4x4 matrix.
+    - Its last row is `[0, 0, 0, 1]`.
+    - The top-left 3x3 submatrix is a valid rotation matrix (orthonormal and determinant equals 1).
 
-    Returns:
-        bool: True if the matrix is an affine transformation matrix, False otherwise.
+    Parameters
+    ----------
+    M : numpy.ndarray
+        A 4x4 NumPy array representing the matrix to be checked.
+    raise_exception : bool, optional
+        If True, raises an exception when the matrix is invalid. If False, returns False instead (default is False).
 
-    Raises:
-        otaf.exceptions.InvalidAffineTransformException: If the matrix is not a valid affine transformation matrix
-                                         and raise_exception is True.
+    Returns
+    -------
+    bool
+        True if the matrix is an affine transformation matrix, False otherwise.
+
+    Raises
+    ------
+    otaf.exceptions.InvalidAffineTransformException
+        If the matrix is not a valid affine transformation matrix and `raise_exception` is True.
+
+    Notes
+    -----
+    - The validity of the rotation matrix is checked using orthonormality and determinant conditions.
     """
     if M.shape != (4, 4):
         if raise_exception:
@@ -99,14 +113,30 @@ def is_affine_transformation_matrix(M: np.ndarray, raise_exception=False) -> boo
 def transformation_from_rotation_translation(
     rotation: np.ndarray, translation: np.ndarray
 ) -> np.ndarray:
-    """Create a 4x4 transformation matrix from a 3x3 rotation matrix and a translation vector.
+    """
+    Create a 4x4 transformation matrix from a 3x3 rotation matrix and a translation vector.
 
-    Args:
-        rotation (np.ndarray): 3x3 rotation matrix.
-        translation (np.ndarray): Translation vector.
+    The transformation matrix has the following structure:
+        [ R | t ]
+        [---|---]
+        [ 0 | 1 ]
+    where R is the 3x3 rotation matrix, and t is the translation vector.
 
-    Returns:
-        np.ndarray: 4x4 transformation matrix.
+    Parameters
+    ----------
+    rotation : numpy.ndarray
+        A 3x3 NumPy array representing the rotation matrix.
+    translation : numpy.ndarray
+        A 1D NumPy array representing the translation vector.
+
+    Returns
+    -------
+    numpy.ndarray
+        A 4x4 NumPy array representing the transformation matrix.
+
+    Notes
+    -----
+    - The input rotation matrix is assumed to be valid (orthonormal and determinant equals 1).
     """
     M = np.eye(4)
     M[:3, :3] = rotation  # .T  We need(n't) this to make it work.
@@ -123,7 +153,33 @@ def tfrt(*args):
 def points_in_cylinder(
     pt1: np.ndarray, pt2: np.ndarray, r: Union[float, int], q: np.ndarray
 ) -> bool:
-    """Return True if point q is inside cylinder defined by pt1, pt2, and r. False otherwise."""
+    """
+    Check if a point is inside a cylinder defined by two points and a radius.
+
+    The cylinder is defined by its axis (the line segment between `pt1` and `pt2`) and its radius `r`.
+    This function checks if the given point `q` lies inside this cylinder.
+
+    Parameters
+    ----------
+    pt1 : numpy.ndarray
+        A 1D NumPy array representing one endpoint of the cylinder's axis.
+    pt2 : numpy.ndarray
+        A 1D NumPy array representing the other endpoint of the cylinder's axis.
+    r : float or int
+        The radius of the cylinder.
+    q : numpy.ndarray
+        A 1D NumPy array representing the point to be checked.
+
+    Returns
+    -------
+    bool
+        True if the point `q` is inside the cylinder, False otherwise.
+
+    Notes
+    -----
+    - The check involves verifying that the point lies between `pt1` and `pt2` along the axis and
+      that its perpendicular distance to the axis is less than or equal to the cylinder's radius.
+    """
     vec = pt2 - pt1
     vec_norm = np.linalg.norm(vec)
     const = r * vec_norm
@@ -139,7 +195,35 @@ def points_in_cylinder(
 def points_in_cylinder_vect(
     pt1: np.ndarray, pt2: np.ndarray, r: Union[float, int], q: np.ndarray
 ) -> np.ndarray:
-    """Return boolean array for points in q being inside cylinder defined by pt1, pt2, and r."""
+    """
+    Check if multiple points are inside a cylinder defined by two points and a radius.
+
+    The cylinder is defined by its axis (the line segment between `pt1` and `pt2`) and its radius `r`.
+    This function checks for each point in `q` whether it lies inside this cylinder.
+
+    Parameters
+    ----------
+    pt1 : numpy.ndarray
+        A 1D NumPy array representing one endpoint of the cylinder's axis.
+    pt2 : numpy.ndarray
+        A 1D NumPy array representing the other endpoint of the cylinder's axis.
+    r : float or int
+        The radius of the cylinder.
+    q : numpy.ndarray
+        A 2D NumPy array where each row represents a point to be checked.
+
+    Returns
+    -------
+    numpy.ndarray
+        A 1D boolean NumPy array where each entry is True if the corresponding point in `q` is
+        inside the cylinder, and False otherwise.
+
+    Notes
+    -----
+    - This function is vectorized to efficiently handle multiple points in `q`.
+    - The check involves verifying that each point lies between `pt1` and `pt2` along the axis
+      and that its perpendicular distance to the axis is less than or equal to the cylinder's radius.
+    """
     vec = pt2 - pt1
     vec_norm = np.linalg.norm(vec)
     const = r * vec_norm
@@ -153,7 +237,30 @@ def points_in_cylinder_vect(
 
 @beartype
 def plane_parameters(point_on_plane: np.ndarray, rotation_matrix: np.ndarray) -> tuple:
-    """Return plane equation parameters using point and rotation matrix."""
+    """
+    Compute the equation parameters of a plane given a point on the plane and a rotation matrix.
+
+    The plane equation is defined as `Ax + By + Cz + D = 0`, where:
+    - `A`, `B`, and `C` are the components of the normal vector to the plane.
+    - `D` is the distance to the plane along the normal vector.
+
+    Parameters
+    ----------
+    point_on_plane : numpy.ndarray
+        A 1D NumPy array representing a point on the plane.
+    rotation_matrix : numpy.ndarray
+        A 3x3 rotation matrix representing the plane's orientation in space.
+
+    Returns
+    -------
+    tuple
+        A tuple `(A, B, C, D)` representing the parameters of the plane equation.
+
+    Notes
+    -----
+    - The normal vector is computed in the base frame using the rotation matrix.
+    - The distance `D` is computed as the negative dot product of the normal vector and the point on the plane.
+    """
     normal_vector_base_frame = np.dot(rotation_matrix.T, [1, 0, 0])
     distance_to_plane = -np.dot(normal_vector_base_frame, point_on_plane)
     A, B, C = normal_vector_base_frame
@@ -162,23 +269,59 @@ def plane_parameters(point_on_plane: np.ndarray, rotation_matrix: np.ndarray) ->
 
 @beartype
 def euclidean_distance(point1: np.ndarray, point2: np.ndarray) -> float:
-    """Return Euclidean distance between point1 and point2."""
+    """
+    Compute the Euclidean distance between two points.
+
+    Parameters
+    ----------
+    point1 : numpy.ndarray
+        A 1D NumPy array representing the first point.
+    point2 : numpy.ndarray
+        A 1D NumPy array representing the second point.
+
+    Returns
+    -------
+    float
+        The Euclidean distance between `point1` and `point2`.
+
+    Notes
+    -----
+    - The Euclidean distance is calculated as the L2 norm of the difference between the points.
+    """
     return np.linalg.norm(point1 - point2)
-
-
-# @beartype
-# def angle_between_vectors(vec1: np.ndarray, vec2: np.ndarray) -> float:
-#    """Return angle in radians between vectors 'vec1' and 'vec2'."""
-#    cos_theta = np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
-#    return np.arccos(np.clip(cos_theta, -1, 1))#
-
 
 @beartype
 def angle_between_vectors(
     vec1: np.ndarray, vec2: np.ndarray, assume_normalized: bool = False
 ) -> float:
-    """Return the angle in radians between vectors 'vec1' and 'vec2'."""
+    """
+    Calculate the angle in radians between two vectors.
 
+    Parameters
+    ----------
+    vec1 : numpy.ndarray
+        A 1D NumPy array representing the first vector.
+    vec2 : numpy.ndarray
+        A 1D NumPy array representing the second vector.
+    assume_normalized : bool, optional
+        If True, assumes the input vectors are already normalized, skipping normalization (default is False).
+
+    Returns
+    -------
+    float
+        The angle between `vec1` and `vec2` in radians.
+
+    Raises
+    ------
+    ValueError
+        If one or both vectors have zero or near-zero magnitude, making the angle undefined.
+
+    Notes
+    -----
+    - The angle is computed using the dot product formula:
+      `cos(theta) = (vec1 . vec2) / (||vec1|| * ||vec2||)`.
+    - The result is clamped to the range [-1, 1] to account for floating-point inaccuracies.
+    """
     if not assume_normalized:
         norm_vec1 = np.linalg.norm(vec1)
         norm_vec2 = np.linalg.norm(vec2)
@@ -196,7 +339,26 @@ def angle_between_vectors(
 
 @beartype
 def point_in_hull(point: np.ndarray, hull: np.ndarray) -> bool:
-    """Return True if 'point' is inside 'hull'. False otherwise."""
+    """
+    Determine if a point is inside a convex hull.
+
+    Parameters
+    ----------
+    point : numpy.ndarray
+        A 1D NumPy array representing the point to check.
+    hull : numpy.ndarray
+        A 2D NumPy array representing the vertices of the convex hull.
+
+    Returns
+    -------
+    bool
+        True if the `point` is inside the convex hull, False otherwise.
+
+    Notes
+    -----
+    - This function constructs a convex hull from the input points and the test point.
+      If the hull volume does not change after adding the test point, the point is inside the hull.
+    """
     hull = ConvexHull(hull)
     new_hull = ConvexHull(np.concatenate([hull.points, [point]]))
     return np.allclose(hull.volume, new_hull.volume)
@@ -209,7 +371,30 @@ def line_plane_intersection(
     line_point: np.ndarray,
     line_direction: np.ndarray,
 ) -> np.ndarray:
-    """Find the intersection of a line and a plane."""
+    """
+    Compute the intersection point of a line and a plane.
+
+    Parameters
+    ----------
+    plane_normal : numpy.ndarray
+        A 1D NumPy array representing the normal vector of the plane.
+    plane_point : numpy.ndarray
+        A 1D NumPy array representing a point on the plane.
+    line_point : numpy.ndarray
+        A 1D NumPy array representing a point on the line.
+    line_direction : numpy.ndarray
+        A 1D NumPy array representing the direction vector of the line.
+
+    Returns
+    -------
+    numpy.ndarray
+        A 1D NumPy array representing the intersection point of the line and the plane.
+
+    Raises
+    ------
+    ZeroDivisionError
+        If the line is parallel to the plane (i.e., the direction vector is orthogonal to the plane normal).
+    """
     d = np.dot(plane_point, plane_normal)
     t = (d - np.dot(line_point, plane_normal)) / np.dot(line_direction, plane_normal)
     return line_point + t * line_direction
@@ -217,7 +402,26 @@ def line_plane_intersection(
 
 @beartype
 def transform_point(point: np.ndarray, transformation_matrix: np.ndarray) -> np.ndarray:
-    """Transform a point using a given transformation matrix."""
+    """
+    Transform a point using a given transformation matrix.
+
+    Parameters
+    ----------
+    point : numpy.ndarray
+        A 1D NumPy array representing the point to transform.
+    transformation_matrix : numpy.ndarray
+        A 4x4 transformation matrix.
+
+    Returns
+    -------
+    numpy.ndarray
+        A 1D NumPy array representing the transformed point.
+
+    Notes
+    -----
+    - The function assumes homogeneous coordinates for the transformation.
+    - The transformation matrix must be a 4x4 affine matrix.
+    """
     return np.dot(transformation_matrix, np.append(point, 1))[:-1]
 
 
@@ -225,7 +429,27 @@ def transform_point(point: np.ndarray, transformation_matrix: np.ndarray) -> np.
 def closest_point_on_plane(
     plane_normal: np.ndarray, plane_point: np.ndarray, point: np.ndarray
 ) -> np.ndarray:
-    """Return the closest point on a plane to a given point."""
+    """
+    Find the closest point on a plane to a given point.
+
+    Parameters
+    ----------
+    plane_normal : numpy.ndarray
+        A 1D NumPy array representing the normal vector of the plane.
+    plane_point : numpy.ndarray
+        A 1D NumPy array representing a point on the plane.
+    point : numpy.ndarray
+        A 1D NumPy array representing the point to find the closest point for.
+
+    Returns
+    -------
+    numpy.ndarray
+        A 1D NumPy array representing the closest point on the plane to the given point.
+
+    Notes
+    -----
+    - The closest point is determined by projecting the input point onto the plane.
+    """
     d = -np.dot(plane_point, plane_normal)
     t = -(np.dot(plane_normal, point) + d) / np.dot(plane_normal, plane_normal)
     return point + t * plane_normal
@@ -234,7 +458,24 @@ def closest_point_on_plane(
 @beartype
 def project_vector_onto_plane(vector: np.ndarray, plane_normal: np.ndarray) -> np.ndarray:
     """
-    Project a vector onto a plane defined by its normal."""
+    Project a vector onto a plane defined by its normal vector.
+
+    Parameters
+    ----------
+    vector : numpy.ndarray
+        A 1D NumPy array representing the vector to be projected.
+    plane_normal : numpy.ndarray
+        A 1D NumPy array representing the normal vector of the plane.
+
+    Returns
+    -------
+    numpy.ndarray
+        A 1D NumPy array representing the projection of the vector onto the plane.
+
+    Notes
+    -----
+    - The projection removes the component of the vector that is parallel to the plane normal.
+    """
     normalized_plane_normal = plane_normal / np.linalg.norm(plane_normal)
     proj_onto_normal = np.dot(vector, normalized_plane_normal) * normalized_plane_normal
     projection_onto_plane = vector - proj_onto_normal
@@ -245,7 +486,27 @@ def project_vector_onto_plane(vector: np.ndarray, plane_normal: np.ndarray) -> n
 def closest_point_on_line(
     line_point1: np.ndarray, line_point2: np.ndarray, point: np.ndarray
 ) -> np.ndarray:
-    """Return the closest point on a line segment to a given point."""
+    """
+    Find the closest point on a line segment to a given point.
+
+    Parameters
+    ----------
+    line_point1 : numpy.ndarray
+        A 1D NumPy array representing one endpoint of the line segment.
+    line_point2 : numpy.ndarray
+        A 1D NumPy array representing the other endpoint of the line segment.
+    point : numpy.ndarray
+        A 1D NumPy array representing the point to find the closest point for.
+
+    Returns
+    -------
+    numpy.ndarray
+        A 1D NumPy array representing the closest point on the line segment to the given point.
+
+    Notes
+    -----
+    - The closest point is computed using vector projections.
+    """
     line_vec = line_point2 - line_point1
     point_vec = point - line_point1
     t = np.dot(point_vec, line_vec) / np.dot(line_vec, line_vec)
@@ -256,7 +517,28 @@ def closest_point_on_line(
 def point_plane_distance(
     plane_normal: np.ndarray, plane_point: np.ndarray, point: np.ndarray
 ) -> float:
-    """Calculate the distance from a point to a plane."""
+    """
+    Calculate the shortest distance from a point to a plane.
+
+    Parameters
+    ----------
+    plane_normal : numpy.ndarray
+        A 1D NumPy array representing the normal vector of the plane.
+    plane_point : numpy.ndarray
+        A 1D NumPy array representing a point on the plane.
+    point : numpy.ndarray
+        A 1D NumPy array representing the point for which the distance is to be calculated.
+
+    Returns
+    -------
+    float
+        The shortest distance from the point to the plane.
+
+    Notes
+    -----
+    - The distance is positive if the point lies above the plane and negative if below,
+      relative to the plane's normal vector.
+    """
     return np.dot(plane_normal, point - plane_point) / np.linalg.norm(plane_normal)
 
 
@@ -264,7 +546,29 @@ def point_plane_distance(
 def point_to_segment_distance(
     point: np.ndarray, segment_start: np.ndarray, segment_end: np.ndarray
 ) -> Union[float, np.ndarray]:
-    """Calculate the shortest distance from a point or array of points to a line segment."""
+    """
+    Calculate the shortest distance from a point or array of points to a line segment.
+
+    Parameters
+    ----------
+    point : numpy.ndarray
+        A 1D or 2D NumPy array representing the point(s) to compute the distance for.
+    segment_start : numpy.ndarray
+        A 1D NumPy array representing the start point of the line segment.
+    segment_end : numpy.ndarray
+        A 1D NumPy array representing the end point of the line segment.
+
+    Returns
+    -------
+    Union[float, numpy.ndarray]
+        The shortest distance from the point(s) to the line segment. Returns a float for a single point
+        or a NumPy array for multiple points.
+
+    Notes
+    -----
+    - The shortest distance is computed using the cross product to find the perpendicular component.
+    - The input can be a single point or an array of points.
+    """
     return np.linalg.norm(
         np.cross(segment_end - segment_start, point - segment_start, axis=-1), axis=-1
     ) / np.linalg.norm(segment_end - segment_start)
@@ -281,32 +585,62 @@ def are_planes_coincident(
     """
     Check if two planes are coincident within a specified tolerance.
 
-    Args:
-        normal1 (np.ndarray): The normal vector of the first plane.
-        point1 (np.ndarray): A point on the first plane.
-        normal2 (np.ndarray): The normal vector of the second plane.
-        point2 (np.ndarray): A point on the second plane.
-        tolerance (float): The tolerance within which the planes are considered coincident.
+    Parameters
+    ----------
+    normal1 : numpy.ndarray
+        A 1D NumPy array representing the normal vector of the first plane.
+    point1 : numpy.ndarray
+        A 1D NumPy array representing a point on the first plane.
+    normal2 : numpy.ndarray
+        A 1D NumPy array representing the normal vector of the second plane.
+    point2 : numpy.ndarray
+        A 1D NumPy array representing a point on the second plane.
+    tolerance : float, optional
+        The tolerance within which the planes are considered coincident (default is 1e-8).
 
-    Returns:
-        bool: True if planes are coincident within the tolerance, False otherwise.
+    Returns
+    -------
+    bool
+        True if the planes are coincident within the specified tolerance, False otherwise.
+
+    Notes
+    -----
+    - Two planes are considered coincident if their normal vectors are parallel (same or opposite direction)
+      and the distance between the planes is within the specified tolerance.
     """
-    # Normalize the normal vectors
     norm1 = normal1 / np.linalg.norm(normal1)
     norm2 = normal2 / np.linalg.norm(normal2)
-    # Check if the normalized normals are parallel (same or opposite direction)
     if not np.allclose(norm1, norm2, atol=tolerance) and not np.allclose(
         norm1, -norm2, atol=tolerance
     ):
         return False
-    # Distance of point2 from the plane formed by norm1 and point1
     distance = np.abs(np.dot(norm1, point2 - point1) / np.linalg.norm(norm1))
     return distance < tolerance
 
 
 @beartype
 def are_planes_parallel(normal1: np.ndarray, normal2: np.ndarray, tolerance: float = 1e-8) -> bool:
-    """Check if two planes are parallel within a tolerance."""
+    """
+    Check if two planes are parallel within a specified tolerance.
+
+    Parameters
+    ----------
+    normal1 : numpy.ndarray
+        A 1D NumPy array representing the normal vector of the first plane.
+    normal2 : numpy.ndarray
+        A 1D NumPy array representing the normal vector of the second plane.
+    tolerance : float, optional
+        The tolerance within which the planes are considered parallel (default is 1e-8).
+
+    Returns
+    -------
+    bool
+        True if the planes are parallel within the specified tolerance, False otherwise.
+
+    Notes
+    -----
+    - Two planes are parallel if the dot product of their normal vectors is approximately ±1.
+    """
     return bool(np.allclose(np.abs(np.dot(normal1, normal2)), 1, atol=tolerance))
 
 
@@ -314,7 +648,27 @@ def are_planes_parallel(normal1: np.ndarray, normal2: np.ndarray, tolerance: flo
 def are_planes_perpendicular(
     normal1: np.ndarray, normal2: np.ndarray, tolerance: float = 1e-8
 ) -> bool:
-    """Check if two planes are perpendicular within a tolerance."""
+    """
+    Check if two planes are perpendicular within a specified tolerance.
+
+    Parameters
+    ----------
+    normal1 : numpy.ndarray
+        A 1D NumPy array representing the normal vector of the first plane.
+    normal2 : numpy.ndarray
+        A 1D NumPy array representing the normal vector of the second plane.
+    tolerance : float, optional
+        The tolerance within which the planes are considered perpendicular (default is 1e-8).
+
+    Returns
+    -------
+    bool
+        True if the planes are perpendicular within the specified tolerance, False otherwise.
+
+    Notes
+    -----
+    - Two planes are perpendicular if the dot product of their normal vectors is approximately 0.
+    """
     return bool(np.allclose(np.dot(normal1, normal2), 0, atol=tolerance))
 
 
@@ -330,17 +684,35 @@ def are_planes_facing(
     """
     Check if translating the origin of each plane along its normal intersects the other plane.
 
-    Args:
-        normal1 (np.ndarray): Normal of the first plane.
-        point1 (np.ndarray): A point on the first plane.
-        normal2 (np.ndarray): Normal of the second plane.
-        point2 (np.ndarray): A point on the second plane.
-        atol (float): Absolute tolerance for the intersection check.
+    This method determines whether the planes are "facing" each other, meaning their normals are
+    approximately opposite, and translation along the normal of one plane intersects the other.
 
-    Returns:
-        bool: True if translation along normals of each plane intersects the other plane, False otherwise.
+    Parameters
+    ----------
+    normal1 : numpy.ndarray
+        A 1D NumPy array representing the normal vector of the first plane.
+    point1 : numpy.ndarray
+        A 1D NumPy array representing a point on the first plane.
+    normal2 : numpy.ndarray
+        A 1D NumPy array representing the normal vector of the second plane.
+    point2 : numpy.ndarray
+        A 1D NumPy array representing a point on the second plane.
+    atol : float, optional
+        Absolute tolerance for the intersection check (default is 1e-9).
+    max_angle : float, optional
+        Maximum allowed deviation from π radians (180°) for the planes to be considered facing (default is 0.26).
+
+    Returns
+    -------
+    bool
+        True if the planes are facing each other and the translated origins intersect, False otherwise.
+
+    Notes
+    -----
+    - The method uses the angle between the normals to determine alignment and checks
+      the position of the points relative to each plane.
+    - The `max_angle` parameter controls the angular tolerance, approximately ±15° by default.
     """
-
     if not (
         math.pi - max_angle < angle_between_vectors(normal1, normal2) < math.pi + max_angle
     ):  # Approx 15°
@@ -355,7 +727,25 @@ def are_planes_facing(
 
 @beartype
 def angle_between_planes(normal1: np.ndarray, normal2: np.ndarray) -> float:
-    """Calculate the angle between two planes."""
+    """
+    Calculate the angle between two planes.
+
+    Parameters
+    ----------
+    normal1 : numpy.ndarray
+        A 1D NumPy array representing the normal vector of the first plane.
+    normal2 : numpy.ndarray
+        A 1D NumPy array representing the normal vector of the second plane.
+
+    Returns
+    -------
+    float
+        The angle between the planes in radians.
+
+    Notes
+    -----
+    - The angle is calculated using the dot product of the normal vectors.
+    """
     return np.arccos(np.dot(normal1, normal2) / (np.linalg.norm(normal1) * np.linalg.norm(normal2)))
 
 
@@ -363,7 +753,30 @@ def angle_between_planes(normal1: np.ndarray, normal2: np.ndarray) -> float:
 def distance_between_planes(
     normal1: np.ndarray, point1: np.ndarray, normal2: np.ndarray, point2: np.ndarray
 ) -> float:
-    """Calculate the distance between two planes, returns 0 if they intersect."""
+    """
+    Calculate the distance between two parallel planes.
+
+    Parameters
+    ----------
+    normal1 : numpy.ndarray
+        A 1D NumPy array representing the normal vector of the first plane.
+    point1 : numpy.ndarray
+        A 1D NumPy array representing a point on the first plane.
+    normal2 : numpy.ndarray
+        A 1D NumPy array representing the normal vector of the second plane.
+    point2 : numpy.ndarray
+        A 1D NumPy array representing a point on the second plane.
+
+    Returns
+    -------
+    float
+        The distance between the two planes. Returns 0.0 if the planes are not parallel (i.e., they intersect).
+
+    Notes
+    -----
+    - The distance is computed only if the planes are parallel.
+    - For intersecting planes, the distance is considered 0.
+    """
     if are_planes_parallel(normal1, normal2):
         return abs(np.dot(normal1, (point1 - point2))) / np.linalg.norm(normal1)
     else:
@@ -372,7 +785,23 @@ def distance_between_planes(
 
 @beartype
 def centroid(arr: np.ndarray) -> np.ndarray:
-    """Calculate the centroid of a numpy array."""
+    """
+    Calculate the centroid of a set of points.
+
+    Parameters
+    ----------
+    arr : numpy.ndarray
+        A 2D NumPy array where each row represents a point.
+
+    Returns
+    -------
+    numpy.ndarray
+        A 1D NumPy array representing the centroid of the points.
+
+    Notes
+    -----
+    - The centroid is calculated as the mean of all points along each axis.
+    """
     sum_vals = np.sum(arr, axis=0)
     length = arr.shape[0]
     centroid = sum_vals / length
@@ -383,13 +812,32 @@ def centroid(arr: np.ndarray) -> np.ndarray:
 def are_points_on_2d_plane(
     points: np.ndarray, return_normal: bool = False
 ) -> Union[Tuple[bool, np.ndarray], bool]:
-    """Check if all points are on the same 2D plane.
+    """
+    Check if all points lie on the same 2D plane.
 
-    Parameters:
-        points (np.ndarray): An array of points (NxD) where N is the number of points and D is the dimension.
+    Parameters
+    ----------
+    points : numpy.ndarray
+        A 2D NumPy array of shape (N, D), where N is the number of points and D is the dimension.
+    return_normal : bool, optional
+        If True, returns the normal vector of the plane in addition to the boolean result (default is False).
 
-    Returns:
-        bool: True if all points are on the same 2D plane, False otherwise."""
+    Returns
+    -------
+    Union[Tuple[bool, numpy.ndarray], bool]
+        - A boolean indicating whether all points lie on the same 2D plane.
+        - If `return_normal` is True, also returns the normal vector of the plane.
+
+    Raises
+    ------
+    ValueError
+        If fewer than 3 points are provided.
+
+    Notes
+    -----
+    - The method determines coplanarity by computing the normal vector of the plane formed by the first three points
+      and checking if all other points lie on that plane.
+    """
     if len(points) < 3:
         raise ValueError("At least 3 points are required to determine a plane.")
 
@@ -403,6 +851,30 @@ def are_points_on_2d_plane(
 
 @beartype
 def point_dict_to_arrays(point_dict: Dict[str, Union[np.ndarray, Tuple, List]]):
+    """
+    Convert a dictionary of points into separate arrays of labels and coordinates.
+
+    Parameters
+    ----------
+    point_dict : dict
+        A dictionary where keys are labels (str) and values are points (list, tuple, or numpy.ndarray).
+
+    Returns
+    -------
+    Tuple[numpy.ndarray, numpy.ndarray]
+        - A 1D NumPy array of labels as strings.
+        - A 2D NumPy array of points as floats.
+
+    Raises
+    ------
+    Exception
+        If the conversion to arrays fails, the original exception is raised with additional context.
+
+    Notes
+    -----
+    - The labels are converted into a NumPy array of strings.
+    - The points are stacked into a 2D NumPy array with dtype `float64`.
+    """
     try:
         label_array = np.array(list(point_dict.keys()), dtype=str)
         point_array = np.stack(list(point_dict.values()), dtype="float64")
@@ -420,16 +892,31 @@ def generate_circle_points(
     start_angle: Union[float, int] = 0,
     rnd: int = 9,
 ) -> np.ndarray:
-    """Generates N points around a circle with a given starting angle.
+    """
+    Generate points evenly distributed around a circle in 2D space.
 
-    Args:
-        radius (float): Radius of the circle.
-        num_points (int): Number of points to generate.
-        center (Tuple[float, float], optional): (x, y) coordinates of the center of the circle. Defaults to (0, 0).
-        start_angle (float, optional): Starting angle in degrees, where 0 degrees is along the positive x-axis. Defaults to 0.
+    Parameters
+    ----------
+    radius : float or int
+        The radius of the circle.
+    num_points : int
+        The number of points to generate.
+    center : Iterable[Union[float, int]], optional
+        The (x, y) coordinates of the circle's center (default is (0, 0)).
+    start_angle : float or int, optional
+        The starting angle in degrees, where 0 degrees is along the positive x-axis (default is 0).
+    rnd : int, optional
+        Number of decimal places to round the output points (default is 9).
 
-    Returns:
-        np.ndarray: Numpy array of shape (N, 2), where each row is an (x, y) point.
+    Returns
+    -------
+    numpy.ndarray
+        A NumPy array of shape (num_points, 2), where each row represents an (x, y) point on the circle.
+
+    Notes
+    -----
+    - The points are evenly distributed along the circle's circumference.
+    - The starting angle allows customization of the initial point's position relative to the x-axis.
     """
     start_angle_rad = np.deg2rad(start_angle)
     angles = np.linspace(start_angle_rad, start_angle_rad + 2 * np.pi, num_points, endpoint=False)
@@ -446,19 +933,32 @@ def generate_circle_points_3d(
     normal: Iterable[Union[float, int]] = (0, 0, 1),
     start_angle: Union[float, int] = 0,
 ) -> np.ndarray:
-    """Generates N points around a circle in 3D space with a given starting angle.
-
-    Args:
-        radius (float): Radius of the circle.
-        num_points (int): Number of points to generate.
-        center (Iterable[Union[float, int]]): (x, y, z) coordinates of the center of the circle. Defaults to (0, 0, 0).
-        normal (Iterable[Union[float, int]]): Normal vector of the circle's plane. Defaults to (0, 0, 1).
-        start_angle (float): Starting angle in degrees, where 0 degrees is along the positive x-axis. Defaults to 0.
-
-    Returns:
-        np.ndarray: Numpy array of shape (N, 3), where each row is an (x, y, z) point.
     """
-    # Create a circle in the XY-plane
+    Generate points evenly distributed around a circle in 3D space.
+
+    Parameters
+    ----------
+    radius : float or int
+        The radius of the circle.
+    num_points : int
+        The number of points to generate.
+    center : Iterable[Union[float, int]], optional
+        The (x, y, z) coordinates of the circle's center (default is (0, 0, 0)).
+    normal : Iterable[Union[float, int]], optional
+        The normal vector defining the plane of the circle (default is (0, 0, 1)).
+    start_angle : float or int, optional
+        The starting angle in degrees, where 0 degrees is along the positive x-axis (default is 0).
+
+    Returns
+    -------
+    numpy.ndarray
+        A NumPy array of shape (num_points, 3), where each row represents an (x, y, z) point on the circle.
+
+    Notes
+    -----
+    - The circle is initially generated in the XY-plane and then rotated to align with the specified normal vector.
+    - The starting angle allows customization of the initial point's position relative to the x-axis in the circle's plane.
+    """
     start_angle_rad = np.deg2rad(start_angle)
     angles = np.linspace(start_angle_rad, start_angle_rad + 2 * np.pi, num_points, endpoint=False)
     circle_points = np.column_stack(
@@ -481,26 +981,43 @@ def generate_circle_points_3d(
 def calculate_cylinder_surface_frame(
     axis_translation: float, axis_rotation: float, radius: float, use_interior_normal: bool = False
 ) -> np.ndarray:
-    """Calculate transformation matrix to position a frame on the cylinder surface.
-
-    Args:
-        axis_translation (float): Displacement along the cylinder's axis.
-        axis_rotation (float): Rotation angle around the axis (in radians).
-        radius (float): Radius of the cylinder.
-
-    Returns:
-        np.ndarray: Transformation matrix for the cylinder surface frame.
     """
-    # Check for radius value
+    Calculate a transformation matrix to position a frame on a cylinder's surface.
+
+    The transformation positions a frame on the cylinder surface based on a specified displacement
+    along the axis, a rotation angle around the axis, and the cylinder radius.
+
+    Parameters
+    ----------
+    axis_translation : float
+        The displacement along the cylinder's axis.
+    axis_rotation : float
+        The rotation angle around the axis, in radians.
+    radius : float
+        The radius of the cylinder.
+    use_interior_normal : bool, optional
+        If True, the normal points inward toward the cylinder's axis. If False, the normal points outward (default is False).
+
+    Returns
+    -------
+    numpy.ndarray
+        A 4x4 transformation matrix for positioning a frame on the cylinder's surface.
+
+    Raises
+    ------
+    ValueError
+        If the radius is negative or the rotation angle is outside the range -2π to 2π.
+
+    Notes
+    -----
+    - The transformation includes translations and rotations to align the frame with the cylinder's geometry.
+    - The direction of the normal vector can be controlled using the `use_interior_normal` parameter.
+    """
     if radius < 0:
         raise ValueError("Radius must be non-negative.")
-    # Check for reasonable rotation angle
     if not -np.pi * 2 <= axis_rotation <= np.pi * 2:
         raise ValueError("Rotation angle should be within -2π to 2π for stability.")
 
-    # Check for extremely large translations
-    if abs(axis_translation) > 1e6:  # 1e6 is an example threshold
-        raise ValueError("Axis translation is too large.")
 
     cos_theta = np.cos(axis_rotation)
     sin_theta = np.sin(axis_rotation)
@@ -530,13 +1047,23 @@ def calculate_cylinder_surface_frame(
 @beartype
 def compute_bounding_box(points: np.ndarray) -> np.ndarray:
     """
-    Computes the bounding box for a set of multi-dimensional points.
+    Compute the bounding box for a set of multi-dimensional points.
 
-    Args:
-        points (np.ndarray): A NumPy array of points, shape (N, M).
+    The bounding box is defined by the minimum and maximum values along each dimension.
 
-    Returns:
-        np.ndarray: The bounding box, shape (M, 2), with min and max values per dimension.
+    Parameters
+    ----------
+    points : numpy.ndarray
+        A 2D NumPy array of shape (N, M), where N is the number of points and M is the dimensionality.
+
+    Returns
+    -------
+    numpy.ndarray
+        A 2D NumPy array of shape (M, 2), where each row represents [min, max] values for a dimension.
+
+    Notes
+    -----
+    - The bounding box is calculated independently for each dimension of the input points.
     """
     return np.array([points.min(axis=0), points.max(axis=0)]).T
 
@@ -544,14 +1071,27 @@ def compute_bounding_box(points: np.ndarray) -> np.ndarray:
 @beartype
 def is_bounding_box_within(bbox1: np.ndarray, bbox2: np.ndarray) -> bool:
     """
-    Checks if one bounding box is completely contained within another.
+    Check if one bounding box is completely contained within another.
 
-    Args:
-        bbox1 (np.ndarray): The first bounding box, shape (M, 2).
-        bbox2 (np.ndarray): The second bounding box, shape (M, 2).
+    Parameters
+    ----------
+    bbox1 : numpy.ndarray
+        A 2D NumPy array of shape (M, 2), representing the first bounding box.
+        Each row represents [min, max] values for a dimension.
+    bbox2 : numpy.ndarray
+        A 2D NumPy array of shape (M, 2), representing the second bounding box.
+        Each row represents [min, max] values for a dimension.
 
-    Returns:
-        bool: True if bbox1 is completely within bbox2, False otherwise.
+    Returns
+    -------
+    bool
+        True if `bbox1` is completely within `bbox2`, False otherwise.
+
+    Notes
+    -----
+    - This function checks that the minimum values of `bbox1` are greater than or equal to the
+      minimum values of `bbox2` and that the maximum values of `bbox1` are less than or equal to
+      the maximum values of `bbox2`.
     """
     return np.all(bbox1[:, 0] >= bbox2[:, 0]) and np.all(bbox1[:, 1] <= bbox2[:, 1])
 
@@ -559,14 +1099,23 @@ def is_bounding_box_within(bbox1: np.ndarray, bbox2: np.ndarray) -> bool:
 @beartype
 def do_bounding_boxes_overlap(bbox1: np.ndarray, bbox2: np.ndarray) -> bool:
     """
-    Checks if two multidimensional bounding boxes overlap.
+    Check if two multidimensional bounding boxes overlap.
 
-    Args:
-        bbox1 (np.ndarray): The first bounding box, shape (M, 2).
-        bbox2 (np.ndarray): The second bounding box, shape (M, 2).
+    Parameters
+    ----------
+    bbox1 : numpy.ndarray
+        A 2D NumPy array of shape (M, 2), where each row represents [min, max] values for a dimension.
+    bbox2 : numpy.ndarray
+        A 2D NumPy array of shape (M, 2), where each row represents [min, max] values for a dimension.
 
-    Returns:
-        bool: True if the bounding boxes overlap, False otherwise.
+    Returns
+    -------
+    bool
+        True if the bounding boxes overlap, False otherwise.
+
+    Notes
+    -----
+    - Bounding boxes overlap if their intervals intersect in all dimensions.
     """
     return np.all(np.maximum(bbox1[:, 0], bbox2[:, 0]) <= np.minimum(bbox1[:, 1], bbox2[:, 1]))
 
@@ -580,20 +1129,35 @@ def are_normals_aligned_and_facing(
     atol: float = 1e-9,
 ) -> bool:
     """
-    Check if two vectors are opposed and facing each other.
+    Check if two normal vectors are aligned in opposite directions and facing each other.
 
-    Vectors are considered to be facing each other if they are aligned in
-    opposite directions and if extending them would cause them to intersect.
+    Vectors are considered to be facing each other if they are approximately anti-parallel
+    (opposed) and the points from which they originate are positioned such that their extensions
+    would intersect.
 
-    Args:
-        normal1 (np.ndarray): The first normal.
-        point1 (np.ndarray): The point from which the first normal originates.
-        normal2 (np.ndarray): The second normal.
-        point2 (np.ndarray): The point from which the second normal originates.
-        tolerance (float): Tolerance for considering normals as opposed.
+    Parameters
+    ----------
+    normal1 : numpy.ndarray
+        A 1D NumPy array representing the first normal vector.
+    point1 : numpy.ndarray
+        A 1D NumPy array representing the origin of the first normal vector.
+    normal2 : numpy.ndarray
+        A 1D NumPy array representing the second normal vector.
+    point2 : numpy.ndarray
+        A 1D NumPy array representing the origin of the second normal vector.
+    atol : float, optional
+        Absolute tolerance for considering the normals to be facing each other (default is 1e-9).
 
-    Returns:
-        bool: True if normals are opposed and facing each other, False otherwise.
+    Returns
+    -------
+    bool
+        True if the normals are opposed and facing each other, False otherwise.
+
+    Notes
+    -----
+    - This function checks that the dot product of the normals is approximately -1
+      (indicating they are anti-parallel).
+    - The vectors from `point1` to `point2` are used to ensure the normals are facing each other.
     """
     if not math.isclose(abs(np.dot(normal1, normal2)), 1):
         return False
@@ -606,19 +1170,26 @@ def calculate_scalar_projection_factor(
     vector_to_project: np.ndarray, reference_vector: np.ndarray
 ) -> float:
     """
-    Calculate the scalar projection factor of one vector onto another vector.
+    Calculate the scalar projection factor of one vector onto another.
 
-    Args:
-        vector_to_project (np.ndarray): The vector to be projected.
-        reference_vector (np.ndarray): The vector onto which the first vector is projected.
+    The scalar projection factor represents the length of the projection of one vector
+    onto another, divided by the length of the reference vector.
 
-    Returns:
-        float: The scalar projection factor.
+    Parameters
+    ----------
+    vector_to_project : numpy.ndarray
+        A 1D NumPy array representing the vector to be projected.
+    reference_vector : numpy.ndarray
+        A 1D NumPy array representing the reference vector onto which the first vector is projected.
 
-    Explanation:
-        The scalar projection factor represents the length of the projection of the
-        vector_to_project onto the reference_vector. It is calculated as the dot
-        product of the two vectors divided by the square of the length of the
-        reference_vector.
+    Returns
+    -------
+    float
+        The scalar projection factor.
+
+    Notes
+    -----
+    - The scalar projection factor is calculated as the dot product of the two vectors
+      divided by the squared norm of the reference vector.
     """
     return np.dot(vector_to_project, reference_vector) / np.linalg.norm(reference_vector) ** 2

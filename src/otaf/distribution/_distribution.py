@@ -41,13 +41,13 @@ def get_composed_normal_defect_distribution(
 
     Notes:
         - The defect names are expected to have specific prefixes to identify their type:
-            - 'u_' for translation along the x axis
-            - 'v_' for translation along the y axis
-            - 'w_' for translation along the z axis
-            - 'alpha_' for rotation around the x-axis
-            - 'beta_' for rotation around the y-axis
-            - 'gamma_' for rotation around the z-axis
-        - This has to be reflected in the mu_dict/sigma_dict if provided, i.e. sigma_dict = {'u':1.0}
+            - ``u_`` for translation along the x-axis
+            - ``v_`` for translation along the y-axis
+            - ``w_`` for translation along the z-axis
+            - ``alpha_`` for rotation around the x-axis
+            - ``beta_`` for rotation around the y-axis
+            - ``gamma_`` for rotation around the z-axis
+        - This has to be reflected in the mu_dict/sigma_dict if provided, e.g., ``sigma_dict = {'u':1.0}``.
     """
     ND = len(defect_names)
     distributions = []

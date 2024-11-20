@@ -362,7 +362,7 @@ def compute_failure_probability_subset_sampling(
 
 
 def compute_gap_optimizations_on_sample(
-    constraint_matrix_generator: otaf.ToleranceAnalysisMatrixPreparer,
+    constraint_matrix_generator: otaf.SystemOfConstraintsAssemblyModel,
     deviation_array: np.ndarray,
     C: Optional[np.ndarray] = None,
     bounds: Optional[Union[List[List[float]], np.ndarray]] = None,
@@ -372,7 +372,7 @@ def compute_gap_optimizations_on_sample(
     """Compute gap optimizations on a sample using a constraint matrix generator.
 
     Args:
-        constraint_matrix_generator (otaf.ToleranceAnalysisMatrixPreparer): Generator for constraint matrices.
+        constraint_matrix_generator (otaf.SystemOfConstraintsAssemblyModel): Generator for constraint matrices.
         deviation_array (np.ndarray): Deviation array.
         C (np.ndarray, optional): Coefficient matrix for the linear objective function.
         bounds (Union[list[list[float]], np.ndarray], optional): Bounds for the variables.
@@ -473,7 +473,7 @@ def milp_batch_sequential(c, bounds, a_ub, b_ub, a_eq, b_eq):
 
 
 def compute_gap_optimizations_on_sample_batch(
-    constraint_matrix_generator: otaf.ToleranceAnalysisMatrixPreparer,
+    constraint_matrix_generator: otaf.SystemOfConstraintsAssemblyModel,
     deviation_array: np.ndarray,
     C: Optional[np.ndarray] = None,
     bounds: Optional[Union[List[List[float]], np.ndarray]] = None,
@@ -486,7 +486,7 @@ def compute_gap_optimizations_on_sample_batch(
     """Compute gap optimizations on a sample using a constraint matrix generator with batching.
 
     Args:
-        constraint_matrix_generator (otaf.ToleranceAnalysisMatrixPreparer): Generator for constraint matrices.
+        constraint_matrix_generator (otaf.SystemOfConstraintsAssemblyModel): Generator for constraint matrices.
         deviation_array (np.ndarray): Deviation array.
         C (np.ndarray, optional): Coefficient matrix for the linear objective function.
         bounds (Union[list[list[float]], np.ndarray], optional): Bounds for the variables.

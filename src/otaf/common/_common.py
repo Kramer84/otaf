@@ -5,7 +5,7 @@ __all__ = [
     "merge_with_checks",
     "parse_matrix_string",
     "get_symbols_in_expressions",
-    "get_relevant_expressions",
+    "extract_expressions_with_variables",
     "round_floats_in_expression",
     "get_symbol_coef_map",
     "get_SE3_base",
@@ -25,7 +25,7 @@ import sympy as sp
 import numpy as np
 
 from beartype import beartype
-from beartype.typing import List, Union, Dict, Tuple
+from beartype.typing import List, Union, Dict, Tuple, Optional
 
 from tqdm import trange
 from tqdm.notebook import trange as trange_notebook
@@ -179,23 +179,16 @@ def parse_matrix_string(matrix_str: str) -> Dict[str, Union[str, bool]]:
     Examples
     --------
     >>> parse_matrix_string('TP1kK0aA0')
-    {
-        'type': 'T', 'part': '1', 'surface1': 'k', 'point1': 'K0',
-        'surface2': 'a', 'point2': 'A0', 'mstring': 'TP1kK0aA0'
-    }
+    {'type': 'T', 'part': '1', 'surface1': 'k', 'point1': 'K0',
+     'surface2': 'a', 'point2': 'A0', 'mstring': 'TP1kK0aA0'}
 
     >>> parse_matrix_string('D1k')
-    {
-        'type': 'D', 'inverse': False, 'part': '1', 'surface': 'k',
-        'point': 'K0', 'mstring': 'D1k'
-    }
+    {'type': 'D', 'inverse': False, 'part': '1', 'surface': 'k',
+     'point': 'K0', 'mstring': 'D1k'}
 
     >>> parse_matrix_string('GP1kK0P2aA0')
-    {
-        'type': 'G', 'inverse': False, 'part1': '1', 'surface1': 'k', 'point1': 'K0',
-        'part2': '2', 'surface2': 'a', 'point2': 'A0',
-        'mstring': 'GP1kK0P2aA0'
-    }
+    {'type': 'G', 'inverse': False, 'part1': '1', 'surface1': 'k', 'point1': 'K0',
+     'part2': '2', 'surface2': 'a', 'point2': 'A0', 'mstring': 'GP1kK0P2aA0'}
     """
     result = {"type": matrix_str[0]}
 
@@ -331,16 +324,27 @@ def get_symbols_in_expressions(expr_list: List[sp.Expr]) -> Tuple[List[sp.Symbol
 
 
 @beartype
-def get_relevant_expressions(m: sp.MatrixBase) -> List[sp.Expr]:
-    """Return all the relevant expressions needed for the compatibility equations.
+def extract_expressions_with_variables(m: sp.MatrixBase) -> List[sp.Expr]:
+    """Extract matrix expressions containing free variables.
 
-    Filters out expressions without free variables.
+    This function filters specific off-diagonal and last-column elements of a given symbolic matrix
+    and returns only those expressions that contain free variables (i.e., symbols).
 
-    Args:
-        m (Matrix): Sympy matrix representing a matrix.
+    Parameters
+    ----------
+    m : sympy.MatrixBase
+        Sympy matrix from which expressions are to be extracted.
 
-    Returns:
-        List[sp.Expr]: List of relevant expressions.
+    Returns
+    -------
+    List[sympy.Expr]
+        A list of expressions from the matrix that contain free variables.
+
+    Notes
+    -----
+    The indices for the filtered elements include:
+    - Off-diagonal terms: (0, 1), (0, 2), (1, 2)
+    - Last-column terms: (0, 3), (1, 3), (2, 3)
     """
     indices = [(0, 1), (0, 2), (1, 2), (0, 3), (1, 3), (2, 3)]
     return [m[i, j] for i, j in indices if len(m[i, j].free_symbols) > 0]
@@ -348,14 +352,20 @@ def get_relevant_expressions(m: sp.MatrixBase) -> List[sp.Expr]:
 
 @beartype
 def round_floats_in_expression(ex: sp.Expr, rnd: int = 6) -> sp.Expr:
-    """Round floats in a sympy expression to the specified decimal places.
+    """
+    Round floating-point numbers in a SymPy expression to a specified number of decimal places.
 
-    Args:
-        ex (sp.Expr): sympy expression to round.
-        rnd (int, optional): Number of decimal places to round to. Defaults to 6.
+    Parameters
+    ----------
+    ex : sympy.Expr
+        SymPy expression containing floating-point numbers to be rounded.
+    rnd : int, optional
+        Number of decimal places to round to (default is 6).
 
-    Returns:
-        sp.Expr: Rounded sympy expression.
+    Returns
+    -------
+    sympy.Expr
+        A new SymPy expression with all floating-point numbers rounded to the specified decimal places.
     """
     substitutions = {
         a: round(a, int(rnd)) for a in sp.preorder_traversal(ex) if isinstance(a, float)
@@ -365,16 +375,27 @@ def round_floats_in_expression(ex: sp.Expr, rnd: int = 6) -> sp.Expr:
 
 @beartype
 def get_symbol_coef_map(expr: sp.Expr, rnd: int = 8) -> Dict[str, float]:
-    """Extract coefficients of each variable in a first-order polynomial.
-
-    Args:
-        expr (sp.Expr): Polynomial expression.
-        rnd (int): Rounding digits.
-
-    Returns:
-        Dict[str, float]: {variable: coefficient}. Includes constant as 'CONST'.
     """
+    Extract coefficients of each variable in a first-order polynomial.
 
+    Parameters
+    ----------
+    expr : sympy.Expr
+        The polynomial expression to extract coefficients from.
+    rnd : int, optional
+        Number of decimal places to round the coefficients to (default is 8).
+
+    Returns
+    -------
+    Dict[str, float]
+        A dictionary mapping variable names (as strings) to their coefficients (as floats).
+        Includes the constant term, represented by the key 'CONST'.
+
+    Notes
+    -----
+    - The function assumes the input is a first-order polynomial.
+    - If no constant term exists in the expression, 'CONST' is set to 0.0.
+    """
     coef_map = dict(expr.as_coefficients_dict())
     if 1 in coef_map:
         coef_map["CONST"] = coef_map[1]
@@ -386,16 +407,27 @@ def get_symbol_coef_map(expr: sp.Expr, rnd: int = 8) -> Dict[str, float]:
 
 
 def get_SE3_base(index: str) -> sp.MatrixBase:
-    """Get SE(3) base matrix by index.
+    """
+    Retrieve the SE(3) base matrix corresponding to a given index.
 
-    Args:
-        index (str): Index representing SE(3) base matrix.
+    Parameters
+    ----------
+    index : str
+        The index representing the SE(3) base matrix.
 
-    Returns:
-        Matrix: SE(3) base matrix.
+    Returns
+    -------
+    sympy.MatrixBase
+        The SE(3) base matrix associated with the given index.
 
-    Raises:
-        KeyError: If index is not found in BASIS_DICT.
+    Raises
+    ------
+    KeyError
+        If the specified index is not found in `BASIS_DICT`.
+
+    Notes
+    -----
+    The SE(3) base matrix is retrieved from the predefined `BASIS_DICT` in the `otaf.constants` module.
     """
     try:
         return sp.Matrix(otaf.constants.BASIS_DICT[index]["MATRIX"])
@@ -406,14 +438,25 @@ def get_SE3_base(index: str) -> sp.MatrixBase:
 def get_SE3_matrices_from_indices(
     se3_indices: List[Union[str, int]], multiplier: Union[float, int] = 1.0
 ) -> List[sp.MatrixBase]:
-    """Get SE(3) matrices from indices.
+    """
+    Retrieve SE(3) matrices corresponding to a list of indices, optionally scaled by a multiplier.
 
-    Args:
-        se3_indices (List[str]): List of indices representing SE(3) base matrices.
-        multiplier (Union[float, int], optional): Multiplier for the matrices. Defaults to 1.
+    Parameters
+    ----------
+    se3_indices : List[Union[str, int]]
+        List of indices representing SE(3) base matrices.
+    multiplier : Union[float, int], optional
+        A scalar multiplier applied to each matrix (default is 1.0).
 
-    Returns:
-        List[Matrix]: List of SE(3) matrices.
+    Returns
+    -------
+    List[sympy.MatrixBase]
+        A list of SE(3) base matrices, each scaled by the specified multiplier.
+
+    Notes
+    -----
+    The indices are converted to strings and used to retrieve the corresponding SE(3) base matrices
+    from the predefined `BASIS_DICT` in the `otaf.constants` module.
     """
     return [multiplier * get_SE3_base(str(i)) for i in se3_indices]
 
@@ -421,17 +464,33 @@ def get_SE3_matrices_from_indices(
 def validate_dict_keys(
     dictionary: dict, keys: List[str], dictionary_name: str, value_checks: dict = None
 ) -> None:
-    """Validate keys in a dictionary and optionally check their values.
+    """
+    Validate the presence of specific keys in a dictionary and optionally check their values.
 
-    Args:
-        dictionary (dict): Dictionary to check.
-        keys (List[str]): List of keys to check in the dictionary.
-        dictionary_name (str): Name of the dictionary (for error messages).
-        value_checks (dict, optional): Optional dictionary where keys are the dictionary keys to check.
+    Parameters
+    ----------
+    dictionary : dict
+        The dictionary to validate.
+    keys : List[str]
+        A list of keys that must be present in the dictionary.
+    dictionary_name : str
+        The name of the dictionary (used in error messages for clarity).
+    value_checks : dict, optional
+        A dictionary where keys are the dictionary keys to validate and values are functions
+        that take the dictionary's value as input and return a boolean indicating whether the value is valid.
+        If None, value validation is skipped (default is None).
 
-    Raises:
-        MissingKeyError: If a required key is missing.
-        ValueError: If a value check fails.
+    Raises
+    ------
+    otaf.exceptions.MissingKeyError
+        If a required key is missing from the dictionary.
+    ValueError
+        If a value associated with a key fails the validation function provided in `value_checks`.
+
+    Notes
+    -----
+    - `value_checks` is an optional mechanism to enforce additional constraints on dictionary values.
+    - This function is designed for use cases where strict key and value validation is required.
     """
     for key in keys:
         if key not in dictionary:
@@ -446,6 +505,24 @@ def validate_dict_keys(
 
 
 def is_running_in_notebook() -> bool:
+    """
+    Check if the current code is running in a Jupyter notebook environment.
+
+    This function detects the type of IPython shell to determine whether the code is
+    executed in a Jupyter notebook, a terminal, or a standard Python interpreter.
+
+    Returns
+    -------
+    bool
+        True if the code is running in a Jupyter notebook or qtconsole, False otherwise.
+
+    Notes
+    -----
+    - If the IPython shell cannot be detected, it is assumed the code is running
+      in a standard Python interpreter.
+    - This function relies on the `get_ipython()` function, which is available
+      only in IPython environments.
+    """
     try:
         shell = get_ipython().__class__.__name__
         if shell == "ZMQInteractiveShell":
@@ -459,10 +536,40 @@ def is_running_in_notebook() -> bool:
 
 
 def get_tqdm_range():
+    """
+    Retrieve the appropriate tqdm range function based on the execution environment.
+
+    Returns
+    -------
+    function
+        `trange_notebook` if running in a Jupyter notebook, otherwise `trange`.
+
+    Notes
+    -----
+    - This function checks the execution environment using `is_running_in_notebook`.
+    - `trange_notebook` is used for better rendering in notebook environments.
+    """
     return trange_notebook if is_running_in_notebook() else trange
 
 
 def alphabet_generator():
+    """
+    Generate infinite sequences of alphabetic strings, starting with single letters.
+
+    This generator produces all possible combinations of lowercase alphabetic characters
+    ('a' to 'z'), incrementing the sequence length after exhausting combinations of the current length.
+
+    Yields
+    ------
+    str
+        The next alphabetic string in the sequence.
+
+    Notes
+    -----
+    - The generator starts with single-letter combinations ('a', 'b', ..., 'z') and continues
+      with multi-letter combinations (e.g., 'aa', 'ab', ..., 'zz', 'aaa', etc.).
+    - It produces strings indefinitely, making it suitable for cases where infinite sequences are needed.
+    """
     n = 1  # Start with single-letter combinations
     # Infinite loop to keep generating sequences
     while True:
@@ -478,35 +585,44 @@ def threshold_for_percentile_positive_values_below(
     arr: Union[list, np.ndarray], percentile: float
 ) -> Optional[float]:
     """
-    Find the threshold value such that the given percentage of positive values
-    in the array are below this threshold.
+    Compute the threshold value such that the given percentage of positive values
+    in the input array are below this threshold.
 
-    Parameters:
+    Parameters
     ----------
     arr : array-like
-        Input array of floats. Should have at least one positive value.
+        Input array of floats. Must contain at least one positive value for meaningful output.
     percentile : float
         The percentage (between 0 and 100) of positive values to consider.
 
-    Returns:
+    Returns
     -------
     float or None
-        The threshold value such that the given percentage of positive values are below it.
-        Returns None if there are no positive values.
+        The threshold value such that the specified percentage of positive values are below it.
+        Returns None if there are no positive values in the input array.
 
-    Raises:
+    Raises
     ------
     ValueError
-        If the percentile is not between 0 and 100, or if the input is empty.
+        If the percentile is not between 0 and 100, if the input array is empty,
+        or if the input cannot be reduced to a one-dimensional array.
 
-    Examples:
+    Notes
+    -----
+    - This function operates on the positive values in the input array, ignoring non-positive values.
+    - The input array is squeezed to handle cases where the input is a higher-dimensional array that can
+      be reduced to one dimension.
+
+    Examples
     --------
+    # Compute the 50th percentile threshold for positive values
     >>> threshold_for_percentile_positive_values_below([-1, 2, 3, 4, 5], 50)
     3.0
+
+    # Handle arrays with no positive values
     >>> threshold_for_percentile_positive_values_below([-1, -2, -3], 50)
     None
     """
-    # Convert input to a one-dimensional numpy array
     arr = np.squeeze(np.asarray(arr))
 
     if arr.ndim != 1:
@@ -516,13 +632,9 @@ def threshold_for_percentile_positive_values_below(
     if arr.size == 0:
         raise ValueError("Input array is empty.")
 
-    # Filter positive values
     positive_values = arr[arr > 0]
-
     if positive_values.size == 0:
         return None  # No positive values in the array
 
-    # Use numpy percentile for precise computation
     threshold_value = np.percentile(positive_values, percentile)
-
     return threshold_value

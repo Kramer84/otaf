@@ -18,18 +18,28 @@ from collections import defaultdict
 
 import torch
 
-from .denavitTolerancingBasicObjects import *
-from .matrixPolynomeTaylorExpansion import *
-from .toleranceAnalysisMatrixPreparer import *
-from .systemDataAugmented import *
-from .compatibilityLoopHandling import *
-from .interfaceLoopHandling import *
+from .assembly_modeling import *
+
+__all__ = [
+    *assembly_modeling.__all__,
+    "geometry",
+    "constants",
+    "plotting",
+    "exceptions",
+    "common",
+    "uncertainty",
+    "surrogate",
+    "sensitivity",
+    "optimization",
+    "sampling",
+    "distribution",
+    "capabilities",
+]
 
 import otaf.geometry
 import otaf.constants
 import otaf.plotting
 import otaf.exceptions
-import otaf.types
 import otaf.common
 import otaf.uncertainty
 import otaf.surrogate
@@ -39,10 +49,7 @@ import otaf.sampling
 import otaf.distribution
 import otaf.capabilities
 
-
 torch._dynamo.config.suppress_errors = True
-
-tree = lambda: defaultdict(tree)  # Special dictionary
 
 # Define a custom log record factory to inject class name into log records
 old_factory = logging.getLogRecordFactory()
@@ -78,13 +85,3 @@ logging.basicConfig(
 )
 
 logging.info("Initializing open (mechanical) tolerance analysis framework")
-
-
-__all__ = (
-    denavitTolerancingBasicObjects.__all__
-    + matrixPolynomeTaylorExpansion.__all__
-    + toleranceAnalysisMatrixPreparer.__all__
-    + systemDataAugmented.__all__
-    + compatibilityLoopHandling.__all__
-    + interfaceLoopHandling.__all__
-)
