@@ -39,5 +39,14 @@ dependencies = [
     "pytransform3d[all]",
 ]
 
+[project.optional-dependencies]
+docs = [
+    "sphinx",
+    "sphinx-autodoc-typehints",
+    "sphinx_rtd_theme",
+    "furo",
+    "myst-parser",
+]
+
 [tool.setuptools.packages.find]
 where = ["src"]
