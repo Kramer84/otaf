@@ -43,7 +43,7 @@ Key use cases include:
 
 ## 🚀 Installation
 
-To install OTAF, you need Python 3.8+ and `pip`.
+[comment]: # (To install OTAF, you need Python 3.8+ and `pip`.)
 
 [comment]: # (### From PyPI (Upcoming)
 
