@@ -45,10 +45,13 @@ Key use cases include:
 
 To install OTAF, you need Python 3.8+ and `pip`.
 
-### From PyPI (Upcoming)
-```bash
-pip install otaf
-```
+[comment]: # (### From PyPI (Upcoming)
+
+[comment]: # (```bash)
+
+[comment]: # (pip install otaf)
+
+[comment]: # (```)
 
 ### From Source
 ```bash
@@ -60,6 +63,9 @@ cd otaf
 
 # Install the package
 pip install .
+
+# Install the package wit documentation build dependencies
+pip install .[docs]
 ```
 
 ### Dependencies

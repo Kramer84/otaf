@@ -1,0 +1,22 @@
+# Core dependencies
+numpy
+scipy
+sympy
+openturns
+matplotlib
+tqdm
+joblib
+torch
+torcheval
+scikit-learn
+trimesh
+beartype
+triangle
+pytransform3d[all]
+
+# Documentation dependencies (optional)
+sphinx
+sphinx-autodoc-typehints
+sphinx_rtd_theme
+furo
+myst-parser
