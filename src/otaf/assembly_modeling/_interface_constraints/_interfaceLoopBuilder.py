@@ -12,6 +12,7 @@ import sympy as sp
 from beartype import beartype
 from beartype.typing import Dict, List, Tuple, Union, Any, Set
 
+from ..assemblyDataProcessor import AssemblyDataProcessor
 import otaf
 
 
@@ -42,7 +43,7 @@ class InterfaceLoopBuilder:
 
     def __init__(
         self,
-        system_data_augmented: Dict[str, Any],
+        system_data_augmented: "AssemblyDataProcessor",
         compatibility_loop_handling: Any,
         filtered_gap_matrices: Dict[str, Dict[str, Any]],
         circle_resolution: int = 8,
@@ -266,41 +267,48 @@ class InterfaceLoopBuilder:
 
         return [T1, *usedGapMatrix, T2, JCor.get_inverse()]
 
-    def _generate_surface_interaction_loop(
-        self, unusedMatch: List[str], usedMatch: List[str], usedGapMatrix: Any
-    ) -> List[Any]:
+    def get_interface_equations_facing_cylinders(self, idPart, idSurf):
         """
-        Generate a surface interaction loop between two gap matrices.
+        Generate interface equations for cylinder-to-cylinder interactions.
 
-        This method constructs a loop that expresses the spatial relationship
-        between an unused gap matrix and a reference (used) gap matrix. It involves
-        calculating transformation matrices to align the unused gap with the spatial
-        configuration defined by the reference gap.
+        This method identifies and processes all interface equations for a specified cylinder
+        (determined by `idPart` and `idSurf`) and its interacting surfaces. It matches used
+        and unused gap matrices, constructs interaction matrix loops, and computes the resulting
+        interaction equations for cylinder-to-cylinder relationships.
 
         Parameters
         ----------
-        unusedMatch : List[str]
-            Data extracted from the regex match of an unused gap matrix. Contains
-            details about the part and surface interactions.
-        usedMatch : List[str]
-            Data extracted from the regex match of a used gap matrix. Serves as the
-            interaction reference.
-        usedGapMatrix : Any
-            Gap matrix object representing the spatial relationship between the two
-            surfaces.
+        idPart : str
+            Identifier for the part containing the cylinder of interest.
+        idSurf : str
+            Identifier for the surface of the part of interest.
 
         Returns
         -------
-        List[Any]
-            Sequence of matrices describing the interaction. This includes
-            transformation matrices, the used gap matrix, and its inverse transformation.
+        List[<appropriate type>]
+            A list of interaction matrix loops representing the geometric relationships and
+            interactions between the cylinder and its interacting surfaces. Each loop consists
+            of transformation and gap matrices expanded into symbolic equations.
 
         Notes
         -----
-        The method constructs two transformation matrices (T1 and T2) to align
-        the interacting surfaces, followed by the application of the used gap matrix
-        and its inverse transformation (JCor inverse). The generated sequence of
-        matrices forms a complete interaction loop.
+        - The method distinguishes between used and unused gap matrices associated with the cylinder
+          and matches them to generate interaction loops.
+        - For each matched pair of used and unused gap matrices, it constructs and expands interaction
+          matrix loops into symbolic equations.
+        - The output can be used to analyze geometric constraints and interactions for tolerance analysis.
+
+        Raises
+        ------
+        ValueError
+            If the input identifiers do not match any known part or surface in the system data.
+
+        Examples
+        --------
+        To generate interaction equations for a cylinder:
+        >>> equations = get_interface_equations_facing_cylinders("Part1", "SurfaceA")
+        >>> for eq in equations:
+        ...     print(eq)
         """
         print(f"Processing part {idPart}, surface {idSurf} for cylinder-to-cylinder interactions.")
 

@@ -8,10 +8,8 @@ import sympy as sp
 
 from beartype import beartype
 from beartype.typing import List, Union
-from beartype.meta import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from otaf import DeviationMatrix, GapMatrix, TransformationMatrix, I4, J4
+from .assemblyModelingBaseObjects import DeviationMatrix, GapMatrix, TransformationMatrix, I4, J4
 
 @beartype
 class FirstOrderMatrixExpansion:

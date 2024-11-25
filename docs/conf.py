@@ -18,7 +18,8 @@ extensions = [
     'sphinx.ext.napoleon',            # Supports Google and NumPy-style docstrings
     'sphinx_autodoc_typehints',       # Adds type hints to documentation
     'sphinx.ext.viewcode',            # Adds links to source code
-    'myst_parser',  # Add this
+    'myst_parser',
+    'nbsphinx',
 ]
 
 # HTML Theme
@@ -53,3 +54,9 @@ myst_enable_extensions = [
 ]
 myst_heading_anchors = 3  # Automatically generate anchors for headings up to level 3
 
+# Optional: Exclude notebook outputs (e.g., large plots, images)
+nbsphinx_execute = 'never'
+
+# Optional: Define paths for Jupyter notebooks
+nbsphinx_allow_errors = True
+# nbsphinx_execute = 'always'

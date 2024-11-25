@@ -14,8 +14,6 @@ __requires__ = [
 import logging
 import inspect
 
-from collections import defaultdict
-
 import torch
 
 from .assembly_modeling import *

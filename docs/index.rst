@@ -6,6 +6,10 @@ Welcome to OTAF's Documentation!
 
 .. toctree::
    :maxdepth: 2
+   :caption: Jupyter Notebooks
+
+   notebooks/example_notebook.ipynb
+
    :caption: Contents:
 
    source/modules

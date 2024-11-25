@@ -12,8 +12,8 @@ from beartype import beartype
 from beartype.typing import Dict, List, Tuple, Union, Any, Set
 from beartype.meta import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from otaf import DeviationMatrix, GapMatrix, TransformationMatrix, I4, J4, AssemblyDataProcessor
+from .assemblyModelingBaseObjects import DeviationMatrix, GapMatrix, TransformationMatrix, I4, J4
+from .assemblyDataProcessor import AssemblyDataProcessor
 import otaf
 
 

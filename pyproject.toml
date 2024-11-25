@@ -46,6 +46,8 @@ docs = [
     "sphinx_rtd_theme",
     "furo",
     "myst-parser",
+    "nbsphinx",
+    "notebook",
 ]
 
 [tool.setuptools.packages.find]
