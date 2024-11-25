@@ -6,53 +6,36 @@
 
 ## 📖 Table of Contents
 1. [Introduction](#introduction)
-2. [Features](#features)
-3. [Installation](#installation)
-4. [Getting Started](#getting-started)
-5. [Modules](#modules)
-6. [Examples](#examples)
-7. [Contributing](#contributing)
-8. [License](#license)
-9. [Acknowledgments](#acknowledgments)
+2. [Installation](#installation)
+3. [Getting Started](#getting-started)
+4. [Modules](#modules)
+5. [Examples](#examples)
+6. [Contributing](#contributing)
+7. [License](#license)
+8. [Acknowledgments](#acknowledgments)
 
 ---
 
 ## 📚 Introduction
 
-**OTAF** (Open Tolerance Analysis Framework) is an open-source Python library designed for statistical tolerance analysis and modeling of overconstrained 3D mechanical assemblies. It provides tools to quantify uncertainty, perform sensitivity analysis, and optimize tolerance allocations in the context of manufacturing and design. It only handles planar and cylindrical features for now.
-This framework aims to address the challenges of probabilistic tolerance analysis by modernizing industrial practices, minimizing manufacturing costs, and reducing waste.
+**OTAF** (Open Tolerance Analysis Framework) is an open-source Python library designed for statistical tolerance analysis and modeling of overconstrained 3D mechanical assemblies. It provides tools to quantify uncertainty, perform sensitivity analysis, and estimate the effect of in the context of manufacturing and design. It also provides a basis for constructing a System Of Constraint (SOC) based assembly model, given a minimal representation of the assembly and its constituting parts, automatically.
 
 Key use cases include:
 - **Modeling Manufacturing Deviations**: Analyze the effects of geometric and dimensional variations.
 - **Probabilistic Failure Estimation**: Leverage advanced statistical tools to quantify and mitigate risk.
 - **Uncertainty Quantification**: Account for imprecise probabilities in design and manufacturing.
 
-> _"In mechanical design, tolerances are used to define the acceptable geometric space for defects, but ambiguity in their distribution can lead to over- or under-estimated probabilities of failure."_
+Limitations :
+- **Only rigid transformations**: Only rigid defects (translation + rotations) are modelled
+- **Only planar and cylindrical features**: The methods have only been developed for these two geometric objects for now.
+- **No tools for tolerance allocation**: But can be easily made on your side once you have the SOC model
 
----
 
-## ✨ Features
-
-- 📐 **Assembly Modeling**: Model and analyze overconstrained 3D assemblies.
-- 📊 **Statistical Tolerance Analysis**: Use state-of-the-art tools for robust tolerance modeling.
-- 🔬 **Uncertainty Quantification**: Employ imprecise probabilities to address uncertainties in manufacturing.
-- ⚙️ **Optimization**: Optimization of the distributions parameters maximizing probabilities of failure
-- 📈 **Visualization**: Generate plots to communicate tolerance and uncertainty insights.
+This package has been written to explore experimental approaches based on imprecise probabilities, read the associated paper. 
 
 ---
 
 ## 🚀 Installation
-
-
-[comment]: # (To install OTAF, you need Python 3.8+ and `pip`.)
-
-[comment]: # (### From PyPI (Upcoming)
-
-[comment]: # (```bash)
-
-[comment]: # (pip install otaf)
-
-[comment]: # (```)
 
 ### From Source
 ```bash
