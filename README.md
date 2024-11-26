@@ -7,15 +7,6 @@
 ## 📖 Table of Contents
 1. [Introduction](#introduction)
 2. [Installation](#installation)
-# OTAF: Open Tolerance Analysis Framework
-
-<div align="left">
-    <img src="logo/logo.png" alt="OTAF Logo" width="400px">
-</div>
-
-## 📖 Table of Contents
-1. [Introduction](#introduction)
-2. [Installation](#installation)
 3. [Getting Started](#getting-started)
 4. [Modules](#modules)
 5. [Examples](#examples)
