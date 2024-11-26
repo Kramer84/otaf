@@ -67,15 +67,6 @@ Refer to [requirements.txt](requirements.txt) for a complete list.
 
 ## 🛠️ Getting Started
 
-### Importing the Library
-After installation, you can use OTAF as follows:
-```python
-import otaf
-
-# Example: Running a tolerance analysis
-results = otaf.run_analysis(input_data)
-```
-
 ### Documentation
 Visit the [OTAF Documentation](https://github.com/Kramer84/otaf/wiki) for detailed guides, examples, and API references.
 [View Documentation](https://kramer84.github.io/otaf/)
