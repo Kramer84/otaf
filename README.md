@@ -18,18 +18,19 @@
 
 ## 📚 Introduction
 
-**OTAF** (Open Tolerance Analysis Framework) is an open-source Python library designed for statistical tolerance analysis and modeling of overconstrained 3D mechanical assemblies. It provides tools to quantify uncertainty, perform sensitivity analysis, and estimate the effect of in the context of manufacturing and design. It also provides a basis for constructing a System Of Constraint (SOC) based assembly model, given a minimal representation of the assembly and its constituting parts, automatically.
+**OTAF** (Open Tolerance Analysis Framework) is an open-source Python library designed for statistical tolerance analysis and modeling of overconstrained 3D mechanical assemblies. It provides tools to model defects at the feature level, perform reliability analysis, and estimate the statistical effect of a tolerance choice on the variaiblity of some quantity of interest (mainly the probability of non assembly here). It also provides a basis for constructing a System Of Constraint (SOC) based assembly model, given a minimal representation of the assembly and its constituting parts, automatically.
 
 Key use cases include:
+- **Construction of a SOC model**: Constrution of the linear problem modelling the assembly
 - **Modeling Manufacturing Deviations**: Analyze the effects of geometric and dimensional variations.
-- **Probabilistic Failure Estimation**: Leverage advanced statistical tools to quantify and mitigate risk.
-- **Uncertainty Quantification**: Account for imprecise probabilities in design and manufacturing.
+- **Probability of Failure Estimation**: Leverage advanced statistical tools to quantify and mitigate risk. (Monte-Carlo / FORM / SORM / GLD)
+- **Imprecise Probability of Failure Esitmation**: Application of the method developed in the paper [COMING SOON] to model the space of possible space of defects.
 
 Limitations :
 - **Only rigid transformations**: Only rigid defects (translation + rotations) are modelled
 - **Only planar and cylindrical features**: The methods have only been developed for these two geometric objects for now.
 - **No tools for tolerance allocation**: But can be easily made on your side once you have the SOC model
-
+- **Not production ready**: Apart from the construction of the SOC model, the rest of the program is in its alpha stage and may stay there, so use at your own discretion.
 
 This package has been written to explore experimental approaches based on imprecise probabilities, read the associated paper. 
 
@@ -91,34 +92,19 @@ OTAF is modular and extensible, with the following key components:
 - **`sampling`**: Low-discrepancy sampling methods.
 - **`uncertainty`**: Probabilistic modeling and failure estimation.
 
-Explore the [source code](https://github.com/Kramer84/otaf) for a complete overview.
+Explore the [source code](https://github.com/Kramer84/otaf/src/otaf/) for a complete overview.
 
 ---
 
 ## 📦 Examples
 
-Explore the `examples/` directory for ready-to-use scripts demonstrating OTAF's capabilities.
-
-### Monte Carlo Simulation
-```python
-from otaf.sampling import MonteCarloSampler
-
-sampler = MonteCarloSampler(bounds=[(0, 1), (0, 1)], num_samples=1000)
-samples = sampler.generate()
-```
-
-### Tolerance Zone Visualization
-```python
-from otaf.plotting import plot_tolerance_zone
-
-plot_tolerance_zone(features, constraints)
-```
+Explore the `NOTEBOOKS/` directory for scripts demonstrating OTAF's capabilities.
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions! Whether you're reporting a bug, suggesting a feature, or submitting a pull request, your help is appreciated. There is still a lot of work to make it work efficiently
+We welcome contributions! Whether you're reporting a bug, suggesting a feature, or submitting a pull request, your help is appreciated. There is still a lot of work to do to handle a broader variety of cases, and being the product of 3 years of PhD, the style may not be the most adapted yet for the easy inclusion of new feature types and/or form defects, and legacy code (for experimental stuff like neural-network based surrogate models).
 
 ---
 
