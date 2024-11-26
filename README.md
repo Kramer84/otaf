@@ -18,21 +18,21 @@
 
 ## 📚 Introduction
 
-**OTAF** (Open Tolerance Analysis Framework) is an open-source Python library designed for statistical tolerance analysis and modeling of overconstrained 3D mechanical assemblies. It provides tools to model defects at the feature level, perform reliability analysis, and estimate the statistical effect of a tolerance choice on the variaiblity of some quantity of interest (mainly the probability of non assembly here). It also provides a basis for constructing a System Of Constraint (SOC) based assembly model, given a minimal representation of the assembly and its constituting parts, automatically.
+**OTAF** (Open Tolerance Analysis Framework) is an open-source Python library designed for statistical tolerance analysis and modeling of overconstrained 3D mechanical assemblies. It provides tools to model defects at the feature level, perform reliability analysis, and estimate the statistical effect of tolerance choices on the variability of quantities of interest (primarily the probability of non-assembly). Additionally, OTAF offers a foundation for constructing a System of Constraints (SOC)-based assembly model automatically, given a minimal representation of the assembly and its components.
 
 Key use cases include:
-- **Construction of a SOC model**: Constrution of the linear problem modelling the assembly
+- **Construction of a SOC Model**: Automatically construct the linear problem modeling the assembly.
 - **Modeling Manufacturing Deviations**: Analyze the effects of geometric and dimensional variations.
-- **Probability of Failure Estimation**: Leverage advanced statistical tools to quantify and mitigate risk. (Monte-Carlo / FORM / SORM / GLD)
-- **Imprecise Probability of Failure Esitmation**: Application of the method developed in the paper [COMING SOON] to model the space of possible space of defects.
+- **Probability of Failure Estimation**: Use advanced statistical tools to quantify and mitigate risks (Monte Carlo, FORM, SORM, GLD).
+- **Imprecise Probability of Failure Estimation**: Apply methods developed in an upcoming paper [COMING SOON] to model the space of possible defects.
 
-Limitations :
-- **Only rigid transformations**: Only rigid defects (translation + rotations) are modelled
-- **Only planar and cylindrical features**: The methods have only been developed for these two geometric objects for now.
-- **No tools for tolerance allocation**: But can be easily made on your side once you have the SOC model
-- **Not production ready**: Apart from the construction of the SOC model, the rest of the program is in its alpha stage and may stay there, so use at your own discretion.
+### Limitations
+- **Only Rigid Transformations**: Only rigid defects (translations and rotations) are modeled.
+- **Limited Feature Types**: Currently supports only planar and cylindrical features.
+- **No Tools for Tolerance Allocation**: Users must implement this on their own after generating the SOC model.
+- **Not Production-Ready**: Apart from SOC model construction, the rest of the program is in an alpha stage and may remain so. Use at your discretion.
 
-This package has been written to explore experimental approaches based on imprecise probabilities, read the associated paper. 
+This package was developed to explore experimental approaches based on imprecise probabilities. For more details, refer to the associated paper.
 
 ---
 
@@ -49,26 +49,26 @@ cd otaf
 # Install the package
 pip install .
 
-# Install the package wit documentation build dependencies
+# Install the package with documentation build dependencies
 pip install .[docs]
 ```
 
 ### Dependencies
 The following Python libraries are required:
 - **Core**: `numpy`, `scipy`, `sympy`, `joblib`, `beartype`
-- **Uncertainty Tools**: `openturns`,
+- **Uncertainty Tools**: `openturns`
 - **Visualization**: `matplotlib`, `trimesh`
 - **Machine Learning**: `torch`, `torcheval`, `scikit-learn`
 - **Geometry**: `triangle`, `pytransform3d[all]`
 
-Check [requirements.txt](requirements.txt) for a complete list.
+Refer to [requirements.txt](requirements.txt) for a complete list.
 
 ---
 
 ## 🛠️ Getting Started
 
 ### Importing the Library
-Once installed, you can start using OTAF as follows:
+After installation, you can use OTAF as follows:
 ```python
 import otaf
 
@@ -87,10 +87,12 @@ Visit the [OTAF Documentation](https://github.com/Kramer84/otaf/wiki) for detail
 OTAF is modular and extensible, with the following key components:
 
 - **`assembly_modeling`**: Base classes for mechanical assemblies.
-- **`geometry`**: Geometric definitions and operations.
-- **`optimization`**: Tools for constrained tolerance optimization.
-- **`sampling`**: Low-discrepancy sampling methods.
-- **`uncertainty`**: Probabilistic modeling and failure estimation.
+- **`geometry`**: Geometric functions for validating geometry, point clouds, etc.
+- **`optimization`**: Tools for solving SOC optimization with diverse approaches.
+- **`sampling`**: Sampling distributions of defects or defect parameters.
+- **`distribution`**: Modeling distributions based on `assembly_modeling` objects and other specialized tools.
+- **`surrogate`**: Experimental methods to create surrogate models for the SOC.
+- **`uncertainty`**: Methods for reliability analyses and failure probability estimation.
 
 Explore the [source code](https://github.com/Kramer84/otaf/src/otaf/) for a complete overview.
 
@@ -104,7 +106,7 @@ Explore the `NOTEBOOKS/` directory for scripts demonstrating OTAF's capabilities
 
 ## 🤝 Contributing
 
-We welcome contributions! Whether you're reporting a bug, suggesting a feature, or submitting a pull request, your help is appreciated. There is still a lot of work to do to handle a broader variety of cases, and being the product of 3 years of PhD, the style may not be the most adapted yet for the easy inclusion of new feature types and/or form defects, and legacy code (for experimental stuff like neural-network based surrogate models).
+We welcome contributions! Whether you're reporting a bug, suggesting a feature, or submitting a pull request, your help is appreciated. There is still significant work to do to support a broader variety of cases. As the product of three years of PhD research, some parts of the code may not yet be fully optimized for adding new feature types or handling form defects. Legacy code for experimental tools, such as neural network-based surrogate models, may also require further refinement.
 
 ---
 
