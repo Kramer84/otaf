@@ -1,5 +1,7 @@
 # Ignore npz files
 *.npz
+*.npy
+*.pth
 
 # Ignore other storage or large files (adjust as needed)
 notebooks/OptimizationBasedModels/STORAGE/
