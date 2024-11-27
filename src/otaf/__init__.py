@@ -11,15 +11,47 @@ __requires__ = [
     "trimesh",
 ]
 
-import logging
-import inspect
+import logging as _logging
 
 import torch
 
-from .assembly_modeling import *
+from .assembly_modeling import (
+    SystemOfConstraintsAssemblyModel,
+    AssemblyDataProcessor,
+    CompatibilityLoopHandling,
+    DeviationMatrix,
+    TransformationMatrix,
+    FirstOrderMatrixExpansion,
+    GapMatrix,
+    InterfaceLoopHandling,
+)
+
+from . import geometry
+from . import constants
+from . import plotting
+from . import exceptions
+from . import common
+from . import uncertainty
+from . import surrogate
+from . import sensitivity
+from . import optimization
+from . import sampling
+from . import distribution
+from . import capabilities
+from . import example_models
+
+# Remove assembly_modeling from the namespace
+del assembly_modeling
 
 __all__ = [
-    *assembly_modeling.__all__,
+    "SystemOfConstraintsAssemblyModel",
+    "AssemblyDataProcessor",
+    "CompatibilityLoopHandling",
+    "DeviationMatrix",
+    "TransformationMatrix",
+    "FirstOrderMatrixExpansion",
+    "GapMatrix",
+    "InterfaceLoopHandling",
     "geometry",
     "constants",
     "plotting",
@@ -32,29 +64,18 @@ __all__ = [
     "sampling",
     "distribution",
     "capabilities",
+    "example_models"
 ]
-
-import otaf.geometry
-import otaf.constants
-import otaf.plotting
-import otaf.exceptions
-import otaf.common
-import otaf.uncertainty
-import otaf.surrogate
-import otaf.sensitivity
-import otaf.optimization
-import otaf.sampling
-import otaf.distribution
-import otaf.capabilities
 
 torch._dynamo.config.suppress_errors = True
 
 # Define a custom log record factory to inject class name into log records
-old_factory = logging.getLogRecordFactory()
+_old_factory = _logging.getLogRecordFactory()
 
 
-def record_factory(*args, **kwargs):
-    record = old_factory(*args, **kwargs)
+def _record_factory(*args, **kwargs):
+    import inspect # Lazy import out of namespace
+    record = _old_factory(*args, **kwargs)
 
     # Try to get the class name, if we're inside a class method
     frame = inspect.currentframe().f_back.f_back
@@ -72,14 +93,14 @@ def record_factory(*args, **kwargs):
 
 
 # Set the new factory
-logging.setLogRecordFactory(record_factory)
+_logging.setLogRecordFactory(_record_factory)
 
-# Configure logging to include class name in the log message
-logging.basicConfig(
+# Configure _logging to include class name in the log message
+_logging.basicConfig(
     filename="otaf_tmp.log",
     filemode="w",
-    level=logging.INFO,
+    level=_logging.INFO,
     format="[%(asctime)s] {%(class_name)s %(funcName)s:%(lineno)d} %(levelname)s - %(message)s",
 )
 
-logging.info("Initializing open (mechanical) tolerance analysis framework")
+_logging.info("Initializing open (mechanical) tolerance analysis framework")

@@ -36,3 +36,7 @@ html, body {
 body {
     background-color: var(--bg-default) !important;
 }
+
+.toctree-wrapper ul ul {
+    display: none;  /* Hides subheadings in notebook TOC */
+}

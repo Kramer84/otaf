@@ -10,6 +10,11 @@ This file includes the following:
 - Mappings for constraints, degrees of freedom (DOFs), and nullified components.
 - Dictionaries for validating surface properties and basis transformations.
 
+Example:
+    >>> from otaf.constants import BASE_SURFACE_TYPES
+    >>> BASE_SURFACE_TYPES
+    ['plane', 'cylinder', 'cone', 'sphere']
+
 Author: Kramer84
 """
 
@@ -51,7 +56,6 @@ from beartype.typing import List, Union
 # Constant Types and Descriptions
 # -----------------------------------------------------------------------------
 
-# Base surface types and directions
 BASE_SURFACE_TYPES = ["plane", "cylinder", "cone", "sphere"]
 """List of supported surface types for modeling."""
 
@@ -66,7 +70,6 @@ CONTACT_TYPES = ["FIXED", "SLIDING", "FLOATING"]
 # Regular Expression Patterns
 # -----------------------------------------------------------------------------
 
-# Surface and origin naming patterns
 SURF_POINT_PATTERN = re.compile(r"[A-Z]+[0-9]+$")
 """Regex to validate surface point names, e.g., 'AA01'."""
 

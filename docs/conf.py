@@ -25,38 +25,44 @@ extensions = [
 # HTML Theme
 html_theme = 'furo'  # Replace 'sphinx_rtd_theme' with 'furo'
 html_theme_options = {
-    "style_external_links": True,  # Ensure external links match the theme
+    #"style_external_links": True,  # Ensure external links match the theme
 }
 # Use custom CSS if needed
 html_static_path = ['_static']
-html_css_files = [
-    'custom.css',
-]
+html_css_files = ['custom.css']
 
 autodoc_default_options = {
     'members': True,         # Include class and module members
     'undoc-members': False,  # Exclude undocumented members
     'show-inheritance': True, # Show class inheritance
     "imported-members": True,  # Include re-exported members
+    'special-members': '__all__',  # Include constants explicitly
 }
 autodoc_typehints = "description"  # Show type hints as part of parameter descriptions
 
 napoleon_google_docstring = True
 napoleon_numpy_docstring = True
 napoleon_include_private_with_doc = False  # Exclude private methods
-napoleon_include_special_with_doc = False  # Exclude `__init__`, etc.
+napoleon_include_special_with_doc = True  # Exclude `__init__`, etc.
 
 
 myst_enable_extensions = [
     "deflist",  # Definition lists
     "linkify",  # Auto-detect and convert URLs into links
     "colon_fence",  # Enable ::: for block elements like admonitions
+    "replacements",
 ]
 myst_heading_anchors = 3  # Automatically generate anchors for headings up to level 3
 
-# Optional: Exclude notebook outputs (e.g., large plots, images)
-nbsphinx_execute = 'never'
+nbsphinx_allow_errors = True  # Allow notebooks to load without execution errors
+nbsphinx_execute = 'never'   # Prevent execution of notebooks
+# nbsphinx_input_prompt = ''   # Remove input prompts
+# nbsphinx_output_prompt = ''  # Remove output prompts
 
-# Optional: Define paths for Jupyter notebooks
-nbsphinx_allow_errors = True
-# nbsphinx_execute = 'always'
+nbsphinx_prolog = """
+.. raw:: html
+
+   <style>
+      .toctree-wrapper .tocsection { display: none; }
+   </style>
+"""

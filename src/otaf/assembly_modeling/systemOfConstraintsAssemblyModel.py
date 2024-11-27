@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-"geometry.py"
 __author__ = "Kramer84"
-__all__ = ["SystemOfConstraintsAssemblyModel", "get_gap_symbol_bounds"]
+__all__ = ["SystemOfConstraintsAssemblyModel"]
 
 import re
 import logging

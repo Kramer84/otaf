@@ -1,0 +1,11 @@
+otaf.constants package
+======================
+
+Module contents
+---------------
+
+.. automodule:: otaf.constants
+   :members:
+   :special-members: __all__
+   :show-inheritance:
+   :inherited-members:

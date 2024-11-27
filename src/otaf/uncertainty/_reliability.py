@@ -362,7 +362,7 @@ def compute_failure_probability_subset_sampling(
 
 
 def compute_gap_optimizations_on_sample(
-    constraint_matrix_generator: otaf.SystemOfConstraintsAssemblyModel,
+    constraint_matrix_generator: "SystemOfConstraintsAssemblyModel",
     deviation_array: np.ndarray,
     C: Optional[np.ndarray] = None,
     bounds: Optional[Union[List[List[float]], np.ndarray]] = None,
@@ -473,7 +473,7 @@ def milp_batch_sequential(c, bounds, a_ub, b_ub, a_eq, b_eq):
 
 
 def compute_gap_optimizations_on_sample_batch(
-    constraint_matrix_generator: otaf.SystemOfConstraintsAssemblyModel,
+    constraint_matrix_generator: "SystemOfConstraintsAssemblyModel",
     deviation_array: np.ndarray,
     C: Optional[np.ndarray] = None,
     bounds: Optional[Union[List[List[float]], np.ndarray]] = None,

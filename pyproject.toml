@@ -48,6 +48,7 @@ docs = [
     "myst-parser",
     "nbsphinx",
     "notebook",
+    "pandoc"
 ]
 
 [tool.setuptools.packages.find]

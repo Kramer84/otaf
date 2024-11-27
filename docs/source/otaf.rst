@@ -12,6 +12,7 @@ Subpackages
    otaf.common
    otaf.constants
    otaf.distribution
+   otaf.example_models
    otaf.exceptions
    otaf.geometry
    otaf.optimization

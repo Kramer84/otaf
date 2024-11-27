@@ -5,11 +5,14 @@ Welcome to OTAF's Documentation!
    :parser: myst
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Jupyter Notebooks
 
-   notebooks/example_notebook.ipynb
+   Analytical 2D Reference Assembly <notebooks/Analytical_2D_Reference_Assembly.ipynb>
 
+
+.. toctree::
+   :maxdepth: 2
    :caption: Contents:
 
    source/modules

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 __author__ = "Kramer84"
 __all__ = [
-    "get_composed_normal_defect_distribution",
 
 ]
 
