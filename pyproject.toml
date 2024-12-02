@@ -26,6 +26,7 @@ dependencies = [
     "numpy",
     "scipy",
     "sympy",
+    "pandas",
     "openturns",
     "matplotlib",
     "tqdm",
@@ -35,8 +36,8 @@ dependencies = [
     "scikit-learn",
     "trimesh",
     "beartype",
-    "triangle",
     "pytransform3d[all]",
+    "gldpy"
 ]
 
 [project.optional-dependencies]

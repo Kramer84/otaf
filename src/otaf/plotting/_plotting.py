@@ -43,7 +43,6 @@ import pytransform3d.transformations as pytr
 import pytransform3d.rotations as pyrot
 from beartype import beartype
 from beartype.typing import Dict, List, Tuple, Union, Callable, Optional
-import triangle
 import otaf
 
 
@@ -131,6 +130,7 @@ def create_open_cylinder(radius, segment, **kwargs):
 
 
 def create_surface_from_planar_contour(vertices, segments):
+    import triangle
     vertices = np.array(vertices)
     segments = np.array(segments)
     on_plane, normal = otaf.geometry.are_points_on_2d_plane(vertices, return_normal=True)
