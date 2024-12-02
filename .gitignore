@@ -3,6 +3,11 @@
 *.npy
 *.pth
 
+# Ignore database stuff
+*.bak
+*.dat
+*.dir
+
 # Ignore other storage or large files (adjust as needed)
 notebooks/OptimizationBasedModels/STORAGE/
 
