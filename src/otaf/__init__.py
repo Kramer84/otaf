@@ -24,6 +24,7 @@ from .assembly_modeling import (
     FirstOrderMatrixExpansion,
     GapMatrix,
     InterfaceLoopHandling,
+    I4, J4
 )
 
 from . import geometry
@@ -69,38 +70,52 @@ __all__ = [
 
 torch._dynamo.config.suppress_errors = True
 
-# Define a custom log record factory to inject class name into log records
-_old_factory = _logging.getLogRecordFactory()
+# Logging setup function
+def setup_logging(filename="otaf_tmp.log", level=_logging.INFO):
+    """
+    Set up logging for the module.
 
+    Parameters
+    ----------
+    filename : str, optional
+        Name of the log file. Default is "otaf_tmp.log".
+    level : int, optional
+        Logging level. Default is logging.INFO.
+    """
+    # Define a custom log record factory to inject class name into log records
+    _old_factory = _logging.getLogRecordFactory()
 
-def _record_factory(*args, **kwargs):
-    import inspect # Lazy import out of namespace
-    record = _old_factory(*args, **kwargs)
+    def _record_factory(*args, **kwargs):
+        import inspect  # Lazy import out of namespace
+        record = _old_factory(*args, **kwargs)
 
-    # Try to get the class name, if we're inside a class method
-    frame = inspect.currentframe().f_back.f_back
-    if "self" in frame.f_locals:
-        record.class_name = frame.f_locals["self"].__class__.__name__
-    else:
-        # Attempt to check if it's inside a class by inspecting the stack further up
-        frame = inspect.currentframe().f_back.f_back.f_back
+        # Try to get the class name, if we're inside a class method
+        frame = inspect.currentframe().f_back.f_back
         if "self" in frame.f_locals:
             record.class_name = frame.f_locals["self"].__class__.__name__
         else:
-            record.class_name = "RootLogger"  # Default to RootLogger if class not found
+            # Attempt to check if it's inside a class by inspecting the stack further up
+            frame = inspect.currentframe().f_back.f_back.f_back
+            if "self" in frame.f_locals:
+                record.class_name = frame.f_locals["self"].__class__.__name__
+            else:
+                record.class_name = "RootLogger"  # Default to RootLogger if class not found
 
-    return record
+        return record
+
+    # Set the new factory
+    _logging.setLogRecordFactory(_record_factory)
+
+    # Configure _logging to include class name in the log message
+    _logging.basicConfig(
+        filename=filename,
+        filemode="w",
+        level=level,
+        format="[%(asctime)s] {%(class_name)s %(funcName)s:%(lineno)d} %(levelname)s - %(message)s",
+    )
+
+    _logging.info("Logging initialized for open (mechanical) tolerance analysis framework")
 
 
-# Set the new factory
-_logging.setLogRecordFactory(_record_factory)
-
-# Configure _logging to include class name in the log message
-_logging.basicConfig(
-    filename="otaf_tmp.log",
-    filemode="w",
-    level=_logging.INFO,
-    format="[%(asctime)s] {%(class_name)s %(funcName)s:%(lineno)d} %(levelname)s - %(message)s",
-)
-
-_logging.info("Initializing open (mechanical) tolerance analysis framework")
+# Notify users that logging is optional
+_logging.info("To enable logging, call setup_logging()")
