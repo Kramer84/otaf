@@ -1,0 +1,1236 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="otaf.optimization package" href="otaf.optimization.html" /><link rel="prev" title="otaf.exceptions package" href="otaf.exceptions.html" />
+
+    <!-- Generated with Sphinx 7.4.7 and Furo 2024.08.06 -->
+        <title>otaf.geometry package - otaf 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=8edd85e4" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">otaf 0.1 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">otaf 0.1 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Jupyter Notebooks</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Analytical_2D_Reference_Assembly.html">Analytical 2D Reference Assembly</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">otaf</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of otaf</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current has-children"><a class="reference internal" href="otaf.html">otaf package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of otaf package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="otaf.assembly_modeling.html">otaf.assembly_modeling package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.capabilities.html">otaf.capabilities package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.common.html">otaf.common package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.constants.html">otaf.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.distribution.html">otaf.distribution package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.example_models.html">otaf.example_models package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.exceptions.html">otaf.exceptions package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">otaf.geometry package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.optimization.html">otaf.optimization package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.plotting.html">otaf.plotting package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.sampling.html">otaf.sampling package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.sensitivity.html">otaf.sensitivity package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.surrogate.html">otaf.surrogate package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.uncertainty.html">otaf.uncertainty package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="otaf.capabilities.html">otaf.capabilities package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="otaf.common.html">otaf.common package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="otaf.constants.html">otaf.constants module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="otaf.distribution.html">otaf.distribution package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="otaf.example_models.html">otaf.example_models package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="otaf.exceptions.html">otaf.exceptions package</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">otaf.geometry package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="otaf.optimization.html">otaf.optimization package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="otaf.plotting.html">otaf.plotting package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="otaf.sampling.html">otaf.sampling package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="otaf.sensitivity.html">otaf.sensitivity package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="otaf.surrogate.html">otaf.surrogate package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="otaf.uncertainty.html">otaf.uncertainty package</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/source/otaf.geometry.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="otaf-geometry-package">
+<h1>otaf.geometry package<a class="headerlink" href="#otaf-geometry-package" title="Link to this heading">¶</a></h1>
+<section id="module-otaf.geometry">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-otaf.geometry" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.angle_between_planes">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">angle_between_planes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normal1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normal2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#angle_between_planes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.angle_between_planes" title="Link to this definition">¶</a></dt>
+<dd><p>Calculate the angle between two planes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>normal1</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the normal vector of the first plane.</p></li>
+<li><p><strong>normal2</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the normal vector of the second plane.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The angle between the planes in radians.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The angle is calculated using the dot product of the normal vectors.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.angle_between_vectors">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">angle_between_vectors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vec2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assume_normalized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#angle_between_vectors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.angle_between_vectors" title="Link to this definition">¶</a></dt>
+<dd><p>Calculate the angle in radians between two vectors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vec1</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the first vector.</p></li>
+<li><p><strong>vec2</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the second vector.</p></li>
+<li><p><strong>assume_normalized</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, assumes the input vectors are already normalized, skipping normalization (default is False).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The angle between <cite>vec1</cite> and <cite>vec2</cite> in radians.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If one or both vectors have zero or near-zero magnitude, making the angle undefined.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The angle is computed using the dot product formula:
+<cite>cos(theta) = (vec1 . vec2) / (||vec1|| * ||vec2||)</cite>.</p></li>
+<li><p>The result is clamped to the range [-1, 1] to account for floating-point inaccuracies.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.are_normals_aligned_and_facing">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">are_normals_aligned_and_facing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normal1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normal2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-09</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#are_normals_aligned_and_facing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.are_normals_aligned_and_facing" title="Link to this definition">¶</a></dt>
+<dd><p>Check if two normal vectors are aligned in opposite directions and facing each other.</p>
+<p>Vectors are considered to be facing each other if they are approximately anti-parallel
+(opposed) and the points from which they originate are positioned such that their extensions
+would intersect.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>normal1</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the first normal vector.</p></li>
+<li><p><strong>point1</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the origin of the first normal vector.</p></li>
+<li><p><strong>normal2</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the second normal vector.</p></li>
+<li><p><strong>point2</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the origin of the second normal vector.</p></li>
+<li><p><strong>atol</strong> (<em>float</em><em>, </em><em>optional</em>) – Absolute tolerance for considering the normals to be facing each other (default is 1e-9).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the normals are opposed and facing each other, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>This function checks that the dot product of the normals is approximately -1
+(indicating they are anti-parallel).</p></li>
+<li><p>The vectors from <cite>point1</cite> to <cite>point2</cite> are used to ensure the normals are facing each other.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.are_planes_coincident">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">are_planes_coincident</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normal1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normal2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#are_planes_coincident"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.are_planes_coincident" title="Link to this definition">¶</a></dt>
+<dd><p>Check if two planes are coincident within a specified tolerance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>normal1</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the normal vector of the first plane.</p></li>
+<li><p><strong>point1</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing a point on the first plane.</p></li>
+<li><p><strong>normal2</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the normal vector of the second plane.</p></li>
+<li><p><strong>point2</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing a point on the second plane.</p></li>
+<li><p><strong>tolerance</strong> (<em>float</em><em>, </em><em>optional</em>) – The tolerance within which the planes are considered coincident (default is 1e-8).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the planes are coincident within the specified tolerance, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Two planes are considered coincident if their normal vectors are parallel (same or opposite direction)
+and the distance between the planes is within the specified tolerance.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.are_planes_facing">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">are_planes_facing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normal1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normal2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-09</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.26</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#are_planes_facing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.are_planes_facing" title="Link to this definition">¶</a></dt>
+<dd><p>Check if translating the origin of each plane along its normal intersects the other plane.</p>
+<p>This method determines whether the planes are “facing” each other, meaning their normals are
+approximately opposite, and translation along the normal of one plane intersects the other.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>normal1</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the normal vector of the first plane.</p></li>
+<li><p><strong>point1</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing a point on the first plane.</p></li>
+<li><p><strong>normal2</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the normal vector of the second plane.</p></li>
+<li><p><strong>point2</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing a point on the second plane.</p></li>
+<li><p><strong>atol</strong> (<em>float</em><em>, </em><em>optional</em>) – Absolute tolerance for the intersection check (default is 1e-9).</p></li>
+<li><p><strong>max_angle</strong> (<em>float</em><em>, </em><em>optional</em>) – Maximum allowed deviation from π radians (180°) for the planes to be considered facing (default is 0.26).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the planes are facing each other and the translated origins intersect, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The method uses the angle between the normals to determine alignment and checks
+the position of the points relative to each plane.</p></li>
+<li><p>The <cite>max_angle</cite> parameter controls the angular tolerance, approximately ±15° by default.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.are_planes_parallel">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">are_planes_parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normal1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normal2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#are_planes_parallel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.are_planes_parallel" title="Link to this definition">¶</a></dt>
+<dd><p>Check if two planes are parallel within a specified tolerance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>normal1</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the normal vector of the first plane.</p></li>
+<li><p><strong>normal2</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the normal vector of the second plane.</p></li>
+<li><p><strong>tolerance</strong> (<em>float</em><em>, </em><em>optional</em>) – The tolerance within which the planes are considered parallel (default is 1e-8).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the planes are parallel within the specified tolerance, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Two planes are parallel if the dot product of their normal vectors is approximately ±1.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.are_planes_perpendicular">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">are_planes_perpendicular</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normal1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normal2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#are_planes_perpendicular"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.are_planes_perpendicular" title="Link to this definition">¶</a></dt>
+<dd><p>Check if two planes are perpendicular within a specified tolerance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>normal1</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the normal vector of the first plane.</p></li>
+<li><p><strong>normal2</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the normal vector of the second plane.</p></li>
+<li><p><strong>tolerance</strong> (<em>float</em><em>, </em><em>optional</em>) – The tolerance within which the planes are considered perpendicular (default is 1e-8).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the planes are perpendicular within the specified tolerance, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Two planes are perpendicular if the dot product of their normal vectors is approximately 0.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.are_points_on_2d_plane">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">are_points_on_2d_plane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_normal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#are_points_on_2d_plane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.are_points_on_2d_plane" title="Link to this definition">¶</a></dt>
+<dd><p>Check if all points lie on the same 2D plane.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> (<em>numpy.ndarray</em>) – A 2D NumPy array of shape (N, D), where N is the number of points and D is the dimension.</p></li>
+<li><p><strong>return_normal</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, returns the normal vector of the plane in addition to the boolean result (default is False).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>A boolean indicating whether all points lie on the same 2D plane.</p></li>
+<li><p>If <cite>return_normal</cite> is True, also returns the normal vector of the plane.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Union[Tuple[bool, numpy.ndarray], bool]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If fewer than 3 points are provided.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The method determines coplanarity by computing the normal vector of the plane formed by the first three points
+and checking if all other points lie on that plane.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.calculate_cylinder_surface_frame">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">calculate_cylinder_surface_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis_translation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis_rotation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_interior_normal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#calculate_cylinder_surface_frame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.calculate_cylinder_surface_frame" title="Link to this definition">¶</a></dt>
+<dd><p>Calculate a transformation matrix to position a frame on a cylinder’s surface.</p>
+<p>The transformation positions a frame on the cylinder surface based on a specified displacement
+along the axis, a rotation angle around the axis, and the cylinder radius.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>axis_translation</strong> (<em>float</em>) – The displacement along the cylinder’s axis.</p></li>
+<li><p><strong>axis_rotation</strong> (<em>float</em>) – The rotation angle around the axis, in radians.</p></li>
+<li><p><strong>radius</strong> (<em>float</em>) – The radius of the cylinder.</p></li>
+<li><p><strong>use_interior_normal</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the normal points inward toward the cylinder’s axis. If False, the normal points outward (default is False).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A 4x4 transformation matrix for positioning a frame on the cylinder’s surface.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the radius is negative or the rotation angle is outside the range -2π to 2π.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The transformation includes translations and rotations to align the frame with the cylinder’s geometry.</p></li>
+<li><p>The direction of the normal vector can be controlled using the <cite>use_interior_normal</cite> parameter.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.calculate_scalar_projection_factor">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">calculate_scalar_projection_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector_to_project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_vector</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#calculate_scalar_projection_factor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.calculate_scalar_projection_factor" title="Link to this definition">¶</a></dt>
+<dd><p>Calculate the scalar projection factor of one vector onto another.</p>
+<p>The scalar projection factor represents the length of the projection of one vector
+onto another, divided by the length of the reference vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vector_to_project</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the vector to be projected.</p></li>
+<li><p><strong>reference_vector</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the reference vector onto which the first vector is projected.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The scalar projection factor.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The scalar projection factor is calculated as the dot product of the two vectors
+divided by the squared norm of the reference vector.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.centroid">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">centroid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#centroid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.centroid" title="Link to this definition">¶</a></dt>
+<dd><p>Calculate the centroid of a set of points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>arr</strong> (<em>numpy.ndarray</em>) – A 2D NumPy array where each row represents a point.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A 1D NumPy array representing the centroid of the points.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The centroid is calculated as the mean of all points along each axis.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.closest_point_on_line">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">closest_point_on_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line_point1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_point2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#closest_point_on_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.closest_point_on_line" title="Link to this definition">¶</a></dt>
+<dd><p>Find the closest point on a line segment to a given point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>line_point1</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing one endpoint of the line segment.</p></li>
+<li><p><strong>line_point2</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the other endpoint of the line segment.</p></li>
+<li><p><strong>point</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the point to find the closest point for.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A 1D NumPy array representing the closest point on the line segment to the given point.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The closest point is computed using vector projections.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.closest_point_on_plane">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">closest_point_on_plane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plane_normal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane_point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#closest_point_on_plane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.closest_point_on_plane" title="Link to this definition">¶</a></dt>
+<dd><p>Find the closest point on a plane to a given point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>plane_normal</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the normal vector of the plane.</p></li>
+<li><p><strong>plane_point</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing a point on the plane.</p></li>
+<li><p><strong>point</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the point to find the closest point for.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A 1D NumPy array representing the closest point on the plane to the given point.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The closest point is determined by projecting the input point onto the plane.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.compute_bounding_box">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">compute_bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#compute_bounding_box"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.compute_bounding_box" title="Link to this definition">¶</a></dt>
+<dd><p>Compute the bounding box for a set of multi-dimensional points.</p>
+<p>The bounding box is defined by the minimum and maximum values along each dimension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>points</strong> (<em>numpy.ndarray</em>) – A 2D NumPy array of shape (N, M), where N is the number of points and M is the dimensionality.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A 2D NumPy array of shape (M, 2), where each row represents [min, max] values for a dimension.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The bounding box is calculated independently for each dimension of the input points.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.distance_between_planes">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">distance_between_planes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normal1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normal2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#distance_between_planes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.distance_between_planes" title="Link to this definition">¶</a></dt>
+<dd><p>Calculate the distance between two parallel planes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>normal1</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the normal vector of the first plane.</p></li>
+<li><p><strong>point1</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing a point on the first plane.</p></li>
+<li><p><strong>normal2</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the normal vector of the second plane.</p></li>
+<li><p><strong>point2</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing a point on the second plane.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The distance between the two planes. Returns 0.0 if the planes are not parallel (i.e., they intersect).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The distance is computed only if the planes are parallel.</p></li>
+<li><p>For intersecting planes, the distance is considered 0.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.do_bounding_boxes_overlap">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">do_bounding_boxes_overlap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bbox2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#do_bounding_boxes_overlap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.do_bounding_boxes_overlap" title="Link to this definition">¶</a></dt>
+<dd><p>Check if two multidimensional bounding boxes overlap.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bbox1</strong> (<em>numpy.ndarray</em>) – A 2D NumPy array of shape (M, 2), where each row represents [min, max] values for a dimension.</p></li>
+<li><p><strong>bbox2</strong> (<em>numpy.ndarray</em>) – A 2D NumPy array of shape (M, 2), where each row represents [min, max] values for a dimension.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the bounding boxes overlap, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Bounding boxes overlap if their intervals intersect in all dimensions.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.euclidean_distance">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">euclidean_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#euclidean_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.euclidean_distance" title="Link to this definition">¶</a></dt>
+<dd><p>Compute the Euclidean distance between two points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>point1</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the first point.</p></li>
+<li><p><strong>point2</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the second point.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Euclidean distance between <cite>point1</cite> and <cite>point2</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The Euclidean distance is calculated as the L2 norm of the difference between the points.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.generate_circle_points">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">generate_circle_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rnd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#generate_circle_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.generate_circle_points" title="Link to this definition">¶</a></dt>
+<dd><p>Generate points evenly distributed around a circle in 2D space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> (<em>float</em><em> or </em><em>int</em>) – The radius of the circle.</p></li>
+<li><p><strong>num_points</strong> (<em>int</em>) – The number of points to generate.</p></li>
+<li><p><strong>center</strong> (<em>Iterable</em><em>[</em><em>Union</em><em>[</em><em>float</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – The (x, y) coordinates of the circle’s center (default is (0, 0)).</p></li>
+<li><p><strong>start_angle</strong> (<em>float</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – The starting angle in degrees, where 0 degrees is along the positive x-axis (default is 0).</p></li>
+<li><p><strong>rnd</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of decimal places to round the output points (default is 9).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A NumPy array of shape (num_points, 2), where each row represents an (x, y) point on the circle.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The points are evenly distributed along the circle’s circumference.</p></li>
+<li><p>The starting angle allows customization of the initial point’s position relative to the x-axis.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.generate_circle_points_3d">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">generate_circle_points_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#generate_circle_points_3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.generate_circle_points_3d" title="Link to this definition">¶</a></dt>
+<dd><p>Generate points evenly distributed around a circle in 3D space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> (<em>float</em><em> or </em><em>int</em>) – The radius of the circle.</p></li>
+<li><p><strong>num_points</strong> (<em>int</em>) – The number of points to generate.</p></li>
+<li><p><strong>center</strong> (<em>Iterable</em><em>[</em><em>Union</em><em>[</em><em>float</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – The (x, y, z) coordinates of the circle’s center (default is (0, 0, 0)).</p></li>
+<li><p><strong>normal</strong> (<em>Iterable</em><em>[</em><em>Union</em><em>[</em><em>float</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – The normal vector defining the plane of the circle (default is (0, 0, 1)).</p></li>
+<li><p><strong>start_angle</strong> (<em>float</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – The starting angle in degrees, where 0 degrees is along the positive x-axis (default is 0).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A NumPy array of shape (num_points, 3), where each row represents an (x, y, z) point on the circle.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The circle is initially generated in the XY-plane and then rotated to align with the specified normal vector.</p></li>
+<li><p>The starting angle allows customization of the initial point’s position relative to the x-axis in the circle’s plane.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.is_affine_transformation_matrix">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">is_affine_transformation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">M</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raise_exception</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#is_affine_transformation_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.is_affine_transformation_matrix" title="Link to this definition">¶</a></dt>
+<dd><p>Check if a 4x4 matrix is a valid affine transformation matrix with a valid rotation component.</p>
+<p>An affine transformation matrix must meet the following criteria:
+- It is a 4x4 matrix.
+- Its last row is <cite>[0, 0, 0, 1]</cite>.
+- The top-left 3x3 submatrix is a valid rotation matrix (orthonormal and determinant equals 1).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>M</strong> (<em>numpy.ndarray</em>) – A 4x4 NumPy array representing the matrix to be checked.</p></li>
+<li><p><strong>raise_exception</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, raises an exception when the matrix is invalid. If False, returns False instead (default is False).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the matrix is an affine transformation matrix, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.InvalidAffineTransformException" title="otaf.exceptions.InvalidAffineTransformException"><strong>otaf.exceptions.InvalidAffineTransformException</strong></a> – If the matrix is not a valid affine transformation matrix and <cite>raise_exception</cite> is True.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The validity of the rotation matrix is checked using orthonormality and determinant conditions.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.is_bounding_box_within">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">is_bounding_box_within</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bbox2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#is_bounding_box_within"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.is_bounding_box_within" title="Link to this definition">¶</a></dt>
+<dd><p>Check if one bounding box is completely contained within another.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bbox1</strong> (<em>numpy.ndarray</em>) – A 2D NumPy array of shape (M, 2), representing the first bounding box.
+Each row represents [min, max] values for a dimension.</p></li>
+<li><p><strong>bbox2</strong> (<em>numpy.ndarray</em>) – A 2D NumPy array of shape (M, 2), representing the second bounding box.
+Each row represents [min, max] values for a dimension.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if <cite>bbox1</cite> is completely within <cite>bbox2</cite>, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>This function checks that the minimum values of <cite>bbox1</cite> are greater than or equal to the
+minimum values of <cite>bbox2</cite> and that the maximum values of <cite>bbox1</cite> are less than or equal to
+the maximum values of <cite>bbox2</cite>.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.line_plane_intersection">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">line_plane_intersection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plane_normal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane_point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_direction</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#line_plane_intersection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.line_plane_intersection" title="Link to this definition">¶</a></dt>
+<dd><p>Compute the intersection point of a line and a plane.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>plane_normal</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the normal vector of the plane.</p></li>
+<li><p><strong>plane_point</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing a point on the plane.</p></li>
+<li><p><strong>line_point</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing a point on the line.</p></li>
+<li><p><strong>line_direction</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the direction vector of the line.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A 1D NumPy array representing the intersection point of the line and the plane.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ZeroDivisionError</strong> – If the line is parallel to the plane (i.e., the direction vector is orthogonal to the plane normal).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.plane_parameters">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">plane_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point_on_plane</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#plane_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.plane_parameters" title="Link to this definition">¶</a></dt>
+<dd><p>Compute the equation parameters of a plane given a point on the plane and a rotation matrix.</p>
+<p>The plane equation is defined as <cite>Ax + By + Cz + D = 0</cite>, where:
+- <cite>A</cite>, <cite>B</cite>, and <cite>C</cite> are the components of the normal vector to the plane.
+- <cite>D</cite> is the distance to the plane along the normal vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>point_on_plane</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing a point on the plane.</p></li>
+<li><p><strong>rotation_matrix</strong> (<em>numpy.ndarray</em>) – A 3x3 rotation matrix representing the plane’s orientation in space.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple <cite>(A, B, C, D)</cite> representing the parameters of the plane equation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The normal vector is computed in the base frame using the rotation matrix.</p></li>
+<li><p>The distance <cite>D</cite> is computed as the negative dot product of the normal vector and the point on the plane.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.point_dict_to_arrays">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">point_dict_to_arrays</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#point_dict_to_arrays"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.point_dict_to_arrays" title="Link to this definition">¶</a></dt>
+<dd><p>Convert a dictionary of points into separate arrays of labels and coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>point_dict</strong> (<em>dict</em>) – A dictionary where keys are labels (str) and values are points (list, tuple, or numpy.ndarray).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>A 1D NumPy array of labels as strings.</p></li>
+<li><p>A 2D NumPy array of points as floats.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[numpy.ndarray, numpy.ndarray]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Exception</strong> – If the conversion to arrays fails, the original exception is raised with additional context.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The labels are converted into a NumPy array of strings.</p></li>
+<li><p>The points are stacked into a 2D NumPy array with dtype <cite>float64</cite>.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.point_in_hull">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">point_in_hull</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hull</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#point_in_hull"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.point_in_hull" title="Link to this definition">¶</a></dt>
+<dd><p>Determine if a point is inside a convex hull.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>point</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the point to check.</p></li>
+<li><p><strong>hull</strong> (<em>numpy.ndarray</em>) – A 2D NumPy array representing the vertices of the convex hull.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the <cite>point</cite> is inside the convex hull, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>This function constructs a convex hull from the input points and the test point.
+If the hull volume does not change after adding the test point, the point is inside the hull.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.point_plane_distance">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">point_plane_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plane_normal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane_point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#point_plane_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.point_plane_distance" title="Link to this definition">¶</a></dt>
+<dd><p>Calculate the shortest distance from a point to a plane.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>plane_normal</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the normal vector of the plane.</p></li>
+<li><p><strong>plane_point</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing a point on the plane.</p></li>
+<li><p><strong>point</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the point for which the distance is to be calculated.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The shortest distance from the point to the plane.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The distance is positive if the point lies above the plane and negative if below,
+relative to the plane’s normal vector.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.point_to_segment_distance">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">point_to_segment_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segment_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segment_end</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#point_to_segment_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.point_to_segment_distance" title="Link to this definition">¶</a></dt>
+<dd><p>Calculate the shortest distance from a point or array of points to a line segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>point</strong> (<em>numpy.ndarray</em>) – A 1D or 2D NumPy array representing the point(s) to compute the distance for.</p></li>
+<li><p><strong>segment_start</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the start point of the line segment.</p></li>
+<li><p><strong>segment_end</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the end point of the line segment.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The shortest distance from the point(s) to the line segment. Returns a float for a single point
+or a NumPy array for multiple points.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Union[float, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.points_in_cylinder">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">points_in_cylinder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pt1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pt2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#points_in_cylinder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.points_in_cylinder" title="Link to this definition">¶</a></dt>
+<dd><p>Check if a point is inside a cylinder defined by two points and a radius.</p>
+<p>The cylinder is defined by its axis (the line segment between <cite>pt1</cite> and <cite>pt2</cite>) and its radius <cite>r</cite>.
+This function checks if the given point <cite>q</cite> lies inside this cylinder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pt1</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing one endpoint of the cylinder’s axis.</p></li>
+<li><p><strong>pt2</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the other endpoint of the cylinder’s axis.</p></li>
+<li><p><strong>r</strong> (<em>float</em><em> or </em><em>int</em>) – The radius of the cylinder.</p></li>
+<li><p><strong>q</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the point to be checked.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the point <cite>q</cite> is inside the cylinder, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The check involves verifying that the point lies between <cite>pt1</cite> and <cite>pt2</cite> along the axis and
+that its perpendicular distance to the axis is less than or equal to the cylinder’s radius.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.points_in_cylinder_vect">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">points_in_cylinder_vect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pt1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pt2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#points_in_cylinder_vect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.points_in_cylinder_vect" title="Link to this definition">¶</a></dt>
+<dd><p>Check if multiple points are inside a cylinder defined by two points and a radius.</p>
+<p>The cylinder is defined by its axis (the line segment between <cite>pt1</cite> and <cite>pt2</cite>) and its radius <cite>r</cite>.
+This function checks for each point in <cite>q</cite> whether it lies inside this cylinder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pt1</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing one endpoint of the cylinder’s axis.</p></li>
+<li><p><strong>pt2</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the other endpoint of the cylinder’s axis.</p></li>
+<li><p><strong>r</strong> (<em>float</em><em> or </em><em>int</em>) – The radius of the cylinder.</p></li>
+<li><p><strong>q</strong> (<em>numpy.ndarray</em>) – A 2D NumPy array where each row represents a point to be checked.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A 1D boolean NumPy array where each entry is True if the corresponding point in <cite>q</cite> is
+inside the cylinder, and False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>This function is vectorized to efficiently handle multiple points in <cite>q</cite>.</p></li>
+<li><p>The check involves verifying that each point lies between <cite>pt1</cite> and <cite>pt2</cite> along the axis
+and that its perpendicular distance to the axis is less than or equal to the cylinder’s radius.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.project_vector_onto_plane">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">project_vector_onto_plane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane_normal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#project_vector_onto_plane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.project_vector_onto_plane" title="Link to this definition">¶</a></dt>
+<dd><p>Project a vector onto a plane defined by its normal vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vector</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the vector to be projected.</p></li>
+<li><p><strong>plane_normal</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the normal vector of the plane.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A 1D NumPy array representing the projection of the vector onto the plane.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The projection removes the component of the vector that is parallel to the plane normal.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.tfrt">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">tfrt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#tfrt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.tfrt" title="Link to this definition">¶</a></dt>
+<dd><p>Alias for transformation_from_rotation_translation function.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.transform_point">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">transform_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transformation_matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#transform_point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.transform_point" title="Link to this definition">¶</a></dt>
+<dd><p>Transform a point using a given transformation matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>point</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the point to transform.</p></li>
+<li><p><strong>transformation_matrix</strong> (<em>numpy.ndarray</em>) – A 4x4 transformation matrix.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A 1D NumPy array representing the transformed point.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The function assumes homogeneous coordinates for the transformation.</p></li>
+<li><p>The transformation matrix must be a 4x4 affine matrix.</p></li>
+</ul>
+</dd></dl>
+
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="otaf.optimization.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">otaf.optimization package</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="otaf.exceptions.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">otaf.exceptions package</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, Kramer84
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">otaf.geometry package</a><ul>
+<li><a class="reference internal" href="#module-otaf.geometry">Module contents</a><ul>
+<li><a class="reference internal" href="#otaf.geometry.angle_between_planes"><code class="docutils literal notranslate"><span class="pre">angle_between_planes()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.angle_between_vectors"><code class="docutils literal notranslate"><span class="pre">angle_between_vectors()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.are_normals_aligned_and_facing"><code class="docutils literal notranslate"><span class="pre">are_normals_aligned_and_facing()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.are_planes_coincident"><code class="docutils literal notranslate"><span class="pre">are_planes_coincident()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.are_planes_facing"><code class="docutils literal notranslate"><span class="pre">are_planes_facing()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.are_planes_parallel"><code class="docutils literal notranslate"><span class="pre">are_planes_parallel()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.are_planes_perpendicular"><code class="docutils literal notranslate"><span class="pre">are_planes_perpendicular()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.are_points_on_2d_plane"><code class="docutils literal notranslate"><span class="pre">are_points_on_2d_plane()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.calculate_cylinder_surface_frame"><code class="docutils literal notranslate"><span class="pre">calculate_cylinder_surface_frame()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.calculate_scalar_projection_factor"><code class="docutils literal notranslate"><span class="pre">calculate_scalar_projection_factor()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.centroid"><code class="docutils literal notranslate"><span class="pre">centroid()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.closest_point_on_line"><code class="docutils literal notranslate"><span class="pre">closest_point_on_line()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.closest_point_on_plane"><code class="docutils literal notranslate"><span class="pre">closest_point_on_plane()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.compute_bounding_box"><code class="docutils literal notranslate"><span class="pre">compute_bounding_box()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.distance_between_planes"><code class="docutils literal notranslate"><span class="pre">distance_between_planes()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.do_bounding_boxes_overlap"><code class="docutils literal notranslate"><span class="pre">do_bounding_boxes_overlap()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.euclidean_distance"><code class="docutils literal notranslate"><span class="pre">euclidean_distance()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.generate_circle_points"><code class="docutils literal notranslate"><span class="pre">generate_circle_points()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.generate_circle_points_3d"><code class="docutils literal notranslate"><span class="pre">generate_circle_points_3d()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.is_affine_transformation_matrix"><code class="docutils literal notranslate"><span class="pre">is_affine_transformation_matrix()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.is_bounding_box_within"><code class="docutils literal notranslate"><span class="pre">is_bounding_box_within()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.line_plane_intersection"><code class="docutils literal notranslate"><span class="pre">line_plane_intersection()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.plane_parameters"><code class="docutils literal notranslate"><span class="pre">plane_parameters()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.point_dict_to_arrays"><code class="docutils literal notranslate"><span class="pre">point_dict_to_arrays()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.point_in_hull"><code class="docutils literal notranslate"><span class="pre">point_in_hull()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.point_plane_distance"><code class="docutils literal notranslate"><span class="pre">point_plane_distance()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.point_to_segment_distance"><code class="docutils literal notranslate"><span class="pre">point_to_segment_distance()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.points_in_cylinder"><code class="docutils literal notranslate"><span class="pre">points_in_cylinder()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.points_in_cylinder_vect"><code class="docutils literal notranslate"><span class="pre">points_in_cylinder_vect()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.project_vector_onto_plane"><code class="docutils literal notranslate"><span class="pre">project_vector_onto_plane()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.tfrt"><code class="docutils literal notranslate"><span class="pre">tfrt()</span></code></a></li>
+<li><a class="reference internal" href="#otaf.geometry.transform_point"><code class="docutils literal notranslate"><span class="pre">transform_point()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    </body>
+</html>
