@@ -18,7 +18,11 @@
 
 ## 📚 Introduction
 
-**OTAF** (Open Tolerance Analysis Framework) is an open-source Python library designed for statistical tolerance analysis and modeling of overconstrained 3D mechanical assemblies. It provides tools to model defects at the feature level, perform reliability analysis, and estimate the statistical effect of tolerance choices on the variability of quantities of interest (primarily the probability of non-assembly). Additionally, OTAF offers a foundation for constructing a System of Constraints (SOC)-based assembly model automatically, given a minimal representation of the assembly and its components.
+**OTAF** (Open Tolerance Analysis Framework) is a research oriented library designed to perform statistical tolerance analysis of mechanical assemblies. It can be used for iso- and over- constrained rigid mechanical assemblies, without large displacements. It allows for the semi-automatic construction a System of Constraints (SOC)-based assembly model, given a minimal representation of the assembly and its components as well as hypotheses.
+
+This model can then be used to perform statistical tolerance analysis, by modeling defects as random variables, and estimating the probability of non assembly using different estimation techniques. 
+
+These codes have been developed during a PhD called TRIP (ToleRance analysis with Imprecise Probabilities), where the defect distributions are modelled using imprecise probabilities, and the notebooks, (once currated) will be from the examples in the paper. 
 
 Key use cases include:
 - **Construction of a SOC Model**: Automatically construct the linear problem modeling the assembly.
@@ -31,8 +35,6 @@ Key use cases include:
 - **Limited Feature Types**: Currently supports only planar and cylindrical features.
 - **No Tools for Tolerance Allocation**: Users must implement this on their own after generating the SOC model.
 - **Not Production-Ready**: Apart from SOC model construction, the rest of the program is in an alpha stage and may remain so. Use at your discretion.
-
-This package was developed to explore experimental approaches based on imprecise probabilities. For more details, refer to the associated paper.
 
 ---
 
@@ -56,8 +58,9 @@ pip install .[docs]
 
 ### Dependencies
 The following Python libraries are required:
-- **Core**: `numpy`, `scipy`, `sympy`, `joblib`, `beartype`
-- **Uncertainty Tools**: `openturns`
+- **Base**: `joblib`, `beartype`
+- **Scientific**: `numpy`, `scipy`, `sympy`
+- **Uncertainty Quantification**: `openturns`
 - **Visualization**: `matplotlib`, `trimesh`
 - **Machine Learning**: `torch`, `torcheval`, `scikit-learn`
 - **Geometry**: `triangle`, `pytransform3d[all]`
@@ -69,11 +72,12 @@ The following Python libraries are required:
 ### General Form Of The Assembly Data Dictionary To Pass to the `AssemblyDataProcessor`
 The `AssemblyDataProcessor` takes as an input a minimal representation of the assembly in the form of a dictionary, that needs to be constructed manually.
 Some specific notation choices have been made on how to represent features and assemblies.
-Parts are always represented by a number, surfaces always by a lowercase letter, and point on the surface always as the letters of the surface in uppercase with a number following it.
-So for Part number 1 on surface aa and point AA1 can be written like this :
-P1aaAA1
+Parts are always represented by a sequence of numbers, surfaces always by a sequence of lowercase letter, and points on the surface always as the same sequence as for the surface in uppercase and an identifying sequence of numbers after it.
 
-The point with index 0 is always the origin point of the feature!
+So for Part number 123 on surface abc and point ABC321 can be written like this :
+P123abcABC321
+
+The point with index 0 is always the origin point of the feature! This notation is kinda arbitrary, and may be updated if something better is proposed.
 
 The system data dictionary may look like this :
 
@@ -160,7 +164,7 @@ Explore the [source code](https://github.com/Kramer84/otaf/src/otaf/) for a comp
 ## 📦 Examples
 
 Explore the `NOTEBOOKS/` directory for scripts demonstrating OTAF's capabilities. 
-THE NOTEBOOKS HAVE YET TO BE CLEANED UP
+**THE NOTEBOOKS HAVE YET TO BE CLEANED UP**
 
 ---
 
