@@ -1,0 +1,1518 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="otaf" href="../source/modules.html" /><link rel="prev" title="Welcome to OTAF’s Documentation!" href="../index.html" />
+
+    <!-- Generated with Sphinx 7.4.7 and Furo 2024.08.06 -->
+        <title>Reference Analytical Example in 2D - otaf 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=8edd85e4" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">otaf 0.1 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">otaf 0.1 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Jupyter Notebooks</span></p>
+<ul class="current">
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Analytical 2D Reference Assembly</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../source/modules.html">otaf</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of otaf</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../source/otaf.html">otaf package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of otaf package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../source/otaf.assembly_modeling.html">otaf.assembly_modeling package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../source/otaf.capabilities.html">otaf.capabilities package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../source/otaf.common.html">otaf.common package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../source/otaf.constants.html">otaf.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../source/otaf.distribution.html">otaf.distribution package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../source/otaf.example_models.html">otaf.example_models package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../source/otaf.exceptions.html">otaf.exceptions package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../source/otaf.geometry.html">otaf.geometry package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../source/otaf.optimization.html">otaf.optimization package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../source/otaf.plotting.html">otaf.plotting package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../source/otaf.sampling.html">otaf.sampling package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../source/otaf.sensitivity.html">otaf.sensitivity package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../source/otaf.surrogate.html">otaf.surrogate package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../source/otaf.uncertainty.html">otaf.uncertainty package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../source/otaf.capabilities.html">otaf.capabilities package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/otaf.common.html">otaf.common package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/otaf.constants.html">otaf.constants module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/otaf.distribution.html">otaf.distribution package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/otaf.example_models.html">otaf.example_models package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/otaf.exceptions.html">otaf.exceptions package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/otaf.geometry.html">otaf.geometry package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/otaf.optimization.html">otaf.optimization package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/otaf.plotting.html">otaf.plotting package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/otaf.sampling.html">otaf.sampling package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/otaf.sensitivity.html">otaf.sensitivity package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/otaf.surrogate.html">otaf.surrogate package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/otaf.uncertainty.html">otaf.uncertainty package</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/notebooks/Analytical_2D_Reference_Assembly.ipynb.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <style>
+   .toctree-wrapper .tocsection { display: none; }
+</style><div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="nx">javascript</span>
+<span class="nx">IPython</span><span class="p">.</span><span class="nx">OutputArea</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_should_scroll</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">lines</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="output_javascript"></div>
+<script type="text/javascript">
+var element = document.currentScript.previousSibling.previousSibling;
+IPython.OutputArea.prototype._should_scroll = function(lines) {
+    return false;
+}
+
+</script></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">viewer</span>
+
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pylab</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Circle</span><span class="p">,</span> <span class="n">Wedge</span><span class="p">,</span> <span class="n">Polygon</span><span class="p">,</span> <span class="n">Rectangle</span>
+<span class="kn">from</span> <span class="nn">matplotlib.collections</span> <span class="kn">import</span> <span class="n">PatchCollection</span>
+<span class="kn">from</span> <span class="nn">matplotlib.font_manager</span> <span class="kn">import</span> <span class="n">FontProperties</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="kn">import</span> <span class="nn">shelve</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">otaf</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># HELPER FUNCTIONS</span>
+<span class="c1"># For plotting</span>
+<span class="n">x_min</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.25</span>
+<span class="n">x_max</span> <span class="o">=</span> <span class="mf">0.7</span>
+<span class="n">n_points</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">1e4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<section id="Reference-Analytical-Example-in-2D">
+<h1>Reference Analytical Example in 2D<a class="headerlink" href="#Reference-Analytical-Example-in-2D" title="Link to this heading">¶</a></h1>
+<p>To show the benefits of this approach compared to the usual ones, we apply it using a minimal isostatic example using only a reduced number of variables and having an analytical solution. As explained, the analysis consists of 6 steps : - The definition of the mathematical model from the the parts plans. - The construction of the deviation domain for each toleranced feature - The construction of the probabilistic model using some quality criteria (sigma/6t smthing) - The generation of the design
+of experiment - The propagation of the uncertainty through the model. - The extraction of the upper and lower envelope of the response of the model.</p>
+<section id="Exploring-the-imprecise-probability-space.">
+<h2>Exploring the imprecise probability space.<a class="headerlink" href="#Exploring-the-imprecise-probability-space." title="Link to this heading">¶</a></h2>
+<p>For the male piece, we know that in 95% of the cases, the value of X1 will be between X1 - X_tot &lt; X1 &lt; X1 + X_tol , but the uncertainty is originating from a combination of positional and orientation defects. We do not know which is contributing more.</p>
+<p>Let’s first explore how the sum of the defects behaves, when under the constraint of the 95%</p>
+<p>Let’s consider that the real measure of X1 is based on a base value and a sum of random modes:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\begin{split}X_{1} = X1 + \mathcal{e}_{pos} + \mathcal{e}_{ori} \\
+\mathcal{e}_{pos} + \mathcal{e}_{ori} &lt;= X_{tol} \ (Dans\ 95\%\ des\ cas)\end{split}\]</div>
+</div>
+<img alt="schema" src="Pictures/Female_Male_Part.jpg" />
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### Different measures of our problem</span>
+<span class="n">X1</span> <span class="o">=</span> <span class="mf">99.8</span>  <span class="c1"># Nominal Length of the male piece</span>
+<span class="n">X2</span> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># Nominal Length of the female piece</span>
+<span class="n">X3</span> <span class="o">=</span> <span class="mf">10.0</span>  <span class="c1"># Nominal width of the pieces</span>
+<span class="n">j</span> <span class="o">=</span> <span class="n">X2</span> <span class="o">-</span> <span class="n">X1</span>  <span class="c1"># Nominal play between pieces.</span>
+<span class="n">T</span> <span class="o">=</span> <span class="mf">0.2</span>  <span class="c1"># Tolerance for X1 and X2. (95% conform)  (= t/2)</span>
+<span class="n">t_</span> <span class="o">=</span> <span class="n">T</span> <span class="o">/</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Cm</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">sigma_e_pos_max</span> <span class="o">=</span> <span class="n">T</span> <span class="o">/</span> <span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">Cm</span><span class="p">)</span>
+<span class="n">e_pos</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma_e_pos_max</span><span class="p">)</span>
+<span class="n">e_pos</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="s2">&quot;e_pos&quot;</span><span class="p">])</span>
+
+<span class="c1"># Le défaut en orientation est piloté par une incertitude sur un angle. On suppose les angles petits &lt;&lt; 1 rad</span>
+<span class="n">theta_max</span> <span class="o">=</span> <span class="n">T</span> <span class="o">/</span> <span class="n">X3</span>
+<span class="n">sigma_theta_max</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">theta_max</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span>
+    <span class="mi">6</span> <span class="o">*</span> <span class="n">Cm</span>
+<span class="p">)</span>  <span class="c1"># 2* theta max!!!! A cause de l&#39;intervalle + / - !!!!!norma</span>
+<span class="n">e_theta</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma_theta_max</span><span class="p">)</span>
+<span class="n">e_theta</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="s2">&quot;e_theta&quot;</span><span class="p">])</span>
+
+<span class="n">e_ori</span> <span class="o">=</span> <span class="p">(</span><span class="n">e_theta</span> <span class="o">*</span> <span class="n">X3</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+<span class="n">e_ori</span> <span class="o">=</span> <span class="n">e_ori</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
+<span class="n">e_ori</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="s2">&quot;e_ori&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">analytical_assembly_model_1_5_D</span><span class="p">(</span><span class="n">rdv</span><span class="p">,</span> <span class="n">rnd</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the minimum difference between the upper and lower gaps for a given set of defects.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        rdv ot.Sample: random deviation vector in the form of a openturns Sample</span>
+<span class="sd">        rnd (int, optional): Number of decimal places to round the result (default: 6).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: A list containing the minimum play/gap for each point in the random deviation array.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">rdv</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+    <span class="n">desc</span> <span class="o">=</span> <span class="n">rdv</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()</span>
+    <span class="n">nzs1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">smpU1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rdv</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">([</span><span class="s2">&quot;u_d_1&quot;</span><span class="p">]))</span> <span class="k">if</span> <span class="s2">&quot;u_d_1&quot;</span> <span class="ow">in</span> <span class="n">desc</span> <span class="k">else</span> <span class="n">nzs1</span>
+    <span class="n">smpG1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rdv</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">([</span><span class="s2">&quot;gamma_d_1&quot;</span><span class="p">]))</span> <span class="k">if</span> <span class="s2">&quot;gamma_d_1&quot;</span> <span class="ow">in</span> <span class="n">desc</span> <span class="k">else</span> <span class="n">nzs1</span>
+    <span class="n">smpU2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rdv</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">([</span><span class="s2">&quot;u_d_2&quot;</span><span class="p">]))</span> <span class="k">if</span> <span class="s2">&quot;u_d_2&quot;</span> <span class="ow">in</span> <span class="n">desc</span> <span class="k">else</span> <span class="n">nzs1</span>
+    <span class="n">smpG2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rdv</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">([</span><span class="s2">&quot;gamma_d_2&quot;</span><span class="p">]))</span> <span class="k">if</span> <span class="s2">&quot;gamma_d_2&quot;</span> <span class="ow">in</span> <span class="n">desc</span> <span class="k">else</span> <span class="n">nzs1</span>
+
+    <span class="n">X1_tilde</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">X1</span> <span class="o">+</span> <span class="n">smpU1</span> <span class="o">-</span> <span class="p">(</span><span class="n">X3</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">smpG1</span><span class="p">,</span> <span class="n">X1</span> <span class="o">+</span> <span class="n">smpU1</span> <span class="o">+</span> <span class="p">(</span><span class="n">X3</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">smpG1</span><span class="p">]</span>  <span class="c1"># haut</span>
+    <span class="p">)</span>
+
+    <span class="n">X2_tilde</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">X2</span> <span class="o">-</span> <span class="n">smpU2</span> <span class="o">-</span> <span class="p">(</span><span class="n">X3</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">smpG2</span><span class="p">,</span> <span class="n">X2</span> <span class="o">-</span> <span class="n">smpU2</span> <span class="o">+</span> <span class="p">(</span><span class="n">X3</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">smpG2</span><span class="p">]</span>  <span class="c1"># bas</span>
+    <span class="p">)</span>
+    <span class="n">jeu</span> <span class="o">=</span> <span class="n">X2_tilde</span> <span class="o">-</span> <span class="n">X1_tilde</span>
+    <span class="n">jeu_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">jeu</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">rnd</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">jeu_min</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">e_theta</span><span class="o">.</span><span class="n">computeCDF</span><span class="p">(</span><span class="n">theta_max</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">e_pos</span><span class="o">.</span><span class="n">computeCDF</span><span class="p">(</span><span class="n">T</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="n">ot</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">e_ori</span><span class="o">.</span><span class="n">drawCDF</span><span class="p">())</span>
+<span class="n">ot</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">e_theta</span><span class="o">.</span><span class="n">drawCDF</span><span class="p">())</span>
+<span class="n">ot</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">e_pos</span><span class="o">.</span><span class="n">drawCDF</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0.0013498980316301035
+0.0013498980316301035
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Analytical_2D_Reference_Assembly_8_1.png" src="../_images/notebooks_Analytical_2D_Reference_Assembly_8_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Analytical_2D_Reference_Assembly_8_2.png" src="../_images/notebooks_Analytical_2D_Reference_Assembly_8_2.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Analytical_2D_Reference_Assembly_8_3.png" src="../_images/notebooks_Analytical_2D_Reference_Assembly_8_3.png" />
+</div>
+</div>
+</section>
+<section id="Only-defects-on-one-feature-of-one-part-(no-interaction-between-parts-yet)">
+<h2>Only defects on one feature of one part (no interaction between parts yet)<a class="headerlink" href="#Only-defects-on-one-feature-of-one-part-(no-interaction-between-parts-yet)" title="Link to this heading">¶</a></h2>
+<section id="Direct-method-on-distributions-using-openturns">
+<h3>Direct method on distributions using openturns<a class="headerlink" href="#Direct-method-on-distributions-using-openturns" title="Link to this heading">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lambda_1</span><span class="p">,</span> <span class="n">lambda_2</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
+<span class="c1"># Limit cases</span>
+<span class="n">j_lim1</span> <span class="o">=</span> <span class="n">X2</span> <span class="o">-</span> <span class="n">e_pos</span> <span class="o">-</span> <span class="n">X1</span>  <span class="c1"># Cas limite 1, seulement erreur en position</span>
+<span class="n">j_lim2</span> <span class="o">=</span> <span class="n">X2</span> <span class="o">-</span> <span class="n">e_ori</span> <span class="o">-</span> <span class="n">X1</span>  <span class="c1"># Cas limite 2, seulement erreur en orientation</span>
+<span class="n">j_lim3</span> <span class="o">=</span> <span class="p">(</span><span class="n">X2</span> <span class="o">-</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="n">e_pos</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="n">e_ori</span><span class="p">)</span> <span class="o">-</span> <span class="n">X1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">j_lim1</span><span class="o">.</span><span class="n">drawCDF</span><span class="p">(</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">)</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">set_graph_legends</span><span class="p">(</span>
+    <span class="n">graph</span><span class="p">,</span> <span class="n">x_title</span><span class="o">=</span><span class="s2">&quot;j&quot;</span><span class="p">,</span> <span class="n">y_title</span><span class="o">=</span><span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Cas limites de la distribution du jeu&quot;</span>
+<span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">j_lim2</span><span class="o">.</span><span class="n">drawCDF</span><span class="p">(</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">))</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">j_lim3</span><span class="o">.</span><span class="n">drawCDF</span><span class="p">(</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">))</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">set_graph_legends</span><span class="p">(</span>
+    <span class="n">graph</span><span class="p">,</span>
+    <span class="n">legends</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POS 1 ORI 0&quot;</span><span class="p">,</span> <span class="s2">&quot;POS 0 ORI 1&quot;</span><span class="p">,</span> <span class="s2">&quot;POS 0.5 ORI 0.5&quot;</span><span class="p">],</span>
+    <span class="n">colors</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;orange&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">pixelsize</span><span class="o">=</span><span class="p">(</span><span class="mi">1100</span><span class="p">,</span> <span class="mi">750</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Analytical_2D_Reference_Assembly_11_0.png" src="../_images/notebooks_Analytical_2D_Reference_Assembly_11_0.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="Sampling-based-estimation-of-the-distribution-with-only-defects-on-one-feature,-and-an-imprecise-defect-allocation">
+<h2>Sampling based estimation of the distribution with only defects on one feature, and an imprecise defect allocation<a class="headerlink" href="#Sampling-based-estimation-of-the-distribution-with-only-defects-on-one-feature,-and-an-imprecise-defect-allocation" title="Link to this heading">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">size_lambda1</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">size_MC1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">1e3</span><span class="p">)</span>
+
+<span class="n">lambda_1_smp_base</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">size_lambda1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)))</span> <span class="o">/</span> <span class="n">size_lambda1</span>
+<span class="n">lambda_1_smp</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lambda_1_smp_base</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">lambda_1_smp_base</span><span class="p">)])</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="c1"># sqrt cause multiplication of distribution with constant</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">888</span><span class="p">)</span>
+
+<span class="n">RandDeviationVect</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">get_composed_normal_defect_distribution</span><span class="p">(</span>
+    <span class="n">defect_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;gamma_d_1&quot;</span><span class="p">,</span> <span class="s2">&quot;u_d_1&quot;</span><span class="p">],</span>
+    <span class="n">sigma_dict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;gamma_&quot;</span><span class="p">:</span> <span class="n">sigma_theta_max</span><span class="p">,</span> <span class="s2">&quot;u_&quot;</span><span class="p">:</span> <span class="n">sigma_e_pos_max</span><span class="p">},</span>
+<span class="p">)</span>
+
+<span class="n">sample_base_1Feature</span> <span class="o">=</span> <span class="n">RandDeviationVect</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">size_MC1</span><span class="p">)</span>
+<span class="n">sample_composed_1Feature</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">sampling</span><span class="o">.</span><span class="n">compose_defects_with_lambdas</span><span class="p">(</span><span class="n">lambda_1_smp</span><span class="p">,</span> <span class="n">sample_base_1Feature</span><span class="p">)</span>
+<span class="n">sample_gap_1Feature</span> <span class="o">=</span> <span class="p">[</span><span class="n">analytical_assembly_model_1_5_D</span><span class="p">(</span><span class="n">_X</span><span class="p">)</span> <span class="k">for</span> <span class="n">_X</span> <span class="ow">in</span> <span class="n">sample_composed_1Feature</span><span class="p">]</span>
+<span class="n">distributions_1Feature</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">UserDefined</span><span class="p">,</span> <span class="n">sample_gap_1Feature</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">colors1</span> <span class="o">=</span> <span class="p">[[</span><span class="s2">&quot;grey&quot;</span><span class="p">]]</span> <span class="o">*</span> <span class="n">lambda_1_smp</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+<span class="n">legends1</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">lambda_1_smp</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+
+<span class="n">sup_data1</span><span class="p">,</span> <span class="n">inf_data1</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">compute_sup_inf_distributions</span><span class="p">(</span><span class="n">distributions_1Feature</span><span class="p">,</span> <span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">)</span>
+
+<span class="n">graph_full_1</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">plot_combined_CDF</span><span class="p">(</span><span class="n">distributions_1Feature</span><span class="p">,</span> <span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="n">colors1</span><span class="p">,</span> <span class="n">legends1</span><span class="p">)</span>
+
+<span class="n">graph_full_1</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">set_graph_legends</span><span class="p">(</span>
+    <span class="n">graph_full_1</span><span class="p">,</span>
+    <span class="n">x_title</span><span class="o">=</span><span class="s2">&quot;j&quot;</span><span class="p">,</span>
+    <span class="n">y_title</span><span class="o">=</span><span class="s2">&quot;P&quot;</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Position and orientation for one feature without correlation&quot;</span><span class="p">,</span>
+    <span class="n">legends</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">distributions_1Feature</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">graph_full_1</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">inf_data1</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;solid&quot;</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="s2">&quot;lower envelope&quot;</span><span class="p">))</span>
+<span class="n">graph_full_1</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">sup_data1</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;solid&quot;</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="s2">&quot;upper envelope&quot;</span><span class="p">))</span>
+
+<span class="n">view</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph_full_1</span><span class="p">,</span> <span class="n">pixelsize</span><span class="o">=</span><span class="p">(</span><span class="mi">1100</span><span class="p">,</span> <span class="mi">750</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Analytical_2D_Reference_Assembly_15_0.png" src="../_images/notebooks_Analytical_2D_Reference_Assembly_15_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sup_data1</span>
+<span class="n">inf_data1</span>
+<span class="n">get_prob_0</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">X</span><span class="p">:</span> <span class="n">X</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">1e-4</span><span class="p">))]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">get_prob_0</span><span class="p">(</span><span class="n">sup_data1</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">get_prob_0</span><span class="p">(</span><span class="n">inf_data1</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0.0 0.0
+</pre></div></div>
+</div>
+</section>
+<section id="Defects-defined-for-both-parts/features.-All-defects-still-independent.">
+<h2>Defects defined for both parts/features. All defects still independent.<a class="headerlink" href="#Defects-defined-for-both-parts/features.-All-defects-still-independent." title="Link to this heading">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Model the imprecise space of defect allocation with 2 features and 4 DOFs</span>
+<span class="c1"># i corresponds to the first feature, j corresponds to the second feature</span>
+<span class="n">size_lambda</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="n">idar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">size_lambda</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">lambda_2_ar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">idar</span> <span class="o">/</span> <span class="n">size_lambda</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">idar</span> <span class="o">/</span> <span class="n">size_lambda</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+
+<span class="c1"># Generate all possible allocation combinations and compute their square roots</span>
+<span class="n">ij_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lambda_2_ar</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">lambda_2_ar</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idar</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">idar</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="c1"># Create a sample using OpenTURNS</span>
+<span class="n">lambda_2_smp</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">ij_list</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Monte Carlo sample size and random generator seed</span>
+<span class="n">size_MC2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">1e6</span><span class="p">)</span>
+<span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">888</span><span class="p">)</span>
+
+<span class="c1"># Get the composed normal defect distribution</span>
+<span class="n">RandDeviationVect</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">get_composed_normal_defect_distribution</span><span class="p">(</span>
+    <span class="n">defect_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;gamma_d_1&quot;</span><span class="p">,</span> <span class="s2">&quot;u_d_1&quot;</span><span class="p">,</span> <span class="s2">&quot;gamma_d_2&quot;</span><span class="p">,</span> <span class="s2">&quot;u_d_2&quot;</span><span class="p">],</span>
+    <span class="n">sigma_dict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;gamma_&quot;</span><span class="p">:</span> <span class="n">sigma_theta_max</span><span class="p">,</span> <span class="s2">&quot;u_&quot;</span><span class="p">:</span> <span class="n">sigma_e_pos_max</span><span class="p">}</span>
+<span class="p">)</span>
+
+<span class="c1"># Sample from the random deviation vector</span>
+<span class="n">rdvx2</span> <span class="o">=</span> <span class="n">RandDeviationVect</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">size_MC2</span><span class="p">)</span>
+
+<span class="c1"># Compose the defect samples with the lambda samples</span>
+<span class="n">rdvxld_l2</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">sampling</span><span class="o">.</span><span class="n">compose_defects_with_lambdas</span><span class="p">(</span><span class="n">lambda_2_smp</span><span class="p">,</span> <span class="n">rdvx2</span><span class="p">)</span>
+
+<span class="c1"># Compute the gap list and corresponding distributions</span>
+<span class="n">gapLst2</span> <span class="o">=</span> <span class="p">[</span><span class="n">analytical_assembly_model_1_5_D</span><span class="p">(</span><span class="n">rdvxld</span><span class="p">)</span> <span class="k">for</span> <span class="n">rdvxld</span> <span class="ow">in</span> <span class="n">rdvxld_l2</span><span class="p">]</span>
+<span class="n">distributions2</span> <span class="o">=</span> <span class="p">[</span><span class="n">ot</span><span class="o">.</span><span class="n">UserDefined</span><span class="p">(</span><span class="n">gap</span><span class="p">)</span> <span class="k">for</span> <span class="n">gap</span> <span class="ow">in</span> <span class="n">gapLst2</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Helper functions for lambda position and formatting strings</span>
+<span class="n">get_pos_lambda</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">,</span> <span class="n">ar</span><span class="p">:</span> <span class="p">[</span><span class="n">ar</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">ar</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">3</span><span class="p">]]</span>  <span class="c1"># Extract specific lambda positions</span>
+<span class="n">get_lambda_str</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">l</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Allocation position piece 1: </span><span class="si">{</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%, piece 2: </span><span class="si">{</span><span class="n">l</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span>
+
+<span class="c1"># Define interesting pairs of lambda values and their colors</span>
+<span class="n">pos_pairs</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]]</span>
+<span class="n">pos_pair_cols</span> <span class="o">=</span> <span class="p">[[</span><span class="s2">&quot;#FF00CD&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;green&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;orange&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;#00FFF3&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;yellow&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;black&quot;</span><span class="p">]]</span>
+
+<span class="c1"># Find the indices corresponding to the interesting lambda pairs</span>
+<span class="n">pos_pair_idx</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ij_list</span><span class="p">))</span> <span class="k">if</span> <span class="n">get_pos_lambda</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">ij_list</span><span class="p">)</span> <span class="ow">in</span> <span class="n">pos_pairs</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize colors and legends for each lambda sample</span>
+<span class="n">colors2</span> <span class="o">=</span> <span class="p">[[</span><span class="s2">&quot;grey&quot;</span><span class="p">]]</span> <span class="o">*</span> <span class="n">lambda_2_smp</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+<span class="n">legends2</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">lambda_2_smp</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+
+<span class="c1"># Set colors and legends for interesting lambda pairs</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pos_pair_idx</span><span class="p">):</span>
+    <span class="n">colors2</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">pos_pair_cols</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">legends2</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_lambda_str</span><span class="p">(</span><span class="n">pos_pairs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+<span class="c1"># Compute the upper and lower envelopes of the distributions</span>
+<span class="n">sup_data2</span><span class="p">,</span> <span class="n">inf_data2</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">compute_sup_inf_distributions</span><span class="p">(</span><span class="n">distributions2</span><span class="p">,</span> <span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">)</span>
+
+<span class="c1"># Plot the combined CDF with additional curves for the envelopes</span>
+<span class="n">graph_full_2</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">plot_combined_CDF</span><span class="p">(</span><span class="n">distributions2</span><span class="p">,</span> <span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="n">colors2</span><span class="p">,</span> <span class="n">legends2</span><span class="p">)</span>
+<span class="n">graph_full_2</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">set_graph_legends</span><span class="p">(</span>
+    <span class="n">graph_full_2</span><span class="p">,</span>
+    <span class="n">x_title</span><span class="o">=</span><span class="s2">&quot;j&quot;</span><span class="p">,</span>
+    <span class="n">y_title</span><span class="o">=</span><span class="s2">&quot;P&quot;</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Orientation and position defects for two parts without correlation.&quot;</span><span class="p">,</span>
+    <span class="n">legends</span><span class="o">=</span><span class="n">legends2</span>
+<span class="p">)</span>
+
+<span class="c1"># Add the upper and lower envelopes to the graph</span>
+<span class="n">graph_full_2</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">inf_data2</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;solid&quot;</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="s2">&quot;lower envelope&quot;</span><span class="p">))</span>
+<span class="n">graph_full_2</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">sup_data2</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;solid&quot;</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="s2">&quot;upper envelope&quot;</span><span class="p">))</span>
+
+<span class="c1"># Display the final graph</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph_full_2</span><span class="p">,</span> <span class="n">pixelsize</span><span class="o">=</span><span class="p">(</span><span class="mi">1100</span><span class="p">,</span> <span class="mi">750</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Analytical_2D_Reference_Assembly_21_0.png" src="../_images/notebooks_Analytical_2D_Reference_Assembly_21_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># %matplotlib qt</span>
+<span class="n">fig3</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+
+<span class="n">ax3</span> <span class="o">=</span> <span class="n">fig3</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sup_data2</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">sup_data2</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:orange&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;upper envelope&quot;</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">inf_data2</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">inf_data2</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:blue&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;lower envelope&quot;</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span>
+    <span class="n">inf_data2</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">inf_data2</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">sup_data2</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span>
+<span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;G&quot;</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;P&quot;</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Probability-Box of the Gap G with Imprecise Allocation and Independence&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Text(0.5, 1.0, &#39;Probability-Box of the Gap G with Imprecise Allocation and Independence&#39;)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Analytical_2D_Reference_Assembly_22_1.png" src="../_images/notebooks_Analytical_2D_Reference_Assembly_22_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Lower probability of failure:&quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">otaf</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">get_prob_below_threshold</span><span class="p">(</span><span class="n">inf_data2</span><span class="p">)),</span> <span class="s2">&quot;%&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Upper probability of failure:&quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">otaf</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">get_prob_below_threshold</span><span class="p">(</span><span class="n">sup_data2</span><span class="p">)),</span> <span class="s2">&quot;%&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Lower probability of failure: 0 %
+Upper probability of failure: 0 %
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Minimum failure probability: </span><span class="si">{</span><span class="n">otaf</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">get_prob_below_threshold</span><span class="p">(</span><span class="n">inf_data2</span><span class="p">)</span><span class="si">:</span><span class="s2">.5e</span><span class="si">}</span><span class="s2">, Maximum failure probability: </span><span class="si">{</span><span class="n">otaf</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">get_prob_below_threshold</span><span class="p">(</span><span class="n">sup_data2</span><span class="p">)</span><span class="si">:</span><span class="s2">.5e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Minimum failure probability: 6.00000e-06, Maximum failure probability: 2.90000e-05
+</pre></div></div>
+</div>
+</section>
+<section id="Adding-Correlations-Between-defects-within-features">
+<h2>Adding Correlations Between defects within features<a class="headerlink" href="#Adding-Correlations-Between-defects-within-features" title="Link to this heading">¶</a></h2>
+<p>Adding correlations between random variables introduces additional dimensions of imprecision. For <code class="docutils literal notranslate"><span class="pre">d</span></code> imperfections modeled and influenced by <code class="docutils literal notranslate"><span class="pre">λ</span></code> (lambda) coefficients, we can define <code class="docutils literal notranslate"><span class="pre">d-1</span></code> correlations if we wish to model them.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Monte Carlo sample size and lambda/correlation settings</span>
+<span class="n">size_monte_carlo</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">1e5</span><span class="p">)</span>
+
+<span class="c1"># Lambda sampling: creating a base array for the lambda space</span>
+<span class="n">size_lambda</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">lambda_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size_lambda</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Simplified sampling of lambda space</span>
+
+<span class="c1"># Correlation sampling: evenly spaced between -1 and 1</span>
+<span class="n">size_correlation</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">correlation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">1e-7</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="mf">1e-7</span><span class="p">,</span> <span class="n">size_correlation</span><span class="p">)</span>  <span class="c1"># Avoiding perfect correlation values</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a 4D grid of lambda and correlation combinations</span>
+<span class="n">lambda_indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">size_lambda</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">correlation_indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">size_correlation</span><span class="p">))</span>
+
+<span class="c1"># Generate all combinations of lambda and correlation pairs</span>
+<span class="n">ijkz_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+    <span class="p">[</span>
+        <span class="p">[</span>
+            <span class="p">[</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">lambda_array</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">lambda_array</span><span class="p">[</span><span class="n">j</span><span class="p">]],</span> <span class="p">[</span><span class="n">correlation</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">correlation</span><span class="p">[</span><span class="n">z</span><span class="p">]])</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">lambda_indices</span>
+            <span class="p">]</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">lambda_indices</span>
+        <span class="p">]</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">correlation_indices</span>
+    <span class="p">]</span>
+    <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">correlation_indices</span>
+<span class="p">])</span>
+
+<span class="c1"># Reshape the resulting array to create a combined lambda-correlation sample</span>
+<span class="n">ijkz_list</span> <span class="o">=</span> <span class="n">ijkz_list</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>  <span class="c1"># Reshaping into a 2D array with 4 columns (λ₁, λ₂, correlation₁, correlation₂)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">compute_gap_with_lambdas_and_correlation</span><span class="p">(</span>
+    <span class="n">lmbd1</span><span class="p">,</span> <span class="n">lmbd2</span><span class="p">,</span> <span class="n">cor1</span><span class="p">,</span> <span class="n">cor2</span><span class="p">,</span>
+    <span class="n">lmb_arr</span><span class="o">=</span><span class="n">lambda_array</span><span class="p">,</span> <span class="n">correlation</span><span class="o">=</span><span class="n">correlation</span><span class="p">,</span>
+    <span class="n">SEED</span><span class="o">=</span><span class="mi">888</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">size_monte_carlo</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the gap between two tilde values, influenced by lambda coefficients and correlations.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    lmbd1 : float</span>
+<span class="sd">        Lambda value for the first sample.</span>
+<span class="sd">    lmbd2 : float</span>
+<span class="sd">        Lambda value for the second sample.</span>
+<span class="sd">    cor1 : float</span>
+<span class="sd">        Correlation coefficient for the first sample.</span>
+<span class="sd">    cor2 : float</span>
+<span class="sd">        Correlation coefficient for the second sample.</span>
+<span class="sd">    lmb_arr : np.array</span>
+<span class="sd">        Array of lambda values (default: lambda_array).</span>
+<span class="sd">    correlation : np.array</span>
+<span class="sd">        Array of correlation values (default: correlation).</span>
+<span class="sd">    SEED : int</span>
+<span class="sd">        Random seed for reproducibility.</span>
+<span class="sd">    N : int</span>
+<span class="sd">        Monte Carlo sample size.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    ot.Sample</span>
+<span class="sd">        A sample of the computed gaps between X1_tilde and X2_tilde.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Set random seed for reproducibility</span>
+    <span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="n">SEED</span><span class="p">)</span>
+
+    <span class="c1"># Generate correlated samples for both sets of imperfections</span>
+    <span class="n">smp1</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">generate_correlated_samples</span><span class="p">(</span>
+        <span class="n">sigma1</span><span class="o">=</span><span class="n">sigma_e_pos_max</span><span class="p">,</span> <span class="n">sigma2</span><span class="o">=</span><span class="n">sigma_theta_max</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">,</span> <span class="n">corr</span><span class="o">=</span><span class="n">cor1</span>
+    <span class="p">)</span>
+    <span class="n">smp2</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">generate_correlated_samples</span><span class="p">(</span>
+        <span class="n">sigma1</span><span class="o">=</span><span class="n">sigma_e_pos_max</span><span class="p">,</span> <span class="n">sigma2</span><span class="o">=</span><span class="n">sigma_theta_max</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">,</span> <span class="n">corr</span><span class="o">=</span><span class="n">cor2</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Extract positional and angular deviations</span>
+    <span class="n">e_pos_X1</span><span class="p">,</span> <span class="n">e_theta1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">smp1</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">smp1</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">e_pos_X2</span><span class="p">,</span> <span class="n">e_theta2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">smp2</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">smp2</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1"># Compute X1_tilde and X2_tilde based on the lambda coefficients and deviations</span>
+    <span class="n">X1_tilde</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+        <span class="n">X1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lmbd1</span><span class="p">)</span> <span class="o">*</span> <span class="n">e_pos_X1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">lmbd1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">X3</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">e_theta1</span><span class="p">,</span>
+        <span class="n">X1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lmbd1</span><span class="p">)</span> <span class="o">*</span> <span class="n">e_pos_X1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">lmbd1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">X3</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">e_theta1</span><span class="p">,</span>
+    <span class="p">])</span>
+
+    <span class="n">X2_tilde</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+        <span class="n">X2</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lmbd2</span><span class="p">)</span> <span class="o">*</span> <span class="n">e_pos_X2</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">lmbd2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">X3</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">e_theta2</span><span class="p">,</span>
+        <span class="n">X2</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lmbd2</span><span class="p">)</span> <span class="o">*</span> <span class="n">e_pos_X2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">lmbd2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">X3</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">e_theta2</span><span class="p">,</span>
+    <span class="p">])</span>
+
+    <span class="c1"># Compute the gap (jeu) between X2_tilde and X1_tilde</span>
+    <span class="n">jeu</span> <span class="o">=</span> <span class="n">X2_tilde</span> <span class="o">-</span> <span class="n">X1_tilde</span>
+    <span class="n">jeu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">jeu</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Return the result as an OpenTURNS sample</span>
+    <span class="k">return</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">jeu</span><span class="p">)</span>
+
+
+<span class="c1"># Create a partial function with fixed parameters for lambda_array, correlation, and Monte Carlo size</span>
+<span class="n">compute_gap_func</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
+    <span class="n">compute_gap_with_lambdas_and_correlation</span><span class="p">,</span>
+    <span class="n">lmb_arr</span><span class="o">=</span><span class="n">lambda_array</span><span class="p">,</span> <span class="n">correlation</span><span class="o">=</span><span class="n">correlation</span><span class="p">,</span>
+    <span class="n">SEED</span><span class="o">=</span><span class="mi">168406047</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">size_monte_carlo</span>
+<span class="p">)</span>
+
+<span class="c1"># Apply the function to each combination in the lambda-correlation grid</span>
+<span class="n">ijkz_results</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">compute_gap_func</span><span class="p">)(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">ijkz_list</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create distributions from the results of the gap function</span>
+<span class="c1">#distributions3 = list(map(ot.UserDefined, ijkz_results))</span>
+<span class="n">distributions3</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">UserDefined</span><span class="p">)(</span><span class="n">result</span><span class="p">)</span> <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">ijkz_results</span><span class="p">)</span>
+
+<span class="c1"># Initialize color and legend settings for each result</span>
+<span class="n">colors3</span> <span class="o">=</span> <span class="p">[[</span><span class="s2">&quot;grey&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">ijkz_results</span><span class="p">]</span>
+<span class="n">legends3</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&quot;</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">ijkz_results</span><span class="p">]</span>
+
+<span class="c1"># Compute the supremum and infimum data from the distributions</span>
+<span class="n">sup_data3</span><span class="p">,</span> <span class="n">inf_data3</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">compute_sup_inf_distributions</span><span class="p">(</span><span class="n">distributions3</span><span class="p">,</span> <span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">)</span>
+
+<span class="c1"># Create a combined CDF graph for the distributions    odel.</span>
+
+<span class="n">Exploring</span> <span class="n">the</span> <span class="n">imprecise</span> <span class="n">probability</span> <span class="n">space</span><span class="o">.</span><span class="err">¶</span>
+<span class="n">graph_full_3</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">plot_combined_CDF</span><span class="p">(</span><span class="n">distributions3</span><span class="p">,</span> <span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="n">colors3</span><span class="p">,</span> <span class="n">legends3</span><span class="p">)</span>
+
+<span class="c1"># Set the title and legends for the graph</span>
+<span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Probability-Box of the Gap G with Imprecise Allocation and Correlation&quot;</span>
+<span class="n">graph_full_3</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">set_graph_legends</span><span class="p">(</span>
+    <span class="n">graph_full_3</span><span class="p">,</span>
+    <span class="n">x_title</span><span class="o">=</span><span class="s2">&quot;G&quot;</span><span class="p">,</span>
+    <span class="n">y_title</span><span class="o">=</span><span class="s2">&quot;P&quot;</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+    <span class="n">legends</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">ijkz_results</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># Add the lower and upper envelopes (infimum and supremum) to the graph</span>
+<span class="n">graph_full_3</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">inf_data3</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;solid&quot;</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="s2">&quot;lower envelope&quot;</span><span class="p">))</span>
+<span class="n">graph_full_3</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">sup_data3</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;solid&quot;</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="s2">&quot;upper envelope&quot;</span><span class="p">))</span>
+
+<span class="c1"># Display the graph</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph_full_3</span><span class="p">,</span> <span class="n">pixelsize</span><span class="o">=</span><span class="p">(</span><span class="mi">1100</span><span class="p">,</span> <span class="mi">750</span><span class="p">))</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># %matplotlib qt</span>
+<span class="n">fig31</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+
+<span class="n">ax31</span> <span class="o">=</span> <span class="n">fig31</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">ax31</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sup_data3</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">sup_data3</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:orange&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;upper envelope&quot;</span><span class="p">)</span>
+<span class="n">ax31</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">inf_data3</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">inf_data3</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:blue&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;lower envelope&quot;</span><span class="p">)</span>
+<span class="n">ax31</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ax31</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span>
+    <span class="n">inf_data3</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">inf_data3</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">sup_data3</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span>
+<span class="p">)</span>
+<span class="n">ax31</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;G&quot;</span><span class="p">)</span>
+<span class="n">ax31</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;P&quot;</span><span class="p">)</span>
+<span class="n">ax31</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">ax31</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Probability-Box of the Gap G with Imprecise Allocation and Correlation&quot;</span><span class="p">)</span>
+<span class="c1"># otaf.plotting.save_plot(filename=&quot;PBoxGapGImpreciseAllocationCorrelation&quot;, ax=ax31, dpi=600)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Lower probability of failure:&quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">otaf</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">get_prob_below_threshold</span><span class="p">(</span><span class="n">inf_data3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="s2">&quot;%&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Upper probability of failure:&quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">otaf</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">get_prob_below_threshold</span><span class="p">(</span><span class="n">sup_data3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="s2">&quot;%&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create the new figure</span>
+<span class="n">fig_overlap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+<span class="n">ax_overlap</span> <span class="o">=</span> <span class="n">fig_overlap</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Plot the upper and lower envelopes for both correlation and independence</span>
+<span class="n">ax_overlap</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sup_data2</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">sup_data2</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:green&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;upper envelope (Independence)&quot;</span><span class="p">)</span>
+<span class="n">ax_overlap</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">inf_data2</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">inf_data2</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:green&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;lower envelope (Independence)&quot;</span><span class="p">)</span>
+
+<span class="n">ax_overlap</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sup_data3</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">sup_data3</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:red&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;upper envelope (Correlation)&quot;</span><span class="p">)</span>
+<span class="n">ax_overlap</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">inf_data3</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">inf_data3</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:red&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;lower envelope (Correlation)&quot;</span><span class="p">)</span>
+
+<span class="c1"># Grid</span>
+<span class="n">ax_overlap</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Define arrays for gap values and bounds</span>
+<span class="n">g_vals</span> <span class="o">=</span> <span class="n">sup_data2</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">li</span> <span class="o">=</span> <span class="n">inf_data2</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># Lower bound for Independence</span>
+<span class="n">lc</span> <span class="o">=</span> <span class="n">inf_data3</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># Lower bound for Correlation</span>
+<span class="n">ui</span> <span class="o">=</span> <span class="n">sup_data2</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># Upper bound for Independence</span>
+<span class="n">uc</span> <span class="o">=</span> <span class="n">sup_data3</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># Upper bound for Correlation</span>
+
+<span class="c1"># Masks for the different regions</span>
+<span class="c1"># Green: Independence dominates (li &lt; lc) or (ui &gt; uc)</span>
+<span class="n">mask_green_lower</span> <span class="o">=</span> <span class="n">li</span> <span class="o">&lt;</span> <span class="n">lc</span>
+<span class="n">mask_green_upper</span> <span class="o">=</span> <span class="n">ui</span> <span class="o">&gt;</span> <span class="n">uc</span>
+
+<span class="c1"># Red: Correlation dominates (lc &lt; li) or (uc &gt; ui)</span>
+<span class="n">mask_red_lower</span> <span class="o">=</span> <span class="n">lc</span> <span class="o">&lt;</span> <span class="n">li</span>
+<span class="n">mask_red_upper</span> <span class="o">=</span> <span class="n">uc</span> <span class="o">&gt;</span> <span class="n">ui</span>
+
+<span class="c1"># Gray: Overlapping regions (li &lt; uc) and (lc &lt; ui)</span>
+<span class="n">mask_gray</span> <span class="o">=</span> <span class="p">(</span><span class="n">li</span> <span class="o">&lt;</span> <span class="n">uc</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">lc</span> <span class="o">&lt;</span> <span class="n">ui</span><span class="p">)</span>
+
+<span class="c1"># Fill regions based on the masks</span>
+<span class="c1"># Green regions</span>
+<span class="n">ax_overlap</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">g_vals</span><span class="p">,</span> <span class="n">li</span><span class="p">,</span> <span class="n">lc</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="n">mask_green_lower</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">ax_overlap</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">g_vals</span><span class="p">,</span> <span class="n">uc</span><span class="p">,</span> <span class="n">ui</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="n">mask_green_upper</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="c1"># Red regions</span>
+<span class="n">ax_overlap</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">g_vals</span><span class="p">,</span> <span class="n">lc</span><span class="p">,</span> <span class="n">li</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="n">mask_red_lower</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">ax_overlap</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">g_vals</span><span class="p">,</span> <span class="n">ui</span><span class="p">,</span> <span class="n">uc</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="n">mask_red_upper</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="c1"># Gray regions (overlap)</span>
+<span class="n">ax_overlap</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">g_vals</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">li</span><span class="p">,</span> <span class="n">lc</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span> <span class="n">uc</span><span class="p">),</span> <span class="n">where</span><span class="o">=</span><span class="n">mask_gray</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="c1"># Set labels and title</span>
+<span class="n">ax_overlap</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;G&quot;</span><span class="p">)</span>
+<span class="n">ax_overlap</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;P&quot;</span><span class="p">)</span>
+<span class="n">ax_overlap</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Overlapping Probability-Box of the Gap G with Imprecise Allocation&quot;</span><span class="p">)</span>
+
+<span class="c1"># Add legend</span>
+<span class="n">ax_overlap</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="c1"># Show the plot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<br/></pre></div>
+</div>
+</div>
+</section>
+<section id="Modify-the-way-we-create-the-experimental-design-to-explore-the-imprecise-space-(lambda-and-correlation)">
+<h2>Modify the way we create the experimental design to explore the imprecise space (lambda and correlation)<a class="headerlink" href="#Modify-the-way-we-create-the-experimental-design-to-explore-the-imprecise-space-(lambda-and-correlation)" title="Link to this heading">¶</a></h2>
+<section id="We-will-use-Latin-Hypercube-Sampling-(LHS)-for-this-purpose.">
+<h3>We will use Latin Hypercube Sampling (LHS) for this purpose.<a class="headerlink" href="#We-will-use-Latin-Hypercube-Sampling-(LHS)-for-this-purpose." title="Link to this heading">¶</a></h3>
+<section id="First,-we-define-distributions-to-represent-the-uncertainties.">
+<h4>First, we define distributions to represent the uncertainties.<a class="headerlink" href="#First,-we-define-distributions-to-represent-the-uncertainties." title="Link to this heading">¶</a></h4>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define uniform distributions for lambda and correlation values</span>
+<span class="n">lambda_12_dist</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">lambda_34_dist</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">correlation_dist12</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">correlation_dist34</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Combine these into a composed distribution</span>
+<span class="n">composed_dist</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">lambda_12_dist</span><span class="p">,</span> <span class="n">lambda_34_dist</span><span class="p">,</span> <span class="n">correlation_dist12</span><span class="p">,</span> <span class="n">correlation_dist34</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="We-generate-the-LHS-in-the-normal-space-and-use-the-isoprobabilistic-transformation-to-map-it-back-to-the-original-space.">
+<h4>We generate the LHS in the normal space and use the isoprobabilistic transformation to map it back to the original space.<a class="headerlink" href="#We-generate-the-LHS-in-the-normal-space-and-use-the-isoprobabilistic-transformation-to-map-it-back-to-the-original-space." title="Link to this heading">¶</a></h4>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">123456789</span><span class="p">)</span>
+<span class="n">SIZE_LHS</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">lhsExp</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LHSExperiment</span><span class="p">(</span><span class="n">composed_dist</span><span class="p">,</span> <span class="n">SIZE_LHS</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">lhs_sample</span> <span class="o">=</span> <span class="n">lhsExp</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Modified mini_func4 without storing in shelve</span>
+<span class="k">def</span> <span class="nf">compute_gap_with_lambdacor</span><span class="p">(</span><span class="n">id_</span><span class="p">,</span> <span class="n">lambdacor</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">size_monte_carlo</span><span class="p">):</span>
+    <span class="n">lb1</span><span class="p">,</span> <span class="n">lb3</span><span class="p">,</span> <span class="n">C1</span><span class="p">,</span> <span class="n">C2</span> <span class="o">=</span> <span class="n">lambdacor</span>
+
+    <span class="c1"># Set the random seed for reproducibility</span>
+    <span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">999</span><span class="p">)</span>
+
+    <span class="c1"># Generate correlated samples for the first and second sets of imperfections</span>
+    <span class="n">smp1</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">generate_correlated_samples</span><span class="p">(</span>
+        <span class="n">sigma1</span><span class="o">=</span><span class="n">sigma_e_pos_max</span><span class="p">,</span> <span class="n">sigma2</span><span class="o">=</span><span class="n">sigma_theta_max</span><span class="p">,</span> <span class="n">corr</span><span class="o">=</span><span class="n">C1</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span>
+    <span class="p">)</span>
+    <span class="n">smp2</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">generate_correlated_samples</span><span class="p">(</span>
+        <span class="n">sigma1</span><span class="o">=</span><span class="n">sigma_e_pos_max</span><span class="p">,</span> <span class="n">sigma2</span><span class="o">=</span><span class="n">sigma_theta_max</span><span class="p">,</span> <span class="n">corr</span><span class="o">=</span><span class="n">C2</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Extract positional and angular deviations</span>
+    <span class="n">e_pos_X1</span><span class="p">,</span> <span class="n">e_theta1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">smp1</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">smp1</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">e_pos_X2</span><span class="p">,</span> <span class="n">e_theta2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">smp2</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">smp2</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1"># Compute X1_tilde and X2_tilde based on the lambda coefficients and deviations</span>
+    <span class="n">X1_tilde</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+        <span class="n">X1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lb1</span><span class="p">)</span> <span class="o">*</span> <span class="n">e_pos_X1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">lb1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">X3</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">e_theta1</span><span class="p">,</span>
+        <span class="n">X1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lb1</span><span class="p">)</span> <span class="o">*</span> <span class="n">e_pos_X1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">lb1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">X3</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">e_theta1</span><span class="p">,</span>
+    <span class="p">])</span>
+
+    <span class="n">X2_tilde</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+        <span class="n">X2</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lb3</span><span class="p">)</span> <span class="o">*</span> <span class="n">e_pos_X2</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">lb3</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">X3</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">e_theta2</span><span class="p">,</span>
+        <span class="n">X2</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lb3</span><span class="p">)</span> <span class="o">*</span> <span class="n">e_pos_X2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">lb3</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">X3</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">e_theta2</span><span class="p">,</span>
+    <span class="p">])</span>
+
+    <span class="c1"># Calculate the gap (jeu) between X2_tilde and X1_tilde</span>
+    <span class="n">jeu</span> <span class="o">=</span> <span class="n">X2_tilde</span> <span class="o">-</span> <span class="n">X1_tilde</span>
+    <span class="n">jeu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">jeu</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">jeu</span><span class="p">)</span>
+
+<span class="c1"># Partial function with fixed parameters</span>
+<span class="n">compute_gap_part4</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">compute_gap_with_lambdacor</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">size_monte_carlo</span><span class="p">)</span>
+
+<span class="c1"># Generate the samples using compute_gap_part4</span>
+<span class="n">samples4</span> <span class="o">=</span> <span class="p">[</span><span class="n">compute_gap_part4</span><span class="p">(</span><span class="n">id_</span><span class="p">,</span> <span class="n">lambdacor</span><span class="p">)</span> <span class="k">for</span> <span class="n">id_</span><span class="p">,</span> <span class="n">lambdacor</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lhs_sample</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create UserDefined distributions based on the samples</span>
+<span class="n">distributions4</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">UserDefined</span><span class="p">,</span> <span class="n">samples4</span><span class="p">))</span>
+
+<span class="c1"># Generate colors and legends for the distributions</span>
+<span class="n">colors4</span> <span class="o">=</span> <span class="p">[[</span><span class="s2">&quot;grey&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">samples4</span><span class="p">]</span>
+<span class="n">legends4</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&quot;</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">samples4</span><span class="p">]</span>
+
+<span class="c1"># Compute the supremum and infimum data for the distributions</span>
+<span class="n">sup_data4</span><span class="p">,</span> <span class="n">inf_data4</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">compute_sup_inf_distributions</span><span class="p">(</span><span class="n">distributions4</span><span class="p">,</span> <span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">)</span>
+
+<span class="c1"># Create a combined CDF graph for the distributions</span>
+<span class="n">graph_full_4</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">plot_combined_CDF</span><span class="p">(</span><span class="n">distributions4</span><span class="p">,</span> <span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="n">colors4</span><span class="p">,</span> <span class="n">legends4</span><span class="p">)</span>
+
+<span class="c1"># Set the graph titles and legends</span>
+<span class="n">graph_full_4</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">set_graph_legends</span><span class="p">(</span>
+    <span class="n">graph_full_4</span><span class="p">,</span>
+    <span class="n">x_title</span><span class="o">=</span><span class="s2">&quot;j&quot;</span><span class="p">,</span>
+    <span class="n">y_title</span><span class="o">=</span><span class="s2">&quot;P&quot;</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Orientation and position defects for two parts. With correlation. Imprecision driven by LHS&quot;</span><span class="p">,</span>
+    <span class="n">legends</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">samples4</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="c1"># Add the lower and upper envelopes to the graph</span>
+<span class="n">graph_full_4</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">inf_data4</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;solid&quot;</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="s2">&quot;lower envelope&quot;</span><span class="p">))</span>
+<span class="n">graph_full_4</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">sup_data4</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;solid&quot;</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="s2">&quot;upper envelope&quot;</span><span class="p">))</span>
+
+<span class="c1"># Display the graph</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph_full_4</span><span class="p">,</span> <span class="n">pixelsize</span><span class="o">=</span><span class="p">(</span><span class="mi">1100</span><span class="p">,</span> <span class="mi">750</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">graph_all</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Superposition of the different cases&quot;&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;j&quot;</span><span class="p">,</span> <span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span>
+<span class="p">)</span>
+<span class="c1">#graph_all.add(ot.Curve(inf_data1, &quot;orange&quot;, &quot;solid&quot;, 1.5, &quot;lower envelope 1&quot;))</span>
+<span class="c1">#graph_all.add(ot.Curve(sup_data1, &quot;orange&quot;, &quot;solid&quot;, 1.5, &quot;upper envelope 1&quot;))</span>
+<span class="n">graph_all</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">inf_data2</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="s2">&quot;solid&quot;</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="s2">&quot;lower envelope 2&quot;</span><span class="p">))</span>
+<span class="n">graph_all</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">sup_data2</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="s2">&quot;solid&quot;</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="s2">&quot;upper envelope 2&quot;</span><span class="p">))</span>
+<span class="n">graph_all</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">inf_data3</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;solid&quot;</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="s2">&quot;lower envelope 3&quot;</span><span class="p">))</span>
+<span class="n">graph_all</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">sup_data3</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;solid&quot;</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="s2">&quot;upper envelope 3&quot;</span><span class="p">))</span>
+<span class="c1">#graph_all.add(ot.Curve(inf_data4, &quot;blue&quot;, &quot;solid&quot;, 1.5, &quot;lower envelope 4&quot;))</span>
+<span class="c1">#graph_all.add(ot.Curve(sup_data4, &quot;blue&quot;, &quot;solid&quot;, 1.5, &quot;upper envelope 4&quot;))</span>
+<span class="n">graph_all</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span> <span class="s1">&#39;black&#39;</span><span class="p">))</span>
+<span class="n">graph_all</span><span class="o">.</span><span class="n">setLegends</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="s2">&quot;lower envelope 1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;upper envelope 1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;lower envelope 2&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;upper envelope 2&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;lower envelope 3&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;upper envelope 3&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;lower envelope 4&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;upper envelope 4&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph_all</span><span class="p">,</span> <span class="n">pixelsize</span><span class="o">=</span><span class="p">(</span><span class="mi">1100</span><span class="p">,</span> <span class="mi">750</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="Let's-plot-some-deviation-domains-with-different-types-of-allocations-and-correlations.">
+<h3>Let’s plot some deviation domains with different types of allocations and correlations.<a class="headerlink" href="#Let's-plot-some-deviation-domains-with-different-types-of-allocations-and-correlations." title="Link to this heading">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">SIZE_LHS</span> <span class="o">=</span> <span class="mi">9</span>
+<span class="n">composed_dist_uiq</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">([</span><span class="n">lambda_12_dist</span><span class="p">,</span> <span class="n">correlation_dist12</span><span class="p">])</span>
+<span class="n">lhsExp_uiq</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LHSExperiment</span><span class="p">(</span><span class="n">composed_dist_uiq</span><span class="p">,</span> <span class="n">SIZE_LHS</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">lhs_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lhsExp_uiq</span><span class="o">.</span><span class="n">generate</span><span class="p">())</span>
+<span class="n">lmbds</span><span class="p">,</span> <span class="n">corr</span> <span class="o">=</span> <span class="n">lhs_arr</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">lhs_arr</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">seed</span> <span class="o">=</span> <span class="mi">3641641648</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="n">sample</span> <span class="o">=</span>  <span class="n">otaf</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">generate_correlated_samples</span><span class="p">(</span><span class="n">sigma1</span><span class="o">=</span><span class="n">sigma_e_pos_max</span><span class="p">,</span> <span class="n">sigma2</span><span class="o">=</span><span class="n">sigma_theta_max</span><span class="p">,</span> <span class="n">corr</span><span class="o">=</span><span class="n">corr</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">N</span><span class="o">=</span><span class="mi">3355</span><span class="p">)</span>
+
+        <span class="c1"># Compute and print variance for diagnostic purposes</span>
+        <span class="n">var_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">sample</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">var_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">sample</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sample </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">: Variance in X1 = </span><span class="si">{</span><span class="n">var_1</span><span class="si">}</span><span class="s2">, Variance in X2 = </span><span class="si">{</span><span class="n">var_2</span><span class="si">}</span><span class="s2">, Correlation = </span><span class="si">{</span><span class="n">corr</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">otaf</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">print_sample_in_deviation_domain</span><span class="p">(</span>
+            <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">sample</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">sample</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lmbds</span><span class="p">[</span><span class="n">idx</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">lmbds</span><span class="p">[</span><span class="n">idx</span><span class="p">]),</span>
+            <span class="n">t_</span><span class="p">,</span> <span class="n">theta_max</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">remove_ticks</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">set_dpi</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sigma_e_pos_max**2&quot;</span><span class="p">,</span> <span class="n">sigma_e_pos_max</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sigma_theta_max**2&quot;</span><span class="p">,</span> <span class="n">sigma_theta_max</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sigma_e_pos_max</span><span class="o">**</span><span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">seed</span> <span class="o">=</span> <span class="mi">3641641648</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>  <span class="c1"># Only one plot for testing</span>
+
+<span class="c1"># Set the first element of the sequences for testing</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># First element of sequences</span>
+<span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+
+<span class="c1"># Generate one sample with the first values of sigma and correlation</span>
+<span class="n">sample</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">generate_correlated_samples</span><span class="p">(</span>
+    <span class="n">sigma1</span><span class="o">=</span><span class="n">sigma_e_pos_max</span><span class="p">,</span> <span class="n">sigma2</span><span class="o">=</span><span class="n">sigma_theta_max</span><span class="p">,</span> <span class="n">corr</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">3355</span> <span class="c1">#</span>
+<span class="p">)</span>
+
+<span class="n">sample_pos</span> <span class="o">=</span> <span class="n">e_pos</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="mi">3355</span><span class="p">)</span>
+<span class="n">sample_theta</span> <span class="o">=</span> <span class="n">e_theta</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="mi">3355</span><span class="p">)</span>
+
+<span class="c1"># Compute and print variance for diagnostic purposes</span>
+<span class="n">var_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">sample</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">var_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">sample</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sample </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">: Variance in X1 = </span><span class="si">{</span><span class="n">var_1</span><span class="si">}</span><span class="s2">, Variance in X2 = </span><span class="si">{</span><span class="n">var_2</span><span class="si">}</span><span class="s2">, Correlation = </span><span class="si">{</span><span class="n">corr</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Plot the sample in the deviation domain using the first parameters</span>
+<span class="n">otaf</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">print_sample_in_deviation_domain</span><span class="p">(</span>
+    <span class="n">ax</span><span class="p">,</span> <span class="n">sample_pos</span><span class="p">,</span> <span class="n">sample_theta</span><span class="p">,</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lmbds</span><span class="p">[</span><span class="n">idx</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">lmbds</span><span class="p">[</span><span class="n">idx</span><span class="p">]),</span>
+    <span class="n">t_</span><span class="p">,</span> <span class="n">theta_max</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">remove_ticks</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+
+<span class="c1"># Adjust figure DPI for better resolution</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">set_dpi</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="c1"># Print the squared sigma values for diagnostic purposes</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sigma_e_pos_max**2&quot;</span><span class="p">,</span> <span class="n">sigma_e_pos_max</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sigma_theta_max**2&quot;</span><span class="p">,</span> <span class="n">sigma_theta_max</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+</section>
+<section id="Let's-plot-the-same-without-correlation-at-all">
+<h3>Let’s plot the same without correlation at all<a class="headerlink" href="#Let's-plot-the-same-without-correlation-at-all" title="Link to this heading">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">SEED</span><span class="o">=</span><span class="mi">265</span>
+<span class="n">N8PTS</span> <span class="o">=</span> <span class="mi">3350</span> <span class="c1">#10000#</span>
+<span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="n">SEED</span><span class="p">)</span>
+<span class="n">sample_pos</span> <span class="o">=</span> <span class="n">e_pos</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">N8PTS</span><span class="p">)</span>
+<span class="n">sample_theta</span> <span class="o">=</span> <span class="n">e_theta</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">N8PTS</span><span class="p">)</span>
+<span class="n">lmbds2</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.98</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ensure &#39;osifont&#39; is correctly recognized</span>
+<span class="n">custom_font</span> <span class="o">=</span> <span class="n">FontProperties</span><span class="p">(</span><span class="n">family</span><span class="o">=</span><span class="s1">&#39;osifont&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">plot_rect_part</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">scaleFactor</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">rect_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">rect_height</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">custom_font</span><span class="o">=</span><span class="n">custom_font</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plots a rectangular part with hatching, maintaining the given aspect ratio and applying</span>
+<span class="sd">    optional custom font and size scaling.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create the main rectangle with hatching</span>
+    <span class="n">main_rect</span> <span class="o">=</span> <span class="n">Rectangle</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">rect_length</span><span class="p">,</span> <span class="n">rect_height</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
+                                  <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">hatch</span><span class="o">=</span><span class="s1">&#39;//&#39;</span><span class="p">)</span>  <span class="c1"># Diagonal hatching</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">main_rect</span><span class="p">)</span>
+
+    <span class="c1"># Maintain the aspect ratio</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="n">aspect</span><span class="p">)</span>
+
+    <span class="c1"># Add the tolerance zone as a green transparent area centered around the nominal value</span>
+    <span class="n">tolerance_zone_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">rect_length</span> <span class="o">-</span> <span class="n">scaleFactor</span> <span class="o">*</span> <span class="n">t_</span><span class="p">,</span> <span class="n">rect_length</span> <span class="o">+</span> <span class="n">scaleFactor</span> <span class="o">*</span> <span class="n">t_</span><span class="p">])</span>
+    <span class="n">tolerance_zone_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">rect_height</span><span class="p">,</span> <span class="n">rect_height</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">tolerance_zone_x</span><span class="p">,</span> <span class="n">tolerance_zone_y</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y2</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+    <span class="c1"># Adding arrows with proper alignment for the tolerance zone</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">arrow</span><span class="p">(</span><span class="n">rect_length</span><span class="p">,</span> <span class="n">rect_height</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="n">t_</span> <span class="o">*</span> <span class="n">scaleFactor</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">head_width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">head_length</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+             <span class="n">overhang</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">length_includes_head</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">arrow</span><span class="p">(</span><span class="n">rect_length</span><span class="p">,</span> <span class="n">rect_height</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">t_</span> <span class="o">*</span> <span class="n">scaleFactor</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">head_width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">head_length</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+             <span class="n">overhang</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">length_includes_head</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">rect_length</span> <span class="o">-</span> <span class="mi">5</span><span class="p">,</span> <span class="n">rect_height</span> <span class="o">+</span> <span class="mf">0.75</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;t*</span><span class="si">{</span><span class="n">scaleFactor</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span>
+            <span class="n">fontsize</span><span class="o">=</span><span class="s2">&quot;x-large&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">,</span> <span class="n">fontproperties</span><span class="o">=</span><span class="n">custom_font</span><span class="p">)</span>
+
+    <span class="c1"># Add label &#39;A&#39; centered and aligned on the left</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mi">11</span><span class="p">,</span> <span class="n">rect_height</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+            <span class="n">fontsize</span><span class="o">=</span><span class="s2">&quot;xx-large&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">,</span> <span class="n">fontproperties</span><span class="o">=</span><span class="n">custom_font</span><span class="p">,</span>
+            <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">boxstyle</span><span class="o">=</span><span class="s2">&quot;circle&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">))</span>
+
+    <span class="c1"># Arrow pointing to the rectangle surface</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">arrow</span><span class="p">(</span><span class="o">-</span><span class="mi">7</span><span class="p">,</span> <span class="n">rect_height</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">6.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">head_width</span><span class="o">=</span><span class="mf">0.45</span><span class="p">,</span> <span class="n">head_length</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
+             <span class="n">overhang</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">length_includes_head</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Removing the grid, ticks, and bounding box</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span><span class="c1">#[0, rect_length])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span><span class="c1">#[0, rect_height])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="s1">&#39;large&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;bottom&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ax</span>
+
+<span class="k">def</span> <span class="nf">plot_deviated_surfs</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">sample_pos</span><span class="p">,</span> <span class="n">sample_rot</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">,</span> <span class="n">scaleFactor</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">rect_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">rect_height</span><span class="o">=</span><span class="mi">10</span><span class="p">,):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;adds on the rectangular part a ensemble of deviated lines, to</span>
+<span class="sd">    see the geometrical distribution of the defects and the impact</span>
+<span class="sd">    of the allocations.</span>
+<span class="sd">    The defects are multiplied by a scaleFactor</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sample_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">sample_pos</span><span class="p">)</span>
+    <span class="n">sample_rot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">sample_rot</span><span class="p">)</span>
+    <span class="n">x_line</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">rect_length</span><span class="p">,</span> <span class="n">rect_length</span><span class="p">])</span>
+    <span class="n">y_line</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">rect_height</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>  <span class="c1"># stays constant</span>
+
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample_pos</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample_rot</span><span class="p">),</span> <span class="s2">&quot;Mismatch in position and rotation lengths.&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sample_rot</span><span class="p">)):</span>
+        <span class="n">x_ltemp</span> <span class="o">=</span> <span class="n">x_line</span> <span class="o">+</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lambda_</span><span class="p">)</span> <span class="o">*</span> <span class="n">sample_pos</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">*</span> <span class="n">scaleFactor</span>
+        <span class="n">x_ltemp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_ltemp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">lambda_</span><span class="p">)</span> <span class="o">*</span> <span class="n">sample_rot</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">rect_height</span><span class="p">)</span> <span class="o">*</span> <span class="n">scaleFactor</span>
+        <span class="n">x_ltemp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_ltemp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">lambda_</span><span class="p">)</span> <span class="o">*</span> <span class="n">sample_rot</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">rect_height</span><span class="p">)</span> <span class="o">*</span> <span class="n">scaleFactor</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_ltemp</span><span class="p">,</span> <span class="n">y_line</span><span class="p">,</span> <span class="s2">&quot;b-&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ax</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># %matplotlib qt</span>
+<span class="n">ncols</span><span class="p">,</span> <span class="n">nrows</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="n">ncols</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="n">nrows</span><span class="p">)</span>
+<span class="n">scale_factor</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ncols</span><span class="p">):</span>
+    <span class="n">axDD</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">print_sample_in_deviation_domain</span><span class="p">(</span>
+        <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">],</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sample_pos</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sample_theta</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lmbds2</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">lmbds2</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
+        <span class="n">t_</span><span class="p">,</span>
+        <span class="n">theta_max</span><span class="p">,</span>
+        <span class="n">ratio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">r</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">remove_ticks</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+    <span class="n">axRP</span> <span class="o">=</span> <span class="n">plot_rect_part</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">],</span> <span class="n">scale_factor</span><span class="p">)</span>
+    <span class="n">axRP</span> <span class="o">=</span> <span class="n">plot_deviated_surfs</span><span class="p">(</span><span class="n">axRP</span><span class="p">,</span> <span class="n">sample_pos</span><span class="p">,</span> <span class="n">sample_theta</span><span class="p">,</span> <span class="n">lmbds2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">scale_factor</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../source/modules.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">otaf</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="../index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Home</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, Kramer84
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Reference Analytical Example in 2D</a><ul>
+<li><a class="reference internal" href="#Exploring-the-imprecise-probability-space.">Exploring the imprecise probability space.</a></li>
+<li><a class="reference internal" href="#Only-defects-on-one-feature-of-one-part-(no-interaction-between-parts-yet)">Only defects on one feature of one part (no interaction between parts yet)</a><ul>
+<li><a class="reference internal" href="#Direct-method-on-distributions-using-openturns">Direct method on distributions using openturns</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Sampling-based-estimation-of-the-distribution-with-only-defects-on-one-feature,-and-an-imprecise-defect-allocation">Sampling based estimation of the distribution with only defects on one feature, and an imprecise defect allocation</a></li>
+<li><a class="reference internal" href="#Defects-defined-for-both-parts/features.-All-defects-still-independent.">Defects defined for both parts/features. All defects still independent.</a></li>
+<li><a class="reference internal" href="#Adding-Correlations-Between-defects-within-features">Adding Correlations Between defects within features</a></li>
+<li><a class="reference internal" href="#Modify-the-way-we-create-the-experimental-design-to-explore-the-imprecise-space-(lambda-and-correlation)">Modify the way we create the experimental design to explore the imprecise space (lambda and correlation)</a><ul>
+<li><a class="reference internal" href="#We-will-use-Latin-Hypercube-Sampling-(LHS)-for-this-purpose.">We will use Latin Hypercube Sampling (LHS) for this purpose.</a><ul>
+<li><a class="reference internal" href="#First,-we-define-distributions-to-represent-the-uncertainties.">First, we define distributions to represent the uncertainties.</a></li>
+<li><a class="reference internal" href="#We-generate-the-LHS-in-the-normal-space-and-use-the-isoprobabilistic-transformation-to-map-it-back-to-the-original-space.">We generate the LHS in the normal space and use the isoprobabilistic transformation to map it back to the original space.</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Let's-plot-some-deviation-domains-with-different-types-of-allocations-and-correlations.">Let’s plot some deviation domains with different types of allocations and correlations.</a></li>
+<li><a class="reference internal" href="#Let's-plot-the-same-without-correlation-at-all">Let’s plot the same without correlation at all</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
+</html>
