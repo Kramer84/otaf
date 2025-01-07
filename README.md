@@ -159,7 +159,8 @@ Explore the [source code](https://github.com/Kramer84/otaf/src/otaf/) for a comp
 
 ## 📦 Examples
 
-Explore the `NOTEBOOKS/` directory for scripts demonstrating OTAF's capabilities.
+Explore the `NOTEBOOKS/` directory for scripts demonstrating OTAF's capabilities. 
+THE NOTEBOOKS HAVE YET TO BE CLEANED UP
 
 ---
 
