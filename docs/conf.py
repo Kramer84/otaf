@@ -23,7 +23,7 @@ extensions = [
 ]
 
 # HTML Theme
-html_theme = 'furo'  # Replace 'sphinx_rtd_theme' with 'furo'
+html_theme = 'sphinx_rtd_theme'  # Replace 'sphinx_rtd_theme' with 'furo'
 html_theme_options = {
     #"style_external_links": True,  # Ensure external links match the theme
 }
