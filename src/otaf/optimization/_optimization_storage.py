@@ -5,7 +5,6 @@ __all__ = [
 ]
 
 import numpy as np
-import pandas as pd
 import logging
 from scipy.optimize import basinhopping, minimize
 
