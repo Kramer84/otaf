@@ -45,7 +45,6 @@ docs = [
     "sphinx",
     "sphinx-autodoc-typehints",
     "sphinx_rtd_theme",
-    "furo",
     "myst-parser",
     "nbsphinx",
     "notebook",
