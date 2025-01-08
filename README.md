@@ -20,9 +20,9 @@
 
 **OTAF** (Open Tolerance Analysis Framework) is a research oriented library designed to perform statistical tolerance analysis of mechanical assemblies. It can be used for iso- and over- constrained rigid mechanical assemblies, without large displacements. It allows for the semi-automatic construction a System of Constraints (SOC)-based assembly model, given a minimal representation of the assembly and its components as well as hypotheses.
 
-This model can then be used to perform statistical tolerance analysis, by modeling defects as random variables, and estimating the probability of non assembly using different estimation techniques. 
+This model can then be used to perform statistical tolerance analysis, by modeling defects as random variables, and estimating the probability of non assembly using different estimation techniques.
 
-These codes have been developed during a PhD called TRIP (ToleRance analysis with Imprecise Probabilities), where the defect distributions are modelled using imprecise probabilities, and the notebooks, (once currated) will be from the examples in the paper. 
+These codes have been developed during a PhD called TRIP (ToleRance analysis with Imprecise Probabilities), where the defect distributions are modelled using imprecise probabilities, and the notebooks, (once currated) will be from the examples in the paper.
 
 Key use cases include:
 - **Construction of a SOC Model**: Automatically construct the linear problem modeling the assembly.
@@ -163,7 +163,7 @@ Explore the [source code](https://github.com/Kramer84/otaf/src/otaf/) for a comp
 
 ## 📦 Examples
 
-Explore the `NOTEBOOKS/` directory for scripts demonstrating OTAF's capabilities. 
+Explore the `NOTEBOOKS/` directory for scripts demonstrating OTAF's capabilities.
 **THE NOTEBOOKS HAVE YET TO BE CLEANED UP**
 
 ---

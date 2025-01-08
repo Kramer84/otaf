@@ -66,3 +66,8 @@ nbsphinx_prolog = """
       .toctree-wrapper .tocsection { display: none; }
    </style>
 """
+
+source_suffix = {
+    '.rst': 'restructuredtext',
+    '.md': 'markdown',
+}
