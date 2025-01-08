@@ -29,6 +29,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install sphinx sphinx-autodoc-typehints sphinx_rtd_theme myst-parser nbsphinx notebook torch
 
+    - name: Convert README.md to README.rst
+      run: |
+        pandoc README.md -f markdown -t rst -o docs/source/README.rst
+
     # Step 4: Build the documentation
     - name: Build documentation
       run: |
