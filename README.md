@@ -42,6 +42,7 @@ Key use cases include:
 
 ### From Source
 Do this inside of a virtual environment or conda :
+
 ```bash
 # Clone the repository
 git clone https://github.com/Kramer84/otaf.git
@@ -82,7 +83,6 @@ The point with index 0 is always the origin point of the feature! This notation 
 The system data dictionary may look like this :
 
 ```python
-
 system_data = {
     "PARTS" : {
         '1' : {
@@ -124,11 +124,14 @@ Information about the different values that the keys can take refer to the sourc
 
 
 ### Documentation
+
 **DOCUMENTATION NOT YET HOSTED**
+
 Visit the [OTAF Documentation](https://github.com/Kramer84/otaf/wiki) for detailed guides, examples, and API references.
 [View Documentation](https://kramer84.github.io/otaf/)
 
 **TO COMPILE THE DOCUMENTATION LOCALLY INSTALL PACKAGE WITH [docs] FLAG, THEN:**
+
 ```bash
 sudo apt install pandoc
 
@@ -139,6 +142,7 @@ cd docs/
 make clean
 make html
 ```
+
 (Only tested on Linux)
 
 **Then you can open the documentation by opening the `index.html` file in `docs/_build/html/`**
@@ -183,5 +187,3 @@ This project is licensed under the **GNU General Public License v3.0 (GPLv3)**. 
 ## 🌟 Acknowledgments
 
 This work is supported by the [French National Research Agency (ANR)](https://anr.fr/Projet-ANR-21-CE46-0009) under the project "Analyse des tolérances avec les probabilités imprécises" (ANR-21-CE46-0009). The goal is to develop new formalisms for tolerance analysis based on imprecise probabilities, bridging the gap between theory and industrial applications.
-
----

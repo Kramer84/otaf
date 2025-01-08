@@ -1,7 +1,7 @@
 Welcome to OTAF's Documentation!
 ================================
 
-.. include:: ../README.md
+.. include:: source/README.rst
 
 .. toctree::
    :maxdepth: 1

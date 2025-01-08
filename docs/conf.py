@@ -51,6 +51,7 @@ myst_enable_extensions = [
     "linkify",  # Auto-detect and convert URLs into links
     "colon_fence",  # Enable ::: for block elements like admonitions
     "replacements",
+    "amsmath"
 ]
 myst_heading_anchors = 3  # Automatically generate anchors for headings up to level 3
 
