@@ -2,7 +2,6 @@ Welcome to OTAF's Documentation!
 ================================
 
 .. include:: ../README.md
-   :parser: myst
 
 .. toctree::
    :maxdepth: 1

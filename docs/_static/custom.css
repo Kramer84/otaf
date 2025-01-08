@@ -1,27 +1,28 @@
 /* Fix inverted color scheme for Markdown-rendered content */
 .markdown-body {
-    background-color: var(--bg-default); /* Match the theme's background */
-    color: var(--fg-default);           /* Match the theme's text color */
+    background-color: var(--color-background-primary); /* Match the theme's primary background */
+    color: var(--color-foreground-primary);           /* Match the theme's primary text color */
 }
 
 /* Ensure headings match the theme */
 .markdown-body h1, .markdown-body h2, .markdown-body h3 {
-    color: var(--fg-accent);
+    color: var(--color-accent-primary);
 }
 
 /* Style links */
 .markdown-body a {
-    color: var(--fg-link);
+    color: var(--color-accent-secondary);
 }
 
 /* Adjust code blocks */
 .markdown-body pre, .markdown-body code {
-    background-color: var(--bg-secondary);
-    color: var(--fg-code);
+    background-color: var(--color-background-secondary);
+    color: var(--color-foreground-primary);
 }
+
 /* Ensure consistent background for the main content area */
-.wy-nav-content, .content {
-    background-color: var(--bg-default) !important; /* Ensure it matches the theme */
+.wy-nav-content, .content, .markdown-body {
+    background-color: var(--color-background-primary) !important;
     filter: none !important; /* Remove any sepia or inversion */
     opacity: 1 !important;  /* Ensure full visibility */
 }
@@ -30,13 +31,4 @@
 html, body {
     margin: 0;
     padding: 0;
-}
-
-/* Fix other potential background conflicts */
-body {
-    background-color: var(--bg-default) !important;
-}
-
-.toctree-wrapper ul ul {
-    display: none;  /* Hides subheadings in notebook TOC */
 }
