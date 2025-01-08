@@ -1,0 +1,282 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>otaf.assembly_modeling._interface_constraints.interfaceLoopHandling &mdash; otaf 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            otaf
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Jupyter Notebooks</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../notebooks/Analytical_2D_Reference_Assembly.html">Analytical 2D Reference Assembly</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules.html">otaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/otaf.capabilities.html">otaf.capabilities package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/otaf.common.html">otaf.common package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/otaf.constants.html">otaf.constants module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/otaf.distribution.html">otaf.distribution package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/otaf.example_models.html">otaf.example_models package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/otaf.exceptions.html">otaf.exceptions package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/otaf.geometry.html">otaf.geometry package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/otaf.optimization.html">otaf.optimization package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/otaf.plotting.html">otaf.plotting package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/otaf.sampling.html">otaf.sampling package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/otaf.sensitivity.html">otaf.sensitivity package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/otaf.surrogate.html">otaf.surrogate package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/otaf.uncertainty.html">otaf.uncertainty package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">otaf</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">otaf.assembly_modeling._interface_constraints.interfaceLoopHandling</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for otaf.assembly_modeling._interface_constraints.interfaceLoopHandling</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;InterfaceLoopHandling&quot;</span><span class="p">]</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">copy</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Set</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">otaf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._interfaceLoopBuilder</span><span class="w"> </span><span class="kn">import</span> <span class="n">InterfaceLoopBuilder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._surfaceInteractionManager</span><span class="w"> </span><span class="kn">import</span> <span class="n">SurfaceInteractionManager</span>
+
+<div class="viewcode-block" id="InterfaceLoopHandling">
+<a class="viewcode-back" href="../../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.InterfaceLoopHandling">[docs]</a>
+<span class="nd">@beartype</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">InterfaceLoopHandling</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system_data_augmented</span><span class="p">,</span> <span class="n">compatibility_loop_handling</span><span class="p">,</span> <span class="n">circle_resolution</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SDA</span> <span class="o">=</span> <span class="n">system_data_augmented</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CLH</span> <span class="o">=</span> <span class="n">compatibility_loop_handling</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">surfaceInteractionManager</span> <span class="o">=</span> <span class="n">SurfaceInteractionManager</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SDA</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">surfaceInteractionManager</span><span class="o">.</span><span class="n">get_facing_point_dictionary</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_gap_matrix_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_all_gap_matrix_names</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compatibility_gap_matrix_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_unique_gap_matrices_from_expanded_loops</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filtered_gap_matrices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_gap_matrices</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compatibility_gap_matrix_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_gap_matrix_names</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">interfaceLoopBuilder</span> <span class="o">=</span> <span class="n">InterfaceLoopBuilder</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SDA</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">CLH</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filtered_gap_matrices</span><span class="p">,</span> <span class="n">circle_resolution</span><span class="o">=</span><span class="n">circle_resolution</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interfaceLoopBuilder</span><span class="o">.</span><span class="n">populate_interface_expressions</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">facing_point_dictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">surfaceInteractionManager</span><span class="o">.</span><span class="n">facingPointDict</span>
+
+<div class="viewcode-block" id="InterfaceLoopHandling.get_interface_loop_expressions">
+<a class="viewcode-back" href="../../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.InterfaceLoopHandling.get_interface_loop_expressions">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_interface_loop_expressions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">interfaceLoopBuilder</span><span class="o">.</span><span class="n">interface_expressions</span></div>
+
+
+<div class="viewcode-block" id="InterfaceLoopHandling.extract_unique_gap_matrices_from_expanded_loops">
+<a class="viewcode-back" href="../../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.InterfaceLoopHandling.extract_unique_gap_matrices_from_expanded_loops">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_unique_gap_matrices_from_expanded_loops</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract unique gap matrices from expanded compatibility loops and return them as a set.&quot;&quot;&quot;</span>
+        <span class="n">gap_matrices</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">SDA</span><span class="o">.</span><span class="n">compatibility_loops_expanded</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">tokens</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s+|-&gt;&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">token</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;G&quot;</span><span class="p">):</span>
+                    <span class="n">gap_matrices</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+
+        <span class="c1"># Sometimes we have the gap in two directions,but ony want one, soooo:</span>
+        <span class="n">inverse_gap_matrices</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">otaf</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">inverse_mstring</span><span class="p">,</span> <span class="n">gap_matrices</span><span class="p">))</span>
+        <span class="n">intersection</span> <span class="o">=</span> <span class="n">gap_matrices</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">inverse_gap_matrices</span><span class="p">)</span>
+        <span class="n">intersection_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">intersection</span><span class="p">)</span>
+        <span class="n">intersection_list_index_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">inter</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">inter</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">intersection_list</span><span class="p">)}</span>
+        <span class="n">inverse_intersection_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">otaf</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">inverse_mstring</span><span class="p">,</span> <span class="n">intersection_list</span><span class="p">))</span>
+        <span class="n">inverse_intersection_list_indexes</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">intersection_list_index_map</span><span class="p">[</span><span class="n">inter</span><span class="p">]</span> <span class="k">for</span> <span class="n">inter</span> <span class="ow">in</span> <span class="n">inverse_intersection_list</span>
+        <span class="p">]</span>
+        <span class="n">gap_matrices_to_remove</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">inverse_intersection_list</span><span class="p">[</span><span class="n">num</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">inverse_intersection_list_indexes</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">num</span> <span class="o">&gt;</span> <span class="n">index</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">gap_matrices</span> <span class="o">-=</span> <span class="n">gap_matrices_to_remove</span>
+        <span class="k">return</span> <span class="n">gap_matrices</span></div>
+
+
+<div class="viewcode-block" id="InterfaceLoopHandling.generate_all_gap_matrix_names">
+<a class="viewcode-back" href="../../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.InterfaceLoopHandling.generate_all_gap_matrix_names">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_all_gap_matrix_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate and return a dictionary of gap matrix names based on facing points.</span>
+
+<span class="sd">        This method iterates through the facing points in the system, creating and organizing</span>
+<span class="sd">        gap matrix names. Each gap matrix name represents a potential spatial relationship</span>
+<span class="sd">        between different parts and surfaces in the system. The names are stored in a nested</span>
+<span class="sd">        dictionary structure keyed by part and surface IDs.</span>
+
+<span class="sd">        Additionally, it ensures that for every gap matrix, its inverse exists in the set for</span>
+<span class="sd">        the corresponding surface on the other part. If an inverse gap matrix is missing, it is</span>
+<span class="sd">        added to maintain consistency in the representation of spatial relationships.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">POINT_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^(\d+)([a-z]+)([A-Z]\d+)$&quot;</span><span class="p">)</span>
+        <span class="n">gap_matrix_dict</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">tree</span><span class="p">()</span>
+
+        <span class="c1"># Step 1: Initialize the gap matrix dictionary</span>
+        <span class="k">for</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">part_data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">SDA</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">gap_matrix_dict</span><span class="p">[</span><span class="n">part_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">surf_id</span><span class="p">:</span> <span class="nb">set</span><span class="p">()</span> <span class="k">for</span> <span class="n">surf_id</span> <span class="ow">in</span> <span class="n">part_data</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+
+        <span class="c1"># Step 2: Populate the gap matrices</span>
+        <span class="k">for</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">surfaces</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">facing_point_dictionary</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">surface_id</span><span class="p">,</span> <span class="n">points</span> <span class="ow">in</span> <span class="n">surfaces</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">point_id</span><span class="p">,</span> <span class="n">facing_point</span> <span class="ow">in</span> <span class="n">points</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">match</span> <span class="o">=</span> <span class="n">POINT_PATTERN</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">facing_point</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+                        <span class="p">(</span><span class="n">facing_part_id</span><span class="p">,</span> <span class="n">facing_surface_id</span><span class="p">,</span> <span class="n">facing_point_id</span><span class="p">)</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">continue</span>
+
+                    <span class="n">gap_matrix_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;GP</span><span class="si">{</span><span class="n">part_id</span><span class="si">}{</span><span class="n">surface_id</span><span class="si">}{</span><span class="n">point_id</span><span class="si">}</span><span class="s2">P</span><span class="si">{</span><span class="n">facing_part_id</span><span class="si">}{</span><span class="n">facing_surface_id</span><span class="si">}{</span><span class="n">facing_point_id</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="n">gap_matrix_dict</span><span class="p">[</span><span class="n">part_id</span><span class="p">][</span><span class="n">surface_id</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">gap_matrix_name</span><span class="p">)</span>
+
+        <span class="c1"># Step 3: Repopulate missing gap matrices by inverting existing ones</span>
+        <span class="k">for</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">surfaces</span> <span class="ow">in</span> <span class="n">gap_matrix_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">surface_id</span><span class="p">,</span> <span class="n">gap_matrices</span> <span class="ow">in</span> <span class="n">surfaces</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">gap_matrix</span> <span class="ow">in</span> <span class="n">gap_matrices</span><span class="p">:</span>
+                    <span class="n">parsed</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">parse_matrix_string</span><span class="p">(</span><span class="n">gap_matrix</span><span class="p">)</span>
+                    <span class="n">inverse_gap_matrix</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">inverse_mstring</span><span class="p">(</span><span class="n">gap_matrix</span><span class="p">)</span>
+                    <span class="n">inv_part_id</span><span class="p">,</span> <span class="n">inv_surface_id</span> <span class="o">=</span> <span class="n">parsed</span><span class="p">[</span><span class="s2">&quot;part2&quot;</span><span class="p">],</span> <span class="n">parsed</span><span class="p">[</span><span class="s2">&quot;surface2&quot;</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">inverse_gap_matrix</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">gap_matrix_dict</span><span class="p">[</span><span class="n">inv_part_id</span><span class="p">][</span><span class="n">inv_surface_id</span><span class="p">]:</span>
+                        <span class="n">gap_matrix_dict</span><span class="p">[</span><span class="n">inv_part_id</span><span class="p">][</span><span class="n">inv_surface_id</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">inverse_gap_matrix</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">gap_matrix_dict</span></div>
+
+
+<div class="viewcode-block" id="InterfaceLoopHandling.filter_gap_matrices">
+<a class="viewcode-back" href="../../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.InterfaceLoopHandling.filter_gap_matrices">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter_gap_matrices</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">existing_gap_matrices</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">all_gap_matrices</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filter and organize gap matrices into used and unused categories.</span>
+
+<span class="sd">        This method categorizes gap matrices into &#39;used&#39; and &#39;unused&#39; based on their presence</span>
+<span class="sd">        in the existing gap matrices set. It iterates through all provided gap matrices, comparing</span>
+<span class="sd">        them with existing ones, and then organizes them into a nested dictionary indicating</span>
+<span class="sd">        their usage status. This only categorizes the matrices when there is at least a common</span>
+<span class="sd">        elemnt</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            existing_gap_matrices (Set[str]): A set of existing gap matrix names.</span>
+<span class="sd">            all_gap_matrices (Dict[str, Dict[str, Set[str]]]): A dictionary of all gap matrices,</span>
+<span class="sd">                structured by parts and surfaces.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, Dict[str, Dict[str, Set[str]]]]: A nested dictionary categorizing gap matrices</span>
+<span class="sd">            into &#39;used&#39; and &#39;unused&#39; for each part and surface.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filtered_dict</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">tree</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">part</span><span class="p">,</span> <span class="n">surfaces</span> <span class="ow">in</span> <span class="n">all_gap_matrices</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">surface</span><span class="p">,</span> <span class="n">matrix_set</span> <span class="ow">in</span> <span class="n">surfaces</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">common_elements</span> <span class="o">=</span> <span class="n">matrix_set</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">existing_gap_matrices</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">common_elements</span><span class="p">:</span>
+                    <span class="n">remaining_elements</span> <span class="o">=</span> <span class="n">matrix_set</span> <span class="o">-</span> <span class="n">common_elements</span>
+                    <span class="k">if</span> <span class="n">remaining_elements</span><span class="p">:</span>
+                        <span class="n">filtered_dict</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="n">surface</span><span class="p">][</span><span class="s2">&quot;UNUSED&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">remaining_elements</span>
+                        <span class="n">filtered_dict</span><span class="p">[</span><span class="n">part</span><span class="p">][</span><span class="n">surface</span><span class="p">][</span><span class="s2">&quot;USED&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">common_elements</span>
+        <span class="k">return</span> <span class="n">filtered_dict</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kramer84.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
