@@ -29,7 +29,7 @@ html_theme_options = {
 }
 # Use custom CSS if needed
 html_static_path = ['_static']
-html_css_files = ['custom.css']
+#html_css_files = ['custom.css']
 
 autodoc_default_options = {
     'members': True,         # Include class and module members
