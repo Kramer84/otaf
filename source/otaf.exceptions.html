@@ -68,7 +68,7 @@
 <li class="toctree-l4"><a class="reference internal" href="otaf.uncertainty.html">otaf.uncertainty package</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="otaf.html#module-contents">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.html#module-otaf">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -79,7 +79,38 @@
 <li class="toctree-l1"><a class="reference internal" href="otaf.distribution.html">otaf.distribution package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.example_models.html">otaf.example_models package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">otaf.exceptions package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-otaf.exceptions">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.ConflictingSurfaceDirectionsException"><code class="docutils literal notranslate"><span class="pre">ConflictingSurfaceDirectionsException</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.DuplicatePointError"><code class="docutils literal notranslate"><span class="pre">DuplicatePointError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.GeometricConditionError"><code class="docutils literal notranslate"><span class="pre">GeometricConditionError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.InvalidAffineTransformException"><code class="docutils literal notranslate"><span class="pre">InvalidAffineTransformException</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.exceptions.InvalidAffineTransformException.matrix"><code class="docutils literal notranslate"><span class="pre">InvalidAffineTransformException.matrix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.exceptions.InvalidAffineTransformException.message"><code class="docutils literal notranslate"><span class="pre">InvalidAffineTransformException.message</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.InvalidGlobalConstraintError"><code class="docutils literal notranslate"><span class="pre">InvalidGlobalConstraintError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.InvalidInteractionFormatError"><code class="docutils literal notranslate"><span class="pre">InvalidInteractionFormatError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.InvalidPartLabelError"><code class="docutils literal notranslate"><span class="pre">InvalidPartLabelError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.InvalidSurfaceDirectionError"><code class="docutils literal notranslate"><span class="pre">InvalidSurfaceDirectionError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.InvalidSurfaceLabelError"><code class="docutils literal notranslate"><span class="pre">InvalidSurfaceLabelError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.LabelPatternError"><code class="docutils literal notranslate"><span class="pre">LabelPatternError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.LabelPrefixError"><code class="docutils literal notranslate"><span class="pre">LabelPrefixError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.MissingKeyError"><code class="docutils literal notranslate"><span class="pre">MissingKeyError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.MissingOriginPointError"><code class="docutils literal notranslate"><span class="pre">MissingOriginPointError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.MissingSurfaceTypeKeyError"><code class="docutils literal notranslate"><span class="pre">MissingSurfaceTypeKeyError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.NonConcentricCylindersException"><code class="docutils literal notranslate"><span class="pre">NonConcentricCylindersException</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.NonUniqueCoordinatesError"><code class="docutils literal notranslate"><span class="pre">NonUniqueCoordinatesError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.NonUniqueLabelError"><code class="docutils literal notranslate"><span class="pre">NonUniqueLabelError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.PartNotFoundError"><code class="docutils literal notranslate"><span class="pre">PartNotFoundError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.PointDictionaryError"><code class="docutils literal notranslate"><span class="pre">PointDictionaryError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.PointsNotOnPlaneError"><code class="docutils literal notranslate"><span class="pre">PointsNotOnPlaneError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.SurfaceNotFoundError"><code class="docutils literal notranslate"><span class="pre">SurfaceNotFoundError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.TimeoutError"><code class="docutils literal notranslate"><span class="pre">TimeoutError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.UniqueLabelSuffixError"><code class="docutils literal notranslate"><span class="pre">UniqueLabelSuffixError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.UnsupportedSurfaceTypeError"><code class="docutils literal notranslate"><span class="pre">UnsupportedSurfaceTypeError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.timeout"><code class="docutils literal notranslate"><span class="pre">timeout()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.geometry.html">otaf.geometry package</a></li>
@@ -119,8 +150,203 @@
              
   <section id="otaf-exceptions-package">
 <h1>otaf.exceptions package<a class="headerlink" href="#otaf-exceptions-package" title="Link to this heading"></a></h1>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="module-otaf.exceptions">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-otaf.exceptions" title="Link to this heading"></a></h2>
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.ConflictingSurfaceDirectionsException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">ConflictingSurfaceDirectionsException</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part_id1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_id1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">part_id2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_id2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#ConflictingSurfaceDirectionsException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.ConflictingSurfaceDirectionsException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Exception raised for conflicting surface directions in cylinder interactions.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.DuplicatePointError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">DuplicatePointError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surf_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">part_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">existing_point</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_point_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">existing_point_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exact_match</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#DuplicatePointError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.DuplicatePointError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.GeometricConditionError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">GeometricConditionError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">condition_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#GeometricConditionError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.GeometricConditionError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.InvalidAffineTransformException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">InvalidAffineTransformException</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Matrix</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">a</span> <span class="pre">valid</span> <span class="pre">affine</span> <span class="pre">transformation</span> <span class="pre">matrix.'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#InvalidAffineTransformException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.InvalidAffineTransformException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Exception raised when a matrix is not a valid affine transformation matrix.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.exceptions.InvalidAffineTransformException.matrix">
+<span class="sig-name descname"><span class="pre">matrix</span></span><a class="headerlink" href="#otaf.exceptions.InvalidAffineTransformException.matrix" title="Link to this definition"></a></dt>
+<dd><p>The matrix that caused the exception.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.exceptions.InvalidAffineTransformException.message">
+<span class="sig-name descname"><span class="pre">message</span></span><a class="headerlink" href="#otaf.exceptions.InvalidAffineTransformException.message" title="Link to this definition"></a></dt>
+<dd><p>Explanation of the error.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.InvalidGlobalConstraintError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">InvalidGlobalConstraintError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">valid_constraints</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#InvalidGlobalConstraintError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.InvalidGlobalConstraintError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.InvalidInteractionFormatError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">InvalidInteractionFormatError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interaction</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#InvalidInteractionFormatError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.InvalidInteractionFormatError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>interaction</strong> (<em>str</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.InvalidPartLabelError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">InvalidPartLabelError</span></span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#InvalidPartLabelError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.InvalidPartLabelError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.InvalidSurfaceDirectionError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">InvalidSurfaceDirectionError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surf_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#InvalidSurfaceDirectionError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.InvalidSurfaceDirectionError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>surf_dir</strong> (<em>str</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.InvalidSurfaceLabelError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">InvalidSurfaceLabelError</span></span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#InvalidSurfaceLabelError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.InvalidSurfaceLabelError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.LabelPatternError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">LabelPatternError</span></span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#LabelPatternError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.LabelPatternError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.LabelPrefixError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">LabelPrefixError</span></span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#LabelPrefixError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.LabelPrefixError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.MissingKeyError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">MissingKeyError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dictionary_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#MissingKeyError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.MissingKeyError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">KeyError</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.MissingOriginPointError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">MissingOriginPointError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surf_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#MissingOriginPointError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.MissingOriginPointError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#otaf.exceptions.PointDictionaryError" title="otaf.exceptions._exceptions.PointDictionaryError"><code class="xref py py-class docutils literal notranslate"><span class="pre">PointDictionaryError</span></code></a></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.MissingSurfaceTypeKeyError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">MissingSurfaceTypeKeyError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surf_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#MissingSurfaceTypeKeyError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.MissingSurfaceTypeKeyError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">KeyError</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.NonConcentricCylindersException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">NonConcentricCylindersException</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part_id1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_id1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">part_id2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_id2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#NonConcentricCylindersException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.NonConcentricCylindersException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Exception raised for cylinders that are not concentric.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.NonUniqueCoordinatesError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">NonUniqueCoordinatesError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">duplicates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#NonUniqueCoordinatesError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.NonUniqueCoordinatesError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.NonUniqueLabelError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">NonUniqueLabelError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#NonUniqueLabelError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.NonUniqueLabelError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#otaf.exceptions.PointDictionaryError" title="otaf.exceptions._exceptions.PointDictionaryError"><code class="xref py py-class docutils literal notranslate"><span class="pre">PointDictionaryError</span></code></a></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.PartNotFoundError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">PartNotFoundError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#PartNotFoundError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.PartNotFoundError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.PointDictionaryError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">PointDictionaryError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#PointDictionaryError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.PointDictionaryError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.PointsNotOnPlaneError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">PointsNotOnPlaneError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surf_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#PointsNotOnPlaneError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.PointsNotOnPlaneError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.SurfaceNotFoundError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">SurfaceNotFoundError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surf_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">part_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#SurfaceNotFoundError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.SurfaceNotFoundError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.TimeoutError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">TimeoutError</span></span><a class="reference internal" href="../_modules/otaf/exceptions/_timeout.html#TimeoutError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.TimeoutError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Custom exception to be raised when a timeout occurs.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.UniqueLabelSuffixError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">UniqueLabelSuffixError</span></span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#UniqueLabelSuffixError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.UniqueLabelSuffixError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.UnsupportedSurfaceTypeError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">UnsupportedSurfaceTypeError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surf_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surf_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#UnsupportedSurfaceTypeError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.UnsupportedSurfaceTypeError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.exceptions.timeout">
+<span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">timeout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seconds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Function</span> <span class="pre">call</span> <span class="pre">timed</span> <span class="pre">out'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_timeout.html#timeout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.timeout" title="Link to this definition"></a></dt>
+<dd><p>Decorator that limits the execution time of a function.</p>
+<section id="parameters">
+<h3>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>seconds<span class="classifier">int</span></dt><dd><p>The number of seconds before the function is terminated with a timeout error.</p>
+</dd>
+<dt>error_message<span class="classifier">str</span></dt><dd><p>The message to include in the TimeoutError raised when the timeout occurs.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
 </section>
 </section>
 

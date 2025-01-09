@@ -1,0 +1,806 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>otaf.surrogate._binary_threshold_classifier &mdash; otaf 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            otaf
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Jupyter Notebooks</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/Analytical_2D_Reference_Assembly.html">Analytical 2D Reference Assembly</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/modules.html">otaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.capabilities.html">otaf.capabilities package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.common.html">otaf.common package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.constants.html">otaf.constants module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.distribution.html">otaf.distribution package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.example_models.html">otaf.example_models package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.exceptions.html">otaf.exceptions package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.geometry.html">otaf.geometry package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.optimization.html">otaf.optimization package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.plotting.html">otaf.plotting package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.sampling.html">otaf.sampling package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.sensitivity.html">otaf.sensitivity package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.surrogate.html">otaf.surrogate package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.uncertainty.html">otaf.uncertainty package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">otaf</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">otaf.surrogate._binary_threshold_classifier</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for otaf.surrogate._binary_threshold_classifier</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;BinaryClassificationModel&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;generate_corrected_binary_predictions&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;evaluate_binary_predictions&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;optimize_thresholds_with_alpha&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;plot_confusion_matrix&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tqdm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">confusion_matrix</span><span class="p">,</span> <span class="n">ConfusionMatrixDisplay</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">minimize</span><span class="p">,</span> <span class="n">basinhopping</span><span class="p">,</span> <span class="n">shgo</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">clear_output</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.optim</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">optim</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torcheval.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">R2Score</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">otaf</span>
+
+
+<span class="n">DEVICE</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;mps&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">mps</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="BinaryClassificationModel">
+<a class="viewcode-back" href="../../../source/otaf.surrogate.html#otaf.surrogate.BinaryClassificationModel">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BinaryClassificationModel</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">input_dim</span><span class="p">,</span>
+        <span class="n">output_dim</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">,</span>
+        <span class="n">y</span><span class="p">,</span>
+        <span class="n">slack_threshold</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">pred_threshold</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>  <span class="c1"># If &gt; 0 class 1, if negative class 2</span>
+        <span class="n">clamping</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">clamping_threshold</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">finish_critertion_epoch</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+        <span class="n">loss_finish</span><span class="o">=</span><span class="mf">1e-16</span><span class="p">,</span>
+        <span class="n">metric_finish</span><span class="o">=</span><span class="mf">0.999</span><span class="p">,</span>
+        <span class="n">max_epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">train_size</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+        <span class="n">input_normalization</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">noise_dims</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">noise_level</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">scheduler</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">device</span><span class="o">=</span><span class="n">DEVICE</span><span class="p">,</span>
+        <span class="n">display_progress_disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">squeeze_labels</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">labels_to_long</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">use_dual_target</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># For cross entropy loss</span>
+        <span class="n">save_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;input_dim&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;output_dim&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">output_dim</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span>
+            <span class="s2">&quot;input_normalization&quot;</span><span class="p">,</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">input_normalization</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">input_dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">X_raw</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_raw</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;X_mean&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span>
+            <span class="s2">&quot;X_std&quot;</span><span class="p">,</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)),</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">input_normalization</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_raw</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_mean</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_std</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_raw</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y_raw</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span>
+        <span class="p">)</span>  <span class="c1"># No normalization for output needed for classification</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">clamping_threshold</span> <span class="o">=</span> <span class="n">clamping_threshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clamping</span> <span class="o">=</span> <span class="n">clamping</span>
+
+        <span class="c1"># Finish criterions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">finish_critertion_epoch</span> <span class="o">=</span> <span class="n">finish_critertion_epoch</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_finish</span> <span class="o">=</span> <span class="n">loss_finish</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metric_finish</span> <span class="o">=</span> <span class="n">metric_finish</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_size</span> <span class="o">=</span> <span class="n">train_size</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_train_test_data</span><span class="p">()</span>
+
+        <span class="c1"># Define the layers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">surrogate</span><span class="o">.</span><span class="n">get_base_relu_mlp_model</span><span class="p">(</span>
+            <span class="n">input_dim</span><span class="p">,</span> <span class="mi">128</span>
+        <span class="p">)</span>  <span class="c1"># nn.Linear(input_dim + 1, 128)  # +1 for the threshold input</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc3</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Output for prediction</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc3</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">())</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span>
+            <span class="s2">&quot;slack_threshold&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">slack_threshold</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span>
+            <span class="s2">&quot;pred_threshold&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">pred_threshold</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span>
+            <span class="s2">&quot;squeeze_labels&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">squeeze_labels</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span>
+            <span class="s2">&quot;labels_to_long&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">labels_to_long</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span>
+            <span class="s2">&quot;use_dual_target&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">use_dual_target</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Training parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_epochs</span> <span class="o">=</span> <span class="n">max_epochs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">BCELoss</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="n">confusion_matrix</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span> <span class="o">=</span> <span class="n">scheduler</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise_dims</span> <span class="o">=</span> <span class="n">noise_dims</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise_level</span> <span class="o">=</span> <span class="n">noise_level</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_progress_disable</span> <span class="o">=</span> <span class="n">display_progress_disable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">history_loss</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">history_metric</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_loss</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_metric</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_weights</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_dict</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_path</span> <span class="o">=</span> <span class="n">save_path</span>
+
+<div class="viewcode-block" id="BinaryClassificationModel.forward">
+<a class="viewcode-back" href="../../../source/otaf.surrogate.html#otaf.surrogate.BinaryClassificationModel.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="c1"># Forward pass through the network</span>
+        <span class="n">pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pred</span></div>
+
+
+<div class="viewcode-block" id="BinaryClassificationModel.get_train_test_data">
+<a class="viewcode-back" href="../../../source/otaf.surrogate.html#otaf.surrogate.BinaryClassificationModel.get_train_test_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_train_test_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Train-test split of the dataset</span>
+        <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">train_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">train_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X_train</span> <span class="o">=</span> <span class="n">X_train</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_train</span> <span class="o">=</span> <span class="n">y_train</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X_test</span> <span class="o">=</span> <span class="n">X_test</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_test</span> <span class="o">=</span> <span class="n">y_test</span></div>
+
+
+<div class="viewcode-block" id="BinaryClassificationModel.add_new_data_points">
+<a class="viewcode-back" href="../../../source/otaf.surrogate.html#otaf.surrogate.BinaryClassificationModel.add_new_data_points">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_new_data_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_X</span><span class="p">,</span> <span class="n">new_y</span><span class="p">):</span>
+        <span class="c1"># Ensure the new data points have the correct shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">new_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Expected new_X to have </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span><span class="si">}</span><span class="s2"> features, but got </span><span class="si">{</span><span class="n">new_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">new_y</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">new_y</span> <span class="o">=</span> <span class="n">new_y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># Normalize new data points if necessary</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_normalization</span><span class="p">:</span>
+            <span class="n">new_X</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">new_X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_mean</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_std</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">new_X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="c1"># Convert new_y to tensor</span>
+        <span class="n">new_y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">new_y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="c1"># Append new data points to the existing raw data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X_raw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">X_raw</span><span class="p">,</span> <span class="n">new_X</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_raw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">y_raw</span><span class="p">,</span> <span class="n">new_y</span><span class="p">])</span>
+        <span class="c1"># Update normalized X</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_normalization</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_raw</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_mean</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_std</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_raw</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="c1"># Update y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_raw</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="c1"># Re-split the data into training and testing sets</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_train_test_data</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="BinaryClassificationModel.train_model">
+<a class="viewcode-back" href="../../../source/otaf.surrogate.html#otaf.surrogate.BinaryClassificationModel.train_model">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">train_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">X_test</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_test</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">y_test</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_test</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_epochs</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">permutation</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randperm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_train</span><span class="o">.</span><span class="n">size</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">with</span> <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="p">(</span>
+                <span class="n">permutation</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;batch&quot;</span><span class="p">,</span> <span class="n">mininterval</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">display_progress_disable</span>
+            <span class="p">)</span> <span class="k">as</span> <span class="n">bar</span><span class="p">:</span>
+                <span class="n">bar</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_train</span><span class="o">.</span><span class="n">size</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">):</span>
+                    <span class="n">indices</span> <span class="o">=</span> <span class="n">permutation</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">]</span>
+                    <span class="n">X_batch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_train</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+                    <span class="n">y_batch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+                    <span class="c1"># Add noise if needed</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_dims</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_level</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">X_batch</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_dims</span><span class="p">]</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">surrogate</span><span class="o">.</span><span class="n">add_gaussian_noise</span><span class="p">(</span>
+                            <span class="n">X_batch</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_dims</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_level</span>
+                        <span class="p">)</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+                    <span class="n">y_pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">X_batch</span><span class="p">)</span>
+
+                    <span class="n">y_batch_binary</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">y_batch</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">slack_threshold</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+
+                    <span class="n">y_batch_binary_dual</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span>
+                        <span class="p">(</span>
+                            <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">y_batch</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">slack_threshold</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+                            <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">y_batch</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">slack_threshold</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+                        <span class="p">),</span>
+                        <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+
+                    <span class="n">y_batch_binary</span><span class="p">,</span> <span class="n">y_batch_binary_dual</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="p">(</span><span class="n">y_batch_binary</span><span class="o">.</span><span class="n">long</span><span class="p">(),</span> <span class="n">y_batch_binary_dual</span><span class="o">.</span><span class="n">long</span><span class="p">())</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels_to_long</span>
+                        <span class="k">else</span> <span class="p">(</span><span class="n">y_batch_binary</span><span class="p">,</span> <span class="n">y_batch_binary_dual</span><span class="p">)</span>
+                    <span class="p">)</span>
+
+                    <span class="c1"># print(&quot;y_pred.shape:&quot;, y_pred.shape)</span>
+                    <span class="c1"># print(&quot;y_batch_binary_dual.shape:&quot;, y_batch_binary_dual.shape)</span>
+
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_dual_target</span><span class="p">:</span>
+                        <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">(</span>
+                            <span class="n">y_pred</span><span class="p">,</span>
+                            <span class="p">(</span>
+                                <span class="n">y_batch_binary_dual</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+                                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">squeeze_labels</span>
+                                <span class="k">else</span> <span class="n">y_batch_binary_dual</span>
+                            <span class="p">),</span>
+                        <span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">(</span>
+                            <span class="n">y_pred</span><span class="p">,</span>
+                            <span class="n">y_batch_binary</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">squeeze_labels</span> <span class="k">else</span> <span class="n">y_batch_binary</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+                    <span class="n">bar</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">param_groups</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;lr&quot;</span><span class="p">])</span>
+
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">clamping</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+                            <span class="n">p</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">clamp_</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">clamping_threshold</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">clamping_threshold</span><span class="p">)</span>
+
+            <span class="c1"># Validation</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+            <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+                <span class="n">y_pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+                <span class="n">y_test_binary</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">y_test</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">slack_threshold</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+                <span class="n">y_test_binary_dual</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span>
+                    <span class="p">(</span>
+                        <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">y_test</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">slack_threshold</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+                        <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">y_test</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">slack_threshold</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+                    <span class="p">),</span>
+                    <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="n">y_test_binary</span><span class="p">,</span> <span class="n">y_test_binary_dual</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="p">(</span><span class="n">y_test_binary</span><span class="o">.</span><span class="n">long</span><span class="p">(),</span> <span class="n">y_test_binary_dual</span><span class="o">.</span><span class="n">long</span><span class="p">())</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels_to_long</span>
+                    <span class="k">else</span> <span class="p">(</span><span class="n">y_test_binary</span><span class="p">,</span> <span class="n">y_test_binary_dual</span><span class="p">)</span>
+                <span class="p">)</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_dual_target</span><span class="p">:</span>
+                    <span class="n">val_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">(</span>
+                        <span class="n">y_pred</span><span class="p">,</span>
+                        <span class="n">y_test_binary_dual</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">squeeze_labels</span> <span class="k">else</span> <span class="n">y_test_binary_dual</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">val_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">(</span>
+                        <span class="n">y_pred</span><span class="p">,</span> <span class="n">y_test_binary</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">squeeze_labels</span> <span class="k">else</span> <span class="n">y_test_binary</span>
+                    <span class="p">)</span>
+
+                <span class="n">y_pred_class</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">y_pred</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">pred_threshold</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">val_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">(</span>
+                    <span class="n">y_pred</span><span class="p">,</span> <span class="n">y_test_binary</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">squeeze_labels</span> <span class="k">else</span> <span class="n">y_test_binary</span>
+                <span class="p">)</span>
+
+                <span class="n">ratio_predicted</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_pred_class</span> <span class="o">==</span> <span class="n">y_test_binary</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>  <span class="c1"># We change that</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">cm</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span>
+                        <span class="n">y_test_binary</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">y_pred_class</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">cm</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_test_binary</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">y_pred_class</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+                <span class="n">tn</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tp</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+                <span class="n">val_metric</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">fn</span> <span class="o">/</span> <span class="p">(</span><span class="n">tn</span> <span class="o">+</span> <span class="mf">1e-9</span><span class="p">)))</span>  <span class="c1"># ratio of false negatives</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">history_loss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val_loss</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">history_metric</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val_metric</span><span class="p">)</span>
+
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2">, Val Loss: </span><span class="si">{</span><span class="n">val_loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, Ratio predicted: </span><span class="si">{</span><span class="n">ratio_predicted</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, Ratio FN/TN </span><span class="si">{</span><span class="n">val_metric</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, TN: </span><span class="si">{</span><span class="n">tn</span><span class="si">}</span><span class="s2">, FP: </span><span class="si">{</span><span class="n">fp</span><span class="si">}</span><span class="s2">, FN: </span><span class="si">{</span><span class="n">fn</span><span class="si">}</span><span class="s2">, TP: </span><span class="si">{</span><span class="n">tp</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">val_loss</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">best_loss</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">best_loss</span> <span class="o">=</span> <span class="n">val_loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">best_metric</span> <span class="o">=</span> <span class="n">val_metric</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">best_weights</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_dict</span><span class="p">())</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_stopping_criterion</span><span class="p">(</span><span class="n">epoch</span><span class="p">):</span>
+                <span class="k">break</span>
+
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Finished training with best loss </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">best_loss</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> and metric of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">best_metric</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+        <span class="n">X_test</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_test</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+        <span class="n">y_test</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_test</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
+
+        <span class="c1"># Restore the best model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">best_weights</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BinaryClassificationModel.evaluate_model">
+<a class="viewcode-back" href="../../../source/otaf.surrogate.html#otaf.surrogate.BinaryClassificationModel.evaluate_model">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">evaluate_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">50000</span><span class="p">,</span> <span class="n">return_on_gpu</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluates the model in non-standard space, processing the input in batches.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (array-like or torch.Tensor): Input data to evaluate.</span>
+<span class="sd">            batch_size (int, optional): Size of batches for evaluation. Default is 50000.</span>
+<span class="sd">            return_on_gpu (bool, optional): Whether to return the result on the GPU. Default is False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: The model&#39;s output.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Standardize the input</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_normalization</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_mean</span><span class="o">.</span><span class="n">cpu</span><span class="p">())</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_std</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+
+        <span class="c1"># Ensure the model is in eval mode and sent to the right device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+
+        <span class="c1"># Prepare to collect the results</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Evaluate in batches</span>
+            <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">batch_size</span><span class="p">):</span>
+                    <span class="n">batch</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+                    <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+
+                    <span class="c1"># Move to CPU if necessary</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">return_on_gpu</span><span class="p">:</span>
+                        <span class="n">output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+
+                    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+
+            <span class="c1"># Concatenate all batch results into a single tensor</span>
+            <span class="n">final_result</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="c1"># Ensure to free up the GPU memory</span>
+            <span class="k">del</span> <span class="n">batch</span><span class="p">,</span> <span class="n">output</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">final_result</span></div>
+
+
+<div class="viewcode-block" id="BinaryClassificationModel.training_stopping_criterion">
+<a class="viewcode-back" href="../../../source/otaf.surrogate.html#otaf.surrogate.BinaryClassificationModel.training_stopping_criterion">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">training_stopping_criterion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determines whether training should stop based on various criteria including:</span>
+<span class="sd">        - Minimum loss tolerance.</span>
+<span class="sd">        - Gradient changes.</span>
+<span class="sd">        - R2 score achievement.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">        epoch (int): The current epoch number.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        bool: True if training should stop, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Check various conditions to determine if training should stop</span>
+        <span class="k">if</span> <span class="n">epoch</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">finish_critertion_epoch</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">best_loss</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_finish</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Stopping: Loss below threshold.&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">best_metric</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric_finish</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Stopping: R2 score is high enough.&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="BinaryClassificationModel.plot_results">
+<a class="viewcode-back" href="../../../source/otaf.surrogate.html#otaf.surrogate.BinaryClassificationModel.plot_results">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_results</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">save_as_png</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="s2">&quot;images&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;ai_training_results.png&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">600</span>
+    <span class="p">):</span>
+        <span class="c1"># Create the figure and two axes</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>  <span class="c1"># Increased figure size for better readability</span>
+        <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span>
+        <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="n">frame_on</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># Plot loss on the first axis</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">history_loss</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C0&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span>
+        <span class="p">)</span>  <span class="c1"># Increased line width for better visibility</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Epoch&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C0&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>  <span class="c1"># Increased font size</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Loss&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C0&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>  <span class="c1"># Increased font size</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s2">&quot;C0&quot;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>  <span class="c1"># Adjusted tick label size</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s2">&quot;C0&quot;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+        <span class="c1"># Plot metric on the second axis</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">history_metric</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C1&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span>
+        <span class="p">)</span>  <span class="c1"># Increased line width for better visibility</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">tick_right</span><span class="p">()</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Metric&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C1&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>  <span class="c1"># Increased font size</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_label_position</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s2">&quot;C1&quot;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+
+        <span class="c1"># Add grid for better readability</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+
+        <span class="c1"># Improve layout spacing</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+        <span class="c1"># Save the plot as a PNG if required</span>
+        <span class="k">if</span> <span class="n">save_as_png</span><span class="p">:</span>
+            <span class="c1"># Create &#39;images&#39; directory if it doesn&#39;t exist</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_path</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">save_path</span><span class="p">)</span>
+
+            <span class="c1"># Save the figure</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Plot saved as </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2"> in the &#39;images&#39; directory.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Show the plot</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="BinaryClassificationModel.save_model">
+<a class="viewcode-back" href="../../../source/otaf.surrogate.html#otaf.surrogate.BinaryClassificationModel.save_model">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_path</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BinaryClassificationModel.load_model">
+<a class="viewcode-back" href="../../../source/otaf.surrogate.html#otaf.surrogate.BinaryClassificationModel.load_model">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_path</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_weights</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_dict</span><span class="p">())</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="generate_corrected_binary_predictions">
+<a class="viewcode-back" href="../../../source/otaf.surrogate.html#otaf.surrogate.generate_corrected_binary_predictions">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_corrected_binary_predictions</span><span class="p">(</span>
+    <span class="n">pred_probs</span><span class="p">,</span> <span class="n">failure_threshold</span><span class="o">=-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">success_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">equality_decision</span><span class="o">=</span><span class="s2">&quot;failure&quot;</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates corrected binary predictions for failures and successes based on threshold values.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    pred_probs (np.ndarray): Array of predicted class probabilities with shape (n_samples, 2).</span>
+<span class="sd">    failure_threshold (float): Threshold value for classifying failures.</span>
+<span class="sd">    success_threshold (float): Threshold value for classifying successes.</span>
+<span class="sd">    equality_decision (str): What is the outcome when both success and failure are positive? &quot;failure&quot; or &quot;success&quot;</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    np.ndarray: Corrected binary predictions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">equality_decision</span> <span class="o">==</span> <span class="s2">&quot;failure&quot;</span><span class="p">:</span>
+        <span class="n">eq_outcome</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">equality_decision</span> <span class="o">==</span> <span class="s2">&quot;success&quot;</span><span class="p">:</span>
+        <span class="n">eq_outcome</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;equality_decision is either &#39;success&#39; or &#39;failure&#39;&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Generate binary predictions for failures</span>
+    <span class="n">pred_failures</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">failure_threshold</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># Generate binary predictions for successes</span>
+    <span class="n">pred_success</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">success_threshold</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># Correct failures and successes. If both have the same outcome, it automatically becomes eq_outcome</span>
+    <span class="n">corrected_predictions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">pred_failures</span> <span class="o">==</span> <span class="n">pred_success</span><span class="p">,</span> <span class="n">eq_outcome</span><span class="p">,</span> <span class="n">pred_failures</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">corrected_predictions</span></div>
+
+
+
+<div class="viewcode-block" id="evaluate_binary_predictions">
+<a class="viewcode-back" href="../../../source/otaf.surrogate.html#otaf.surrogate.evaluate_binary_predictions">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">evaluate_binary_predictions</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Evaluates binary predictions against ground truth labels and computes confusion matrix and accuracy.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    predictions (np.ndarray): Array of binary predictions (1 for positive class, 0 for negative class).</span>
+<span class="sd">    labels (np.ndarray): Array of ground truth binary labels (1 for positive class, 0 for negative class).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    dict: Dictionary containing confusion matrix, accuracy, and detailed metrics.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Ensure inputs are numpy arrays</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+
+    <span class="c1"># Compute confusion matrix</span>
+    <span class="n">cm</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
+    <span class="n">tn</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tp</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+    <span class="c1"># Compute accuracy</span>
+    <span class="n">accuracy</span> <span class="o">=</span> <span class="p">(</span><span class="n">tn</span> <span class="o">+</span> <span class="n">tp</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">tn</span> <span class="o">+</span> <span class="n">fp</span> <span class="o">+</span> <span class="n">fn</span> <span class="o">+</span> <span class="n">tp</span><span class="p">)</span>
+
+    <span class="c1"># Compute other metrics</span>
+    <span class="n">precision</span> <span class="o">=</span> <span class="n">tp</span> <span class="o">/</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fp</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fp</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">recall</span> <span class="o">=</span> <span class="n">tp</span> <span class="o">/</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fn</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fn</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">f1_score</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">precision</span> <span class="o">*</span> <span class="n">recall</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">precision</span> <span class="o">+</span> <span class="n">recall</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">precision</span> <span class="o">+</span> <span class="n">recall</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+
+    <span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;confusion_matrix&quot;</span><span class="p">:</span> <span class="n">cm</span><span class="p">,</span>
+        <span class="s2">&quot;accuracy&quot;</span><span class="p">:</span> <span class="n">accuracy</span><span class="p">,</span>
+        <span class="s2">&quot;precision&quot;</span><span class="p">:</span> <span class="n">precision</span><span class="p">,</span>
+        <span class="s2">&quot;recall&quot;</span><span class="p">:</span> <span class="n">recall</span><span class="p">,</span>
+        <span class="s2">&quot;f1_score&quot;</span><span class="p">:</span> <span class="n">f1_score</span><span class="p">,</span>
+        <span class="s2">&quot;true_negatives&quot;</span><span class="p">:</span> <span class="n">tn</span><span class="p">,</span>
+        <span class="s2">&quot;false_positives&quot;</span><span class="p">:</span> <span class="n">fp</span><span class="p">,</span>
+        <span class="s2">&quot;false_negatives&quot;</span><span class="p">:</span> <span class="n">fn</span><span class="p">,</span>
+        <span class="s2">&quot;true_positives&quot;</span><span class="p">:</span> <span class="n">tp</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">metrics</span></div>
+
+
+
+<div class="viewcode-block" id="optimize_thresholds_with_alpha">
+<a class="viewcode-back" href="../../../source/otaf.surrogate.html#otaf.surrogate.optimize_thresholds_with_alpha">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">optimize_thresholds_with_alpha</span><span class="p">(</span>
+    <span class="n">pred_probs</span><span class="p">,</span>
+    <span class="n">ground_truth</span><span class="p">,</span>
+    <span class="n">bounds</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">],</span>
+    <span class="n">optimize_for</span><span class="o">=</span><span class="s2">&quot;minimize_fn_maximize_tn&quot;</span><span class="p">,</span>
+    <span class="n">equality_decision</span><span class="o">=</span><span class="s2">&quot;failure&quot;</span><span class="p">,</span>
+    <span class="n">optimal_ratio</span><span class="o">=</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">10000</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Optimizes the failure and success thresholds based on the specified objective using basin hopping.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    pred_probs (np.ndarray): Array of predicted class probabilities with shape (n_samples, 2).</span>
+<span class="sd">    ground_truth (np.ndarray): Array of true binary labels.</span>
+<span class="sd">    bounds (list): Bounds for the threshold values, default is [-5, 5].</span>
+<span class="sd">    optimize_for (str): Objective for optimization, &quot;minimize_fn_maximize_tn&quot; or &quot;minimize_fp_maximize_tp&quot;.</span>
+<span class="sd">    equality_decision (str): What is the outcome when both success and failure are positive? &quot;failure&quot; or &quot;success&quot;.</span>
+<span class="sd">    optimal_ratio (float): Ratio for penalizing false negatives/positives, default is 1/10000.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    dict: Best thresholds, alpha (currently unused), and corresponding evaluation metrics.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Informative message at the start</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="s2">&quot;Using basin hopping with cobyla to optimize thresholds for minimizing classification errors.&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">objective</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Objective function to minimize based on the specified optimization goal.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">failure_threshold</span><span class="p">,</span> <span class="n">success_threshold</span> <span class="o">=</span> <span class="n">params</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="n">generate_corrected_binary_predictions</span><span class="p">(</span>
+            <span class="n">pred_probs</span><span class="p">,</span> <span class="n">failure_threshold</span><span class="p">,</span> <span class="n">success_threshold</span><span class="p">,</span> <span class="n">equality_decision</span>
+        <span class="p">)</span>
+        <span class="n">evaluation</span> <span class="o">=</span> <span class="n">evaluate_binary_predictions</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">ground_truth</span><span class="p">)</span>
+
+        <span class="n">fn</span> <span class="o">=</span> <span class="n">evaluation</span><span class="p">[</span><span class="s2">&quot;false_negatives&quot;</span><span class="p">]</span>
+        <span class="n">tn</span> <span class="o">=</span> <span class="n">evaluation</span><span class="p">[</span><span class="s2">&quot;true_negatives&quot;</span><span class="p">]</span>
+        <span class="n">tp</span> <span class="o">=</span> <span class="n">evaluation</span><span class="p">[</span><span class="s2">&quot;true_positives&quot;</span><span class="p">]</span>
+        <span class="n">fp</span> <span class="o">=</span> <span class="n">evaluation</span><span class="p">[</span><span class="s2">&quot;false_positives&quot;</span><span class="p">]</span>
+
+        <span class="c1"># Normalize the objective function results</span>
+        <span class="n">total_positives</span> <span class="o">=</span> <span class="n">fn</span> <span class="o">+</span> <span class="n">tp</span>
+        <span class="n">total_negatives</span> <span class="o">=</span> <span class="n">tn</span> <span class="o">+</span> <span class="n">fp</span>
+
+        <span class="k">if</span> <span class="n">optimize_for</span> <span class="o">==</span> <span class="s2">&quot;minimize_fn_maximize_tn&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">fn</span> <span class="o">/</span> <span class="n">optimal_ratio</span> <span class="o">-</span> <span class="n">tn</span><span class="p">)</span> <span class="o">/</span> <span class="n">total_negatives</span>
+        <span class="k">elif</span> <span class="n">optimize_for</span> <span class="o">==</span> <span class="s2">&quot;minimize_fp_maximize_tp&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">fp</span> <span class="o">/</span> <span class="n">optimal_ratio</span> <span class="o">-</span> <span class="n">tp</span><span class="p">)</span> <span class="o">/</span> <span class="n">total_positives</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Invalid value for optimize_for. Choose either &#39;minimize_fn_maximize_tn&#39; or &#39;minimize_fp_maximize_tp&#39;.&quot;</span>
+            <span class="p">)</span>
+
+    <span class="c1"># Setup for the basin hopping minimizer</span>
+    <span class="n">minimizer_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;COBYLA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;bounds&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">bounds</span><span class="p">,</span> <span class="n">bounds</span><span class="p">],</span>  <span class="c1"># Applying bounds to both failure and success thresholds</span>
+        <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;disp&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;maxiter&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+            <span class="s2">&quot;tol&quot;</span><span class="p">:</span> <span class="mf">1e-6</span><span class="p">,</span>
+        <span class="p">},</span>  <span class="c1"># Turn off display for optimization steps</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Basin hopping optimization</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">basinhopping</span><span class="p">(</span>
+        <span class="n">objective</span><span class="p">,</span>
+        <span class="n">x0</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="p">),</span>  <span class="c1"># Random initial guess within bounds</span>
+        <span class="n">minimizer_kwargs</span><span class="o">=</span><span class="n">minimizer_kwargs</span><span class="p">,</span>
+        <span class="n">niter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>  <span class="c1"># Number of iterations for basin hopping</span>
+        <span class="n">disp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># Suppressing verbose output</span>
+        <span class="n">T</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>  <span class="c1"># Temperature parameter for randomness in basin hopping</span>
+        <span class="n">stepsize</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span>  <span class="c1"># Step size for random displacement</span>
+        <span class="n">niter_success</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>  <span class="c1"># Stop if no improvement after this many iterations</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Extracting the best found thresholds</span>
+    <span class="n">best_failure_threshold</span><span class="p">,</span> <span class="n">best_success_threshold</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span>
+
+    <span class="c1"># Generate predictions and evaluate using the best thresholds</span>
+    <span class="n">best_predictions</span> <span class="o">=</span> <span class="n">generate_corrected_binary_predictions</span><span class="p">(</span>
+        <span class="n">pred_probs</span><span class="p">,</span> <span class="n">best_failure_threshold</span><span class="p">,</span> <span class="n">best_success_threshold</span><span class="p">,</span> <span class="n">equality_decision</span>
+    <span class="p">)</span>
+    <span class="n">best_evaluation</span> <span class="o">=</span> <span class="n">evaluate_binary_predictions</span><span class="p">(</span><span class="n">best_predictions</span><span class="p">,</span> <span class="n">ground_truth</span><span class="p">)</span>
+
+    <span class="c1"># Returning the result in a dictionary format</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;best_failure_threshold&quot;</span><span class="p">:</span> <span class="n">best_failure_threshold</span><span class="p">,</span>
+        <span class="s2">&quot;best_success_threshold&quot;</span><span class="p">:</span> <span class="n">best_success_threshold</span><span class="p">,</span>
+        <span class="s2">&quot;best_alpha&quot;</span><span class="p">:</span> <span class="s2">&quot;None&quot;</span><span class="p">,</span>  <span class="c1"># Currently unused; placeholder for future use</span>
+        <span class="s2">&quot;evaluation&quot;</span><span class="p">:</span> <span class="n">best_evaluation</span><span class="p">,</span>
+    <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="plot_confusion_matrix">
+<a class="viewcode-back" href="../../../source/otaf.surrogate.html#otaf.surrogate.plot_confusion_matrix">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_confusion_matrix</span><span class="p">(</span><span class="n">cm</span><span class="p">):</span>
+    <span class="n">ConfusionMatrixDisplay</span><span class="p">(</span><span class="n">cm</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kramer84.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

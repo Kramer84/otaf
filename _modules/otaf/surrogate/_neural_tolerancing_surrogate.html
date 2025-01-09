@@ -1,0 +1,577 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>otaf.surrogate._neural_tolerancing_surrogate &mdash; otaf 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            otaf
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Jupyter Notebooks</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/Analytical_2D_Reference_Assembly.html">Analytical 2D Reference Assembly</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/modules.html">otaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.capabilities.html">otaf.capabilities package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.common.html">otaf.common package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.constants.html">otaf.constants module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.distribution.html">otaf.distribution package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.example_models.html">otaf.example_models package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.exceptions.html">otaf.exceptions package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.geometry.html">otaf.geometry package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.optimization.html">otaf.optimization package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.plotting.html">otaf.plotting package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.sampling.html">otaf.sampling package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.sensitivity.html">otaf.sensitivity package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.surrogate.html">otaf.surrogate package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.uncertainty.html">otaf.uncertainty package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">otaf</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">otaf.surrogate._neural_tolerancing_surrogate</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for otaf.surrogate._neural_tolerancing_surrogate</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;DualNetworkPredictor&quot;</span><span class="p">]</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tqdm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">clear_output</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.optim</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">optim</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torcheval.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">R2Score</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">TensorDataset</span><span class="p">,</span> <span class="n">random_split</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">otaf</span>
+
+<span class="n">DEVICE</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;mps&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">mps</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="DualNetworkPredictor">
+<a class="viewcode-back" href="../../../source/otaf.surrogate.html#otaf.surrogate.DualNetworkPredictor">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DualNetworkPredictor</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A PyTorch module that combines two neural networks to predict slack from defects.</span>
+
+<span class="sd">    This module first predicts gaps from defects using the first neural network,</span>
+<span class="sd">    then combines the original input array with the predicted gaps to predict slack</span>
+<span class="sd">    using the second neural network.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        model_defects_to_gaps (nn.Module): The first neural network model.</span>
+<span class="sd">        model_gap_def_to_slack (nn.Module): The second neural network model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_defects_to_gaps</span><span class="p">,</span> <span class="n">model_gap_def_to_slack</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_defects_to_gaps</span> <span class="o">=</span> <span class="n">model_defects_to_gaps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_gap_def_to_slack</span> <span class="o">=</span> <span class="n">model_gap_def_to_slack</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">X_def</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_defects_to_gaps</span><span class="o">.</span><span class="n">X_raw</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_gap</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_defects_to_gaps</span><span class="o">.</span><span class="n">y_raw</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_slack</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_gap_def_to_slack</span><span class="o">.</span><span class="n">y_raw</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span>
+            <span class="s2">&quot;mean_def&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_defects_to_gaps</span><span class="o">.</span><span class="n">X_mean</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span>
+            <span class="s2">&quot;std_def&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_defects_to_gaps</span><span class="o">.</span><span class="n">X_std</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span>
+            <span class="s2">&quot;mean_gap&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_defects_to_gaps</span><span class="o">.</span><span class="n">y_mean</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span>
+            <span class="s2">&quot;std_gap&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_defects_to_gaps</span><span class="o">.</span><span class="n">y_std</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span>
+            <span class="s2">&quot;mean_slack&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_gap_def_to_slack</span><span class="o">.</span><span class="n">y_mean</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span>
+            <span class="s2">&quot;std_slack&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_gap_def_to_slack</span><span class="o">.</span><span class="n">y_std</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="n">R2Score</span><span class="p">()</span>
+
+        <span class="c1"># Hold the best model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_R2</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>  <span class="c1"># init to infinity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_weights</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_dict</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">history_gaps</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">history_slack</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="DualNetworkPredictor.load_best_weights">
+<a class="viewcode-back" href="../../../source/otaf.surrogate.html#otaf.surrogate.DualNetworkPredictor.load_best_weights">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_best_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">best_weights</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DualNetworkPredictor.restore_start_weights">
+<a class="viewcode-back" href="../../../source/otaf.surrogate.html#otaf.surrogate.DualNetworkPredictor.restore_start_weights">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">restore_start_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_defects_to_gaps</span><span class="o">.</span><span class="n">load_model</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_gap_def_to_slack</span><span class="o">.</span><span class="n">load_model</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_weights</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_dict</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="DualNetworkPredictor.get_train_test_data">
+<a class="viewcode-back" href="../../../source/otaf.surrogate.html#otaf.surrogate.DualNetworkPredictor.get_train_test_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_train_test_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Splits the dataset into training and testing sets.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            test_size (float): Proportion of the dataset to include in the test split. Default is 0.2.</span>
+<span class="sd">            random_seed (int): Seed for random number generator. Default is 42.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: Training and testing datasets (X_train, y_train_gaps, y_train_slack, X_test, y_test_gaps, y_test_slack).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">TensorDataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_def</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_gap</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_slack</span><span class="p">)</span>
+        <span class="n">total_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+        <span class="n">test_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">total_size</span> <span class="o">*</span> <span class="n">test_size</span><span class="p">)</span>
+        <span class="n">train_size</span> <span class="o">=</span> <span class="n">total_size</span> <span class="o">-</span> <span class="n">test_size</span>
+
+        <span class="n">train_dataset</span><span class="p">,</span> <span class="n">test_dataset</span> <span class="o">=</span> <span class="n">random_split</span><span class="p">(</span>
+            <span class="n">dataset</span><span class="p">,</span> <span class="p">[</span><span class="n">train_size</span><span class="p">,</span> <span class="n">test_size</span><span class="p">],</span> <span class="n">generator</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">Generator</span><span class="p">()</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="n">random_seed</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">X_train</span> <span class="o">=</span> <span class="n">train_dataset</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">tensors</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">train_dataset</span><span class="o">.</span><span class="n">indices</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_train_gaps</span> <span class="o">=</span> <span class="n">train_dataset</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">tensors</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">train_dataset</span><span class="o">.</span><span class="n">indices</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_train_slack</span> <span class="o">=</span> <span class="n">train_dataset</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">tensors</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">train_dataset</span><span class="o">.</span><span class="n">indices</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">X_test</span> <span class="o">=</span> <span class="n">test_dataset</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">tensors</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">test_dataset</span><span class="o">.</span><span class="n">indices</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_test_gaps</span> <span class="o">=</span> <span class="n">test_dataset</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">tensors</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">test_dataset</span><span class="o">.</span><span class="n">indices</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_test_slack</span> <span class="o">=</span> <span class="n">test_dataset</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">tensors</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">test_dataset</span><span class="o">.</span><span class="n">indices</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="DualNetworkPredictor.forward">
+<a class="viewcode-back" href="../../../source/otaf.surrogate.html#otaf.surrogate.DualNetworkPredictor.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Forward pass through the combined networks.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (torch.Tensor): Input tensor containing normalized defect features.</span>
+<span class="sd">            batch_size (int, optional): Batch size for processing. Default is 250000.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Predicted slack values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_defects_to_gaps</span><span class="o">.</span><span class="n">input_normalization</span><span class="p">:</span>  <span class="c1"># We assume x is in std space</span>
+            <span class="n">pred_gaps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_defects_to_gaps</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_def</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_def</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pred_gaps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_defects_to_gaps</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_defects_to_gaps</span><span class="o">.</span><span class="n">output_normalization</span><span class="p">:</span>
+            <span class="n">pred_gaps</span> <span class="o">=</span> <span class="p">(</span><span class="n">pred_gaps</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_gap</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_gap</span>
+
+        <span class="c1"># Combine the original input array with the predicted gaps</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_gap_def_to_slack</span><span class="o">.</span><span class="n">input_normalization</span><span class="p">:</span>
+            <span class="n">combined_array</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_def</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_def</span><span class="p">,</span> <span class="n">pred_gaps</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_gap</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_gap</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">combined_array</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">pred_gaps</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">pred_slack</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_gap_def_to_slack</span><span class="p">(</span><span class="n">combined_array</span><span class="p">)</span>
+
+        <span class="c1"># if not self.model_gap_def_to_slack.output_normalization: # If the output is not normalized we normalize?</span>
+        <span class="c1">#    pred_slack = (pred_slack-self.mean_slack)/self.std_slack</span>
+
+        <span class="k">return</span> <span class="n">pred_slack</span></div>
+
+
+<div class="viewcode-block" id="DualNetworkPredictor.evaluate_in_batches">
+<a class="viewcode-back" href="../../../source/otaf.surrogate.html#otaf.surrogate.DualNetworkPredictor.evaluate_in_batches">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">evaluate_in_batches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">50000</span><span class="p">,</span> <span class="n">return_on_gpu</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper function to evaluate the combined model in batches.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (torch.Tensor): Input tensor in real space</span>
+<span class="sd">            batch_size (int, optional): Batch size for processing. Default is 50000.</span>
+<span class="sd">            return_on_gpu (bool, optional): Whether to return the result on the GPU. Default is False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: The concatenated output of the model evaluated in batches.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_best_weights</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">batch_size</span><span class="p">):</span>
+                <span class="n">batch</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+                    <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_def</span>
+                <span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_def</span>  <span class="c1"># Normalizing</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_gap_def_to_slack</span><span class="o">.</span><span class="n">output_normalization</span><span class="p">:</span>
+                    <span class="n">output</span> <span class="o">=</span> <span class="n">output</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_slack</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_slack</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">return_on_gpu</span><span class="p">:</span>
+                    <span class="n">output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+
+                <span class="c1"># Free up the GPU memory</span>
+                <span class="k">del</span> <span class="n">batch</span><span class="p">,</span> <span class="n">output</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
+
+        <span class="n">final_result</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">final_result</span></div>
+
+
+<div class="viewcode-block" id="DualNetworkPredictor.brute_force_probability_of_failure">
+<a class="viewcode-back" href="../../../source/otaf.surrogate.html#otaf.surrogate.DualNetworkPredictor.brute_force_probability_of_failure">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">brute_force_probability_of_failure</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">composed_distribution</span><span class="p">,</span>
+        <span class="n">N_MC_MAX</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">1e9</span><span class="p">),</span>
+        <span class="n">N_GEN_MAX</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">1e7</span><span class="p">),</span>
+        <span class="n">batch_size</span><span class="o">=</span><span class="mi">500000</span><span class="p">,</span>
+        <span class="n">PF_STAB</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span>
+        <span class="n">threshold</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Brute-force calculation of the probability of failure.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (torch.Tensor): Input tensor in real space.</span>
+<span class="sd">            threshold (float): The threshold below which a prediction is considered a failure.</span>
+<span class="sd">            batch_size (int, optional): Batch size for processing. Default is 50000.</span>
+<span class="sd">            N_MC_MAX (int, optional): Maximum number of Monte Carlo samples to evaluate. Default is 1e9.</span>
+<span class="sd">            PF_STAB (float, optional): Stability threshold for stopping criterion. Default is 1e-6.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The probability of failure.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">N_FIN</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Final size of Monte Carlo</span>
+        <span class="n">means</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">composed_distribution</span><span class="o">.</span><span class="n">getMean</span><span class="p">())</span>
+        <span class="n">stnds</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">composed_distribution</span><span class="o">.</span><span class="n">getStandardDeviation</span><span class="p">())</span>
+        <span class="n">torchDist</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">distributions</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">means</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">stnds</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_best_weights</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+            <span class="n">failures</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">int8</span><span class="p">)</span><span class="o">.</span><span class="n">to_sparse</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+            <span class="n">pf_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([],</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float32&quot;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_MC_MAX</span> <span class="o">//</span> <span class="n">N_GEN_MAX</span><span class="p">):</span>
+                <span class="n">sample</span> <span class="o">=</span> <span class="n">torchDist</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="n">N_GEN_MAX</span><span class="p">,))</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+                <span class="n">sample</span> <span class="o">=</span> <span class="p">(</span><span class="n">sample</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_def</span><span class="o">.</span><span class="n">cpu</span><span class="p">())</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_def</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N_GEN_MAX</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+                    <span class="n">batch</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="n">j</span> <span class="p">:</span> <span class="n">j</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+                    <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_gap_def_to_slack</span><span class="o">.</span><span class="n">output_normalization</span><span class="p">:</span>
+                        <span class="n">output</span> <span class="o">=</span> <span class="n">output</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_slack</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_slack</span>
+
+                    <span class="n">output</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">torch</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">output</span> <span class="o">&lt;</span> <span class="n">threshold</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+                        <span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">int8</span><span class="p">)</span>
+                        <span class="o">.</span><span class="n">to_sparse</span><span class="p">()</span>
+                    <span class="p">)</span>
+
+                    <span class="n">failures</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">failures</span><span class="p">,</span> <span class="n">output</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+                    <span class="n">total_failures</span> <span class="o">=</span> <span class="n">failures</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+                    <span class="n">total_samples_processed</span> <span class="o">=</span> <span class="n">failures</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span>
+
+                    <span class="c1"># Calculate the current probability of failure</span>
+                    <span class="n">pf_cpu</span> <span class="o">=</span> <span class="n">total_failures</span> <span class="o">/</span> <span class="n">total_samples_processed</span>
+                    <span class="n">pf_cpu_mod</span> <span class="o">=</span> <span class="p">(</span><span class="n">total_failures</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">total_samples_processed</span>
+
+                    <span class="n">pf_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pf_array</span><span class="p">,</span> <span class="n">pf_cpu</span><span class="p">)</span>
+
+                <span class="c1"># Check the stopping criterion within the inner loop</span>
+                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">pf_cpu</span> <span class="o">-</span> <span class="n">pf_cpu_mod</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">PF_STAB</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Finished at iteration </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">batch_size</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> with </span><span class="si">{</span><span class="n">total_samples_processed</span><span class="si">}</span><span class="s2"> samples processed. Pf: </span><span class="si">{</span><span class="n">pf_cpu</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+                    <span class="k">return</span> <span class="n">pf_array</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+                <span class="c1"># Free up the GPU memory</span>
+                <span class="k">del</span> <span class="n">batch</span><span class="p">,</span> <span class="n">output</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">pf_array</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># or np.mean(pf_array) if averaging is preferred</span></div>
+
+
+<div class="viewcode-block" id="DualNetworkPredictor.train_model">
+<a class="viewcode-back" href="../../../source/otaf.surrogate.html#otaf.surrogate.DualNetworkPredictor.train_model">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">train_model</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="p">,</span>
+        <span class="n">num_epochs</span><span class="p">,</span>
+        <span class="n">loss_f_gaps</span><span class="p">,</span>
+        <span class="n">loss_f_slack</span><span class="p">,</span>
+        <span class="n">optimizer_gaps</span><span class="p">,</span>
+        <span class="n">optimizer_slack</span><span class="p">,</span>
+        <span class="n">device</span><span class="o">=</span><span class="n">DEVICE</span><span class="p">,</span>
+        <span class="n">display_progress_disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Train the dual network model.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            batch_size (int): Batch size for training.</span>
+<span class="sd">            num_epochs (int): Number of epochs to train.</span>
+<span class="sd">            loss_f_gaps (torch.nn.Module): Loss function.</span>
+<span class="sd">            optimizer (torch.optim.Optimizer): Optimizer.</span>
+<span class="sd">            device (torch.device): Device to use for training (CPU or GPU).</span>
+<span class="sd">            display_progress_disable (bool): Flag to disable tqdm progress display.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">set_detect_anomaly</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Enable anomaly detection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">best_loss</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+        <span class="n">best_weights</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Determine tqdm function based on environment</span>
+        <span class="k">if</span> <span class="n">otaf</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">is_running_in_notebook</span><span class="p">():</span>
+            <span class="n">tq</span> <span class="o">=</span> <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm_notebook</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tq</span> <span class="o">=</span> <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_epochs</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+                <span class="n">running_loss_gaps</span> <span class="o">=</span> <span class="mf">0.0</span>
+                <span class="n">running_loss_slack</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+                <span class="k">with</span> <span class="n">tq</span><span class="p">(</span>
+                    <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_train</span><span class="p">),</span> <span class="n">batch_size</span><span class="p">),</span>
+                    <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;batch&quot;</span><span class="p">,</span>
+                    <span class="n">disable</span><span class="o">=</span><span class="n">display_progress_disable</span><span class="p">,</span>
+                <span class="p">)</span> <span class="k">as</span> <span class="n">bar</span><span class="p">:</span>
+                    <span class="n">bar</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bar</span><span class="p">:</span>
+                        <span class="n">inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_train</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+                        <span class="n">gaps_targets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train_gaps</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+                        <span class="n">slack_targets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train_slack</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+                        <span class="n">optimizer_gaps</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+                        <span class="c1"># Step 1: Optimize the upper network (defects to gaps)</span>
+                        <span class="k">if</span> <span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">model_defects_to_gaps</span><span class="o">.</span><span class="n">input_normalization</span>
+                        <span class="p">):</span>  <span class="c1"># X is not in standard space</span>
+                            <span class="n">pred_gaps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_defects_to_gaps</span><span class="p">(</span>
+                                <span class="p">(</span><span class="n">inputs</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_def</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_def</span>
+                            <span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">pred_gaps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_defects_to_gaps</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_defects_to_gaps</span><span class="o">.</span><span class="n">output_normalization</span><span class="p">:</span>
+                            <span class="n">pred_gaps</span> <span class="o">=</span> <span class="n">pred_gaps</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_gap</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_gap</span>
+                        <span class="n">loss_gaps</span> <span class="o">=</span> <span class="n">loss_f_gaps</span><span class="p">(</span><span class="n">pred_gaps</span><span class="p">,</span> <span class="n">gaps_targets</span><span class="p">)</span>
+                        <span class="n">loss_gaps</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">retain_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                        <span class="n">optimizer_gaps</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+                        <span class="c1"># Detach pred_gaps to avoid modifying it in-place in the next step</span>
+                        <span class="n">pred_gaps</span> <span class="o">=</span> <span class="n">pred_gaps</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+
+                        <span class="c1"># Step 2: Optimize the combined network (defects + gaps to slack)</span>
+                        <span class="n">optimizer_slack</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_gap_def_to_slack</span><span class="o">.</span><span class="n">input_normalization</span><span class="p">:</span>
+                            <span class="n">combined_array</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span>
+                                <span class="p">(</span>
+                                    <span class="p">(</span><span class="n">inputs</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_def</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_def</span><span class="p">,</span>
+                                    <span class="p">(</span><span class="n">pred_gaps</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_gap</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_gap</span><span class="p">,</span>
+                                <span class="p">),</span>
+                                <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                            <span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">combined_array</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">inputs</span><span class="p">,</span> <span class="n">pred_gaps</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                        <span class="n">pred_slack</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_gap_def_to_slack</span><span class="p">(</span><span class="n">combined_array</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_gap_def_to_slack</span><span class="o">.</span><span class="n">output_normalization</span><span class="p">:</span>
+                            <span class="n">pred_slack</span> <span class="o">=</span> <span class="n">pred_slack</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_slack</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_slack</span>
+
+                        <span class="n">loss_slack</span> <span class="o">=</span> <span class="n">loss_f_slack</span><span class="p">(</span><span class="n">pred_slack</span><span class="p">,</span> <span class="n">slack_targets</span><span class="p">)</span>
+                        <span class="n">loss_slack</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+
+                        <span class="n">optimizer_slack</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+                        <span class="n">running_loss_gaps</span> <span class="o">+=</span> <span class="n">loss_gaps</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">*</span> <span class="n">inputs</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                        <span class="n">running_loss_slack</span> <span class="o">+=</span> <span class="n">loss_slack</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">*</span> <span class="n">inputs</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+                        <span class="n">bar</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">(</span><span class="n">loss_gaps</span><span class="o">=</span><span class="n">loss_gaps</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">loss_slack</span><span class="o">=</span><span class="n">loss_slack</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+
+                <span class="c1"># Calculate average training losses</span>
+                <span class="n">train_loss_gaps</span> <span class="o">=</span> <span class="n">running_loss_gaps</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_train</span><span class="p">)</span>
+                <span class="n">train_loss_slack</span> <span class="o">=</span> <span class="n">running_loss_slack</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_train</span><span class="p">)</span>
+
+                <span class="c1"># Validation phase</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+                <span class="n">val_loss_gaps</span> <span class="o">=</span> <span class="mf">0.0</span>
+                <span class="n">val_loss_slack</span> <span class="o">=</span> <span class="mf">0.0</span>
+                <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_test</span><span class="p">),</span> <span class="n">batch_size</span><span class="p">):</span>
+                        <span class="n">inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_test</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+                        <span class="n">gaps_targets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_test_gaps</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+                        <span class="n">slack_targets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_test_slack</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+                        <span class="c1"># Forward pass through both networks</span>
+                        <span class="n">pred_gaps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_defects_to_gaps</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_defects_to_gaps</span><span class="o">.</span><span class="n">output_normalization</span><span class="p">:</span>
+                            <span class="n">pred_gaps</span> <span class="o">=</span> <span class="p">(</span><span class="n">pred_gaps</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_gap</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_gap</span>
+                        <span class="n">combined_array</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">inputs</span><span class="p">,</span> <span class="n">pred_gaps</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                        <span class="n">pred_slack</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_gap_def_to_slack</span><span class="p">(</span><span class="n">combined_array</span><span class="p">)</span>
+
+                        <span class="c1"># Compute losses</span>
+                        <span class="n">loss_gaps</span> <span class="o">=</span> <span class="n">loss_f_gaps</span><span class="p">(</span><span class="n">pred_gaps</span><span class="p">,</span> <span class="n">gaps_targets</span><span class="p">)</span>
+                        <span class="n">loss_slack</span> <span class="o">=</span> <span class="n">loss_f_slack</span><span class="p">(</span><span class="n">pred_slack</span><span class="p">,</span> <span class="n">slack_targets</span><span class="p">)</span>
+                        <span class="n">val_loss_gaps</span> <span class="o">+=</span> <span class="n">loss_gaps</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">*</span> <span class="n">inputs</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                        <span class="n">val_loss_slack</span> <span class="o">+=</span> <span class="n">loss_slack</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">*</span> <span class="n">inputs</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">slack_targets</span><span class="p">,</span> <span class="n">pred_slack</span><span class="p">)</span>
+
+                <span class="c1"># Calculate average validation losses</span>
+                <span class="n">val_loss_gaps</span> <span class="o">=</span> <span class="n">val_loss_gaps</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_test</span><span class="p">)</span>
+                <span class="n">val_loss_slack</span> <span class="o">=</span> <span class="n">val_loss_slack</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_test</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">history_gaps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val_loss_gaps</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">history_slack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val_loss_slack</span><span class="p">)</span>
+
+                <span class="n">R2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">compute</span><span class="p">())</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Epoch [</span><span class="si">{</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">num_epochs</span><span class="si">}</span><span class="s2">], Train Loss Gaps: </span><span class="si">{</span><span class="n">train_loss_gaps</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, Train Loss Slack: </span><span class="si">{</span><span class="n">train_loss_slack</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, Val Loss Gaps: </span><span class="si">{</span><span class="n">val_loss_gaps</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, Val Loss Slack: </span><span class="si">{</span><span class="n">val_loss_slack</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, R2: </span><span class="si">{</span><span class="n">R2</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+                <span class="c1"># Save the best model weights</span>
+                <span class="n">val_loss</span> <span class="o">=</span> <span class="n">val_loss_gaps</span> <span class="o">+</span> <span class="n">val_loss_slack</span>
+                <span class="k">if</span> <span class="n">val_loss</span> <span class="o">&lt;</span> <span class="n">best_loss</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">best_loss</span> <span class="o">=</span> <span class="n">val_loss</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">best_R2</span> <span class="o">=</span> <span class="n">R2</span>
+                    <span class="n">best_weights</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_dict</span><span class="p">())</span>
+
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training interrupted by user&quot;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Finished training at epoch </span><span class="si">{</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> with best validation loss </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">best_loss</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> and R2 of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">best_R2</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Restore the best model weights</span>
+        <span class="k">if</span> <span class="n">best_weights</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">best_weights</span> <span class="o">=</span> <span class="n">best_weights</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">best_weights</span><span class="p">)</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DualNetworkPredictor.plot_results">
+<a class="viewcode-back" href="../../../source/otaf.surrogate.html#otaf.surrogate.DualNetworkPredictor.plot_results">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">history_gaps</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;gaps&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">history_slack</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;slack&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kramer84.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

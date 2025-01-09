@@ -1,0 +1,452 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>otaf.optimization._basinhopping_step_accept &mdash; otaf 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            otaf
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Jupyter Notebooks</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/Analytical_2D_Reference_Assembly.html">Analytical 2D Reference Assembly</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/modules.html">otaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.capabilities.html">otaf.capabilities package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.common.html">otaf.common package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.constants.html">otaf.constants module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.distribution.html">otaf.distribution package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.example_models.html">otaf.example_models package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.exceptions.html">otaf.exceptions package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.geometry.html">otaf.geometry package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.optimization.html">otaf.optimization package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.plotting.html">otaf.plotting package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.sampling.html">otaf.sampling package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.sensitivity.html">otaf.sensitivity package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.surrogate.html">otaf.surrogate package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.uncertainty.html">otaf.uncertainty package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">otaf</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">otaf.optimization._basinhopping_step_accept</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for otaf.optimization._basinhopping_step_accept</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;StepTaking&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;AcceptTest&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Callback&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;check_constraint_with_tolerance&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearConstraint</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">otaf</span>
+
+
+<div class="viewcode-block" id="StepTaking">
+<a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.StepTaking">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">StepTaking</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Custom class for generating bounded steps in the optimization space.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    linear_condition : callable</span>
+<span class="sd">        A function to enforce linear constraints on subsets of variables.</span>
+<span class="sd">    stepsize : float</span>
+<span class="sd">        The size of the step to be taken (default 0.5).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storage</span><span class="p">,</span> <span class="n">defect_description</span><span class="p">,</span> <span class="n">stepsize</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the StepTaking class.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        ----------</span>
+<span class="sd">        storage : OptimizationStorage</span>
+<span class="sd">            An instance of the OptimizationStorage class to manage optimization points.</span>
+<span class="sd">        defect_description : list</span>
+<span class="sd">            Descriptions of the features, used to normalize the steps.</span>
+<span class="sd">        stepsize : float, optional</span>
+<span class="sd">            The size of the step to be taken (default: 0.5).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">storage</span> <span class="o">=</span> <span class="n">storage</span>  <span class="c1"># Use OptimizationStorage to store and manage points</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature_indices</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">sampling</span><span class="o">.</span><span class="n">validate_and_extract_indices</span><span class="p">(</span>
+            <span class="n">defect_description</span>
+        <span class="p">)</span>  <span class="c1"># Normalize within features</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linear_constraints</span> <span class="o">=</span> <span class="n">linear_constraint_from_feature_indices</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">feature_indices</span>
+        <span class="p">)</span>  <span class="c1"># Linear constraint object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stepsize</span> <span class="o">=</span> <span class="n">stepsize</span>
+
+<div class="viewcode-block" id="StepTaking.__call__">
+<a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.StepTaking.__call__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate a new candidate step based on the current position &#39;x&#39;.</span>
+<span class="sd">        The step respects the provided bounds and enforces the linear condition.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : array-like</span>
+<span class="sd">            The current point in the search space.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        -------</span>
+<span class="sd">        new_x : array-like</span>
+<span class="sd">            The new point after taking a step.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Generate a random step vector</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">stepsize</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stepsize</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="c1"># Add step to current position</span>
+        <span class="n">new_x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">step</span>
+        <span class="n">new_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+            <span class="n">new_x</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">new_x</span>
+        <span class="p">)</span>  <span class="c1"># Only positive, needs to be changed if working with imprecise corelation.</span>
+
+        <span class="k">return</span> <span class="n">otaf</span><span class="o">.</span><span class="n">sampling</span><span class="o">.</span><span class="n">condition_sample_array</span><span class="p">(</span>
+            <span class="n">new_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_indices</span><span class="p">,</span> <span class="n">squared_sum</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>  <span class="c1"># Normalizing.</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="AcceptTest">
+<a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.AcceptTest">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AcceptTest</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Custom class for accepting or rejecting new steps in the optimization process.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">    ----------</span>
+<span class="sd">    storage : OptimizationStorage</span>
+<span class="sd">        An instance of the OptimizationStorage class to store and manage optimization points.</span>
+<span class="sd">    linear_constraints : LinearConstraint</span>
+<span class="sd">        A function to enforce linear constraints on the variables.</span>
+<span class="sd">    distance_threshold : float</span>
+<span class="sd">        Minimum distance between points to avoid revisiting.</span>
+<span class="sd">    surrogate_model : callable</span>
+<span class="sd">        A callable to update a surrogate model based on new points.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storage</span><span class="p">,</span> <span class="n">defect_description</span><span class="p">,</span> <span class="n">distance_threshold</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">surrogate_model</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">storage</span> <span class="o">=</span> <span class="n">storage</span>  <span class="c1"># Instance of OptimizationStorage for storing and managing points</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature_indices</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">sampling</span><span class="o">.</span><span class="n">validate_and_extract_indices</span><span class="p">(</span>
+            <span class="n">defect_description</span>
+        <span class="p">)</span>  <span class="c1"># Normalize within features</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linear_constraints</span> <span class="o">=</span> <span class="n">linear_constraint_from_feature_indices</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">feature_indices</span>
+        <span class="p">)</span>  <span class="c1"># Linear constraint object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distance_threshold</span> <span class="o">=</span> <span class="n">distance_threshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">surrogate_model</span> <span class="o">=</span> <span class="n">surrogate_model</span>
+
+<div class="viewcode-block" id="AcceptTest.__call__">
+<a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.AcceptTest.__call__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f_new</span><span class="p">,</span> <span class="n">x_new</span><span class="p">,</span> <span class="n">f_old</span><span class="p">,</span> <span class="n">x_old</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Decide whether to accept or reject a new step in the optimization.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        ----------</span>
+<span class="sd">        f_new : float</span>
+<span class="sd">            The function value at the new point.</span>
+<span class="sd">        x_new : array-like</span>
+<span class="sd">            The coordinates of the new point.</span>
+<span class="sd">        f_old : float</span>
+<span class="sd">            The function value at the previous point.</span>
+<span class="sd">        x_old : array-like</span>
+<span class="sd">            The coordinates of the previous point.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            True if the new step is accepted, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check if the new point satisfies the linear constraints</span>
+        <span class="n">constraint_satisfied</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">check_constraint_with_tolerance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">linear_constraints</span><span class="p">,</span> <span class="n">x_new</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">constraint_satisfied</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Check distance from previous points</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_too_close</span><span class="p">(</span><span class="n">x_new</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Optionally update the surrogate model with new data</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">surrogate_model</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">surrogate_model</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">x_new</span><span class="p">,</span> <span class="n">f_new</span><span class="p">)</span>
+
+        <span class="c1"># Store the new point using OptimizationStorage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span><span class="n">x_new</span><span class="p">,</span> <span class="n">f_new</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="s2">&quot;local&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Accept new point if the function value improves, else use the Metropolis criterion</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_accept_based_on_value</span><span class="p">(</span><span class="n">f_new</span><span class="p">,</span> <span class="n">f_old</span><span class="p">)</span></div>
+
+
+    <span class="nd">@otaf</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">timeout</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">error_message</span><span class="o">=</span><span class="s2">&quot;Execution took too long!&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_is_too_close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_new</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the new point is too close to any existing points in the storage.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x_new : array-like</span>
+<span class="sd">            The coordinates of the new point.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            True if the point is too close to any existing point, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">iter_points</span><span class="p">(</span>
+            <span class="n">source</span><span class="o">=</span><span class="s2">&quot;global&quot;</span><span class="p">,</span> <span class="n">constraints_respected</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bounds_respected</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">):</span>
+            <span class="n">x_existing</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;point&quot;</span><span class="p">]</span>
+            <span class="n">distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">x_new</span> <span class="o">-</span> <span class="n">x_existing</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">distance</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance_threshold</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_accept_based_on_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f_new</span><span class="p">,</span> <span class="n">f_old</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Decide whether to accept the new point based on its function value.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        ----------</span>
+<span class="sd">        f_new : float</span>
+<span class="sd">            The function value at the new point.</span>
+<span class="sd">        f_old : float</span>
+<span class="sd">            The function value at the previous point.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            True if the new point is accepted, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">f_new</span> <span class="o">&lt;</span> <span class="n">f_old</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Metropolis criterion for worse solutions</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">f_old</span> <span class="o">-</span> <span class="n">f_new</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Callback">
+<a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.Callback">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Callback</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A callback class to store accepted local minima and allow data sharing between components.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storage</span><span class="p">,</span> <span class="n">stop_criterion</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the Callback class.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        ----------</span>
+<span class="sd">        storage : OptimizationStorage</span>
+<span class="sd">            An instance of the OptimizationStorage class to manage optimization data.</span>
+<span class="sd">        stop_criterion : callable or None, optional</span>
+<span class="sd">            A user-defined function that determines whether to stop the basinhopping routine.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">storage</span> <span class="o">=</span> <span class="n">storage</span>  <span class="c1"># Use OptimizationStorage to store points</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_criterion</span> <span class="o">=</span> <span class="n">stop_criterion</span>
+
+<div class="viewcode-block" id="Callback.__call__">
+<a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.Callback.__call__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">accept</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Store the current local minimum if accepted and apply the stop criterion if provided.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : array-like</span>
+<span class="sd">            The coordinates of the current minimum.</span>
+<span class="sd">        f : float</span>
+<span class="sd">            The function value at the current minimum.</span>
+<span class="sd">        accept : bool</span>
+<span class="sd">            Whether the current minimum was accepted.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool or None</span>
+<span class="sd">            Return True to stop the basinhopping routine if the stop criterion is met, otherwise return None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Only store accepted minima</span>
+        <span class="k">if</span> <span class="n">accept</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="s2">&quot;local&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Check user-defined stop criterion</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stop_criterion</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">stop_criterion</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">accept</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>  <span class="c1"># Stop the basinhopping routine</span></div>
+
+
+<div class="viewcode-block" id="Callback.get_data">
+<a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.Callback.get_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve the stored local minima points.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">get_all_data</span><span class="p">()</span></div>
+</div>
+
+
+
+<span class="nd">@otaf</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">timeout</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">error_message</span><span class="o">=</span><span class="s2">&quot;Execution took too long!&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">linear_constraint_from_feature_indices</span><span class="p">(</span>
+    <span class="n">feature_indices</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">keep_feasible</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a linear constraint ensuring that lambda parameters sum to 1 for each feature.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        feature_indices (list[int]): List of feature indices extracted from the sample description.</span>
+<span class="sd">        tol (float, optional): Tolerance for the constraint bounds. Defaults to 1e-12.</span>
+<span class="sd">        keep_feasible (bool, optional): Whether to keep the constraint feasible. Defaults to True.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        LinearConstraint: Linear constraint ensuring that lambda parameters for each feature sum to 1.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">feature_indices</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Feature indices must be provided.&quot;</span><span class="p">)</span>
+
+    <span class="n">unique_features_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">feature_indices</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">n_symb</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_indices</span><span class="p">)</span>
+    <span class="n">n_feat</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_features_ids</span><span class="p">)</span>
+
+    <span class="c1"># Initialize the constraint matrix</span>
+    <span class="n">constraint_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_feat</span><span class="p">,</span> <span class="n">n_symb</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float64&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Build the constraint matrix where each row corresponds to a feature</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">feature_idx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">unique_features_ids</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">feature_indices</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">feature_idx</span> <span class="o">==</span> <span class="n">idx</span><span class="p">:</span>
+                <span class="n">constraint_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+    <span class="c1"># Define the lower and upper bounds for the linear constraint</span>
+    <span class="n">lb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_feat</span><span class="p">,))</span> <span class="o">-</span> <span class="n">tol</span>
+    <span class="n">ub</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_feat</span><span class="p">,))</span> <span class="o">+</span> <span class="n">tol</span>
+
+    <span class="c1"># Create the linear constraint</span>
+    <span class="n">linear_constraint</span> <span class="o">=</span> <span class="n">LinearConstraint</span><span class="p">(</span><span class="n">constraint_matrix</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">,</span> <span class="n">keep_feasible</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">linear_constraint</span>
+
+
+<div class="viewcode-block" id="check_constraint_with_tolerance">
+<a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.check_constraint_with_tolerance">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_constraint_with_tolerance</span><span class="p">(</span><span class="n">linear_constraint</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if the vector x satisfies the linear constraint within a specified tolerance.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    linear_constraint : scipy.optimize.LinearConstraint</span>
+<span class="sd">        The linear constraint object containing A, lb, and ub.</span>
+<span class="sd">    x : array_like</span>
+<span class="sd">        The vector of independent variables to check.</span>
+<span class="sd">    tolerance : float, optional</span>
+<span class="sd">        The tolerance within which the constraint should be satisfied (default is 1e-6).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        True if the constraint is satisfied within the tolerance, False otherwise.</span>
+<span class="sd">    dict</span>
+<span class="sd">        A dictionary containing the lower and upper residuals.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sl</span><span class="p">,</span> <span class="n">sb</span> <span class="o">=</span> <span class="n">linear_constraint</span><span class="o">.</span><span class="n">residual</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="c1"># Check if all residuals are greater than or equal to -tolerance</span>
+    <span class="n">lower_residuals_check</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">sl</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="n">tolerance</span><span class="p">)</span>
+    <span class="n">upper_residuals_check</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">sb</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="n">tolerance</span><span class="p">)</span>
+
+    <span class="c1"># If both checks pass, the constraint is satisfied</span>
+    <span class="n">constraint_satisfied</span> <span class="o">=</span> <span class="n">lower_residuals_check</span> <span class="ow">and</span> <span class="n">upper_residuals_check</span>
+
+    <span class="c1"># Return the result and the residuals for further analysis if needed</span>
+    <span class="k">return</span> <span class="n">constraint_satisfied</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;lower_residuals&quot;</span><span class="p">:</span> <span class="n">sl</span><span class="p">,</span> <span class="s2">&quot;upper_residuals&quot;</span><span class="p">:</span> <span class="n">sb</span><span class="p">}</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kramer84.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

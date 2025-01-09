@@ -68,7 +68,7 @@
 <li class="toctree-l4"><a class="reference internal" href="otaf.uncertainty.html">otaf.uncertainty package</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="otaf.html#module-contents">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.html#module-otaf">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -84,7 +84,28 @@
 <li class="toctree-l1"><a class="reference internal" href="otaf.plotting.html">otaf.plotting package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.sampling.html">otaf.sampling package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">otaf.sensitivity package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-otaf.sensitivity">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.generate"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.generateWithWeights"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.generateWithWeights()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getClassName"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.getClassName()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getId"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.getId()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getName"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.getName()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getShadowedId"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.getShadowedId()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getSize"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.getSize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getVisibility"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.getVisibility()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.hasName"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.hasName()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.hasUniformWeights"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.hasUniformWeights()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.hasVisibleName"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.hasVisibleName()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setComposedDistribution"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.setComposedDistribution()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setName"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.setName()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setShadowedId"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.setShadowedId()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setSize"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.setSize()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.sensitivity.plotSobolIndicesWithErr"><code class="docutils literal notranslate"><span class="pre">plotSobolIndicesWithErr()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.surrogate.html">otaf.surrogate package</a></li>
@@ -119,8 +140,126 @@
              
   <section id="otaf-sensitivity-package">
 <h1>otaf.sensitivity package<a class="headerlink" href="#otaf-sensitivity-package" title="Link to this heading"></a></h1>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="module-otaf.sensitivity">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-otaf.sensitivity" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.sensitivity.</span></span><span class="sig-name descname"><span class="pre">SobolIndicesExperimentWithComposedDistribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">composedDistribution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">second_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sensitivity/_sobol_experiment_construction.html#SobolIndicesExperimentWithComposedDistribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">SobolIndicesExperiment</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sensitivity/_sobol_experiment_construction.html#SobolIndicesExperimentWithComposedDistribution.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.generate" title="Link to this definition"></a></dt>
+<dd><p>Generates and returns the final mixture matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Keyword Arguments<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>method</strong> (<em>str</em>) – Can be : ‘MonteCarlo’, ‘LHS’, ‘QMC’</p></li>
+<li><p><strong>sequence</strong> (<em>str</em>) – Only if using QMC
+Can be : ‘Faure’, ‘Halton’, ‘ReverseHalton’, ‘Haselgrove’, ‘Sobol’</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.generateWithWeights">
+<span class="sig-name descname"><span class="pre">generateWithWeights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sensitivity/_sobol_experiment_construction.html#SobolIndicesExperimentWithComposedDistribution.generateWithWeights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.generateWithWeights" title="Link to this definition"></a></dt>
+<dd><p>Not implemented, for coherence with openturns library</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getClassName">
+<span class="sig-name descname"><span class="pre">getClassName</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sensitivity/_sobol_experiment_construction.html#SobolIndicesExperimentWithComposedDistribution.getClassName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getClassName" title="Link to this definition"></a></dt>
+<dd><p>Returns the name of the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getId">
+<span class="sig-name descname"><span class="pre">getId</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sensitivity/_sobol_experiment_construction.html#SobolIndicesExperimentWithComposedDistribution.getId"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getId" title="Link to this definition"></a></dt>
+<dd><p>Returns the ID of the object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getName">
+<span class="sig-name descname"><span class="pre">getName</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sensitivity/_sobol_experiment_construction.html#SobolIndicesExperimentWithComposedDistribution.getName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getName" title="Link to this definition"></a></dt>
+<dd><p>Returns the name of the object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getShadowedId">
+<span class="sig-name descname"><span class="pre">getShadowedId</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sensitivity/_sobol_experiment_construction.html#SobolIndicesExperimentWithComposedDistribution.getShadowedId"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getShadowedId" title="Link to this definition"></a></dt>
+<dd><p>Returns the shadowed ID of the object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getSize">
+<span class="sig-name descname"><span class="pre">getSize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sensitivity/_sobol_experiment_construction.html#SobolIndicesExperimentWithComposedDistribution.getSize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getSize" title="Link to this definition"></a></dt>
+<dd><p>Returns the size of the generated mixture matrix.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getVisibility">
+<span class="sig-name descname"><span class="pre">getVisibility</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sensitivity/_sobol_experiment_construction.html#SobolIndicesExperimentWithComposedDistribution.getVisibility"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getVisibility" title="Link to this definition"></a></dt>
+<dd><p>Returns the visibility</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.hasName">
+<span class="sig-name descname"><span class="pre">hasName</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sensitivity/_sobol_experiment_construction.html#SobolIndicesExperimentWithComposedDistribution.hasName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.hasName" title="Link to this definition"></a></dt>
+<dd><p>Returns if the object has a name</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.hasUniformWeights">
+<span class="sig-name descname"><span class="pre">hasUniformWeights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sensitivity/_sobol_experiment_construction.html#SobolIndicesExperimentWithComposedDistribution.hasUniformWeights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.hasUniformWeights" title="Link to this definition"></a></dt>
+<dd><p>Not implemented, for coherence with openturns library</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.hasVisibleName">
+<span class="sig-name descname"><span class="pre">hasVisibleName</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sensitivity/_sobol_experiment_construction.html#SobolIndicesExperimentWithComposedDistribution.hasVisibleName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.hasVisibleName" title="Link to this definition"></a></dt>
+<dd><p>Returns if yes or not the name is visible</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setComposedDistribution">
+<span class="sig-name descname"><span class="pre">setComposedDistribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">composedDistribution</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sensitivity/_sobol_experiment_construction.html#SobolIndicesExperimentWithComposedDistribution.setComposedDistribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setComposedDistribution" title="Link to this definition"></a></dt>
+<dd><p>Sets the composed distribution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setName">
+<span class="sig-name descname"><span class="pre">setName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sensitivity/_sobol_experiment_construction.html#SobolIndicesExperimentWithComposedDistribution.setName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setName" title="Link to this definition"></a></dt>
+<dd><p>Sets the name of the object</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setShadowedId">
+<span class="sig-name descname"><span class="pre">setShadowedId</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ids</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sensitivity/_sobol_experiment_construction.html#SobolIndicesExperimentWithComposedDistribution.setShadowedId"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setShadowedId" title="Link to this definition"></a></dt>
+<dd><p>Sets the shadowed ID of the object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setSize">
+<span class="sig-name descname"><span class="pre">setSize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">N</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sensitivity/_sobol_experiment_construction.html#SobolIndicesExperimentWithComposedDistribution.setSize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setSize" title="Link to this definition"></a></dt>
+<dd><p>Sets the size of the samples A and B.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.sensitivity.plotSobolIndicesWithErr">
+<span class="sig-prename descclassname"><span class="pre">otaf.sensitivity.</span></span><span class="sig-name descname"><span class="pre">plotSobolIndicesWithErr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">errS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">varNames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_dims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Stot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">errStot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimNames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(20,</span> <span class="pre">10)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sensitivity/_sensitivity_plotting.html#plotSobolIndicesWithErr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sensitivity.plotSobolIndicesWithErr" title="Link to this definition"></a></dt>
+<dd><p>Function to plot the Sobol’ indices with an errorbar to visualize the
+uncertaintity in the estimator. (only first and total order yet)</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Function is written to adapt the plotting according to the dimensions of
+the input, for higher level inputs, mayavi seems the most reasonable choice
+for plotting</p>
+</div>
+</dd></dl>
+
 </section>
 </section>
 

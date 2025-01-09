@@ -1,0 +1,414 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>otaf.exceptions._exceptions &mdash; otaf 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            otaf
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Jupyter Notebooks</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/Analytical_2D_Reference_Assembly.html">Analytical 2D Reference Assembly</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/modules.html">otaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.capabilities.html">otaf.capabilities package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.common.html">otaf.common package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.constants.html">otaf.constants module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.distribution.html">otaf.distribution package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.example_models.html">otaf.example_models package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.exceptions.html">otaf.exceptions package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.geometry.html">otaf.geometry package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.optimization.html">otaf.optimization package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.plotting.html">otaf.plotting package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.sampling.html">otaf.sampling package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.sensitivity.html">otaf.sensitivity package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.surrogate.html">otaf.surrogate package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.uncertainty.html">otaf.uncertainty package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">otaf</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">otaf.exceptions._exceptions</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for otaf.exceptions._exceptions</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;MissingSurfaceTypeKeyError&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;MissingKeyError&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;InvalidPartLabelError&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;InvalidSurfaceLabelError&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;UnsupportedSurfaceTypeError&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;InvalidInteractionFormatError&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;InvalidSurfaceDirectionError&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;InvalidGlobalConstraintError&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PointDictionaryError&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;MissingOriginPointError&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;NonUniqueLabelError&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PartNotFoundError&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SurfaceNotFoundError&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DuplicatePointError&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;LabelPatternError&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;LabelPrefixError&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;UniqueLabelSuffixError&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;NonUniqueCoordinatesError&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;GeometricConditionError&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PointsNotOnPlaneError&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;NonConcentricCylindersException&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ConflictingSurfaceDirectionsException&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;InvalidAffineTransformException&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">otaf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+
+<div class="viewcode-block" id="MissingSurfaceTypeKeyError">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.MissingSurfaceTypeKeyError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MissingSurfaceTypeKeyError</span><span class="p">(</span><span class="ne">KeyError</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Surface type key &#39;TYPE&#39; is missing for surface </span><span class="si">{</span><span class="n">surf_id</span><span class="si">}</span><span class="s2"> in part </span><span class="si">{</span><span class="n">part_id</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="MissingKeyError">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.MissingKeyError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MissingKeyError</span><span class="p">(</span><span class="ne">KeyError</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">dictionary_name</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Required key &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; is missing in &#39;</span><span class="si">{</span><span class="n">dictionary_name</span><span class="si">}</span><span class="s2">&#39; dictionary.&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="InvalidPartLabelError">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.InvalidPartLabelError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">InvalidPartLabelError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;All parts must be labelled by the string representation of an integer.&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="InvalidSurfaceLabelError">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.InvalidSurfaceLabelError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">InvalidSurfaceLabelError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;All surfaces must be labelled by a lowercase alphabetical character.&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="InvalidInteractionFormatError">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.InvalidInteractionFormatError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">InvalidInteractionFormatError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interaction</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;The interaction &#39;</span><span class="si">{</span><span class="n">interaction</span><span class="si">}</span><span class="s2">&#39; does not match the expected format. Ensure it conforms to the required regex pattern.&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="InvalidSurfaceDirectionError">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.InvalidSurfaceDirectionError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">InvalidSurfaceDirectionError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surf_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;The surface direction &#39;</span><span class="si">{</span><span class="n">surf_dir</span><span class="si">}</span><span class="s2">&#39; is not one of the expected ones: </span><span class="si">{</span><span class="n">otaf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">SURFACE_DIRECTIONS</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="UnsupportedSurfaceTypeError">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.UnsupportedSurfaceTypeError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UnsupportedSurfaceTypeError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">,</span> <span class="n">surf_type</span><span class="p">):</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;The type </span><span class="si">{</span><span class="n">surf_type</span><span class="si">}</span><span class="s2"> defined for part </span><span class="si">{</span><span class="n">part_id</span><span class="si">}</span><span class="s2"> on surface </span><span class="si">{</span><span class="n">surf_id</span><span class="si">}</span><span class="s2"> is not a standard surface type and not supported.</span><span class="se">\n</span><span class="s2"> Standard types: </span><span class="si">{</span><span class="n">otaf</span><span class="o">.</span><span class="n">BASE_SURFACE_TYPES</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="InvalidGlobalConstraintError">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.InvalidGlobalConstraintError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">InvalidGlobalConstraintError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">valid_constraints</span><span class="p">):</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;The global constraint can only be one the following: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">valid_constraints</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="PointDictionaryError">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.PointDictionaryError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PointDictionaryError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="MissingOriginPointError">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.MissingOriginPointError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MissingOriginPointError</span><span class="p">(</span><span class="n">PointDictionaryError</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">):</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;A point dictionary has been passed for part </span><span class="si">{</span><span class="n">part_id</span><span class="si">}</span><span class="s2"> surface </span><span class="si">{</span><span class="n">surf_id</span><span class="si">}</span><span class="s2"> but does not contain a point for the surface origin.&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="NonUniqueLabelError">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.NonUniqueLabelError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NonUniqueLabelError</span><span class="p">(</span><span class="n">PointDictionaryError</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="PartNotFoundError">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.PartNotFoundError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PartNotFoundError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Part ID </span><span class="si">{</span><span class="n">part_id</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="SurfaceNotFoundError">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.SurfaceNotFoundError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SurfaceNotFoundError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">,</span> <span class="n">part_id</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Surface ID </span><span class="si">{</span><span class="n">surf_id</span><span class="si">}</span><span class="s2"> not found in Part ID </span><span class="si">{</span><span class="n">part_id</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="DuplicatePointError">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.DuplicatePointError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DuplicatePointError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">point_name</span><span class="p">,</span>
+        <span class="n">surf_id</span><span class="p">,</span>
+        <span class="n">part_id</span><span class="p">,</span>
+        <span class="n">existing_point</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">origin</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">new_point_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">existing_point_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">exact_match</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">value_message</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">new_point_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">existing_point_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">formatted_new_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array2string</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">new_point_value</span><span class="p">),</span> <span class="n">precision</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">separator</span><span class="o">=</span><span class="s2">&quot;,&quot;</span>
+            <span class="p">)</span>
+            <span class="n">formatted_existing_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array2string</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">existing_point_value</span><span class="p">),</span> <span class="n">precision</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">separator</span><span class="o">=</span><span class="s2">&quot;,&quot;</span>
+            <span class="p">)</span>
+            <span class="n">value_message</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot; New value: </span><span class="si">{</span><span class="n">formatted_new_value</span><span class="si">}</span><span class="s2">. Existing value: </span><span class="si">{</span><span class="n">formatted_existing_value</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">exact_match</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Duplicate point name &#39;</span><span class="si">{</span><span class="n">point_name</span><span class="si">}</span><span class="s2">&#39; for surface </span><span class="si">{</span><span class="n">surf_id</span><span class="si">}</span><span class="s2">, part </span><span class="si">{</span><span class="n">part_id</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="si">{</span><span class="n">value_message</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Point &#39;</span><span class="si">{</span><span class="n">point_name</span><span class="si">}</span><span class="s2">&#39; conflicts with existing point &#39;</span><span class="si">{</span><span class="n">existing_point</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;on surface </span><span class="si">{</span><span class="n">surf_id</span><span class="si">}</span><span class="s2">, part </span><span class="si">{</span><span class="n">part_id</span><span class="si">}</span><span class="s2"> due to similar coordinates.</span><span class="se">\n</span><span class="si">{</span><span class="n">value_message</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="LabelPatternError">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.LabelPatternError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LabelPatternError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;Some labels in the point dict do not comply to the expected pattern.&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="LabelPrefixError">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.LabelPrefixError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LabelPrefixError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="s2">&quot;Some labels in the point dict do not comply to the expected pattern, all prefixes should be identical.&quot;</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="UniqueLabelSuffixError">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.UniqueLabelSuffixError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UniqueLabelSuffixError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="s2">&quot;Some labels in the point dict do not comply to the expected pattern, all integer suffixes must be unique. Here A000 and A0 would be identical, and cannot be used together.&quot;</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="NonUniqueCoordinatesError">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.NonUniqueCoordinatesError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NonUniqueCoordinatesError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duplicates</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">duplicates</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;All coordinates in the point dictionary must be unique.&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">duplicates_str</span> <span class="o">=</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="sa">f</span><span class="s2">&quot;for label(s) </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="si">}</span><span class="s2"> we have </span><span class="si">{</span><span class="n">coords</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="k">for</span> <span class="n">coords</span><span class="p">,</span> <span class="n">labels</span> <span class="ow">in</span> <span class="n">duplicates</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;All coordinates in the point dictionary must be unique. </span><span class="si">{</span><span class="n">duplicates_str</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="GeometricConditionError">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.GeometricConditionError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GeometricConditionError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Geometric condition &#39;</span><span class="si">{</span><span class="n">condition_name</span><span class="si">}</span><span class="s2">&#39; is not met.&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="PointsNotOnPlaneError">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.PointsNotOnPlaneError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PointsNotOnPlaneError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Points for expected plane, surface </span><span class="si">{</span><span class="n">surf_id</span><span class="si">}</span><span class="s2"> on part </span><span class="si">{</span><span class="n">part_id</span><span class="si">}</span><span class="s2"> are not on same plane&quot;</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="NonConcentricCylindersException">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.NonConcentricCylindersException">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NonConcentricCylindersException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised for cylinders that are not concentric.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id1</span><span class="p">,</span> <span class="n">surface_id1</span><span class="p">,</span> <span class="n">part_id2</span><span class="p">,</span> <span class="n">surface_id2</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Cylinders are not concentric for: Part </span><span class="si">{</span><span class="n">part_id1</span><span class="si">}</span><span class="s2">, Surface </span><span class="si">{</span><span class="n">surface_id1</span><span class="si">}</span><span class="s2"> and Part </span><span class="si">{</span><span class="n">part_id2</span><span class="si">}</span><span class="s2">, Surface </span><span class="si">{</span><span class="n">surface_id2</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ConflictingSurfaceDirectionsException">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.ConflictingSurfaceDirectionsException">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConflictingSurfaceDirectionsException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised for conflicting surface directions in cylinder interactions.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id1</span><span class="p">,</span> <span class="n">surface_id1</span><span class="p">,</span> <span class="n">part_id2</span><span class="p">,</span> <span class="n">surface_id2</span><span class="p">):</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Conflicting surface directions between Part </span><span class="si">{</span><span class="n">part_id1</span><span class="si">}</span><span class="s2">, Surface </span><span class="si">{</span><span class="n">surface_id1</span><span class="si">}</span><span class="s2"> and Part </span><span class="si">{</span><span class="n">part_id2</span><span class="si">}</span><span class="s2">, Surface </span><span class="si">{</span><span class="n">surface_id2</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CylindricalInterferenceGeometricException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised for geometric inconsistencies in cylindrical interactions.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id1</span><span class="p">,</span> <span class="n">surface_id1</span><span class="p">,</span> <span class="n">part_id2</span><span class="p">,</span> <span class="n">surface_id2</span><span class="p">,</span> <span class="n">radius1</span><span class="p">,</span> <span class="n">radius2</span><span class="p">):</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Geometric inconsistency or interference in cylindrical interaction: Part </span><span class="si">{</span><span class="n">part_id1</span><span class="si">}</span><span class="s2">, Surface </span><span class="si">{</span><span class="n">surface_id1</span><span class="si">}</span><span class="s2"> (Radius: </span><span class="si">{</span><span class="n">radius1</span><span class="si">}</span><span class="s2">) and Part </span><span class="si">{</span><span class="n">part_id2</span><span class="si">}</span><span class="s2">, Surface </span><span class="si">{</span><span class="n">surface_id2</span><span class="si">}</span><span class="s2"> (Radius: </span><span class="si">{</span><span class="n">radius2</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="InvalidAffineTransformException">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.InvalidAffineTransformException">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">InvalidAffineTransformException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Exception raised when a matrix is not a valid affine transformation matrix.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        matrix (np.ndarray): The matrix that caused the exception.</span>
+<span class="sd">        message (str): Explanation of the error.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Matrix is not a valid affine transformation matrix.&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">message</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="se">\n</span><span class="s2">Matrix:</span><span class="se">\n</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kramer84.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -68,13 +68,16 @@
 <li class="toctree-l4"><a class="reference internal" href="otaf.uncertainty.html">otaf.uncertainty package</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="otaf.html#module-contents">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.html#module-otaf">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">otaf.capabilities package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-otaf.capabilities">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.capabilities.process_capability"><code class="docutils literal notranslate"><span class="pre">process_capability()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.common.html">otaf.common package</a></li>
@@ -119,8 +122,21 @@
              
   <section id="otaf-capabilities-package">
 <h1>otaf.capabilities package<a class="headerlink" href="#otaf-capabilities-package" title="Link to this heading"></a></h1>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="module-otaf.capabilities">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-otaf.capabilities" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.capabilities.process_capability">
+<span class="sig-prename descclassname"><span class="pre">otaf.capabilities.</span></span><span class="sig-name descname"><span class="pre">process_capability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">USL</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">LSL</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std_dev</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/capabilities/_capabilities.html#process_capability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.capabilities.process_capability" title="Link to this definition"></a></dt>
+<dd><p>Calculates the process capability indices Cp, CPU, CPL, Cpk, and k.</p>
+<p>Parameters:
+USL (float): Upper Specification Limit
+LSL (float): Lower Specification Limit
+mean (float): Mean of the process (x̄)
+std_dev (float): Standard deviation of the process (σ)</p>
+<p>Returns:
+dict: Dictionary containing Cp, CPU, CPL, Cpk, and k.</p>
+</dd></dl>
+
 </section>
 </section>
 

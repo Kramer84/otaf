@@ -101,7 +101,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">.assemblyModelingBaseObjects</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeviationMatrix</span><span class="p">,</span> <span class="n">GapMatrix</span><span class="p">,</span> <span class="n">TransformationMatrix</span><span class="p">,</span> <span class="n">I4</span><span class="p">,</span> <span class="n">J4</span>
 
 <div class="viewcode-block" id="FirstOrderMatrixExpansion">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.firstOrderMatrixExpansion.FirstOrderMatrixExpansion">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.FirstOrderMatrixExpansion">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">FirstOrderMatrixExpansion</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -124,7 +124,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">matrix_list</span> <span class="o">=</span> <span class="n">matrix_list</span>
 
 <div class="viewcode-block" id="FirstOrderMatrixExpansion.compute_first_order_expansion">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.firstOrderMatrixExpansion.FirstOrderMatrixExpansion.compute_first_order_expansion">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.FirstOrderMatrixExpansion.compute_first_order_expansion">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_first_order_expansion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the first-order Taylor expansion of a matrix product.</span>

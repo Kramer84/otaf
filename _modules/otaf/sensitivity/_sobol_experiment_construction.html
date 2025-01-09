@@ -1,0 +1,360 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>otaf.sensitivity._sobol_experiment_construction &mdash; otaf 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            otaf
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Jupyter Notebooks</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/Analytical_2D_Reference_Assembly.html">Analytical 2D Reference Assembly</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/modules.html">otaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.capabilities.html">otaf.capabilities package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.common.html">otaf.common package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.constants.html">otaf.constants module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.distribution.html">otaf.distribution package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.example_models.html">otaf.example_models package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.exceptions.html">otaf.exceptions package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.geometry.html">otaf.geometry package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.optimization.html">otaf.optimization package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.plotting.html">otaf.plotting package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.sampling.html">otaf.sampling package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.sensitivity.html">otaf.sensitivity package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.surrogate.html">otaf.surrogate package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.uncertainty.html">otaf.uncertainty package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">otaf</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">otaf.sensitivity._sobol_experiment_construction</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for otaf.sensitivity._sobol_experiment_construction</h1><div class="highlight"><pre>
+<span></span><span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.1&quot;</span>
+<span class="n">__date__</span> <span class="o">=</span> <span class="s2">&quot;21.05.24&quot;</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;SobolIndicesExperimentWithComposedDistribution&quot;</span><span class="p">]</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
+
+
+<div class="viewcode-block" id="SobolIndicesExperimentWithComposedDistribution">
+<a class="viewcode-back" href="../../../source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SobolIndicesExperimentWithComposedDistribution</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">SobolIndicesExperiment</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">composedDistribution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">second_order</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">composedDistribution</span> <span class="o">=</span> <span class="n">composedDistribution</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__visibility__</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s2">&quot;Unnamed&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__shadowedId__</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__computeSecondOrder__</span> <span class="o">=</span> <span class="n">second_order</span>
+
+        <span class="k">if</span> <span class="n">size</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setSize</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">composedDistribution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setComposedDistribution</span><span class="p">(</span><span class="n">composedDistribution</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sample_A</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sample_B</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_experimentSample</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="SobolIndicesExperimentWithComposedDistribution.generate">
+<a class="viewcode-back" href="../../../source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.generate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates and returns the final mixture matrix.</span>
+
+<span class="sd">        Keyword Arguments</span>
+<span class="sd">        -----------------</span>
+<span class="sd">        method : str</span>
+<span class="sd">            Can be : &#39;MonteCarlo&#39;, &#39;LHS&#39;, &#39;QMC&#39;</span>
+<span class="sd">        sequence : str</span>
+<span class="sd">            Only if using QMC</span>
+<span class="sd">            Can be : &#39;Faure&#39;, &#39;Halton&#39;, &#39;ReverseHalton&#39;, &#39;Haselgrove&#39;, &#39;Sobol&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">composedDistribution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">),</span> <span class="s2">&quot;Please intialize sample size and composed distribution&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_generateSample</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mixSamples</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_experimentSample</span><span class="o">.</span><span class="n">setDescription</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">composedDistribution</span><span class="o">.</span><span class="n">getDescription</span><span class="p">())</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_experimentSample</span></div>
+
+
+<div class="viewcode-block" id="SobolIndicesExperimentWithComposedDistribution.generateWithWeights">
+<a class="viewcode-back" href="../../../source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.generateWithWeights">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generateWithWeights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Not implemented, for coherence with openturns library&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="SobolIndicesExperimentWithComposedDistribution.getClassName">
+<a class="viewcode-back" href="../../../source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getClassName">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getClassName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the name of the class.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span></div>
+
+
+<div class="viewcode-block" id="SobolIndicesExperimentWithComposedDistribution.getId">
+<a class="viewcode-back" href="../../../source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getId">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getId</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the ID of the object.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SobolIndicesExperimentWithComposedDistribution.getName">
+<a class="viewcode-back" href="../../../source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getName">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the name of the object.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span></div>
+
+
+<div class="viewcode-block" id="SobolIndicesExperimentWithComposedDistribution.getShadowedId">
+<a class="viewcode-back" href="../../../source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getShadowedId">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getShadowedId</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the shadowed ID of the object.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__shadowedId__</span></div>
+
+
+<div class="viewcode-block" id="SobolIndicesExperimentWithComposedDistribution.getSize">
+<a class="viewcode-back" href="../../../source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getSize">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getSize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the size of the generated mixture matrix.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_experimentSample</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_experimentSample</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SobolIndicesExperimentWithComposedDistribution.getVisibility">
+<a class="viewcode-back" href="../../../source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getVisibility">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getVisibility</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the visibility&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__visibility__</span></div>
+
+
+<div class="viewcode-block" id="SobolIndicesExperimentWithComposedDistribution.hasName">
+<a class="viewcode-back" href="../../../source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.hasName">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hasName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns if the object has a name&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="SobolIndicesExperimentWithComposedDistribution.hasUniformWeights">
+<a class="viewcode-back" href="../../../source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.hasUniformWeights">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hasUniformWeights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Not implemented, for coherence with openturns library&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="SobolIndicesExperimentWithComposedDistribution.hasVisibleName">
+<a class="viewcode-back" href="../../../source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.hasVisibleName">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hasVisibleName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns if yes or not the name is visible&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;Unnamed&quot;</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="SobolIndicesExperimentWithComposedDistribution.setComposedDistribution">
+<a class="viewcode-back" href="../../../source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setComposedDistribution">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setComposedDistribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">composedDistribution</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the composed distribution.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">composedDistribution</span> <span class="o">=</span> <span class="n">composedDistribution</span></div>
+
+
+<div class="viewcode-block" id="SobolIndicesExperimentWithComposedDistribution.setName">
+<a class="viewcode-back" href="../../../source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setName">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the name of the object&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SobolIndicesExperimentWithComposedDistribution.setShadowedId">
+<a class="viewcode-back" href="../../../source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setShadowedId">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setShadowedId</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ids</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the shadowed ID of the object.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__shadowedId__</span> <span class="o">=</span> <span class="n">ids</span></div>
+
+
+<div class="viewcode-block" id="SobolIndicesExperimentWithComposedDistribution.setSize">
+<a class="viewcode-back" href="../../../source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setSize">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setSize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the size of the samples A and B.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="n">N</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Sample size can only be positive integer&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">N</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">N</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sample_A</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_B</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_experimentSample</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_mixSamples</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Mixes the samples together for Sobol analysis.&quot;&quot;&quot;</span>
+        <span class="n">n_vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">composedDistribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__computeSecondOrder__</span> <span class="ow">or</span> <span class="n">n_vars</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">N_tot</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">N</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="n">n_vars</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_experimentSample</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">N_tot</span><span class="p">,</span> <span class="n">n_vars</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_experimentSample</span><span class="p">[:</span><span class="n">N</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_A</span><span class="p">[:,</span> <span class="p">:]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_experimentSample</span><span class="p">[</span><span class="n">N</span> <span class="p">:</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">N</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_B</span><span class="p">[:,</span> <span class="p">:]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_vars</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_experimentSample</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">N</span> <span class="o">*</span> <span class="n">i</span> <span class="p">:</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">N</span> <span class="o">*</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_A</span><span class="p">[</span>
+                    <span class="p">:,</span> <span class="p">:</span>
+                <span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_experimentSample</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">N</span> <span class="o">*</span> <span class="n">i</span> <span class="p">:</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">N</span> <span class="o">*</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_B</span><span class="p">[</span>
+                    <span class="p">:,</span> <span class="n">i</span>
+                <span class="p">]</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">N_tot</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">N</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n_vars</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_experimentSample</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">N_tot</span><span class="p">,</span> <span class="n">n_vars</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_experimentSample</span><span class="p">[:</span><span class="n">N</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_A</span><span class="p">[:,</span> <span class="p">:]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_experimentSample</span><span class="p">[</span><span class="n">N</span> <span class="p">:</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">N</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_B</span><span class="p">[:,</span> <span class="p">:]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_vars</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_experimentSample</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">N</span> <span class="o">*</span> <span class="n">i</span> <span class="p">:</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">N</span> <span class="o">*</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_A</span><span class="p">[</span>
+                    <span class="p">:,</span> <span class="p">:</span>
+                <span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_experimentSample</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">N</span> <span class="o">*</span> <span class="n">i</span> <span class="p">:</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">N</span> <span class="o">*</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_B</span><span class="p">[</span>
+                    <span class="p">:,</span> <span class="n">i</span>
+                <span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_vars</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_experimentSample</span><span class="p">[</span>
+                    <span class="mi">2</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">N</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_vars</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span> <span class="p">:</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">N</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_vars</span> <span class="o">+</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="p">:</span>
+                <span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_B</span><span class="p">[:,</span> <span class="p">:]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_experimentSample</span><span class="p">[</span>
+                    <span class="mi">2</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">N</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_vars</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span> <span class="p">:</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">N</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_vars</span> <span class="o">+</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">i</span>
+                <span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_A</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generateSample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generation of two samples A and B using diverse methods&quot;&quot;&quot;</span>
+        <span class="n">distribution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">composedDistribution</span>
+        <span class="k">if</span> <span class="s2">&quot;method&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="s2">&quot;MonteCarlo&quot;</span>
+        <span class="n">N2</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;MonteCarlo&quot;</span><span class="p">:</span>
+            <span class="n">sample</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">N2</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;LHS&quot;</span><span class="p">:</span>
+            <span class="n">lhsExp</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LHSExperiment</span><span class="p">(</span><span class="n">distribution</span><span class="p">,</span> <span class="n">N2</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="n">sample</span> <span class="o">=</span> <span class="n">lhsExp</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;QMC&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;sequence&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                <span class="n">sequence</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;sequence&quot;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">sequence</span> <span class="o">==</span> <span class="s2">&quot;Faure&quot;</span><span class="p">:</span>
+                    <span class="n">seq</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FaureSequence</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">sequence</span> <span class="o">==</span> <span class="s2">&quot;Halton&quot;</span><span class="p">:</span>
+                    <span class="n">seq</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">HaltonSequence</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">sequence</span> <span class="o">==</span> <span class="s2">&quot;ReverseHalton&quot;</span><span class="p">:</span>
+                    <span class="n">seq</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ReverseHaltonSequence</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">sequence</span> <span class="o">==</span> <span class="s2">&quot;Haselgrove&quot;</span><span class="p">:</span>
+                    <span class="n">seq</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">HaselgroveSequence</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">sequence</span> <span class="o">==</span> <span class="s2">&quot;Sobol&quot;</span><span class="p">:</span>
+                    <span class="n">seq</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SobolSequence</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown sequence type&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sequence undefined for low discrepancy experiment, default: SobolSequence&quot;</span><span class="p">)</span>
+                <span class="n">seq</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SobolSequence</span><span class="p">()</span>
+            <span class="n">LDExperiment</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LowDiscrepancyExperiment</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">distribution</span><span class="p">,</span> <span class="n">N2</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="n">LDExperiment</span><span class="o">.</span><span class="n">setRandomize</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">sample</span> <span class="o">=</span> <span class="n">LDExperiment</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown sampling method&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sample_A</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sample_B</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="p">:,</span> <span class="p">:]</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kramer84.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

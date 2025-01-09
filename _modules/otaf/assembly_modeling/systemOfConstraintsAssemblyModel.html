@@ -108,7 +108,7 @@
 
 
 <div class="viewcode-block" id="SystemOfConstraintsAssemblyModel">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.SystemOfConstraintsAssemblyModel">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SystemOfConstraintsAssemblyModel</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -161,7 +161,7 @@
 <span class="sd">        Verbosity level for logging (default is 0).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="SystemOfConstraintsAssemblyModel.__init__">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.SystemOfConstraintsAssemblyModel.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">compatibility_eqs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">],</span> <span class="n">interface_eqs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">],</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -226,7 +226,7 @@
 
 
 <div class="viewcode-block" id="SystemOfConstraintsAssemblyModel.__call__">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel.__call__">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.SystemOfConstraintsAssemblyModel.__call__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">deviation_array</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">],</span>
@@ -336,7 +336,7 @@
 
 
 <div class="viewcode-block" id="SystemOfConstraintsAssemblyModel.generateConstraintMatrices">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel.generateConstraintMatrices">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.SystemOfConstraintsAssemblyModel.generateConstraintMatrices">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generateConstraintMatrices</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">rnd</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
@@ -422,7 +422,7 @@
 
 
 <div class="viewcode-block" id="SystemOfConstraintsAssemblyModel.extractFreeGapAndDeviationVariables">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel.extractFreeGapAndDeviationVariables">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.SystemOfConstraintsAssemblyModel.extractFreeGapAndDeviationVariables">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">extractFreeGapAndDeviationVariables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extract sets of deviation and gap variables present in compatibility equations.</span>
@@ -472,7 +472,7 @@
 
 
 <div class="viewcode-block" id="SystemOfConstraintsAssemblyModel.validateOptimizationResults">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel.validateOptimizationResults">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.SystemOfConstraintsAssemblyModel.validateOptimizationResults">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">validateOptimizationResults</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">gap_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">deviation_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">rnd</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span>
@@ -532,7 +532,7 @@
 
 
 <div class="viewcode-block" id="SystemOfConstraintsAssemblyModel.embedOptimizationVariable">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel.embedOptimizationVariable">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.SystemOfConstraintsAssemblyModel.embedOptimizationVariable">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">embedOptimizationVariable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Embed an auxiliary optimization variable for feasibility.</span>
@@ -556,7 +556,7 @@
 
 
 <div class="viewcode-block" id="SystemOfConstraintsAssemblyModel.get_feature_indices_and_dimensions">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.systemOfConstraintsAssemblyModel.SystemOfConstraintsAssemblyModel.get_feature_indices_and_dimensions">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.SystemOfConstraintsAssemblyModel.get_feature_indices_and_dimensions">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_feature_indices_and_dimensions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extract unique feature indices (classes) and their corresponding sizes from deviation symbols.</span>

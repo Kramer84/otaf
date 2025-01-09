@@ -68,7 +68,7 @@
 <li class="toctree-l4"><a class="reference internal" href="otaf.uncertainty.html">otaf.uncertainty package</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="otaf.html#module-contents">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.html#module-otaf">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -85,7 +85,95 @@
 <li class="toctree-l1"><a class="reference internal" href="otaf.sampling.html">otaf.sampling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.sensitivity.html">otaf.sensitivity package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">otaf.surrogate package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-otaf.surrogate">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.surrogate.BinaryClassificationModel"><code class="docutils literal notranslate"><span class="pre">BinaryClassificationModel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.BinaryClassificationModel.add_new_data_points"><code class="docutils literal notranslate"><span class="pre">BinaryClassificationModel.add_new_data_points()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.BinaryClassificationModel.evaluate_model"><code class="docutils literal notranslate"><span class="pre">BinaryClassificationModel.evaluate_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.BinaryClassificationModel.forward"><code class="docutils literal notranslate"><span class="pre">BinaryClassificationModel.forward()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.BinaryClassificationModel.get_train_test_data"><code class="docutils literal notranslate"><span class="pre">BinaryClassificationModel.get_train_test_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.BinaryClassificationModel.load_model"><code class="docutils literal notranslate"><span class="pre">BinaryClassificationModel.load_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.BinaryClassificationModel.plot_results"><code class="docutils literal notranslate"><span class="pre">BinaryClassificationModel.plot_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.BinaryClassificationModel.save_model"><code class="docutils literal notranslate"><span class="pre">BinaryClassificationModel.save_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.BinaryClassificationModel.train_model"><code class="docutils literal notranslate"><span class="pre">BinaryClassificationModel.train_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.BinaryClassificationModel.training_stopping_criterion"><code class="docutils literal notranslate"><span class="pre">BinaryClassificationModel.training_stopping_criterion()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.surrogate.DualNetworkPredictor"><code class="docutils literal notranslate"><span class="pre">DualNetworkPredictor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.DualNetworkPredictor.model_defects_to_gaps"><code class="docutils literal notranslate"><span class="pre">DualNetworkPredictor.model_defects_to_gaps</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.DualNetworkPredictor.model_gap_def_to_slack"><code class="docutils literal notranslate"><span class="pre">DualNetworkPredictor.model_gap_def_to_slack</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.DualNetworkPredictor.brute_force_probability_of_failure"><code class="docutils literal notranslate"><span class="pre">DualNetworkPredictor.brute_force_probability_of_failure()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.DualNetworkPredictor.evaluate_in_batches"><code class="docutils literal notranslate"><span class="pre">DualNetworkPredictor.evaluate_in_batches()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.DualNetworkPredictor.forward"><code class="docutils literal notranslate"><span class="pre">DualNetworkPredictor.forward()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.DualNetworkPredictor.get_train_test_data"><code class="docutils literal notranslate"><span class="pre">DualNetworkPredictor.get_train_test_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.DualNetworkPredictor.load_best_weights"><code class="docutils literal notranslate"><span class="pre">DualNetworkPredictor.load_best_weights()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.DualNetworkPredictor.plot_results"><code class="docutils literal notranslate"><span class="pre">DualNetworkPredictor.plot_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.DualNetworkPredictor.restore_start_weights"><code class="docutils literal notranslate"><span class="pre">DualNetworkPredictor.restore_start_weights()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.DualNetworkPredictor.train_model"><code class="docutils literal notranslate"><span class="pre">DualNetworkPredictor.train_model()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.surrogate.GaussianSurrogateModel"><code class="docutils literal notranslate"><span class="pre">GaussianSurrogateModel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.GaussianSurrogateModel.acquisition_function"><code class="docutils literal notranslate"><span class="pre">GaussianSurrogateModel.acquisition_function()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.GaussianSurrogateModel.add_point"><code class="docutils literal notranslate"><span class="pre">GaussianSurrogateModel.add_point()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.GaussianSurrogateModel.find_global_minima"><code class="docutils literal notranslate"><span class="pre">GaussianSurrogateModel.find_global_minima()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.GaussianSurrogateModel.fit_model"><code class="docutils literal notranslate"><span class="pre">GaussianSurrogateModel.fit_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.GaussianSurrogateModel.optimize_acquisition"><code class="docutils literal notranslate"><span class="pre">GaussianSurrogateModel.optimize_acquisition()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.GaussianSurrogateModel.predict"><code class="docutils literal notranslate"><span class="pre">GaussianSurrogateModel.predict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.surrogate.LPNeuralSurrogateTolereancing"><code class="docutils literal notranslate"><span class="pre">LPNeuralSurrogateTolereancing</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.LPNeuralSurrogateTolereancing.evaluate_model_non_standard_space"><code class="docutils literal notranslate"><span class="pre">LPNeuralSurrogateTolereancing.evaluate_model_non_standard_space()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.LPNeuralSurrogateTolereancing.forward"><code class="docutils literal notranslate"><span class="pre">LPNeuralSurrogateTolereancing.forward()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.LPNeuralSurrogateTolereancing.get_train_test_data"><code class="docutils literal notranslate"><span class="pre">LPNeuralSurrogateTolereancing.get_train_test_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.LPNeuralSurrogateTolereancing.load_model"><code class="docutils literal notranslate"><span class="pre">LPNeuralSurrogateTolereancing.load_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.LPNeuralSurrogateTolereancing.pf_monte_carlo_bruteforce"><code class="docutils literal notranslate"><span class="pre">LPNeuralSurrogateTolereancing.pf_monte_carlo_bruteforce()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.LPNeuralSurrogateTolereancing.plot_results"><code class="docutils literal notranslate"><span class="pre">LPNeuralSurrogateTolereancing.plot_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.LPNeuralSurrogateTolereancing.save_model"><code class="docutils literal notranslate"><span class="pre">LPNeuralSurrogateTolereancing.save_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.LPNeuralSurrogateTolereancing.train_model"><code class="docutils literal notranslate"><span class="pre">LPNeuralSurrogateTolereancing.train_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.LPNeuralSurrogateTolereancing.training_stopping_criterion"><code class="docutils literal notranslate"><span class="pre">LPNeuralSurrogateTolereancing.training_stopping_criterion()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.surrogate.LimitSpaceFocusedLoss"><code class="docutils literal notranslate"><span class="pre">LimitSpaceFocusedLoss</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.LimitSpaceFocusedLoss.a"><code class="docutils literal notranslate"><span class="pre">LimitSpaceFocusedLoss.a</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.LimitSpaceFocusedLoss.b"><code class="docutils literal notranslate"><span class="pre">LimitSpaceFocusedLoss.b</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.LimitSpaceFocusedLoss.square"><code class="docutils literal notranslate"><span class="pre">LimitSpaceFocusedLoss.square</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.LimitSpaceFocusedLoss.forward"><code class="docutils literal notranslate"><span class="pre">LimitSpaceFocusedLoss.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.evaluate_model_non_standard_space"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.evaluate_model_non_standard_space()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.forward"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.forward()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.get_model_as_openturns_function"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.get_model_as_openturns_function()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.get_train_test_data"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.get_train_test_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.gradient"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.gradient()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.hessian"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.hessian()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.load_model"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.load_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.pf_monte_carlo_bruteforce"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.pf_monte_carlo_bruteforce()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.plot_results"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.plot_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.save_model"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.save_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.train_model"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.train_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.training_stopping_criterion"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.training_stopping_criterion()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.surrogate.PositiveLimitSpaceFocusedLoss"><code class="docutils literal notranslate"><span class="pre">PositiveLimitSpaceFocusedLoss</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.PositiveLimitSpaceFocusedLoss.a"><code class="docutils literal notranslate"><span class="pre">PositiveLimitSpaceFocusedLoss.a</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.PositiveLimitSpaceFocusedLoss.b"><code class="docutils literal notranslate"><span class="pre">PositiveLimitSpaceFocusedLoss.b</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.PositiveLimitSpaceFocusedLoss.c"><code class="docutils literal notranslate"><span class="pre">PositiveLimitSpaceFocusedLoss.c</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.PositiveLimitSpaceFocusedLoss.square"><code class="docutils literal notranslate"><span class="pre">PositiveLimitSpaceFocusedLoss.square</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.PositiveLimitSpaceFocusedLoss.forward"><code class="docutils literal notranslate"><span class="pre">PositiveLimitSpaceFocusedLoss.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.surrogate.add_gaussian_noise"><code class="docutils literal notranslate"><span class="pre">add_gaussian_noise()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.surrogate.evaluate_binary_predictions"><code class="docutils literal notranslate"><span class="pre">evaluate_binary_predictions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.surrogate.generate_corrected_binary_predictions"><code class="docutils literal notranslate"><span class="pre">generate_corrected_binary_predictions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.surrogate.get_base_relu_mlp_model"><code class="docutils literal notranslate"><span class="pre">get_base_relu_mlp_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.surrogate.get_base_tanh_mlp_model"><code class="docutils literal notranslate"><span class="pre">get_base_tanh_mlp_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.surrogate.get_custom_mlp_layers"><code class="docutils literal notranslate"><span class="pre">get_custom_mlp_layers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.surrogate.get_variable_size_sequential_linear_model"><code class="docutils literal notranslate"><span class="pre">get_variable_size_sequential_linear_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.surrogate.initialize_model_weights"><code class="docutils literal notranslate"><span class="pre">initialize_model_weights()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.surrogate.optimize_thresholds_with_alpha"><code class="docutils literal notranslate"><span class="pre">optimize_thresholds_with_alpha()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.surrogate.plot_confusion_matrix"><code class="docutils literal notranslate"><span class="pre">plot_confusion_matrix()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.uncertainty.html">otaf.uncertainty package</a></li>
@@ -119,8 +207,777 @@
              
   <section id="otaf-surrogate-package">
 <h1>otaf.surrogate package<a class="headerlink" href="#otaf-surrogate-package" title="Link to this heading"></a></h1>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="module-otaf.surrogate">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-otaf.surrogate" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="otaf.surrogate.BinaryClassificationModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.surrogate.</span></span><span class="sig-name descname"><span class="pre">BinaryClassificationModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slack_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clamping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clamping_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finish_critertion_epoch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_finish</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_finish</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.999</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_normalization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_dims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheduler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">display_progress_disable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">squeeze_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels_to_long</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_dual_target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_binary_threshold_classifier.html#BinaryClassificationModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.BinaryClassificationModel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.BinaryClassificationModel.add_new_data_points">
+<span class="sig-name descname"><span class="pre">add_new_data_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_binary_threshold_classifier.html#BinaryClassificationModel.add_new_data_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.BinaryClassificationModel.add_new_data_points" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.BinaryClassificationModel.evaluate_model">
+<span class="sig-name descname"><span class="pre">evaluate_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_on_gpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_binary_threshold_classifier.html#BinaryClassificationModel.evaluate_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.BinaryClassificationModel.evaluate_model" title="Link to this definition"></a></dt>
+<dd><p>Evaluates the model in non-standard space, processing the input in batches.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>array-like</em><em> or </em><em>torch.Tensor</em>) – Input data to evaluate.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Size of batches for evaluation. Default is 50000.</p></li>
+<li><p><strong>return_on_gpu</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return the result on the GPU. Default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The model’s output.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.BinaryClassificationModel.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_binary_threshold_classifier.html#BinaryClassificationModel.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.BinaryClassificationModel.forward" title="Link to this definition"></a></dt>
+<dd><p>Define the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.BinaryClassificationModel.get_train_test_data">
+<span class="sig-name descname"><span class="pre">get_train_test_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_binary_threshold_classifier.html#BinaryClassificationModel.get_train_test_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.BinaryClassificationModel.get_train_test_data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.BinaryClassificationModel.load_model">
+<span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_binary_threshold_classifier.html#BinaryClassificationModel.load_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.BinaryClassificationModel.load_model" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.BinaryClassificationModel.plot_results">
+<span class="sig-name descname"><span class="pre">plot_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_as_png</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'images'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ai_training_results.png'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">600</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_binary_threshold_classifier.html#BinaryClassificationModel.plot_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.BinaryClassificationModel.plot_results" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.BinaryClassificationModel.save_model">
+<span class="sig-name descname"><span class="pre">save_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_binary_threshold_classifier.html#BinaryClassificationModel.save_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.BinaryClassificationModel.save_model" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.BinaryClassificationModel.train_model">
+<span class="sig-name descname"><span class="pre">train_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_binary_threshold_classifier.html#BinaryClassificationModel.train_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.BinaryClassificationModel.train_model" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.BinaryClassificationModel.training_stopping_criterion">
+<span class="sig-name descname"><span class="pre">training_stopping_criterion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epoch</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_binary_threshold_classifier.html#BinaryClassificationModel.training_stopping_criterion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.BinaryClassificationModel.training_stopping_criterion" title="Link to this definition"></a></dt>
+<dd><p>Determines whether training should stop based on various criteria including:
+- Minimum loss tolerance.
+- Gradient changes.
+- R2 score achievement.</p>
+<p>Args:
+epoch (int): The current epoch number.</p>
+<p>Returns:
+bool: True if training should stop, False otherwise.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="otaf.surrogate.DualNetworkPredictor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.surrogate.</span></span><span class="sig-name descname"><span class="pre">DualNetworkPredictor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_defects_to_gaps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_gap_def_to_slack</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_tolerancing_surrogate.html#DualNetworkPredictor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.DualNetworkPredictor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>A PyTorch module that combines two neural networks to predict slack from defects.</p>
+<p>This module first predicts gaps from defects using the first neural network,
+then combines the original input array with the predicted gaps to predict slack
+using the second neural network.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.surrogate.DualNetworkPredictor.model_defects_to_gaps">
+<span class="sig-name descname"><span class="pre">model_defects_to_gaps</span></span><a class="headerlink" href="#otaf.surrogate.DualNetworkPredictor.model_defects_to_gaps" title="Link to this definition"></a></dt>
+<dd><p>The first neural network model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>nn.Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.surrogate.DualNetworkPredictor.model_gap_def_to_slack">
+<span class="sig-name descname"><span class="pre">model_gap_def_to_slack</span></span><a class="headerlink" href="#otaf.surrogate.DualNetworkPredictor.model_gap_def_to_slack" title="Link to this definition"></a></dt>
+<dd><p>The second neural network model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>nn.Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.DualNetworkPredictor.brute_force_probability_of_failure">
+<span class="sig-name descname"><span class="pre">brute_force_probability_of_failure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">composed_distribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_MC_MAX</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_GEN_MAX</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PF_STAB</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_tolerancing_surrogate.html#DualNetworkPredictor.brute_force_probability_of_failure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.DualNetworkPredictor.brute_force_probability_of_failure" title="Link to this definition"></a></dt>
+<dd><p>Brute-force calculation of the probability of failure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>torch.Tensor</em>) – Input tensor in real space.</p></li>
+<li><p><strong>threshold</strong> (<em>float</em>) – The threshold below which a prediction is considered a failure.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Batch size for processing. Default is 50000.</p></li>
+<li><p><strong>N_MC_MAX</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of Monte Carlo samples to evaluate. Default is 1e9.</p></li>
+<li><p><strong>PF_STAB</strong> (<em>float</em><em>, </em><em>optional</em>) – Stability threshold for stopping criterion. Default is 1e-6.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The probability of failure.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.DualNetworkPredictor.evaluate_in_batches">
+<span class="sig-name descname"><span class="pre">evaluate_in_batches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_on_gpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_tolerancing_surrogate.html#DualNetworkPredictor.evaluate_in_batches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.DualNetworkPredictor.evaluate_in_batches" title="Link to this definition"></a></dt>
+<dd><p>Helper function to evaluate the combined model in batches.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>torch.Tensor</em>) – Input tensor in real space</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Batch size for processing. Default is 50000.</p></li>
+<li><p><strong>return_on_gpu</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return the result on the GPU. Default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The concatenated output of the model evaluated in batches.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.DualNetworkPredictor.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_tolerancing_surrogate.html#DualNetworkPredictor.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.DualNetworkPredictor.forward" title="Link to this definition"></a></dt>
+<dd><p>Forward pass through the combined networks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>torch.Tensor</em>) – Input tensor containing normalized defect features.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Batch size for processing. Default is 250000.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Predicted slack values.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.DualNetworkPredictor.get_train_test_data">
+<span class="sig-name descname"><span class="pre">get_train_test_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_tolerancing_surrogate.html#DualNetworkPredictor.get_train_test_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.DualNetworkPredictor.get_train_test_data" title="Link to this definition"></a></dt>
+<dd><p>Splits the dataset into training and testing sets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>test_size</strong> (<em>float</em>) – Proportion of the dataset to include in the test split. Default is 0.2.</p></li>
+<li><p><strong>random_seed</strong> (<em>int</em>) – Seed for random number generator. Default is 42.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Training and testing datasets (X_train, y_train_gaps, y_train_slack, X_test, y_test_gaps, y_test_slack).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.DualNetworkPredictor.load_best_weights">
+<span class="sig-name descname"><span class="pre">load_best_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_tolerancing_surrogate.html#DualNetworkPredictor.load_best_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.DualNetworkPredictor.load_best_weights" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.DualNetworkPredictor.plot_results">
+<span class="sig-name descname"><span class="pre">plot_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_tolerancing_surrogate.html#DualNetworkPredictor.plot_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.DualNetworkPredictor.plot_results" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.DualNetworkPredictor.restore_start_weights">
+<span class="sig-name descname"><span class="pre">restore_start_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_tolerancing_surrogate.html#DualNetworkPredictor.restore_start_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.DualNetworkPredictor.restore_start_weights" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.DualNetworkPredictor.train_model">
+<span class="sig-name descname"><span class="pre">train_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_epochs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_f_gaps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_f_slack</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_gaps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_slack</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">display_progress_disable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_tolerancing_surrogate.html#DualNetworkPredictor.train_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.DualNetworkPredictor.train_model" title="Link to this definition"></a></dt>
+<dd><p>Train the dual network model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>batch_size</strong> (<em>int</em>) – Batch size for training.</p></li>
+<li><p><strong>num_epochs</strong> (<em>int</em>) – Number of epochs to train.</p></li>
+<li><p><strong>loss_f_gaps</strong> (<em>torch.nn.Module</em>) – Loss function.</p></li>
+<li><p><strong>optimizer</strong> (<em>torch.optim.Optimizer</em>) – Optimizer.</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em>) – Device to use for training (CPU or GPU).</p></li>
+<li><p><strong>display_progress_disable</strong> (<em>bool</em>) – Flag to disable tqdm progress display.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="otaf.surrogate.GaussianSurrogateModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.surrogate.</span></span><span class="sig-name descname"><span class="pre">GaussianSurrogateModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dimension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_gaussian_surrogate_model.html#GaussianSurrogateModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.GaussianSurrogateModel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.GaussianSurrogateModel.acquisition_function">
+<span class="sig-name descname"><span class="pre">acquisition_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_gaussian_surrogate_model.html#GaussianSurrogateModel.acquisition_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.GaussianSurrogateModel.acquisition_function" title="Link to this definition"></a></dt>
+<dd><p>Simple acquisition function: Upper Confidence Bound (UCB).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> – Points to evaluate the acquisition function on.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Acquisition function values.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.GaussianSurrogateModel.add_point">
+<span class="sig-name descname"><span class="pre">add_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_new</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_new</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_gaussian_surrogate_model.html#GaussianSurrogateModel.add_point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.GaussianSurrogateModel.add_point" title="Link to this definition"></a></dt>
+<dd><p>Add a new point to the dataset and refit the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X_new</strong> – New input point (1D array of length equal to the number of dimensions).</p></li>
+<li><p><strong>y_new</strong> – Corresponding function value at the new point.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.GaussianSurrogateModel.find_global_minima">
+<span class="sig-name descname"><span class="pre">find_global_minima</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_gaussian_surrogate_model.html#GaussianSurrogateModel.find_global_minima"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.GaussianSurrogateModel.find_global_minima" title="Link to this definition"></a></dt>
+<dd><p>Find the global minimum in the constrained space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The input point that minimizes the surrogate model’s prediction.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.GaussianSurrogateModel.fit_model">
+<span class="sig-name descname"><span class="pre">fit_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_gaussian_surrogate_model.html#GaussianSurrogateModel.fit_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.GaussianSurrogateModel.fit_model" title="Link to this definition"></a></dt>
+<dd><p>Fit the Gaussian Process model to the current dataset.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.GaussianSurrogateModel.optimize_acquisition">
+<span class="sig-name descname"><span class="pre">optimize_acquisition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_gaussian_surrogate_model.html#GaussianSurrogateModel.optimize_acquisition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.GaussianSurrogateModel.optimize_acquisition" title="Link to this definition"></a></dt>
+<dd><p>Optimize the acquisition function to find the next point, subject to the constraints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>acquisition_function</strong> – The acquisition function to maximize.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The next point to sample.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.GaussianSurrogateModel.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_gaussian_surrogate_model.html#GaussianSurrogateModel.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.GaussianSurrogateModel.predict" title="Link to this definition"></a></dt>
+<dd><p>Predict the objective function at new points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> – New points to predict on.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Mean prediction and standard deviation (uncertainty).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="otaf.surrogate.LPNeuralSurrogateTolereancing">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.surrogate.</span></span><span class="sig-name descname"><span class="pre">LPNeuralSurrogateTolereancing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nEq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nUb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A_eq_Def</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A_eq_Gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K_eq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A_ub_Def</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A_ub_Gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K_ub</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clamping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finish_critertion_epoch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_finish</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_finish</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.999</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compile_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">display_progress_disable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_dims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_linear_solver_surrogate.html#LPNeuralSurrogateTolereancing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.LPNeuralSurrogateTolereancing" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<ul class="simple">
+<li><p>Compatibility equations (equality constraints) become A_eq_Def*X + A_eq_Gap*Y + K_eq = 0.</p></li>
+<li><p>Interface equations (inequality constraints) become A_ub_Def*X + A_ub_Gap*Y + K_ub &gt;= 0.</p></li>
+</ul>
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.LPNeuralSurrogateTolereancing.evaluate_model_non_standard_space">
+<span class="sig-name descname"><span class="pre">evaluate_model_non_standard_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_on_gpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_linear_solver_surrogate.html#LPNeuralSurrogateTolereancing.evaluate_model_non_standard_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.LPNeuralSurrogateTolereancing.evaluate_model_non_standard_space" title="Link to this definition"></a></dt>
+<dd><p>Evaluates the model in non-standard space, processing the input in batches.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>array-like</em><em> or </em><em>torch.Tensor</em>) – Input data to evaluate.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Size of batches for evaluation. Default is 50000.</p></li>
+<li><p><strong>return_on_gpu</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return the result on the GPU. Default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The model’s output.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.LPNeuralSurrogateTolereancing.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_linear_solver_surrogate.html#LPNeuralSurrogateTolereancing.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.LPNeuralSurrogateTolereancing.forward" title="Link to this definition"></a></dt>
+<dd><p>Define the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.LPNeuralSurrogateTolereancing.get_train_test_data">
+<span class="sig-name descname"><span class="pre">get_train_test_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_linear_solver_surrogate.html#LPNeuralSurrogateTolereancing.get_train_test_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.LPNeuralSurrogateTolereancing.get_train_test_data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.LPNeuralSurrogateTolereancing.load_model">
+<span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_linear_solver_surrogate.html#LPNeuralSurrogateTolereancing.load_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.LPNeuralSurrogateTolereancing.load_model" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.LPNeuralSurrogateTolereancing.pf_monte_carlo_bruteforce">
+<span class="sig-name descname"><span class="pre">pf_monte_carlo_bruteforce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">composed_distribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_MC_MAX</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_GEN_MAX</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PF_STAB</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_linear_solver_surrogate.html#LPNeuralSurrogateTolereancing.pf_monte_carlo_bruteforce"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.LPNeuralSurrogateTolereancing.pf_monte_carlo_bruteforce" title="Link to this definition"></a></dt>
+<dd><p>N_MC_MAX : Monte carlo size
+N_GEN_MAX : Max sample size to generate
+PF_STAB : Max variability of probability if one new point is added.
+threshold : failure threshold</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.LPNeuralSurrogateTolereancing.plot_results">
+<span class="sig-name descname"><span class="pre">plot_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_linear_solver_surrogate.html#LPNeuralSurrogateTolereancing.plot_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.LPNeuralSurrogateTolereancing.plot_results" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.LPNeuralSurrogateTolereancing.save_model">
+<span class="sig-name descname"><span class="pre">save_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_linear_solver_surrogate.html#LPNeuralSurrogateTolereancing.save_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.LPNeuralSurrogateTolereancing.save_model" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.LPNeuralSurrogateTolereancing.train_model">
+<span class="sig-name descname"><span class="pre">train_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_linear_solver_surrogate.html#LPNeuralSurrogateTolereancing.train_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.LPNeuralSurrogateTolereancing.train_model" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.LPNeuralSurrogateTolereancing.training_stopping_criterion">
+<span class="sig-name descname"><span class="pre">training_stopping_criterion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epoch</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_linear_solver_surrogate.html#LPNeuralSurrogateTolereancing.training_stopping_criterion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.LPNeuralSurrogateTolereancing.training_stopping_criterion" title="Link to this definition"></a></dt>
+<dd><p>Determines whether training should stop based on various criteria including:
+- Minimum loss tolerance.
+- Gradient changes.
+- R2 score achievement.</p>
+<p>Args:
+epoch (int): The current epoch number.</p>
+<p>Returns:
+bool: True if training should stop, False otherwise.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="otaf.surrogate.LimitSpaceFocusedLoss">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.surrogate.</span></span><span class="sig-name descname"><span class="pre">LimitSpaceFocusedLoss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.04</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">square</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_loss_functions.html#LimitSpaceFocusedLoss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.LimitSpaceFocusedLoss" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Custom loss function which amplifies the penalty based on the sign disagreement between the model’s output and the target.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.surrogate.LimitSpaceFocusedLoss.a">
+<span class="sig-name descname"><span class="pre">a</span></span><a class="headerlink" href="#otaf.surrogate.LimitSpaceFocusedLoss.a" title="Link to this definition"></a></dt>
+<dd><p>A small constant added for numerical stability in computing the exponential function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.surrogate.LimitSpaceFocusedLoss.b">
+<span class="sig-name descname"><span class="pre">b</span></span><a class="headerlink" href="#otaf.surrogate.LimitSpaceFocusedLoss.b" title="Link to this definition"></a></dt>
+<dd><p>Scaling factor that adjusts the steepness of the exponential function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.surrogate.LimitSpaceFocusedLoss.square">
+<span class="sig-name descname"><span class="pre">square</span></span><a class="headerlink" href="#otaf.surrogate.LimitSpaceFocusedLoss.square" title="Link to this definition"></a></dt>
+<dd><p>If True, the squared difference is used; if False, the absolute difference is used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>float</em>) – Small constant to avoid division by zero. Default: 0.04.</p></li>
+<li><p><strong>b</strong> (<em>float</em>) – Scaling factor for the exponential part of the loss. Default: 3.0.</p></li>
+<li><p><strong>square</strong> (<em>bool</em>) – Indicator of whether to use square error or absolute error. Default: True.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.LimitSpaceFocusedLoss.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_loss_functions.html#LimitSpaceFocusedLoss.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.LimitSpaceFocusedLoss.forward" title="Link to this definition"></a></dt>
+<dd><p>Calculate the forward pass of the loss function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output</strong> (<em>torch.Tensor</em>) – The predictions from the model.</p></li>
+<li><p><strong>target</strong> (<em>torch.Tensor</em>) – The ground truth values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The computed mean loss.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.surrogate.</span></span><span class="sig-name descname"><span class="pre">NeuralRegressorNetwork</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clamping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finish_critertion_epoch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_finish</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_finish</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.999</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compile_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">display_progress_disable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_normalization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_normalization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_dims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork.evaluate_model_non_standard_space">
+<span class="sig-name descname"><span class="pre">evaluate_model_non_standard_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_on_gpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork.evaluate_model_non_standard_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork.evaluate_model_non_standard_space" title="Link to this definition"></a></dt>
+<dd><p>Evaluates the model in non-standard space, processing the input in batches.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>array-like</em><em> or </em><em>torch.Tensor</em>) – Input data to evaluate.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Size of batches for evaluation. Default is 50000.</p></li>
+<li><p><strong>return_on_gpu</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return the result on the GPU. Default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The model’s output.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork.forward" title="Link to this definition"></a></dt>
+<dd><p>Define the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork.get_model_as_openturns_function">
+<span class="sig-name descname"><span class="pre">get_model_as_openturns_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork.get_model_as_openturns_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork.get_model_as_openturns_function" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork.get_train_test_data">
+<span class="sig-name descname"><span class="pre">get_train_test_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork.get_train_test_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork.get_train_test_data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork.gradient">
+<span class="sig-name descname"><span class="pre">gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inP</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork.gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork.gradient" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork.hessian">
+<span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inP</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork.hessian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork.hessian" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork.load_model">
+<span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork.load_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork.load_model" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork.pf_monte_carlo_bruteforce">
+<span class="sig-name descname"><span class="pre">pf_monte_carlo_bruteforce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">composed_distribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_MC_MAX</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_GEN_MAX</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PF_STAB</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork.pf_monte_carlo_bruteforce"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork.pf_monte_carlo_bruteforce" title="Link to this definition"></a></dt>
+<dd><p>N_MC_MAX : Monte carlo size
+N_GEN_MAX : Max sample size to generate
+PF_STAB : Max variability of probability if one new point is added.
+threshold : failure threshold</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork.plot_results">
+<span class="sig-name descname"><span class="pre">plot_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork.plot_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork.plot_results" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork.save_model">
+<span class="sig-name descname"><span class="pre">save_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork.save_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork.save_model" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork.train_model">
+<span class="sig-name descname"><span class="pre">train_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork.train_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork.train_model" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork.training_stopping_criterion">
+<span class="sig-name descname"><span class="pre">training_stopping_criterion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epoch</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork.training_stopping_criterion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork.training_stopping_criterion" title="Link to this definition"></a></dt>
+<dd><p>Determines whether training should stop based on various criteria including:
+- Minimum loss tolerance.
+- Gradient changes.
+- R2 score achievement.</p>
+<p>Args:
+epoch (int): The current epoch number.</p>
+<p>Returns:
+bool: True if training should stop, False otherwise.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="otaf.surrogate.PositiveLimitSpaceFocusedLoss">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.surrogate.</span></span><span class="sig-name descname"><span class="pre">PositiveLimitSpaceFocusedLoss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.04</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">square</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_loss_functions.html#PositiveLimitSpaceFocusedLoss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.PositiveLimitSpaceFocusedLoss" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Extends LimitSpaceFocusedLoss by specifically penalizing positive discrepancies between model output and target more heavily.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.surrogate.PositiveLimitSpaceFocusedLoss.a">
+<span class="sig-name descname"><span class="pre">a</span></span><a class="headerlink" href="#otaf.surrogate.PositiveLimitSpaceFocusedLoss.a" title="Link to this definition"></a></dt>
+<dd><p>A small constant added for numerical stability in computing the exponential function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.surrogate.PositiveLimitSpaceFocusedLoss.b">
+<span class="sig-name descname"><span class="pre">b</span></span><a class="headerlink" href="#otaf.surrogate.PositiveLimitSpaceFocusedLoss.b" title="Link to this definition"></a></dt>
+<dd><p>Scaling factor that adjusts the steepness of the exponential function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.surrogate.PositiveLimitSpaceFocusedLoss.c">
+<span class="sig-name descname"><span class="pre">c</span></span><a class="headerlink" href="#otaf.surrogate.PositiveLimitSpaceFocusedLoss.c" title="Link to this definition"></a></dt>
+<dd><p>Factor to amplify the loss when the target is positive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.surrogate.PositiveLimitSpaceFocusedLoss.square">
+<span class="sig-name descname"><span class="pre">square</span></span><a class="headerlink" href="#otaf.surrogate.PositiveLimitSpaceFocusedLoss.square" title="Link to this definition"></a></dt>
+<dd><p>If True, the squared difference is used; if False, the absolute difference is used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>float</em>) – Small constant to avoid division by zero. Default: 0.04.</p></li>
+<li><p><strong>b</strong> (<em>float</em>) – Scaling factor for the exponential part of the loss. Default: 3.0.</p></li>
+<li><p><strong>c</strong> (<em>int</em>) – Amplification factor for positive target values. Default: 4.</p></li>
+<li><p><strong>square</strong> (<em>bool</em>) – Indicator of whether to use square error or absolute error. Default: True.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.PositiveLimitSpaceFocusedLoss.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_loss_functions.html#PositiveLimitSpaceFocusedLoss.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.PositiveLimitSpaceFocusedLoss.forward" title="Link to this definition"></a></dt>
+<dd><p>Calculate the forward pass of the loss function, with added penalties for positive discrepancies.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output</strong> (<em>torch.Tensor</em>) – The predictions from the model.</p></li>
+<li><p><strong>target</strong> (<em>torch.Tensor</em>) – The ground truth values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The computed mean loss.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.surrogate.add_gaussian_noise">
+<span class="sig-prename descclassname"><span class="pre">otaf.surrogate.</span></span><span class="sig-name descname"><span class="pre">add_gaussian_noise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_base_models.html#add_gaussian_noise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.add_gaussian_noise" title="Link to this definition"></a></dt>
+<dd><p>Add Gaussian noise to a tensor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tensor</strong> (<em>torch.Tensor</em>) – Input tensor of shape (N, M).</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Scaling factor for the standard deviation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tensor with added Gaussian noise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.surrogate.evaluate_binary_predictions">
+<span class="sig-prename descclassname"><span class="pre">otaf.surrogate.</span></span><span class="sig-name descname"><span class="pre">evaluate_binary_predictions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predictions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_binary_threshold_classifier.html#evaluate_binary_predictions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.evaluate_binary_predictions" title="Link to this definition"></a></dt>
+<dd><p>Evaluates binary predictions against ground truth labels and computes confusion matrix and accuracy.</p>
+<p>Parameters:
+predictions (np.ndarray): Array of binary predictions (1 for positive class, 0 for negative class).
+labels (np.ndarray): Array of ground truth binary labels (1 for positive class, 0 for negative class).</p>
+<p>Returns:
+dict: Dictionary containing confusion matrix, accuracy, and detailed metrics.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.surrogate.generate_corrected_binary_predictions">
+<span class="sig-prename descclassname"><span class="pre">otaf.surrogate.</span></span><span class="sig-name descname"><span class="pre">generate_corrected_binary_predictions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">failure_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">success_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">equality_decision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'failure'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_binary_threshold_classifier.html#generate_corrected_binary_predictions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.generate_corrected_binary_predictions" title="Link to this definition"></a></dt>
+<dd><p>Generates corrected binary predictions for failures and successes based on threshold values.</p>
+<p>Parameters:
+pred_probs (np.ndarray): Array of predicted class probabilities with shape (n_samples, 2).
+failure_threshold (float): Threshold value for classifying failures.
+success_threshold (float): Threshold value for classifying successes.
+equality_decision (str): What is the outcome when both success and failure are positive? “failure” or “success”</p>
+<p>Returns:
+np.ndarray: Corrected binary predictions.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.surrogate.get_base_relu_mlp_model">
+<span class="sig-prename descclassname"><span class="pre">otaf.surrogate.</span></span><span class="sig-name descname"><span class="pre">get_base_relu_mlp_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compile_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_base_models.html#get_base_relu_mlp_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.get_base_relu_mlp_model" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.surrogate.get_base_tanh_mlp_model">
+<span class="sig-prename descclassname"><span class="pre">otaf.surrogate.</span></span><span class="sig-name descname"><span class="pre">get_base_tanh_mlp_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compile_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_base_models.html#get_base_tanh_mlp_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.get_base_tanh_mlp_model" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.surrogate.get_custom_mlp_layers">
+<span class="sig-prename descclassname"><span class="pre">otaf.surrogate.</span></span><span class="sig-name descname"><span class="pre">get_custom_mlp_layers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layer_sizes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_class=&lt;class</span> <span class="pre">'torch.nn.modules.linear.Linear'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation_class=&lt;class</span> <span class="pre">'torch.nn.modules.activation.ReLU'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_kwargs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation_kwargs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_class=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_kwargs=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_base_models.html#get_custom_mlp_layers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.get_custom_mlp_layers" title="Link to this definition"></a></dt>
+<dd><p>Creates a list of layers for a multi-layer perceptron (MLP) with specified layer sizes, layer class, activation function, and optional dropout layers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>layer_sizes</strong> (<em>list</em><em> of </em><em>int</em>) – List of layer sizes [input, hidden1, …, hiddenN, output].</p></li>
+<li><p><strong>layer_class</strong> (<em>callable</em>) – Layer class to use (e.g., nn.Linear).</p></li>
+<li><p><strong>activation_class</strong> (<em>callable</em>) – Activation function class to use (e.g., nn.ReLU).</p></li>
+<li><p><strong>layer_kwargs</strong> (<em>dict</em>) – Dictionary of additional keyword arguments for the layer class.</p></li>
+<li><p><strong>activation_kwargs</strong> (<em>dict</em>) – Dictionary of additional keyword arguments for the activation function class.</p></li>
+<li><p><strong>dropout_prob</strong> (<em>float</em><em>, </em><em>optional</em>) – Dropout probability. If None, no dropout layers are added.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of layers for the MLP.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.surrogate.get_variable_size_sequential_linear_model">
+<span class="sig-prename descclassname"><span class="pre">otaf.surrogate.</span></span><span class="sig-name descname"><span class="pre">get_variable_size_sequential_linear_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relative_max_layer_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relative_max_layer_depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relative_layer_number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_layer_number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_base_models.html#get_variable_size_sequential_linear_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.get_variable_size_sequential_linear_model" title="Link to this definition"></a></dt>
+<dd><p>Constructs a variable sized neural network models based on input dimensions.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.surrogate.initialize_model_weights">
+<span class="sig-prename descclassname"><span class="pre">otaf.surrogate.</span></span><span class="sig-name descname"><span class="pre">initialize_model_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_linear_solver_surrogate.html#initialize_model_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.initialize_model_weights" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.surrogate.optimize_thresholds_with_alpha">
+<span class="sig-prename descclassname"><span class="pre">otaf.surrogate.</span></span><span class="sig-name descname"><span class="pre">optimize_thresholds_with_alpha</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ground_truth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[-5.0,</span> <span class="pre">5.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimize_for</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'minimize_fn_maximize_tn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">equality_decision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'failure'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimal_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_binary_threshold_classifier.html#optimize_thresholds_with_alpha"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.optimize_thresholds_with_alpha" title="Link to this definition"></a></dt>
+<dd><p>Optimizes the failure and success thresholds based on the specified objective using basin hopping.</p>
+<p>Parameters:
+pred_probs (np.ndarray): Array of predicted class probabilities with shape (n_samples, 2).
+ground_truth (np.ndarray): Array of true binary labels.
+bounds (list): Bounds for the threshold values, default is [-5, 5].
+optimize_for (str): Objective for optimization, “minimize_fn_maximize_tn” or “minimize_fp_maximize_tp”.
+equality_decision (str): What is the outcome when both success and failure are positive? “failure” or “success”.
+optimal_ratio (float): Ratio for penalizing false negatives/positives, default is 1/10000.</p>
+<p>Returns:
+dict: Best thresholds, alpha (currently unused), and corresponding evaluation metrics.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.surrogate.plot_confusion_matrix">
+<span class="sig-prename descclassname"><span class="pre">otaf.surrogate.</span></span><span class="sig-name descname"><span class="pre">plot_confusion_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_binary_threshold_classifier.html#plot_confusion_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.plot_confusion_matrix" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
 </section>
 

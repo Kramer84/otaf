@@ -1,0 +1,803 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>otaf.common._common &mdash; otaf 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            otaf
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Jupyter Notebooks</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/Analytical_2D_Reference_Assembly.html">Analytical 2D Reference Assembly</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/modules.html">otaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.capabilities.html">otaf.capabilities package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.common.html">otaf.common package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.constants.html">otaf.constants module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.distribution.html">otaf.distribution package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.example_models.html">otaf.example_models package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.exceptions.html">otaf.exceptions package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.geometry.html">otaf.geometry package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.optimization.html">otaf.optimization package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.plotting.html">otaf.plotting package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.sampling.html">otaf.sampling package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.sensitivity.html">otaf.sensitivity package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.surrogate.html">otaf.surrogate package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.uncertainty.html">otaf.uncertainty package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">otaf</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">otaf.common._common</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for otaf.common._common</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;inverse_mstring&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;merge_with_checks&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;parse_matrix_string&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;get_symbols_in_expressions&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;extract_expressions_with_variables&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;round_floats_in_expression&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;get_symbol_coef_map&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;get_SE3_base&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;get_SE3_matrices_from_indices&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;validate_dict_keys&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;is_running_in_notebook&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;get_tqdm_range&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;alphabet_generator&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;threshold_for_percentile_positive_values_below&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">string</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">trange</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.notebook</span><span class="w"> </span><span class="kn">import</span> <span class="n">trange</span> <span class="k">as</span> <span class="n">trange_notebook</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">otaf</span>
+
+
+<div class="viewcode-block" id="inverse_mstring">
+<a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.inverse_mstring">[docs]</a>
+<span class="nd">@beartype</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">inverse_mstring</span><span class="p">(</span><span class="n">matrix_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate the inverse of a matrix string representation.</span>
+
+<span class="sd">    This function processes a matrix string representation (either a Transformation matrix</span>
+<span class="sd">    or a Gap matrix) and returns its inverse string representation. The inverse is computed</span>
+<span class="sd">    by swapping certain elements in the input string based on predefined patterns.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    matrix_str : str</span>
+<span class="sd">        The string representation of the matrix. Must follow the expected</span>
+<span class="sd">        format for either a Transformation matrix or a Gap matrix.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        The inverse string representation of the matrix. Returns an empty string</span>
+<span class="sd">        if `matrix_str` is empty.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the matrix string does not match the expected format for a Transformation</span>
+<span class="sd">        or Gap matrix, or if the matrix type is unsupported.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; inverse_mstring(&quot;TP123S1P456S2&quot;)</span>
+<span class="sd">    &#39;TP123S2P456S1&#39;</span>
+
+<span class="sd">    &gt;&gt;&gt; inverse_mstring(&quot;GP1S1P1P2S2P2&quot;)</span>
+<span class="sd">    &#39;GP2S2P2P1S1P1&#39;</span>
+
+<span class="sd">    &gt;&gt;&gt; inverse_mstring(&quot;&quot;)</span>
+<span class="sd">    &#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">matrix_str</span><span class="p">:</span>
+        <span class="n">matrix_type</span> <span class="o">=</span> <span class="n">matrix_str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">matrix_type</span> <span class="o">==</span> <span class="s2">&quot;T&quot;</span><span class="p">:</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">T_MATRIX_PATTERN</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">matrix_str</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid format for Transformation matrix: </span><span class="si">{</span><span class="n">matrix_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">part</span><span class="p">,</span> <span class="n">surface1</span><span class="p">,</span> <span class="n">point1</span><span class="p">,</span> <span class="n">surface2</span><span class="p">,</span> <span class="n">point2</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;TP</span><span class="si">{</span><span class="n">part</span><span class="si">}{</span><span class="n">surface2</span><span class="si">}{</span><span class="n">point2</span><span class="si">}{</span><span class="n">surface1</span><span class="si">}{</span><span class="n">point1</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">elif</span> <span class="n">matrix_type</span> <span class="o">==</span> <span class="s2">&quot;G&quot;</span><span class="p">:</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">G_MATRIX_MSTRING_PATTERN</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">matrix_str</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid format for Gap matrix: </span><span class="si">{</span><span class="n">matrix_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">part1</span><span class="p">,</span> <span class="n">surface1</span><span class="p">,</span> <span class="n">point1</span><span class="p">,</span> <span class="n">part2</span><span class="p">,</span> <span class="n">surface2</span><span class="p">,</span> <span class="n">point2</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;GP</span><span class="si">{</span><span class="n">part2</span><span class="si">}{</span><span class="n">surface2</span><span class="si">}{</span><span class="n">point2</span><span class="si">}</span><span class="s2">P</span><span class="si">{</span><span class="n">part1</span><span class="si">}{</span><span class="n">surface1</span><span class="si">}{</span><span class="n">point1</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported matrix type: </span><span class="si">{</span><span class="n">matrix_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="merge_with_checks">
+<a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.merge_with_checks">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">merge_with_checks</span><span class="p">(</span><span class="n">existing_points</span><span class="p">,</span> <span class="n">new_points</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Merge two dictionaries with value consistency checks.</span>
+
+<span class="sd">    This function merges `new_points` into `existing_points`. If a key in `new_points` already</span>
+<span class="sd">    exists in `existing_points`, the function checks whether their corresponding values are</span>
+<span class="sd">    numerically close. If not, a `ValueError` is raised. The `existing_points` dictionary is</span>
+<span class="sd">    modified in place.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    existing_points : dict</span>
+<span class="sd">        The original dictionary of points to merge into. This dictionary is updated in place.</span>
+<span class="sd">        Keys are typically strings, and values are numeric arrays or similar types.</span>
+
+<span class="sd">    new_points : dict</span>
+<span class="sd">        The new points to merge. Keys should match those in `existing_points` if they overlap.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        The updated `existing_points` dictionary after merging.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If a key exists in both dictionaries and the corresponding values are not numerically close.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; existing_points = {&#39;A&#39;: [1.0, 2.0], &#39;B&#39;: [3.0, 4.0]}</span>
+<span class="sd">    &gt;&gt;&gt; new_points = {&#39;B&#39;: [3.0, 4.0], &#39;C&#39;: [5.0, 6.0]}</span>
+<span class="sd">    &gt;&gt;&gt; merge_with_checks(existing_points, new_points)</span>
+<span class="sd">    {&#39;A&#39;: [1.0, 2.0], &#39;B&#39;: [3.0, 4.0], &#39;C&#39;: [5.0, 6.0]}</span>
+
+<span class="sd">    &gt;&gt;&gt; new_points = {&#39;B&#39;: [3.1, 4.1]}</span>
+<span class="sd">    &gt;&gt;&gt; merge_with_checks(existing_points, new_points)</span>
+<span class="sd">    ValueError: Conflict for key B: existing value [3.0, 4.0], new value [3.1, 4.1]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">new_points</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">existing_points</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">existing_points</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">value</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Conflict for key </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: existing value </span><span class="si">{</span><span class="n">existing_points</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="s2">, new value </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">existing_points</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="k">return</span> <span class="n">existing_points</span></div>
+
+
+
+<div class="viewcode-block" id="parse_matrix_string">
+<a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.parse_matrix_string">[docs]</a>
+<span class="nd">@beartype</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_matrix_string</span><span class="p">(</span><span class="n">matrix_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse a matrix string into its components.</span>
+
+<span class="sd">    This function processes a string representation of a matrix, identifying its type</span>
+<span class="sd">    (Transformation, Deviation, or Gap) based on the first character. It extracts and returns</span>
+<span class="sd">    the relevant components in a structured dictionary format. The function also handles</span>
+<span class="sd">    specific rules and patterns associated with each type.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    matrix_str : str</span>
+<span class="sd">        The string representation of the matrix to be parsed.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Dict[str, Union[str, bool]]</span>
+<span class="sd">        A dictionary containing the parsed components of the matrix. The keys depend on the</span>
+<span class="sd">        type of matrix but typically include:</span>
+<span class="sd">        - &#39;type&#39;: The matrix type (&#39;T&#39;, &#39;D&#39;, or &#39;G&#39;).</span>
+<span class="sd">        - &#39;part&#39;, &#39;surface1&#39;, &#39;point1&#39;, &#39;surface2&#39;, &#39;point2&#39;: Components specific to</span>
+<span class="sd">          Transformation or Gap matrices.</span>
+<span class="sd">        - &#39;inverse&#39;: Boolean indicating if the matrix is an inverse (for Deviation and Gap types).</span>
+<span class="sd">        - &#39;mstring&#39;: The reconstructed matrix string based on parsed components.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the matrix string does not conform to the expected pattern for its type or</span>
+<span class="sd">        if an unsupported matrix type is encountered.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; parse_matrix_string(&#39;TP1kK0aA0&#39;)</span>
+<span class="sd">    {&#39;type&#39;: &#39;T&#39;, &#39;part&#39;: &#39;1&#39;, &#39;surface1&#39;: &#39;k&#39;, &#39;point1&#39;: &#39;K0&#39;,</span>
+<span class="sd">     &#39;surface2&#39;: &#39;a&#39;, &#39;point2&#39;: &#39;A0&#39;, &#39;mstring&#39;: &#39;TP1kK0aA0&#39;}</span>
+
+<span class="sd">    &gt;&gt;&gt; parse_matrix_string(&#39;D1k&#39;)</span>
+<span class="sd">    {&#39;type&#39;: &#39;D&#39;, &#39;inverse&#39;: False, &#39;part&#39;: &#39;1&#39;, &#39;surface&#39;: &#39;k&#39;,</span>
+<span class="sd">     &#39;point&#39;: &#39;K0&#39;, &#39;mstring&#39;: &#39;D1k&#39;}</span>
+
+<span class="sd">    &gt;&gt;&gt; parse_matrix_string(&#39;GP1kK0P2aA0&#39;)</span>
+<span class="sd">    {&#39;type&#39;: &#39;G&#39;, &#39;inverse&#39;: False, &#39;part1&#39;: &#39;1&#39;, &#39;surface1&#39;: &#39;k&#39;, &#39;point1&#39;: &#39;K0&#39;,</span>
+<span class="sd">     &#39;part2&#39;: &#39;2&#39;, &#39;surface2&#39;: &#39;a&#39;, &#39;point2&#39;: &#39;A0&#39;, &#39;mstring&#39;: &#39;GP1kK0P2aA0&#39;}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">matrix_str</span><span class="p">[</span><span class="mi">0</span><span class="p">]}</span>
+
+    <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Wrong type for matrix string </span><span class="si">{</span><span class="n">matrix_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;T&quot;</span><span class="p">:</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">T_MATRIX_PATTERN</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">matrix_str</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid format for Transformation matrix: </span><span class="si">{</span><span class="n">matrix_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+            <span class="n">part</span><span class="p">,</span> <span class="n">surface1</span><span class="p">,</span> <span class="n">point1</span><span class="p">,</span> <span class="n">surface2</span><span class="p">,</span> <span class="n">point2</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;part&quot;</span><span class="p">:</span> <span class="n">part</span><span class="p">,</span>
+                <span class="s2">&quot;surface1&quot;</span><span class="p">:</span> <span class="n">surface1</span><span class="p">,</span>
+                <span class="s2">&quot;point1&quot;</span><span class="p">:</span> <span class="n">point1</span><span class="p">,</span>
+                <span class="s2">&quot;surface2&quot;</span><span class="p">:</span> <span class="n">surface2</span><span class="p">,</span>
+                <span class="s2">&quot;point2&quot;</span><span class="p">:</span> <span class="n">point2</span><span class="p">,</span>
+                <span class="s2">&quot;mstring&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;TP</span><span class="si">{</span><span class="n">part</span><span class="si">}{</span><span class="n">surface1</span><span class="si">}{</span><span class="n">point1</span><span class="si">}{</span><span class="n">surface2</span><span class="si">}{</span><span class="n">point2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;D&quot;</span><span class="p">:</span>
+        <span class="n">match1</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">D_MATRIX_PATTERN1</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">matrix_str</span><span class="p">)</span>
+        <span class="n">match2</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">D_MATRIX_PATTERN2</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">matrix_str</span><span class="p">)</span>
+        <span class="n">match3</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">D_MATRIX_PATTERN3</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">matrix_str</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">([</span><span class="n">match1</span><span class="p">,</span> <span class="n">match2</span><span class="p">,</span> <span class="n">match3</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid format for Deviation matrix: </span><span class="si">{</span><span class="n">matrix_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">match1</span><span class="p">:</span>
+            <span class="n">is_inverse</span><span class="p">,</span> <span class="n">part</span><span class="p">,</span> <span class="n">surface</span> <span class="o">=</span> <span class="n">match1</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+            <span class="n">point</span> <span class="o">=</span> <span class="n">surface</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;0&quot;</span>
+        <span class="k">elif</span> <span class="n">match2</span><span class="p">:</span>
+            <span class="n">is_inverse</span><span class="p">,</span> <span class="n">part</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">point</span> <span class="o">=</span> <span class="n">match2</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">match3</span><span class="p">:</span>
+            <span class="n">is_inverse</span><span class="p">,</span> <span class="n">part</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">partbis</span><span class="p">,</span> <span class="n">surfacebis</span> <span class="o">=</span> <span class="n">match3</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+            <span class="k">assert</span> <span class="n">part</span> <span class="o">==</span> <span class="n">partbis</span> <span class="ow">and</span> <span class="n">surface</span> <span class="o">==</span> <span class="n">surfacebis</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Check definition of </span><span class="si">{</span><span class="n">matrix_str</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">point</span> <span class="o">=</span> <span class="n">surface</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;0&quot;</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;inverse&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">is_inverse</span><span class="p">),</span>
+                <span class="s2">&quot;part&quot;</span><span class="p">:</span> <span class="n">part</span><span class="p">,</span>
+                <span class="s2">&quot;surface&quot;</span><span class="p">:</span> <span class="n">surface</span><span class="p">,</span>
+                <span class="s2">&quot;point&quot;</span><span class="p">:</span> <span class="n">point</span><span class="p">,</span>
+                <span class="s2">&quot;mstring&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;D</span><span class="si">{</span><span class="n">part</span><span class="si">}{</span><span class="n">surface</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;G&quot;</span><span class="p">:</span>
+        <span class="n">match1</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">G_MATRIX_PATTERN1</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">matrix_str</span><span class="p">)</span>
+        <span class="n">match2</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">G_MATRIX_PATTERN2</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">matrix_str</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">([</span><span class="n">match1</span><span class="p">,</span> <span class="n">match2</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid format for Gap matrix: </span><span class="si">{</span><span class="n">matrix_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">match1</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">is_inverse</span><span class="p">,</span> <span class="n">part1</span><span class="p">,</span> <span class="n">surface1</span><span class="p">,</span> <span class="n">point1</span><span class="p">,</span> <span class="n">part2</span><span class="p">,</span> <span class="n">surface2</span><span class="p">,</span> <span class="n">point2</span><span class="p">)</span> <span class="o">=</span> <span class="n">match1</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">match2</span><span class="p">:</span>
+            <span class="n">is_inverse</span><span class="p">,</span> <span class="n">part1</span><span class="p">,</span> <span class="n">surface1</span><span class="p">,</span> <span class="n">part2</span><span class="p">,</span> <span class="n">surface2</span> <span class="o">=</span> <span class="n">match2</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+            <span class="n">point1</span><span class="p">,</span> <span class="n">point2</span> <span class="o">=</span> <span class="n">surface1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="n">surface2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;0&quot;</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;inverse&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">is_inverse</span><span class="p">),</span>
+                <span class="s2">&quot;part1&quot;</span><span class="p">:</span> <span class="n">part1</span><span class="p">,</span>
+                <span class="s2">&quot;surface1&quot;</span><span class="p">:</span> <span class="n">surface1</span><span class="p">,</span>
+                <span class="s2">&quot;point1&quot;</span><span class="p">:</span> <span class="n">point1</span><span class="p">,</span>
+                <span class="s2">&quot;part2&quot;</span><span class="p">:</span> <span class="n">part2</span><span class="p">,</span>
+                <span class="s2">&quot;surface2&quot;</span><span class="p">:</span> <span class="n">surface2</span><span class="p">,</span>
+                <span class="s2">&quot;point2&quot;</span><span class="p">:</span> <span class="n">point2</span><span class="p">,</span>
+                <span class="s2">&quot;mstring&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;GP</span><span class="si">{</span><span class="n">part1</span><span class="si">}{</span><span class="n">surface1</span><span class="si">}{</span><span class="n">point1</span><span class="si">}</span><span class="s2">P</span><span class="si">{</span><span class="n">part2</span><span class="si">}{</span><span class="n">surface2</span><span class="si">}{</span><span class="n">point2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+
+<div class="viewcode-block" id="get_symbols_in_expressions">
+<a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.get_symbols_in_expressions">[docs]</a>
+<span class="nd">@beartype</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_symbols_in_expressions</span><span class="p">(</span><span class="n">expr_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract and sort unique symbols from a list of sympy expressions.</span>
+
+<span class="sd">    This function processes a list of sympy expressions, extracts the free symbols, and</span>
+<span class="sd">    categorizes them into deviation symbols and gap symbols based on their naming patterns.</span>
+<span class="sd">    The symbols in each category are sorted according to a predefined order.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    expr_list : List[sp.Expr]</span>
+<span class="sd">        A list of sympy expressions from which symbols will be extracted.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Tuple[List[sp.Symbol], List[sp.Symbol]]</span>
+<span class="sd">        - The first list contains sorted deviation symbols (symbols with &quot;_d_&quot; in their names).</span>
+<span class="sd">        - The second list contains sorted gap symbols (symbols with &quot;_g_&quot; in their names).</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If a symbol&#39;s name does not end with a number or cannot be categorized based on the</span>
+<span class="sd">        predefined sort order.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - Sorting prioritizes symbols with a specific prefix order (`&quot;u_&quot;, &quot;v_&quot;, &quot;w_&quot;, &quot;alpha_&quot;,</span>
+<span class="sd">      &quot;beta_&quot;, &quot;gamma_&quot;`) followed by numerical suffixes.</span>
+<span class="sd">    - The function assumes symbols are named consistently with the expected patterns.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from sympy import symbols, Eq</span>
+<span class="sd">    &gt;&gt;&gt; u_d_1, v_g_2, w_d_3 = symbols(&quot;u_d_1 v_g_2 w_d_3&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; expr_list = [u_d_1 + v_g_2, w_d_3]</span>
+<span class="sd">    &gt;&gt;&gt; get_symbols_in_expressions(expr_list)</span>
+<span class="sd">    ([u_d_1, w_d_3], [v_g_2])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">sort_order</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;u_&quot;</span><span class="p">,</span> <span class="s2">&quot;v_&quot;</span><span class="p">,</span> <span class="s2">&quot;w_&quot;</span><span class="p">,</span> <span class="s2">&quot;alpha_&quot;</span><span class="p">,</span> <span class="s2">&quot;beta_&quot;</span><span class="p">,</span> <span class="s2">&quot;gamma_&quot;</span><span class="p">]</span>
+    <span class="n">sort_key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span>
+        <span class="nb">int</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\d+)$&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span>
+        <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="n">sort_order</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="kc">True</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">free_symbols</span> <span class="o">=</span> <span class="p">{</span><span class="n">symb</span> <span class="k">for</span> <span class="n">expr</span> <span class="ow">in</span> <span class="n">expr_list</span> <span class="k">for</span> <span class="n">symb</span> <span class="ow">in</span> <span class="n">expr</span><span class="o">.</span><span class="n">free_symbols</span><span class="p">}</span>
+    <span class="k">try</span> <span class="p">:</span>
+        <span class="n">deviation_symbols</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">symb</span> <span class="k">for</span> <span class="n">symb</span> <span class="ow">in</span> <span class="n">free_symbols</span> <span class="k">if</span> <span class="s2">&quot;_d_&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">symb</span><span class="p">)),</span>
+            <span class="n">key</span><span class="o">=</span><span class="n">sort_key</span><span class="p">,</span>  <span class="c1"># otaf.sort_key_by_prefix_and_number</span>
+        <span class="p">)</span>
+        <span class="n">gap_symbols</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">symb</span> <span class="k">for</span> <span class="n">symb</span> <span class="ow">in</span> <span class="n">free_symbols</span> <span class="k">if</span> <span class="s2">&quot;_g_&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">symb</span><span class="p">)),</span>
+            <span class="n">key</span><span class="o">=</span><span class="n">sort_key</span><span class="p">,</span>  <span class="c1"># otaf.sort_key_by_prefix_and_number</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Symbols must follow naming guidelines&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">deviation_symbols</span><span class="p">,</span> <span class="n">gap_symbols</span></div>
+
+
+
+<div class="viewcode-block" id="extract_expressions_with_variables">
+<a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.extract_expressions_with_variables">[docs]</a>
+<span class="nd">@beartype</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_expressions_with_variables</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract matrix expressions containing free variables.</span>
+
+<span class="sd">    This function filters specific off-diagonal and last-column elements of a given symbolic matrix</span>
+<span class="sd">    and returns only those expressions that contain free variables (i.e., symbols).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    m : sympy.MatrixBase</span>
+<span class="sd">        Sympy matrix from which expressions are to be extracted.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    List[sympy.Expr]</span>
+<span class="sd">        A list of expressions from the matrix that contain free variables.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The indices for the filtered elements include:</span>
+<span class="sd">    - Off-diagonal terms: (0, 1), (0, 2), (1, 2)</span>
+<span class="sd">    - Last-column terms: (0, 3), (1, 3), (2, 3)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">indices</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">m</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">indices</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">free_symbols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="round_floats_in_expression">
+<a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.round_floats_in_expression">[docs]</a>
+<span class="nd">@beartype</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">round_floats_in_expression</span><span class="p">(</span><span class="n">ex</span><span class="p">:</span> <span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">,</span> <span class="n">rnd</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Round floating-point numbers in a SymPy expression to a specified number of decimal places.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ex : sympy.Expr</span>
+<span class="sd">        SymPy expression containing floating-point numbers to be rounded.</span>
+<span class="sd">    rnd : int, optional</span>
+<span class="sd">        Number of decimal places to round to (default is 6).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sympy.Expr</span>
+<span class="sd">        A new SymPy expression with all floating-point numbers rounded to the specified decimal places.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">substitutions</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">a</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">rnd</span><span class="p">))</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">sp</span><span class="o">.</span><span class="n">preorder_traversal</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">ex</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">substitutions</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_symbol_coef_map">
+<a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.get_symbol_coef_map">[docs]</a>
+<span class="nd">@beartype</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_symbol_coef_map</span><span class="p">(</span><span class="n">expr</span><span class="p">:</span> <span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">,</span> <span class="n">rnd</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract coefficients of each variable in a first-order polynomial.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    expr : sympy.Expr</span>
+<span class="sd">        The polynomial expression to extract coefficients from.</span>
+<span class="sd">    rnd : int, optional</span>
+<span class="sd">        Number of decimal places to round the coefficients to (default is 8).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Dict[str, float]</span>
+<span class="sd">        A dictionary mapping variable names (as strings) to their coefficients (as floats).</span>
+<span class="sd">        Includes the constant term, represented by the key &#39;CONST&#39;.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - The function assumes the input is a first-order polynomial.</span>
+<span class="sd">    - If no constant term exists in the expression, &#39;CONST&#39; is set to 0.0.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">coef_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">as_coefficients_dict</span><span class="p">())</span>
+    <span class="k">if</span> <span class="mi">1</span> <span class="ow">in</span> <span class="n">coef_map</span><span class="p">:</span>
+        <span class="n">coef_map</span><span class="p">[</span><span class="s2">&quot;CONST&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coef_map</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">coef_map</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">coef_map</span><span class="p">[</span><span class="s2">&quot;CONST&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">coef_map</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">):</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="n">rnd</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">coef_map</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="k">return</span> <span class="n">coef_map</span></div>
+
+
+
+<div class="viewcode-block" id="get_SE3_base">
+<a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.get_SE3_base">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_SE3_base</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieve the SE(3) base matrix corresponding to a given index.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    index : str</span>
+<span class="sd">        The index representing the SE(3) base matrix.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sympy.MatrixBase</span>
+<span class="sd">        The SE(3) base matrix associated with the given index.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    KeyError</span>
+<span class="sd">        If the specified index is not found in `BASIS_DICT`.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The SE(3) base matrix is retrieved from the predefined `BASIS_DICT` in the `otaf.constants` module.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">(</span><span class="n">otaf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">BASIS_DICT</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="s2">&quot;MATRIX&quot;</span><span class="p">])</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Index &#39;</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">&#39; not found in BASIS_DICT.&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_SE3_matrices_from_indices">
+<a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.get_SE3_matrices_from_indices">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_SE3_matrices_from_indices</span><span class="p">(</span>
+    <span class="n">se3_indices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="n">multiplier</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieve SE(3) matrices corresponding to a list of indices, optionally scaled by a multiplier.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    se3_indices : List[Union[str, int]]</span>
+<span class="sd">        List of indices representing SE(3) base matrices.</span>
+<span class="sd">    multiplier : Union[float, int], optional</span>
+<span class="sd">        A scalar multiplier applied to each matrix (default is 1.0).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    List[sympy.MatrixBase]</span>
+<span class="sd">        A list of SE(3) base matrices, each scaled by the specified multiplier.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The indices are converted to strings and used to retrieve the corresponding SE(3) base matrices</span>
+<span class="sd">    from the predefined `BASIS_DICT` in the `otaf.constants` module.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">multiplier</span> <span class="o">*</span> <span class="n">get_SE3_base</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">se3_indices</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="validate_dict_keys">
+<a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.validate_dict_keys">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_dict_keys</span><span class="p">(</span>
+    <span class="n">dictionary</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">dictionary_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value_checks</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate the presence of specific keys in a dictionary and optionally check their values.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dictionary : dict</span>
+<span class="sd">        The dictionary to validate.</span>
+<span class="sd">    keys : List[str]</span>
+<span class="sd">        A list of keys that must be present in the dictionary.</span>
+<span class="sd">    dictionary_name : str</span>
+<span class="sd">        The name of the dictionary (used in error messages for clarity).</span>
+<span class="sd">    value_checks : dict, optional</span>
+<span class="sd">        A dictionary where keys are the dictionary keys to validate and values are functions</span>
+<span class="sd">        that take the dictionary&#39;s value as input and return a boolean indicating whether the value is valid.</span>
+<span class="sd">        If None, value validation is skipped (default is None).</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    otaf.exceptions.MissingKeyError</span>
+<span class="sd">        If a required key is missing from the dictionary.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If a value associated with a key fails the validation function provided in `value_checks`.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - `value_checks` is an optional mechanism to enforce additional constraints on dictionary values.</span>
+<span class="sd">    - This function is designed for use cases where strict key and value validation is required.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">otaf</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">MissingKeyError</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">dictionary_name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">value_checks</span> <span class="ow">and</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">value_checks</span><span class="p">:</span>
+            <span class="n">validator</span> <span class="o">=</span> <span class="n">value_checks</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">validator</span><span class="p">(</span><span class="n">dictionary</span><span class="p">[</span><span class="n">key</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Value for key &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; in &#39;</span><span class="si">{</span><span class="n">dictionary_name</span><span class="si">}</span><span class="s2">&#39; did not pass validation.&quot;</span>
+                <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="is_running_in_notebook">
+<a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.is_running_in_notebook">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_running_in_notebook</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if the current code is running in a Jupyter notebook environment.</span>
+
+<span class="sd">    This function detects the type of IPython shell to determine whether the code is</span>
+<span class="sd">    executed in a Jupyter notebook, a terminal, or a standard Python interpreter.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        True if the code is running in a Jupyter notebook or qtconsole, False otherwise.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - If the IPython shell cannot be detected, it is assumed the code is running</span>
+<span class="sd">      in a standard Python interpreter.</span>
+<span class="sd">    - This function relies on the `get_ipython()` function, which is available</span>
+<span class="sd">      only in IPython environments.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">shell</span> <span class="o">=</span> <span class="n">get_ipython</span><span class="p">()</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="k">if</span> <span class="n">shell</span> <span class="o">==</span> <span class="s2">&quot;ZMQInteractiveShell&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>  <span class="c1"># Jupyter notebook or qtconsole</span>
+        <span class="k">elif</span> <span class="n">shell</span> <span class="o">==</span> <span class="s2">&quot;TerminalInteractiveShell&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>  <span class="c1"># Terminal running IPython</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>  <span class="c1"># Other type (?)</span>
+    <span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>  <span class="c1"># Probably standard Python interpreter</span></div>
+
+
+
+<div class="viewcode-block" id="get_tqdm_range">
+<a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.get_tqdm_range">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_tqdm_range</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieve the appropriate tqdm range function based on the execution environment.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    function</span>
+<span class="sd">        `trange_notebook` if running in a Jupyter notebook, otherwise `trange`.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - This function checks the execution environment using `is_running_in_notebook`.</span>
+<span class="sd">    - `trange_notebook` is used for better rendering in notebook environments.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">trange_notebook</span> <span class="k">if</span> <span class="n">is_running_in_notebook</span><span class="p">()</span> <span class="k">else</span> <span class="n">trange</span></div>
+
+
+
+<div class="viewcode-block" id="alphabet_generator">
+<a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.alphabet_generator">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">alphabet_generator</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate infinite sequences of alphabetic strings, starting with single letters.</span>
+
+<span class="sd">    This generator produces all possible combinations of lowercase alphabetic characters</span>
+<span class="sd">    (&#39;a&#39; to &#39;z&#39;), incrementing the sequence length after exhausting combinations of the current length.</span>
+
+<span class="sd">    Yields</span>
+<span class="sd">    ------</span>
+<span class="sd">    str</span>
+<span class="sd">        The next alphabetic string in the sequence.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - The generator starts with single-letter combinations (&#39;a&#39;, &#39;b&#39;, ..., &#39;z&#39;) and continues</span>
+<span class="sd">      with multi-letter combinations (e.g., &#39;aa&#39;, &#39;ab&#39;, ..., &#39;zz&#39;, &#39;aaa&#39;, etc.).</span>
+<span class="sd">    - It produces strings indefinitely, making it suitable for cases where infinite sequences are needed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Start with single-letter combinations</span>
+    <span class="c1"># Infinite loop to keep generating sequences</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="c1"># Generate all combinations for the current length `n`</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_lowercase</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">n</span><span class="p">):</span>
+            <span class="c1"># Join tuple into a string and yield</span>
+            <span class="k">yield</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="c1"># Increment to generate sequences of increased length</span>
+        <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+
+
+<div class="viewcode-block" id="threshold_for_percentile_positive_values_below">
+<a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.threshold_for_percentile_positive_values_below">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">threshold_for_percentile_positive_values_below</span><span class="p">(</span>
+    <span class="n">arr</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">percentile</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the threshold value such that the given percentage of positive values</span>
+<span class="sd">    in the input array are below this threshold.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    arr : array-like</span>
+<span class="sd">        Input array of floats. Must contain at least one positive value for meaningful output.</span>
+<span class="sd">    percentile : float</span>
+<span class="sd">        The percentage (between 0 and 100) of positive values to consider.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float or None</span>
+<span class="sd">        The threshold value such that the specified percentage of positive values are below it.</span>
+<span class="sd">        Returns None if there are no positive values in the input array.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the percentile is not between 0 and 100, if the input array is empty,</span>
+<span class="sd">        or if the input cannot be reduced to a one-dimensional array.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - This function operates on the positive values in the input array, ignoring non-positive values.</span>
+<span class="sd">    - The input array is squeezed to handle cases where the input is a higher-dimensional array that can</span>
+<span class="sd">      be reduced to one dimension.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    # Compute the 50th percentile threshold for positive values</span>
+<span class="sd">    &gt;&gt;&gt; threshold_for_percentile_positive_values_below([-1, 2, 3, 4, 5], 50)</span>
+<span class="sd">    3.0</span>
+
+<span class="sd">    # Handle arrays with no positive values</span>
+<span class="sd">    &gt;&gt;&gt; threshold_for_percentile_positive_values_below([-1, -2, -3], 50)</span>
+<span class="sd">    None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">arr</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">arr</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input must be one-dimensional or squeezable to one-dimensional.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">percentile</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Percentile must be between 0 and 100.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">arr</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input array is empty.&quot;</span><span class="p">)</span>
+
+    <span class="n">positive_values</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="n">arr</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">positive_values</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># No positive values in the array</span>
+
+    <span class="n">threshold_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">positive_values</span><span class="p">,</span> <span class="n">percentile</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">threshold_value</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kramer84.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

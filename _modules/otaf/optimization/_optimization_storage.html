@@ -1,0 +1,374 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>otaf.optimization._optimization_storage &mdash; otaf 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            otaf
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Jupyter Notebooks</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/Analytical_2D_Reference_Assembly.html">Analytical 2D Reference Assembly</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/modules.html">otaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.capabilities.html">otaf.capabilities package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.common.html">otaf.common package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.constants.html">otaf.constants module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.distribution.html">otaf.distribution package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.example_models.html">otaf.example_models package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.exceptions.html">otaf.exceptions package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.geometry.html">otaf.geometry package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.optimization.html">otaf.optimization package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.plotting.html">otaf.plotting package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.sampling.html">otaf.sampling package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.sensitivity.html">otaf.sensitivity package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.surrogate.html">otaf.surrogate package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.uncertainty.html">otaf.uncertainty package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">otaf</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">otaf.optimization._optimization_storage</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for otaf.optimization._optimization_storage</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;OptimizationStorage&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">basinhopping</span><span class="p">,</span> <span class="n">minimize</span>
+
+
+<div class="viewcode-block" id="OptimizationStorage">
+<a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.OptimizationStorage">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">OptimizationStorage</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to store, manage, and analyze optimization data. This class keeps track of points explored during optimization,</span>
+<span class="sd">    whether generated by a global or local optimizer, and verifies if the points respect user-defined constraints and bounds.</span>
+
+<span class="sd">    Key Features:</span>
+<span class="sd">    -------------</span>
+<span class="sd">    - Stores each point&#39;s coordinates and the corresponding objective function value.</span>
+<span class="sd">    - Tracks whether each point was generated by a local or global optimization method.</span>
+<span class="sd">    - Automatically checks if points respect user-specified variable bounds.</span>
+<span class="sd">    - Evaluates whether points satisfy given constraints (passed via a constraint function).</span>
+<span class="sd">    - Offers utility methods to filter, manage, and query stored data.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    bounds : list of tuple or None, optional</span>
+<span class="sd">        List of tuples defining (lower, upper) bounds for each variable. If None, no bounds are applied (default: None).</span>
+<span class="sd">    constraint_function : callable or None, optional</span>
+<span class="sd">        A function that takes a point (array-like) as input and returns a boolean indicating whether the point satisfies</span>
+<span class="sd">        the constraints (True if satisfied, False otherwise). If None, no constraints are applied (default: None).</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    data : pandas.DataFrame</span>
+<span class="sd">        A DataFrame that stores optimization points and related metadata, with the following columns:</span>
+<span class="sd">        - &#39;point&#39; : array-like, the coordinates of the explored point.</span>
+<span class="sd">        - &#39;function_value&#39; : float, the value of the objective function at the given point.</span>
+<span class="sd">        - &#39;source&#39; : str, whether the point was generated from a local or global optimizer (&#39;local&#39; or &#39;global&#39;).</span>
+<span class="sd">        - &#39;bounds_respected&#39; : bool, whether the point respects the variable bounds.</span>
+<span class="sd">        - &#39;constraints_respected&#39; : bool, whether the point satisfies the constraint function.</span>
+
+<span class="sd">    Methods:</span>
+<span class="sd">    --------</span>
+<span class="sd">    add_point(x, f, source):</span>
+<span class="sd">        Adds a new optimization point with its function value, source, and checks for bounds and constraints compliance.</span>
+
+<span class="sd">    check_bounds(x):</span>
+<span class="sd">        Verifies if a point respects the variable bounds.</span>
+
+<span class="sd">    check_constraints(x):</span>
+<span class="sd">        Verifies if a point satisfies the constraint function.</span>
+
+<span class="sd">    apply_checks_to_all():</span>
+<span class="sd">        Reapplies bounds and constraints checks to all stored points, updating the DataFrame.</span>
+
+<span class="sd">    get_all_data():</span>
+<span class="sd">        Returns the complete DataFrame of stored optimization points.</span>
+
+<span class="sd">    get_points_by_source(source):</span>
+<span class="sd">        Filters and returns points generated by either the local or global optimizer.</span>
+
+<span class="sd">    clear_storage():</span>
+<span class="sd">        Clears the stored data while retaining the DataFrame structure.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">constraint_function</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># Create an empty DataFrame with the desired columns</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+                <span class="s2">&quot;point&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;function_value&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;source&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;bounds_respected&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;constraints_respected&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="n">bounds</span>  <span class="c1"># (min, max) for each variable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">constraint_function</span> <span class="o">=</span> <span class="n">constraint_function</span>  <span class="c1"># Function to check constraints</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;OptimizationStorage initialized with bounds: </span><span class="si">%s</span><span class="s2"> and constraint_function: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">constraint_function</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="OptimizationStorage.add_point">
+<a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.OptimizationStorage.add_point">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a point, its function value, and its source (local or global) to the DataFrame.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Attempting to add point: </span><span class="si">%s</span><span class="s2"> with function value: </span><span class="si">%f</span><span class="s2"> from source: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">source</span>
+        <span class="p">)</span>
+        <span class="n">bounds_respected</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_bounds</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">constraints_respected</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_constraints</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Attempting to add NaN function value for point: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: NaN function value detected for point: </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">new_entry</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;point&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">x</span><span class="p">)],</span>
+                <span class="s2">&quot;function_value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">f</span><span class="p">],</span>
+                <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">source</span><span class="p">],</span>
+                <span class="s2">&quot;bounds_respected&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">bounds_respected</span><span class="p">],</span>
+                <span class="s2">&quot;constraints_respected&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">constraints_respected</span><span class="p">],</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">new_entry</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="OptimizationStorage.check_bounds">
+<a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.OptimizationStorage.check_bounds">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the point respects the bounds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="c1"># Use the residual method from the Bounds object to check feasibility</span>
+        <span class="n">sl</span><span class="p">,</span> <span class="n">sb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">residual</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="c1"># If any sl or sb are negative, the point is out of bounds</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">sl</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">sb</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="OptimizationStorage.check_constraints">
+<a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.OptimizationStorage.check_constraints">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the point respects the constraints.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraint_function</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraint_function</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="OptimizationStorage.apply_checks_to_all">
+<a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.OptimizationStorage.apply_checks_to_all">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply_checks_to_all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply bounds and constraint checks to all entries in the DataFrame.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;bounds_respected&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;point&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">check_bounds</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;constraints_respected&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;point&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">check_constraints</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="OptimizationStorage.get_all_data">
+<a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.OptimizationStorage.get_all_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_all_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the entire DataFrame with all stored points.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="OptimizationStorage.get_points_by_source">
+<a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.OptimizationStorage.get_points_by_source">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_points_by_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return points filtered by their source (local or global).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">source</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="OptimizationStorage.clear_storage">
+<a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.OptimizationStorage.clear_storage">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clear_storage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear the DataFrame.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Clear the DataFrame by keeping the structure</span></div>
+
+
+    <span class="c1"># New method for filtering points</span>
+<div class="viewcode-block" id="OptimizationStorage.filter_points">
+<a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.OptimizationStorage.filter_points">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bounds_respected</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">constraints_respected</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filter the points based on source, bounds compliance, and constraint compliance.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        source : str, optional</span>
+<span class="sd">            Filter by the source of the point (&#39;local&#39; or &#39;global&#39;).</span>
+<span class="sd">        bounds_respected : bool, optional</span>
+<span class="sd">            Filter by whether the bounds were respected.</span>
+<span class="sd">        constraints_respected : bool, optional</span>
+<span class="sd">            Filter by whether the constraints were respected.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        --------</span>
+<span class="sd">        pd.DataFrame</span>
+<span class="sd">            A DataFrame filtered according to the provided criteria.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Filtering points with source=</span><span class="si">%s</span><span class="s2">, bounds_respected=</span><span class="si">%s</span><span class="s2">, constraints_respected=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">source</span><span class="p">,</span>
+            <span class="n">bounds_respected</span><span class="p">,</span>
+            <span class="n">constraints_respected</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">source</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">source</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">bounds_respected</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;bounds_respected&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">bounds_respected</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">constraints_respected</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;constraints_respected&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">constraints_respected</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">df</span></div>
+
+
+    <span class="c1"># Adding iterator functionality</span>
+<div class="viewcode-block" id="OptimizationStorage.__iter__">
+<a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.OptimizationStorage.__iter__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Iterate over all points in the storage by default.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="OptimizationStorage.iter_points">
+<a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.OptimizationStorage.iter_points">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">iter_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bounds_respected</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">constraints_respected</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generator for iterating over points based on specific filters.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        source : str, optional</span>
+<span class="sd">            Iterate over points filtered by their source (&#39;local&#39; or &#39;global&#39;).</span>
+<span class="sd">        bounds_respected : bool, optional</span>
+<span class="sd">            Iterate over points filtered by whether bounds were respected.</span>
+<span class="sd">        constraints_respected : bool, optional</span>
+<span class="sd">            Iterate over points filtered by whether constraints were respected.</span>
+
+<span class="sd">        Yields:</span>
+<span class="sd">        -------</span>
+<span class="sd">        index : int</span>
+<span class="sd">            Index of the point in the DataFrame.</span>
+<span class="sd">        row : pd.Series</span>
+<span class="sd">            Row from the DataFrame with point information.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filtered_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_points</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">bounds_respected</span><span class="p">,</span> <span class="n">constraints_respected</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">filtered_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="k">yield</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kramer84.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

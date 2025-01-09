@@ -68,7 +68,7 @@
 <li class="toctree-l4"><a class="reference internal" href="otaf.uncertainty.html">otaf.uncertainty package</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="otaf.html#module-contents">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.html#module-otaf">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -77,7 +77,16 @@
 <li class="toctree-l1"><a class="reference internal" href="otaf.common.html">otaf.common package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.constants.html">otaf.constants module</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">otaf.distribution package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-otaf.distribution">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.distribution.compute_sup_inf_distributions"><code class="docutils literal notranslate"><span class="pre">compute_sup_inf_distributions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.distribution.generate_correlated_samples"><code class="docutils literal notranslate"><span class="pre">generate_correlated_samples()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.distribution.get_composed_normal_defect_distribution"><code class="docutils literal notranslate"><span class="pre">get_composed_normal_defect_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.distribution.get_means_standards_composed_distribution"><code class="docutils literal notranslate"><span class="pre">get_means_standards_composed_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.distribution.get_prob_below_threshold"><code class="docutils literal notranslate"><span class="pre">get_prob_below_threshold()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.distribution.multiply_composed_distribution_standard_with_constants"><code class="docutils literal notranslate"><span class="pre">multiply_composed_distribution_standard_with_constants()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.distribution.multiply_composed_distribution_with_constant"><code class="docutils literal notranslate"><span class="pre">multiply_composed_distribution_with_constant()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.example_models.html">otaf.example_models package</a></li>
@@ -119,8 +128,144 @@
              
   <section id="otaf-distribution-package">
 <h1>otaf.distribution package<a class="headerlink" href="#otaf-distribution-package" title="Link to this heading"></a></h1>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="module-otaf.distribution">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-otaf.distribution" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.distribution.compute_sup_inf_distributions">
+<span class="sig-prename descclassname"><span class="pre">otaf.distribution.</span></span><span class="sig-name descname"><span class="pre">compute_sup_inf_distributions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distributions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/distribution/_distribution.html#compute_sup_inf_distributions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.distribution.compute_sup_inf_distributions" title="Link to this definition"></a></dt>
+<dd><p>Compute the supremum (sup) and infimum (inf) CDFs for a list of distributions.</p>
+<p>This function evaluates the Cumulative Distribution Functions (CDFs) at <cite>n_points</cite>
+evenly spaced points between <cite>x_min</cite> and <cite>x_max</cite> for a given list of distributions.
+It then computes the pointwise supremum and infimum of the CDFs across the
+distributions at each of these points.</p>
+<section id="parameters">
+<h3>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>distributions<span class="classifier">list</span></dt><dd><p>A list of objects where each object has a <cite>computeCDF(x)</cite> method to evaluate
+the CDF at a point x.</p>
+</dd>
+<dt>x_min<span class="classifier">float</span></dt><dd><p>The lower bound of the x values over which the CDFs are evaluated.</p>
+</dd>
+<dt>x_max<span class="classifier">float</span></dt><dd><p>The upper bound of the x values over which the CDFs are evaluated.</p>
+</dd>
+<dt>n_points<span class="classifier">int, optional</span></dt><dd><p>The number of points at which the CDFs are evaluated between <cite>x_min</cite> and <cite>x_max</cite>.
+Default is 10,000.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h3>Returns:<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<p>:
+sup_data : np.ndarray</p>
+<blockquote>
+<div><p>A 2D array with shape (n_points, 2), where the first column is the x values
+and the second column contains the pointwise supremum of the CDFs at each x.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>inf_data<span class="classifier">np.ndarray</span></dt><dd><p>A 2D array with shape (n_points, 2), where the first column is the x values
+and the second column contains the pointwise infimum of the CDFs at each x.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.distribution.generate_correlated_samples">
+<span class="sig-prename descclassname"><span class="pre">otaf.distribution.</span></span><span class="sig-name descname"><span class="pre">generate_correlated_samples</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">corr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/distribution/_distribution.html#generate_correlated_samples"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.distribution.generate_correlated_samples" title="Link to this definition"></a></dt>
+<dd><p>Generate bivariate correlated samples.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.distribution.get_composed_normal_defect_distribution">
+<span class="sig-prename descclassname"><span class="pre">otaf.distribution.</span></span><span class="sig-name descname"><span class="pre">get_composed_normal_defect_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">defect_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/distribution/_distribution.html#get_composed_normal_defect_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.distribution.get_composed_normal_defect_distribution" title="Link to this definition"></a></dt>
+<dd><p>Create a composed distribution of defects based on their names and associated standard deviations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>defect_names</strong> (<em>list</em>) – A list of defect variable names (symbols).</p></li>
+<li><p><strong>mu_list</strong> (<em>list</em><em>, </em><em>optional</em>) – List of means for each defect. If not provided, defaults to 0.0 for all defects.</p></li>
+<li><p><strong>sigma_list</strong> (<em>list</em><em>, </em><em>optional</em>) – List of standard deviations for each defect. If not provided, defaults to 1.0 for all defects.</p></li>
+<li><p><strong>mu_dict</strong> (<em>dict</em><em>, </em><em>optional</em>) – Dictionary mapping defect names to their mean values.</p></li>
+<li><p><strong>sigma_dict</strong> (<em>dict</em><em>, </em><em>optional</em>) – Dictionary mapping defect names to their standard deviation values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A composed distribution object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ot.ComposedDistribution</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>The defect names are expected to have specific prefixes to identify their type:</dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">u_</span></code> for translation along the x-axis</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">v_</span></code> for translation along the y-axis</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">w_</span></code> for translation along the z-axis</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">alpha_</span></code> for rotation around the x-axis</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">beta_</span></code> for rotation around the y-axis</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gamma_</span></code> for rotation around the z-axis</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>This has to be reflected in the mu_dict/sigma_dict if provided, e.g., <code class="docutils literal notranslate"><span class="pre">sigma_dict</span> <span class="pre">=</span> <span class="pre">{'u':1.0}</span></code>.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.distribution.get_means_standards_composed_distribution">
+<span class="sig-prename descclassname"><span class="pre">otaf.distribution.</span></span><span class="sig-name descname"><span class="pre">get_means_standards_composed_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">composed_distribution</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/distribution/_distribution.html#get_means_standards_composed_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.distribution.get_means_standards_composed_distribution" title="Link to this definition"></a></dt>
+<dd><p>Extracts the means and standard deviations from the composed distribution.
+Assumes all distributions are normal (mean/std).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>composed_distribution</strong> – The composed distribution of normal distributions.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of the means of the distributions.
+stds: A list of the standard deviations of the distributions.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>means</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.distribution.get_prob_below_threshold">
+<span class="sig-prename descclassname"><span class="pre">otaf.distribution.</span></span><span class="sig-name descname"><span class="pre">get_prob_below_threshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_inf_sup</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/distribution/_distribution.html#get_prob_below_threshold"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.distribution.get_prob_below_threshold" title="Link to this definition"></a></dt>
+<dd><p>Get the probability of the gap statistic being below a specified threshold.</p>
+<p>This function finds the element in the array <cite>data_inf_sup</cite> where the
+absolute value of the difference between the first column and the threshold
+is the smallest, and then returns the corresponding value from the second column.</p>
+<p>Parameters:
+data_inf_sup : numpy array</p>
+<blockquote>
+<div><p>Array where the first column contains gap values and the second column contains probabilities.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>threshold<span class="classifier">float, optional</span></dt><dd><p>The threshold to check against (default is 0).</p>
+</dd>
+</dl>
+<p>Returns:
+float</p>
+<blockquote>
+<div><p>The probability corresponding to the gap closest to the threshold.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.distribution.multiply_composed_distribution_standard_with_constants">
+<span class="sig-prename descclassname"><span class="pre">otaf.distribution.</span></span><span class="sig-name descname"><span class="pre">multiply_composed_distribution_standard_with_constants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">composed_distribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constants</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/distribution/_distribution.html#multiply_composed_distribution_standard_with_constants"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.distribution.multiply_composed_distribution_standard_with_constants" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.distribution.multiply_composed_distribution_with_constant">
+<span class="sig-prename descclassname"><span class="pre">otaf.distribution.</span></span><span class="sig-name descname"><span class="pre">multiply_composed_distribution_with_constant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">composed_distribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constant</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/distribution/_distribution.html#multiply_composed_distribution_with_constant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.distribution.multiply_composed_distribution_with_constant" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
 </section>
 

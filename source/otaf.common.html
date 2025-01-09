@@ -68,14 +68,30 @@
 <li class="toctree-l4"><a class="reference internal" href="otaf.uncertainty.html">otaf.uncertainty package</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="otaf.html#module-contents">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.html#module-otaf">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.capabilities.html">otaf.capabilities package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">otaf.common package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-otaf.common">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.common.alphabet_generator"><code class="docutils literal notranslate"><span class="pre">alphabet_generator()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.common.extract_expressions_with_variables"><code class="docutils literal notranslate"><span class="pre">extract_expressions_with_variables()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.common.get_SE3_base"><code class="docutils literal notranslate"><span class="pre">get_SE3_base()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.common.get_SE3_matrices_from_indices"><code class="docutils literal notranslate"><span class="pre">get_SE3_matrices_from_indices()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.common.get_symbol_coef_map"><code class="docutils literal notranslate"><span class="pre">get_symbol_coef_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.common.get_symbols_in_expressions"><code class="docutils literal notranslate"><span class="pre">get_symbols_in_expressions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.common.get_tqdm_range"><code class="docutils literal notranslate"><span class="pre">get_tqdm_range()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.common.inverse_mstring"><code class="docutils literal notranslate"><span class="pre">inverse_mstring()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.common.is_running_in_notebook"><code class="docutils literal notranslate"><span class="pre">is_running_in_notebook()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.common.merge_with_checks"><code class="docutils literal notranslate"><span class="pre">merge_with_checks()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.common.parse_matrix_string"><code class="docutils literal notranslate"><span class="pre">parse_matrix_string()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.common.round_floats_in_expression"><code class="docutils literal notranslate"><span class="pre">round_floats_in_expression()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.common.threshold_for_percentile_positive_values_below"><code class="docutils literal notranslate"><span class="pre">threshold_for_percentile_positive_values_below()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.common.validate_dict_keys"><code class="docutils literal notranslate"><span class="pre">validate_dict_keys()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.constants.html">otaf.constants module</a></li>
@@ -119,8 +135,427 @@
              
   <section id="otaf-common-package">
 <h1>otaf.common package<a class="headerlink" href="#otaf-common-package" title="Link to this heading"></a></h1>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="module-otaf.common">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-otaf.common" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.common.alphabet_generator">
+<span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">alphabet_generator</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#alphabet_generator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.alphabet_generator" title="Link to this definition"></a></dt>
+<dd><p>Generate infinite sequences of alphabetic strings, starting with single letters.</p>
+<p>This generator produces all possible combinations of lowercase alphabetic characters
+(‘a’ to ‘z’), incrementing the sequence length after exhausting combinations of the current length.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Yields<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>str</em> – The next alphabetic string in the sequence.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The generator starts with single-letter combinations (‘a’, ‘b’, …, ‘z’) and continues
+with multi-letter combinations (e.g., ‘aa’, ‘ab’, …, ‘zz’, ‘aaa’, etc.).</p></li>
+<li><p>It produces strings indefinitely, making it suitable for cases where infinite sequences are needed.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.common.extract_expressions_with_variables">
+<span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">extract_expressions_with_variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#extract_expressions_with_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.extract_expressions_with_variables" title="Link to this definition"></a></dt>
+<dd><p>Extract matrix expressions containing free variables.</p>
+<p>This function filters specific off-diagonal and last-column elements of a given symbolic matrix
+and returns only those expressions that contain free variables (i.e., symbols).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>m</strong> (<em>sympy.MatrixBase</em>) – Sympy matrix from which expressions are to be extracted.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of expressions from the matrix that contain free variables.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[sympy.Expr]</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The indices for the filtered elements include:
+- Off-diagonal terms: (0, 1), (0, 2), (1, 2)
+- Last-column terms: (0, 3), (1, 3), (2, 3)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.common.get_SE3_base">
+<span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">get_SE3_base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#get_SE3_base"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.get_SE3_base" title="Link to this definition"></a></dt>
+<dd><p>Retrieve the SE(3) base matrix corresponding to a given index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>str</em>) – The index representing the SE(3) base matrix.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The SE(3) base matrix associated with the given index.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>sympy.MatrixBase</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>KeyError</strong> – If the specified index is not found in <cite>BASIS_DICT</cite>.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The SE(3) base matrix is retrieved from the predefined <cite>BASIS_DICT</cite> in the <cite>otaf.constants</cite> module.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.common.get_SE3_matrices_from_indices">
+<span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">get_SE3_matrices_from_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">se3_indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiplier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#get_SE3_matrices_from_indices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.get_SE3_matrices_from_indices" title="Link to this definition"></a></dt>
+<dd><p>Retrieve SE(3) matrices corresponding to a list of indices, optionally scaled by a multiplier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>se3_indices</strong> (<em>List</em><em>[</em><em>Union</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em><em>]</em>) – List of indices representing SE(3) base matrices.</p></li>
+<li><p><strong>multiplier</strong> (<em>Union</em><em>[</em><em>float</em><em>, </em><em>int</em><em>]</em><em>, </em><em>optional</em>) – A scalar multiplier applied to each matrix (default is 1.0).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of SE(3) base matrices, each scaled by the specified multiplier.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[sympy.MatrixBase]</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The indices are converted to strings and used to retrieve the corresponding SE(3) base matrices
+from the predefined <cite>BASIS_DICT</cite> in the <cite>otaf.constants</cite> module.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.common.get_symbol_coef_map">
+<span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">get_symbol_coef_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rnd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#get_symbol_coef_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.get_symbol_coef_map" title="Link to this definition"></a></dt>
+<dd><p>Extract coefficients of each variable in a first-order polynomial.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>expr</strong> (<em>sympy.Expr</em>) – The polynomial expression to extract coefficients from.</p></li>
+<li><p><strong>rnd</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of decimal places to round the coefficients to (default is 8).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary mapping variable names (as strings) to their coefficients (as floats).
+Includes the constant term, represented by the key ‘CONST’.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, float]</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The function assumes the input is a first-order polynomial.</p></li>
+<li><p>If no constant term exists in the expression, ‘CONST’ is set to 0.0.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.common.get_symbols_in_expressions">
+<span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">get_symbols_in_expressions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expr_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#get_symbols_in_expressions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.get_symbols_in_expressions" title="Link to this definition"></a></dt>
+<dd><p>Extract and sort unique symbols from a list of sympy expressions.</p>
+<p>This function processes a list of sympy expressions, extracts the free symbols, and
+categorizes them into deviation symbols and gap symbols based on their naming patterns.
+The symbols in each category are sorted according to a predefined order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>expr_list</strong> (<em>List</em><em>[</em><em>sp.Expr</em><em>]</em>) – A list of sympy expressions from which symbols will be extracted.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>The first list contains sorted deviation symbols (symbols with “_d_” in their names).</p></li>
+<li><p>The second list contains sorted gap symbols (symbols with “_g_” in their names).</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[List[sp.Symbol], List[sp.Symbol]]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If a symbol’s name does not end with a number or cannot be categorized based on the
+    predefined sort order.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Sorting prioritizes symbols with a specific prefix order (<cite>“u_”, “v_”, “w_”, “alpha_”,
+“beta_”, “gamma_”</cite>) followed by numerical suffixes.</p></li>
+<li><p>The function assumes symbols are named consistently with the expected patterns.</p></li>
+</ul>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="kn">import</span> <span class="n">symbols</span><span class="p">,</span> <span class="n">Eq</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">u_d_1</span><span class="p">,</span> <span class="n">v_g_2</span><span class="p">,</span> <span class="n">w_d_3</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;u_d_1 v_g_2 w_d_3&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">expr_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">u_d_1</span> <span class="o">+</span> <span class="n">v_g_2</span><span class="p">,</span> <span class="n">w_d_3</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_symbols_in_expressions</span><span class="p">(</span><span class="n">expr_list</span><span class="p">)</span>
+<span class="go">([u_d_1, w_d_3], [v_g_2])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.common.get_tqdm_range">
+<span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">get_tqdm_range</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#get_tqdm_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.get_tqdm_range" title="Link to this definition"></a></dt>
+<dd><p>Retrieve the appropriate tqdm range function based on the execution environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>trange_notebook</cite> if running in a Jupyter notebook, otherwise <cite>trange</cite>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>function</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>This function checks the execution environment using <cite>is_running_in_notebook</cite>.</p></li>
+<li><p><cite>trange_notebook</cite> is used for better rendering in notebook environments.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.common.inverse_mstring">
+<span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">inverse_mstring</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#inverse_mstring"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.inverse_mstring" title="Link to this definition"></a></dt>
+<dd><p>Generate the inverse of a matrix string representation.</p>
+<p>This function processes a matrix string representation (either a Transformation matrix
+or a Gap matrix) and returns its inverse string representation. The inverse is computed
+by swapping certain elements in the input string based on predefined patterns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>matrix_str</strong> (<em>str</em>) – The string representation of the matrix. Must follow the expected
+format for either a Transformation matrix or a Gap matrix.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The inverse string representation of the matrix. Returns an empty string
+if <cite>matrix_str</cite> is empty.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the matrix string does not match the expected format for a Transformation
+    or Gap matrix, or if the matrix type is unsupported.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inverse_mstring</span><span class="p">(</span><span class="s2">&quot;TP123S1P456S2&quot;</span><span class="p">)</span>
+<span class="go">&#39;TP123S2P456S1&#39;</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inverse_mstring</span><span class="p">(</span><span class="s2">&quot;GP1S1P1P2S2P2&quot;</span><span class="p">)</span>
+<span class="go">&#39;GP2S2P2P1S1P1&#39;</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inverse_mstring</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="go">&#39;&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.common.is_running_in_notebook">
+<span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">is_running_in_notebook</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#is_running_in_notebook"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.is_running_in_notebook" title="Link to this definition"></a></dt>
+<dd><p>Check if the current code is running in a Jupyter notebook environment.</p>
+<p>This function detects the type of IPython shell to determine whether the code is
+executed in a Jupyter notebook, a terminal, or a standard Python interpreter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the code is running in a Jupyter notebook or qtconsole, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>If the IPython shell cannot be detected, it is assumed the code is running
+in a standard Python interpreter.</p></li>
+<li><p>This function relies on the <cite>get_ipython()</cite> function, which is available
+only in IPython environments.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.common.merge_with_checks">
+<span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">merge_with_checks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">existing_points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#merge_with_checks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.merge_with_checks" title="Link to this definition"></a></dt>
+<dd><p>Merge two dictionaries with value consistency checks.</p>
+<p>This function merges <cite>new_points</cite> into <cite>existing_points</cite>. If a key in <cite>new_points</cite> already
+exists in <cite>existing_points</cite>, the function checks whether their corresponding values are
+numerically close. If not, a <cite>ValueError</cite> is raised. The <cite>existing_points</cite> dictionary is
+modified in place.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>existing_points</strong> (<em>dict</em>) – The original dictionary of points to merge into. This dictionary is updated in place.
+Keys are typically strings, and values are numeric arrays or similar types.</p></li>
+<li><p><strong>new_points</strong> (<em>dict</em>) – The new points to merge. Keys should match those in <cite>existing_points</cite> if they overlap.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The updated <cite>existing_points</cite> dictionary after merging.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If a key exists in both dictionaries and the corresponding values are not numerically close.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">existing_points</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="s1">&#39;B&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_points</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;B&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">],</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">merge_with_checks</span><span class="p">(</span><span class="n">existing_points</span><span class="p">,</span> <span class="n">new_points</span><span class="p">)</span>
+<span class="go">{&#39;A&#39;: [1.0, 2.0], &#39;B&#39;: [3.0, 4.0], &#39;C&#39;: [5.0, 6.0]}</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">new_points</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;B&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">3.1</span><span class="p">,</span> <span class="mf">4.1</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">merge_with_checks</span><span class="p">(</span><span class="n">existing_points</span><span class="p">,</span> <span class="n">new_points</span><span class="p">)</span>
+<span class="go">ValueError: Conflict for key B: existing value [3.0, 4.0], new value [3.1, 4.1]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.common.parse_matrix_string">
+<span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">parse_matrix_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#parse_matrix_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.parse_matrix_string" title="Link to this definition"></a></dt>
+<dd><p>Parse a matrix string into its components.</p>
+<p>This function processes a string representation of a matrix, identifying its type
+(Transformation, Deviation, or Gap) based on the first character. It extracts and returns
+the relevant components in a structured dictionary format. The function also handles
+specific rules and patterns associated with each type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>matrix_str</strong> (<em>str</em>) – The string representation of the matrix to be parsed.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>A dictionary containing the parsed components of the matrix. The keys depend on the
+type of matrix but typically include:
+- ‘type’: The matrix type (‘T’, ‘D’, or ‘G’).
+- ‘part’, ‘surface1’, ‘point1’, ‘surface2’, ‘point2’: Components specific to</p>
+<blockquote>
+<div><p>Transformation or Gap matrices.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>’inverse’: Boolean indicating if the matrix is an inverse (for Deviation and Gap types).</p></li>
+<li><p>’mstring’: The reconstructed matrix string based on parsed components.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Union[str, bool]]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the matrix string does not conform to the expected pattern for its type or
+    if an unsupported matrix type is encountered.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_matrix_string</span><span class="p">(</span><span class="s1">&#39;TP1kK0aA0&#39;</span><span class="p">)</span>
+<span class="go">{&#39;type&#39;: &#39;T&#39;, &#39;part&#39;: &#39;1&#39;, &#39;surface1&#39;: &#39;k&#39;, &#39;point1&#39;: &#39;K0&#39;,</span>
+<span class="go"> &#39;surface2&#39;: &#39;a&#39;, &#39;point2&#39;: &#39;A0&#39;, &#39;mstring&#39;: &#39;TP1kK0aA0&#39;}</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_matrix_string</span><span class="p">(</span><span class="s1">&#39;D1k&#39;</span><span class="p">)</span>
+<span class="go">{&#39;type&#39;: &#39;D&#39;, &#39;inverse&#39;: False, &#39;part&#39;: &#39;1&#39;, &#39;surface&#39;: &#39;k&#39;,</span>
+<span class="go"> &#39;point&#39;: &#39;K0&#39;, &#39;mstring&#39;: &#39;D1k&#39;}</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_matrix_string</span><span class="p">(</span><span class="s1">&#39;GP1kK0P2aA0&#39;</span><span class="p">)</span>
+<span class="go">{&#39;type&#39;: &#39;G&#39;, &#39;inverse&#39;: False, &#39;part1&#39;: &#39;1&#39;, &#39;surface1&#39;: &#39;k&#39;, &#39;point1&#39;: &#39;K0&#39;,</span>
+<span class="go"> &#39;part2&#39;: &#39;2&#39;, &#39;surface2&#39;: &#39;a&#39;, &#39;point2&#39;: &#39;A0&#39;, &#39;mstring&#39;: &#39;GP1kK0P2aA0&#39;}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.common.round_floats_in_expression">
+<span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">round_floats_in_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rnd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#round_floats_in_expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.round_floats_in_expression" title="Link to this definition"></a></dt>
+<dd><p>Round floating-point numbers in a SymPy expression to a specified number of decimal places.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ex</strong> (<em>sympy.Expr</em>) – SymPy expression containing floating-point numbers to be rounded.</p></li>
+<li><p><strong>rnd</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of decimal places to round to (default is 6).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new SymPy expression with all floating-point numbers rounded to the specified decimal places.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>sympy.Expr</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.common.threshold_for_percentile_positive_values_below">
+<span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">threshold_for_percentile_positive_values_below</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percentile</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#threshold_for_percentile_positive_values_below"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.threshold_for_percentile_positive_values_below" title="Link to this definition"></a></dt>
+<dd><p>Compute the threshold value such that the given percentage of positive values
+in the input array are below this threshold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arr</strong> (<em>array-like</em>) – Input array of floats. Must contain at least one positive value for meaningful output.</p></li>
+<li><p><strong>percentile</strong> (<em>float</em>) – The percentage (between 0 and 100) of positive values to consider.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The threshold value such that the specified percentage of positive values are below it.
+Returns None if there are no positive values in the input array.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float or None</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the percentile is not between 0 and 100, if the input array is empty,
+    or if the input cannot be reduced to a one-dimensional array.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>This function operates on the positive values in the input array, ignoring non-positive values.</p></li>
+<li><p>The input array is squeezed to handle cases where the input is a higher-dimensional array that can
+be reduced to one dimension.</p></li>
+</ul>
+<p class="rubric">Examples</p>
+<p># Compute the 50th percentile threshold for positive values
+&gt;&gt;&gt; threshold_for_percentile_positive_values_below([-1, 2, 3, 4, 5], 50)
+3.0</p>
+<p># Handle arrays with no positive values
+&gt;&gt;&gt; threshold_for_percentile_positive_values_below([-1, -2, -3], 50)
+None</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.common.validate_dict_keys">
+<span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">validate_dict_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dictionary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dictionary_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_checks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#validate_dict_keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.validate_dict_keys" title="Link to this definition"></a></dt>
+<dd><p>Validate the presence of specific keys in a dictionary and optionally check their values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dictionary</strong> (<em>dict</em>) – The dictionary to validate.</p></li>
+<li><p><strong>keys</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – A list of keys that must be present in the dictionary.</p></li>
+<li><p><strong>dictionary_name</strong> (<em>str</em>) – The name of the dictionary (used in error messages for clarity).</p></li>
+<li><p><strong>value_checks</strong> (<em>dict</em><em>, </em><em>optional</em>) – A dictionary where keys are the dictionary keys to validate and values are functions
+that take the dictionary’s value as input and return a boolean indicating whether the value is valid.
+If None, value validation is skipped (default is None).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.MissingKeyError" title="otaf.exceptions.MissingKeyError"><strong>otaf.exceptions.MissingKeyError</strong></a> – If a required key is missing from the dictionary.</p></li>
+<li><p><strong>ValueError</strong> – If a value associated with a key fails the validation function provided in <cite>value_checks</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p><cite>value_checks</cite> is an optional mechanism to enforce additional constraints on dictionary values.</p></li>
+<li><p>This function is designed for use cases where strict key and value validation is required.</p></li>
+</ul>
+</dd></dl>
+
 </section>
 </section>
 

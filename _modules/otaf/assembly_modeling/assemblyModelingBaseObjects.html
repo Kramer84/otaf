@@ -101,7 +101,7 @@
 
 
 <div class="viewcode-block" id="DeviationMatrix">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.DeviationMatrix">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">DeviationMatrix</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -171,7 +171,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">n_variables</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DeviationMatrix.__repr__">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix.__repr__">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.DeviationMatrix.__repr__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate a string representation of the DeviationMatrix.</span>
@@ -217,7 +217,7 @@
                     <span class="p">)</span>
 
 <div class="viewcode-block" id="DeviationMatrix.get_inverse">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix.get_inverse">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.DeviationMatrix.get_inverse">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate the inverse of the current DeviationMatrix.</span>
@@ -241,7 +241,7 @@
 
 
 <div class="viewcode-block" id="DeviationMatrix.get_variables">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix.get_variables">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.DeviationMatrix.get_variables">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the symbolic variables associated with the deviation matrix.</span>
@@ -259,7 +259,7 @@
 
 
 <div class="viewcode-block" id="DeviationMatrix.get_matrix">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix.get_matrix">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.DeviationMatrix.get_matrix">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate the SE(3) matrix for the deviation matrix.</span>
@@ -277,7 +277,7 @@
 
 
 <div class="viewcode-block" id="DeviationMatrix.get_matrix_inverse">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix.get_matrix_inverse">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.DeviationMatrix.get_matrix_inverse">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_matrix_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate the inverse SE(3) matrix for the deviation matrix.</span>
@@ -297,7 +297,7 @@
 
 
 <div class="viewcode-block" id="GapMatrix">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.GapMatrix">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.GapMatrix">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">GapMatrix</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -397,7 +397,7 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[Type: &#39;G&#39;, ID: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="si">}</span><span class="s2">] Added </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">)</span><span class="si">}</span><span class="s2"> basis variables.&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="GapMatrix.__repr__">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.GapMatrix.__repr__">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.GapMatrix.__repr__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate a string representation of the GapMatrix.</span>
@@ -411,7 +411,7 @@
 
 
 <div class="viewcode-block" id="GapMatrix.get_inverse">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.GapMatrix.get_inverse">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.GapMatrix.get_inverse">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate the inverse of the current GapMatrix.</span>
@@ -435,7 +435,7 @@
 
 
 <div class="viewcode-block" id="GapMatrix.get_variables">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.GapMatrix.get_variables">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.GapMatrix.get_variables">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the symbolic variables associated with the gap matrix.</span>
@@ -453,7 +453,7 @@
 
 
 <div class="viewcode-block" id="GapMatrix.get_matrix">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.GapMatrix.get_matrix">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.GapMatrix.get_matrix">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate the SE(3) matrix for the gap matrix.</span>
@@ -471,7 +471,7 @@
 
 
 <div class="viewcode-block" id="GapMatrix.get_matrix_inverse">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.GapMatrix.get_matrix_inverse">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.GapMatrix.get_matrix_inverse">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_matrix_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate the inverse SE(3) matrix for the gap matrix.</span>
@@ -491,7 +491,7 @@
 
 
 <div class="viewcode-block" id="TransformationMatrix">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.TransformationMatrix">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">TransformationMatrix</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -563,7 +563,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_affine_validity_and_inverse</span><span class="p">()</span>
 
 <div class="viewcode-block" id="TransformationMatrix.__repr__">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix.__repr__">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.TransformationMatrix.__repr__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate a string representation of the TransformationMatrix.</span>
@@ -606,7 +606,7 @@
         <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Transformation matrix </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> wrong.&quot;</span>
 
 <div class="viewcode-block" id="TransformationMatrix.get_change_of_basis_matrix">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix.get_change_of_basis_matrix">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.TransformationMatrix.get_change_of_basis_matrix">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_change_of_basis_matrix</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">initial</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">final</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">as_array</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
@@ -649,7 +649,7 @@
 
 
 <div class="viewcode-block" id="TransformationMatrix.get_inverse">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix.get_inverse">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.TransformationMatrix.get_inverse">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate the inverse of the current TransformationMatrix.</span>
@@ -678,7 +678,7 @@
 
 
 <div class="viewcode-block" id="TransformationMatrix.get_matrix">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix.get_matrix">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.TransformationMatrix.get_matrix">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the transformation matrix.</span>
@@ -699,7 +699,7 @@
 
 
 <div class="viewcode-block" id="TransformationMatrix.get_matrix_inverse">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix.get_matrix_inverse">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.TransformationMatrix.get_matrix_inverse">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_matrix_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the inverse of the transformation matrix.</span>
@@ -722,7 +722,7 @@
 
 
 <div class="viewcode-block" id="I4">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.I4">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.I4">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">I4</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class representing a 4x4 identity matrix.</span>
@@ -739,7 +739,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">TYPE</span> <span class="o">=</span> <span class="s2">&quot;I4&quot;</span>
 
 <div class="viewcode-block" id="I4.get_matrix">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.I4.get_matrix">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.I4.get_matrix">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate a 4x4 identity matrix.</span>
@@ -754,7 +754,7 @@
 
 
 <div class="viewcode-block" id="I4.get_matrix_inverse">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.I4.get_matrix_inverse">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.I4.get_matrix_inverse">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_matrix_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate the inverse of the 4x4 identity matrix.</span>
@@ -773,7 +773,7 @@
 
 
 <div class="viewcode-block" id="J4">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.J4">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.J4">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">J4</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class representing a 4x4 rotation matrix for a 180° rotation around the z-axis.</span>
@@ -790,7 +790,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">TYPE</span> <span class="o">=</span> <span class="s2">&quot;J4&quot;</span>
 
 <div class="viewcode-block" id="J4.get_matrix">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.J4.get_matrix">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.J4.get_matrix">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate a 4x4 rotation matrix representing a 180° rotation around the z-axis.</span>
@@ -812,7 +812,7 @@
 
 
 <div class="viewcode-block" id="J4.get_matrix_inverse">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyModelingBaseObjects.J4.get_matrix_inverse">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.J4.get_matrix_inverse">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_matrix_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate the inverse of the 4x4 rotation matrix.</span>
