@@ -33,7 +33,6 @@ dependencies = [
     "joblib",
     "torch",
     "torcheval",
-    "scikit-learn",
     "trimesh",
     "beartype",
     "pytransform3d[all]",
