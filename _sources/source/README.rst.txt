@@ -166,11 +166,8 @@ the source code in ``constants.py``.
 Documentation
 ~~~~~~~~~~~~~
 
-**DOCUMENTATION NOT YET HOSTED**
-
-Visit the `OTAF Documentation <https://github.com/Kramer84/otaf/wiki>`__
-for detailed guides, examples, and API references. `View
-Documentation <https://kramer84.github.io/otaf/>`__
+Visit the `OTAF Documentation <https://kramer84.github.io/otaf/>`__ for
+detailed guides, examples, and API references.
 
 **TO COMPILE THE DOCUMENTATION LOCALLY INSTALL PACKAGE WITH [docs] FLAG,
 THEN:**
@@ -185,11 +182,6 @@ THEN:**
 
    make clean
    make html
-
-(Only tested on Linux)
-
-**Then you can open the documentation by opening the ``index.html`` file
-in ``docs/_build/html/``**
 
 --------------
 
