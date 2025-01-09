@@ -125,10 +125,8 @@ Information about the different values that the keys can take refer to the sourc
 
 ### Documentation
 
-**DOCUMENTATION NOT YET HOSTED**
+Visit the [OTAF Documentation](https://kramer84.github.io/otaf/) for detailed guides, examples, and API references.
 
-Visit the [OTAF Documentation](https://github.com/Kramer84/otaf/wiki) for detailed guides, examples, and API references.
-[View Documentation](https://kramer84.github.io/otaf/)
 
 **TO COMPILE THE DOCUMENTATION LOCALLY INSTALL PACKAGE WITH [docs] FLAG, THEN:**
 
@@ -142,10 +140,6 @@ cd docs/
 make clean
 make html
 ```
-
-(Only tested on Linux)
-
-**Then you can open the documentation by opening the `index.html` file in `docs/_build/html/`**
 
 ---
 
