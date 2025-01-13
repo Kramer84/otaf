@@ -1,32 +1,30 @@
-# This CITATION.cff file was generated with cffinit.
-# Visit https://bit.ly/cffinit to generate yours today!
-
-cff-version: 1.2.0
 title: "otaf : Open Tolerance Analysis Framework"
-message: >-
-  If you use this software, please cite it using the
-  metadata from this file.
-type: software
+abstract: Python library for the modeling of rigid mechanical assemblies with random defects and failure rate estimation.
 authors:
   - given-names: Kristof Attila
     family-names: Simady
     email: ksimady@sigma-clermont.fr
+    affiliation: 'Institut Pascal, UMR 6602'
   - given-names: Pierre
     family-names: Beaurepaire
-    email: pierre.beaurepaire@sigma-clermont.fr
     affiliation: 'Institut Pascal, UMR 6602'
   - given-names: Nicolas
     family-names: 'Gayton '
-    email: nicolas.gayton@sigma-clermont.fr
     affiliation: 'Institut Pascal, UMR 6602'
-repository-code: 'https://github.com/Kramer84/otaf'
-abstract: There will be some abstract here later
 keywords:
   - Tolerance Analysis
-  - Statistical analysis
+  - Reliability
+  - Imprecise Probabilities
   - Probability of Failure
   - Mechanical Engineering
+repository-code: 'https://github.com/Kramer84/otaf'
 license: GPL-3.0
 version: 0.1.0
 doi: NONEYET
 date-released: '2025-01-15'
+cff-version: 1.2.0
+type: software
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+
