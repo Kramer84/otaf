@@ -5,12 +5,6 @@ authors:
     family-names: Simady
     email: ksimady@sigma-clermont.fr
     affiliation: 'Institut Pascal, UMR 6602'
-  - given-names: Pierre
-    family-names: Beaurepaire
-    affiliation: 'Institut Pascal, UMR 6602'
-  - given-names: Nicolas
-    family-names: 'Gayton '
-    affiliation: 'Institut Pascal, UMR 6602'
 keywords:
   - Tolerance Analysis
   - Reliability
