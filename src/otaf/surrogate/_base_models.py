@@ -68,7 +68,7 @@ def get_variable_size_sequential_linear_model(
     return nn.Sequential(*seq_args)
 
 
-def get_base_relu_mlp_model(input_dim, output_dim, compile_model=True):
+def get_base_relu_mlp_model(input_dim, output_dim, compile_model=False):
     layer_sizes = list(
         map(
             int,
@@ -91,7 +91,7 @@ def get_base_relu_mlp_model(input_dim, output_dim, compile_model=True):
         return model
 
 
-def get_base_tanh_mlp_model(input_dim, output_dim, compile_model=True):
+def get_base_tanh_mlp_model(input_dim, output_dim, compile_model=False):
     layer_sizes = list(
         map(
             int,
