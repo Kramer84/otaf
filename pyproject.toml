@@ -36,7 +36,10 @@ dependencies = [
     "trimesh",
     "beartype",
     "pytransform3d[all]",
-    "gldpy"
+    "gldpy",
+    "jupyter",
+    "ipywidgets",
+    "pyside2"
 ]
 
 [project.optional-dependencies]
