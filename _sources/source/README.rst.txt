@@ -8,7 +8,7 @@ OTAF: Open Tolerance Analysis Framework
       <img src="logo/logo.png" alt="OTAF Logo" width="400px">
 
 📖 Table of Contents
--------------------
+--------------------
 
 1. `Introduction <#introduction>`__
 2. `Installation <#installation>`__
@@ -22,7 +22,7 @@ OTAF: Open Tolerance Analysis Framework
 --------------
 
 📚 Introduction
---------------
+---------------
 
 **OTAF** (Open Tolerance Analysis Framework) is a research oriented
 library designed to perform statistical tolerance analysis of mechanical
@@ -66,7 +66,7 @@ Limitations
 --------------
 
 🚀 Installation
---------------
+---------------
 
 From Source
 ~~~~~~~~~~~
@@ -211,7 +211,7 @@ for a complete overview.
 --------------
 
 📦 Examples
-----------
+-----------
 
 Explore the ``NOTEBOOKS/`` directory for scripts demonstrating OTAF’s
 capabilities. **THE NOTEBOOKS HAVE YET TO BE CLEANED UP**
@@ -219,7 +219,7 @@ capabilities. **THE NOTEBOOKS HAVE YET TO BE CLEANED UP**
 --------------
 
 🤝 Contributing
---------------
+---------------
 
 We welcome contributions! Whether you’re reporting a bug, suggesting a
 feature, or submitting a pull request, your help is appreciated. There
@@ -232,7 +232,7 @@ network-based surrogate models, may also require further refinement.
 --------------
 
 📜 License
----------
+----------
 
 This project is licensed under the **GNU General Public License v3.0
 (GPLv3)**. For details, see the
@@ -241,7 +241,7 @@ This project is licensed under the **GNU General Public License v3.0
 --------------
 
 🌟 Acknowledgments
------------------
+------------------
 
 This work is supported by the `French National Research Agency
 (ANR) <https://anr.fr/Projet-ANR-21-CE46-0009>`__ under the project
