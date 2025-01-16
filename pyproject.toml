@@ -22,9 +22,11 @@ classifiers = [
     "Natural Language :: English",
 ]
 
+requires-python = ">= 3.8"
+
 dependencies = [
     "numpy",
-    "scipy",
+    "scipy>=1.14.0",
     "sympy",
     "pandas",
     "openturns",
@@ -39,7 +41,6 @@ dependencies = [
     "gldpy",
     "jupyter",
     "ipywidgets",
-    "pyside2"
 ]
 
 [project.optional-dependencies]
