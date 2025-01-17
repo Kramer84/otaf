@@ -40,6 +40,7 @@ from . import sampling
 from . import distribution
 from . import capabilities
 from . import example_models
+from . import tolerances
 
 # Remove assembly_modeling from the namespace
 del assembly_modeling
@@ -65,7 +66,8 @@ __all__ = [
     "sampling",
     "distribution",
     "capabilities",
-    "example_models"
+    "example_models",
+    "tolerances"
 ]
 
 torch._dynamo.config.suppress_errors = True
