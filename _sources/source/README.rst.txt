@@ -1,12 +1,6 @@
 OTAF: Open Tolerance Analysis Framework
 =======================================
 
-.. container::
-
-   ::
-
-      <img src="logo/logo.png" alt="OTAF Logo" width="400px">
-
 📖 Table of Contents
 --------------------
 
