@@ -16,7 +16,7 @@ import numpy as np
 import sympy as sp
 import openturns as ot
 from beartype import beartype
-from beartype.typing import Dict, List, Tuple, Union, Callable, Optional
+from beartype.typing import Dict, List, Tuple, Union, Callable, Optional, Sequence
 
 
 @beartype
@@ -111,6 +111,20 @@ def get_composed_normal_defect_distribution(
 
 
 def multiply_composed_distribution_with_constant(composed_distribution, constant):
+    """
+    Multiply all parameters in a ComposedDistribution by a constant.
+
+    Args:
+        composed_distribution (ot.ComposedDistribution):
+            The original composed distribution.
+        constant (float):
+            The constant value by which to multiply all parameters.
+
+    Returns:
+        ot.ComposedDistribution:
+            A copy of the original composed distribution,
+            with its parameters scaled by the given constant.
+    """
     composed_distribution = copy.copy(composed_distribution)
     parameters = composed_distribution.getParameter()
     parameters = np.array(parameters) * constant
@@ -119,7 +133,23 @@ def multiply_composed_distribution_with_constant(composed_distribution, constant
 
 
 def multiply_composed_distribution_standard_with_constants(composed_distribution, constants):
-    ## Assumes all distiributions are normals (mean/std)
+    """
+    Multiply the standard deviations of each sub-distribution by corresponding constants.
+
+    This function assumes each sub-distribution is a Normal distribution,
+    where each distribution's parameters are in the form [mean, std, mean, std, ...].
+
+    Args:
+        composed_distribution (ot.ComposedDistribution):
+            The original composed distribution.
+        constants (list[float]):
+            A list of constants to multiply each distribution’s standard deviation.
+
+    Returns:
+        ot.ComposedDistribution:
+            A copy of the original composed distribution,
+            with updated standard deviations.
+    """
     composed_distribution = copy.copy(composed_distribution)
     parameters = composed_distribution.getParameter()
     for i in range(len(constants)):

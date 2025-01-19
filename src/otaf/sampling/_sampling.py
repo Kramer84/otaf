@@ -11,6 +11,7 @@ __all__ = [
     "generate_imprecise_probabilistic_samples",
     "generate_and_transform_sequence",
     "compose_defects_with_lambdas",
+    "scale_sample_with_params",
 ]
 
 import itertools
@@ -22,7 +23,7 @@ import sympy as sp
 from scipy.optimize import Bounds, LinearConstraint
 import openturns as ot
 from beartype import beartype
-from beartype.typing import Dict, List, Tuple, Union, Callable, Optional
+from beartype.typing import Dict, List, Tuple, Union, Callable, Optional, Sequence
 from functools import partial, lru_cache
 from collections.abc import Iterable
 
@@ -513,3 +514,58 @@ def compose_defects_with_lambdas(lds, rdv):
         scaled_defect_samples.append(scaled_sample)
 
     return scaled_defect_samples
+
+
+@beartype
+def scale_sample_with_params(
+    sample: np.ndarray,
+    parameters: Union[np.ndarray, Sequence[float]]
+) -> np.ndarray:
+    """
+    Scale a sample of shape (N, M) using mean and standard deviation parameters.
+
+    Each column of the sample corresponds to a component of a standard normal unit distribution.
+    The input parameters define mean and standard deviation pairs for scaling each column.
+
+    Args:
+        sample (np.ndarray):
+            A 2D array of shape (N, M), where each column represents a random vector component
+            from a standard normal distribution.
+        parameters (Union[np.ndarray, Sequence[float]]):
+            A 1D array or sequence of size 2 * M, where the elements alternate between
+            mean and standard deviation for each column.
+
+    Returns:
+        np.ndarray:
+            A 2D array of shape (N, M), with each column scaled using the provided parameters.
+
+    Raises:
+        ValueError: If the sample is not a 2D array.
+        ValueError: If the parameters are not of size 2 * M.
+    """
+    # Ensure sample is a 2D array
+    if sample.ndim != 2:
+        raise ValueError(f"Sample must be a 2D array, but got shape {sample.shape}.")
+
+    # Get dimensions of the sample
+    N, M = sample.shape
+
+    # Ensure parameters are of size 2 * M
+    parameters = np.asarray(parameters)
+    if parameters.shape[0] != 2 * M:
+        raise ValueError(
+            f"Parameters must have size 2 * M (expected {2 * M}, got {parameters.shape[0]})."
+        )
+
+    # Extract means and standard deviations from interleaved parameters
+    means = parameters[::2]
+    stds = parameters[1::2]
+
+    # Ensure standard deviations are positive
+    if np.any(stds <= 0):
+        raise ValueError("All standard deviations must be positive.")
+
+    # Scale the sample
+    scaled_sample = sample * stds + means
+
+    return scaled_sample
