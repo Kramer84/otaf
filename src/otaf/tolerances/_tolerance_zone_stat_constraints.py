@@ -206,33 +206,80 @@ class FeatureLevelStatisticalConstraint:
 
 
 class ComposedAssemblyLevelStatisticalConstraint:
-    """Class to combine feature level constraints into a big
-    constraint function for the whole assembly from which we can then
-    construct the non linear constraint for scipy
-    This will take as an input the direct parameter values, not the normalized ones
+    """
+    Combines feature-level constraints into a single constraint function
+    for the entire assembly.
+
+    Parameters
+    ----------
+    feature_constraint_list : Sequence[FeatureLevelStatisticalConstraint]
+        A list of feature-level statistical constraint objects.
+
+    Attributes
+    ----------
+    feature_constraint_list : Sequence[FeatureLevelStatisticalConstraint]
+        The provided list of feature-level constraints.
+    n_feature : int
+        Number of features (length of feature_constraint_list).
     """
 
     def __init__(self, feature_constraint_list: Sequence[FeatureLevelStatisticalConstraint]):
+        if not isinstance(feature_constraint_list, Sequence) or not feature_constraint_list:
+            raise ValueError("feature_constraint_list must be a non-empty sequence.")
+
         self.feature_constraint_list = feature_constraint_list
         self.n_feature = len(self.feature_constraint_list)
 
-    def __call__(self, composed_param):
-        """list of list of all params of all feature constraints in order.
+    def __call__(self, composed_param: List[List[float]]) -> np.ndarray:
         """
+        Evaluate the constraints for the given parameter values.
+
+        Parameters
+        ----------
+        composed_param : List[List[float]]
+            A list of parameter lists corresponding to each feature constraint.
+
+        Returns
+        -------
+        np.ndarray
+            Array of constraint evaluations for each feature.
+
+        Raises
+        ------
+        AssertionError
+            If the length of composed_param does not match the number of features.
+        """
+        if len(composed_param) != self.n_feature:
+            raise ValueError(
+                f"Expected {self.n_feature} parameter sets, but got {len(composed_param)}."
+            )
+
         err_l = []
-        assert len(composed_param) == self.n_feature, "Should be as much parameters than features"
-        for i, fc in enumerate(self.feature_constraint_list) :
+        for i, fc in enumerate(self.feature_constraint_list):
             err_l.append(fc(composed_param[i]))
+
         return np.array(err_l)
 
 
 class NormalizedAssemblyLevelConstraint:
-    """Class that uses normalized inputs for the assembly constraint, and
-    so has already the max parameter values predefined,
-    and supposes that all feature level distrbutions are normal.
+    """
+    Handles normalized inputs for assembly constraints, using pre-defined
+    parameter value bounds and assuming normal distributions.
 
-    param_val_bounds are the bounds for each parameter of the feature distributions. The construction is that for each feature there is a list of bounds,
-    and then for the assembly it is a list of each list for each feature.
+    Parameters
+    ----------
+    composed_statistical_constraint : ComposedAssemblyLevelStatisticalConstraint
+        The composed constraint object operating on original parameter values.
+    param_val_bounds : List[List[Tuple[float, float]]]
+        Bounds for each parameter of the feature distributions. The structure
+        is a list of bounds per feature, with each bound as a tuple (min, max).
+
+    Attributes
+    ----------
+    composed_statistical_constraint : ComposedAssemblyLevelStatisticalConstraint
+        The provided composed statistical constraint.
+    param_val_bounds : List[List[Tuple[float, float]]]
+        The provided parameter value bounds.
     """
     def __init__(
         self,
@@ -241,18 +288,35 @@ class NormalizedAssemblyLevelConstraint:
         self.composed_statistical_constraint = composed_statistical_constraint
         self.param_val_bounds = param_val_bounds
 
-    def __call__(self, composed_param_normalized):
+    def __call__(self, composed_param_normalized: List[List[float]]) -> np.ndarray:
         """
-        composed_param_normalized = List
-            The values are 0 and 1
-        """
-        # First put the vals back, in the original space
+        Evaluate the normalized constraints.
 
+        Parameters
+        ----------
+        composed_param_normalized : List[List[float]]
+            Normalized parameter values (0 to 1) for each feature.
+
+        Returns
+        -------
+        np.ndarray
+            Array of constraint evaluations for the normalized parameters.
+        """
         composed_param = []
 
         for i, feature_param in enumerate(composed_param_normalized):
-            composed_param.append([])
+            capped_params = []
             for j, norm_param in enumerate(feature_param):
-                composed_param[i].append( (self.param_val_bounds[i][j][1]-self.param_val_bounds[i][j][0])*norm_param + self.param_val_bounds[i][j][0] )
+                if norm_param < 0.0 or norm_param > 1.0:
+                    print(f"Warning: Normalized parameter {norm_param} for feature {i}, parameter {j} is out of bounds. Capping to [0, 1].")
+                    norm_param = max(0.0, min(1.0, norm_param))
+
+                original_param = (
+                    (self.param_val_bounds[i][j][1] - self.param_val_bounds[i][j][0]) * norm_param
+                    + self.param_val_bounds[i][j][0]
+                )
+                capped_params.append(original_param)
+
+            composed_param.append(capped_params)
 
         return self.composed_statistical_constraint(composed_param)
