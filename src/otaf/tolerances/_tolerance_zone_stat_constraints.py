@@ -2,6 +2,8 @@
 __author__ = "Kramer84"
 __all__ = [
     "FeatureLevelStatisticalConstraint",
+    "ComposedAssemblyLevelStatisticalConstraint",
+    "NormalizedAssemblyLevelConstraint"
 ]
 
 import numpy as np
@@ -11,7 +13,7 @@ import openturns as ot
 
 from scipy.optimize import Bounds, LinearConstraint, NonlinearConstraint
 from beartype import beartype
-from beartype.typing import Dict, List, Tuple, Union, Callable, Optional
+from beartype.typing import Dict, List, Tuple, Union, Callable, Optional, Sequence, Any
 
 import otaf
 
@@ -82,6 +84,7 @@ class FeatureLevelStatisticalConstraint:
         """Gets called with a set of params and returns the error from the target
         """
         if self.isNormal :
+            self.dist_params = param
             sample = otaf.sampling.scale_sample_with_params(self.normalSample, param)
             self.compute_on_sample(sample)
         else :
@@ -206,4 +209,50 @@ class ComposedAssemblyLevelStatisticalConstraint:
     """Class to combine feature level constraints into a big
     constraint function for the whole assembly from which we can then
     construct the non linear constraint for scipy
+    This will take as an input the direct parameter values, not the normalized ones
     """
+
+    def __init__(self, feature_constraint_list: Sequence[FeatureLevelStatisticalConstraint]):
+        self.feature_constraint_list = feature_constraint_list
+        self.n_feature = len(self.feature_constraint_list)
+
+    def __call__(self, composed_param):
+        """list of list of all params of all feature constraints in order.
+        """
+        err_l = []
+        assert len(composed_param) == self.n_feature, "Should be as much parameters than features"
+        for i, fc in enumerate(self.feature_constraint_list) :
+            err_l.append(fc(composed_param[i]))
+        return np.array(err_l)
+
+
+class NormalizedAssemblyLevelConstraint:
+    """Class that uses normalized inputs for the assembly constraint, and
+    so has already the max parameter values predefined,
+    and supposes that all feature level distrbutions are normal.
+
+    param_val_bounds are the bounds for each parameter of the feature distributions. The construction is that for each feature there is a list of bounds,
+    and then for the assembly it is a list of each list for each feature.
+    """
+    def __init__(
+        self,
+        composed_statistical_constraint: ComposedAssemblyLevelStatisticalConstraint,
+        param_val_bounds):
+        self.composed_statistical_constraint = composed_statistical_constraint
+        self.param_val_bounds = param_val_bounds
+
+    def __call__(self, composed_param_normalized):
+        """
+        composed_param_normalized = List
+            The values are 0 and 1
+        """
+        # First put the vals back, in the original space
+
+        composed_param = []
+
+        for i, feature_param in enumerate(composed_param_normalized):
+            composed_param.append([])
+            for j, norm_param in enumerate(feature_param):
+                composed_param[i].append( (self.param_val_bounds[i][j][1]-self.param_val_bounds[i][j][0])*norm_param + self.param_val_bounds[i][j][0] )
+
+        return self.composed_statistical_constraint(composed_param)
