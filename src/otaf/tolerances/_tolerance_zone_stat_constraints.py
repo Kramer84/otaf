@@ -307,10 +307,6 @@ class NormalizedAssemblyLevelConstraint:
         for i, feature_param in enumerate(composed_param_normalized):
             capped_params = []
             for j, norm_param in enumerate(feature_param):
-                if norm_param < 0.0 or norm_param > 1.0:
-                    print(f"Warning: Normalized parameter {norm_param} for feature {i}, parameter {j} is out of bounds. Capping to [0, 1].")
-                    norm_param = max(0.0, min(1.0, norm_param))
-
                 original_param = (
                     (self.param_val_bounds[i][j][1] - self.param_val_bounds[i][j][0]) * norm_param
                     + self.param_val_bounds[i][j][0]
