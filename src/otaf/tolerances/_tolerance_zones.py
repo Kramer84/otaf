@@ -2,6 +2,8 @@
 __author__ = "Kramer84"
 __all__ = [
     "MiSdofToleranceZones",
+    "bound_distance",
+    "points_within_bounds",
 ]
 
 import numpy as np
