@@ -562,7 +562,7 @@ def scale_sample_with_params(
     stds = parameters[1::2]
 
     # Ensure standard deviations are positive
-    if np.any(stds <= 0):
+    if np.any(stds < 0):
         raise ValueError("All standard deviations must be positive.")
 
     # Scale the sample

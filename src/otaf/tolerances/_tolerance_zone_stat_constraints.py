@@ -103,7 +103,10 @@ class FeatureLevelStatisticalConstraint:
 
         if self.isNormal :
             # Later we'll use some better generator
-            self.normalSample = np.random.normal(size=(self.n_sample, self.n_dof))
+            # sample = np.random.normal(size=(self.n_sample, self.n_dof))
+            dist = ot.ComposedDistribution([ot.Normal()]*self.n_dof)
+            sample = otaf.sampling.generate_and_transform_sequence(self.n_dof, self.n_sample, dist)
+            self.normalSample = sample
 
     def set_distribution(self, dist: ot.Distribution) -> None:
         """
