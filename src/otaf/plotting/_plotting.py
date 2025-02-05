@@ -1020,7 +1020,7 @@ def save_plot(fig=None, ax=None, filename='plot', folder='.', file_format='png',
     return file_path
 
 
-def plot_gld_pbox_cdf(gld_obj, lower_params, upper_params, x_values, xtol=1e-5, labels=None, colors=('tab:blue', 'tab:orange'), fill_color='gray', alpha=0.3):
+def plot_gld_pbox_cdf(gld_obj, lower_params, upper_params, x_values, xtol=1e-5, labels=None, colors=('tab:blue', 'tab:orange'), fill_color='gray', alpha=0.3, xlabel="X", ylabel="P", title="Probability-Box of the CDF"):
     """
     Plot a Probability-Box (P-Box) using two sets of GLD parameters representing the lower and upper bounds of the CDF.
 
@@ -1058,8 +1058,8 @@ def plot_gld_pbox_cdf(gld_obj, lower_params, upper_params, x_values, xtol=1e-5, 
     plt.fill_between(x_values, lower_cdf, upper_cdf, color=fill_color, alpha=alpha)
 
     # Labels and title
-    plt.xlabel("X")
-    plt.ylabel("P")
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
     plt.legend()
-    plt.title("Probability-Box of the CDF")
+    plt.title(title)
     plt.show()
