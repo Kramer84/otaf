@@ -105,7 +105,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span>
 
 
 <div class="viewcode-block" id="get_composed_normal_defect_distribution">
@@ -205,6 +205,20 @@
 <div class="viewcode-block" id="multiply_composed_distribution_with_constant">
 <a class="viewcode-back" href="../../../source/otaf.distribution.html#otaf.distribution.multiply_composed_distribution_with_constant">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">multiply_composed_distribution_with_constant</span><span class="p">(</span><span class="n">composed_distribution</span><span class="p">,</span> <span class="n">constant</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Multiply all parameters in a ComposedDistribution by a constant.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        composed_distribution (ot.ComposedDistribution):</span>
+<span class="sd">            The original composed distribution.</span>
+<span class="sd">        constant (float):</span>
+<span class="sd">            The constant value by which to multiply all parameters.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ot.ComposedDistribution:</span>
+<span class="sd">            A copy of the original composed distribution,</span>
+<span class="sd">            with its parameters scaled by the given constant.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">composed_distribution</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">composed_distribution</span><span class="p">)</span>
     <span class="n">parameters</span> <span class="o">=</span> <span class="n">composed_distribution</span><span class="o">.</span><span class="n">getParameter</span><span class="p">()</span>
     <span class="n">parameters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span> <span class="o">*</span> <span class="n">constant</span>
@@ -216,7 +230,23 @@
 <div class="viewcode-block" id="multiply_composed_distribution_standard_with_constants">
 <a class="viewcode-back" href="../../../source/otaf.distribution.html#otaf.distribution.multiply_composed_distribution_standard_with_constants">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">multiply_composed_distribution_standard_with_constants</span><span class="p">(</span><span class="n">composed_distribution</span><span class="p">,</span> <span class="n">constants</span><span class="p">):</span>
-    <span class="c1">## Assumes all distiributions are normals (mean/std)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Multiply the standard deviations of each sub-distribution by corresponding constants.</span>
+
+<span class="sd">    This function assumes each sub-distribution is a Normal distribution,</span>
+<span class="sd">    where each distribution&#39;s parameters are in the form [mean, std, mean, std, ...].</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        composed_distribution (ot.ComposedDistribution):</span>
+<span class="sd">            The original composed distribution.</span>
+<span class="sd">        constants (list[float]):</span>
+<span class="sd">            A list of constants to multiply each distribution’s standard deviation.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ot.ComposedDistribution:</span>
+<span class="sd">            A copy of the original composed distribution,</span>
+<span class="sd">            with updated standard deviations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">composed_distribution</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">composed_distribution</span><span class="p">)</span>
     <span class="n">parameters</span> <span class="o">=</span> <span class="n">composed_distribution</span><span class="o">.</span><span class="n">getParameter</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">constants</span><span class="p">)):</span>

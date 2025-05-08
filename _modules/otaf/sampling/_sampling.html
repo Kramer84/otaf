@@ -100,6 +100,7 @@
     <span class="s2">&quot;generate_imprecise_probabilistic_samples&quot;</span><span class="p">,</span>
     <span class="s2">&quot;generate_and_transform_sequence&quot;</span><span class="p">,</span>
     <span class="s2">&quot;compose_defects_with_lambdas&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;scale_sample_with_params&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
@@ -111,7 +112,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bounds</span><span class="p">,</span> <span class="n">LinearConstraint</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">lru_cache</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
 
@@ -631,6 +632,64 @@
         <span class="n">scaled_defect_samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scaled_sample</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">scaled_defect_samples</span></div>
+
+
+
+<div class="viewcode-block" id="scale_sample_with_params">
+<a class="viewcode-back" href="../../../source/otaf.sampling.html#otaf.sampling.scale_sample_with_params">[docs]</a>
+<span class="nd">@beartype</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">scale_sample_with_params</span><span class="p">(</span>
+    <span class="n">sample</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">parameters</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Scale a sample of shape (N, M) using mean and standard deviation parameters.</span>
+
+<span class="sd">    Each column of the sample corresponds to a component of a standard normal unit distribution.</span>
+<span class="sd">    The input parameters define mean and standard deviation pairs for scaling each column.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sample (np.ndarray):</span>
+<span class="sd">            A 2D array of shape (N, M), where each column represents a random vector component</span>
+<span class="sd">            from a standard normal distribution.</span>
+<span class="sd">        parameters (Union[np.ndarray, Sequence[float]]):</span>
+<span class="sd">            A 1D array or sequence of size 2 * M, where the elements alternate between</span>
+<span class="sd">            mean and standard deviation for each column.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        np.ndarray:</span>
+<span class="sd">            A 2D array of shape (N, M), with each column scaled using the provided parameters.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the sample is not a 2D array.</span>
+<span class="sd">        ValueError: If the parameters are not of size 2 * M.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Ensure sample is a 2D array</span>
+    <span class="k">if</span> <span class="n">sample</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sample must be a 2D array, but got shape </span><span class="si">{</span><span class="n">sample</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Get dimensions of the sample</span>
+    <span class="n">N</span><span class="p">,</span> <span class="n">M</span> <span class="o">=</span> <span class="n">sample</span><span class="o">.</span><span class="n">shape</span>
+
+    <span class="c1"># Ensure parameters are of size 2 * M</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">parameters</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">M</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Parameters must have size 2 * M (expected </span><span class="si">{</span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">M</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">parameters</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">).&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Extract means and standard deviations from interleaved parameters</span>
+    <span class="n">means</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">stds</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="c1"># Ensure standard deviations are positive</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">stds</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;All standard deviations must be positive : </span><span class="si">{</span><span class="n">stds</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Scale the sample</span>
+    <span class="n">scaled_sample</span> <span class="o">=</span> <span class="n">sample</span> <span class="o">*</span> <span class="n">stds</span> <span class="o">+</span> <span class="n">means</span>
+
+    <span class="k">return</span> <span class="n">scaled_sample</span></div>
 
 </pre></div>
 

@@ -259,12 +259,46 @@ float</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.distribution.multiply_composed_distribution_standard_with_constants">
 <span class="sig-prename descclassname"><span class="pre">otaf.distribution.</span></span><span class="sig-name descname"><span class="pre">multiply_composed_distribution_standard_with_constants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">composed_distribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constants</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/distribution/_distribution.html#multiply_composed_distribution_standard_with_constants"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.distribution.multiply_composed_distribution_standard_with_constants" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Multiply the standard deviations of each sub-distribution by corresponding constants.</p>
+<p>This function assumes each sub-distribution is a Normal distribution,
+where each distribution’s parameters are in the form [mean, std, mean, std, …].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>composed_distribution</strong> (<em>ot.ComposedDistribution</em>) – The original composed distribution.</p></li>
+<li><p><strong>constants</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – A list of constants to multiply each distribution’s standard deviation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A copy of the original composed distribution,
+with updated standard deviations.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ot.ComposedDistribution</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.distribution.multiply_composed_distribution_with_constant">
 <span class="sig-prename descclassname"><span class="pre">otaf.distribution.</span></span><span class="sig-name descname"><span class="pre">multiply_composed_distribution_with_constant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">composed_distribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constant</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/distribution/_distribution.html#multiply_composed_distribution_with_constant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.distribution.multiply_composed_distribution_with_constant" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Multiply all parameters in a ComposedDistribution by a constant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>composed_distribution</strong> (<em>ot.ComposedDistribution</em>) – The original composed distribution.</p></li>
+<li><p><strong>constant</strong> (<em>float</em>) – The constant value by which to multiply all parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A copy of the original composed distribution,
+with its parameters scaled by the given constant.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ot.ComposedDistribution</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 </section>
