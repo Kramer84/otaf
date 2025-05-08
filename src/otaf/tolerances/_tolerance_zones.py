@@ -2,11 +2,14 @@
 __author__ = "Kramer84"
 __all__ = [
     "MiSdofToleranceZones",
+    "bound_distance",
+    "points_within_bounds",
 ]
 
 import numpy as np
 from beartype import beartype
 from beartype.typing import Dict, List, Tuple, Union, Callable, Optional
+
 
 
 class MiSdofToleranceZones:
@@ -47,7 +50,7 @@ class MiSdofToleranceZones:
         """
         bounds = np.array([[-t/2, -t/2], [t/2, t/2]])
         dist_func = np.sqrt(X[:, 0]**2 + X[:, 1]**2)
-        dist_valid = points_within_bounds(dist_func, [[0, t/2]])
+        dist_valid = points_within_bounds(dist_func, [[0], [t/2]])
         bounds_valid = points_within_bounds(X, bounds)
         valid = dist_valid * bounds_valid
         return valid, dist_func
@@ -73,7 +76,7 @@ class MiSdofToleranceZones:
         """
         bounds = np.array([[-t/2, -t/2], [t/2, t/2]])
         dist_func = np.sqrt(X[:, 0]**2 + X[:, 1]**2)
-        dist_valid = points_within_bounds(dist_func, [[0, t/2]])
+        dist_valid = points_within_bounds(dist_func, [[0], [t/2]])
         bounds_valid = points_within_bounds(X, bounds)
         valid = dist_valid * bounds_valid
         return valid, dist_func
@@ -101,7 +104,7 @@ class MiSdofToleranceZones:
         """
         bounds = np.array([[-t/2, -t/L], [t/2, t/L]])
         dist_func = np.abs(X[:, 0]) + np.abs((X[:, 1]*t)/(2*L))
-        dist_valid = points_within_bounds(dist_func, [[0, t/2]])
+        dist_valid = points_within_bounds(dist_func, [[0], [t/2]])
         bounds_valid = points_within_bounds(X, bounds)
         valid = dist_valid * bounds_valid
         return valid, dist_func
@@ -131,7 +134,7 @@ class MiSdofToleranceZones:
         """
         bounds = np.array([[-t/2, -t/2, -t/2], [t/2, t/2, t/2]])
         dist_func = np.sqrt(X[:, 0]**2 + X[:, 1]**2 + X[:, 2]**2)
-        dist_valid = points_within_bounds(dist_func, [[0, t/2]])
+        dist_valid = points_within_bounds(dist_func, [[0], [t/2]])
         bounds_valid = points_within_bounds(X, bounds)
         valid = dist_valid * bounds_valid
         return valid, dist_func
@@ -159,7 +162,7 @@ class MiSdofToleranceZones:
         """
         bounds = np.array([[-t/2, -t/2, -t/L, -t/L], [t/2, t/2, t/L, t/L]])
         dist_func = np.sqrt((X[:, 0] + X[:, 2]*(L/2))**2 + (X[:, 1] + X[:, 3]*(L/2))**2)
-        dist_valid = points_within_bounds(dist_func, [[0, t/2]])
+        dist_valid = points_within_bounds(dist_func, [[0], [t/2]])
         bounds_valid = points_within_bounds(X, bounds)
         valid = dist_valid * bounds_valid
         return valid, dist_func
@@ -187,7 +190,7 @@ class MiSdofToleranceZones:
         """
         bounds = np.array([[-t/2, -t/2, -t/L, -t/L], [t/2, t/2, t/L, t/L]])
         dist_func = np.sqrt((X[:, 0] + X[:, 2]*(L/2))**2 + (X[:, 1] + X[:, 3]*(L/2))**2)
-        dist_valid = points_within_bounds(dist_func, [[0, t/2]])
+        dist_valid = points_within_bounds(dist_func, [[0], [t/2]])
         bounds_valid = points_within_bounds(X, bounds)
         valid = dist_valid * bounds_valid
         return valid, dist_func
@@ -218,8 +221,8 @@ class MiSdofToleranceZones:
         bounds = np.array([[-t1/2, -t2/2, -t1/L, -t2/L], [t1/2, t2/2, t1/L, t2/L]])
         dist_func_1 = np.abs(X[:, 0]) + np.abs(X[:, 2]*(L/2))
         dist_func_2 = np.abs(X[:, 1]) + np.abs(X[:, 3]*(L/2))
-        dist_valid_1 = points_within_bounds(dist_func_1, [[0, t1/2]])
-        dist_valid_2 = points_within_bounds(dist_func_2, [[0, t2/2]])
+        dist_valid_1 = points_within_bounds(dist_func_1, [[0], [t1/2]])
+        dist_valid_2 = points_within_bounds(dist_func_2, [[0], [t2/2]])
         bounds_valid = points_within_bounds(X, bounds)
         valid = dist_valid_1 * dist_valid_2 * bounds_valid
         return valid, (dist_func_1, dist_func_2)
@@ -249,7 +252,7 @@ class MiSdofToleranceZones:
         """
         bounds = np.array([[-t/2, -t/Ly, -t/Lx], [t/2, t/Ly, t/Lx]])
         dist_func = np.abs(X[:, 0]) + np.abs(X[:, 1]*(Ly/2)) + np.abs(X[:, 2]*(Lx/2))
-        dist_valid = points_within_bounds(dist_func, [[0, t/2]])
+        dist_valid = points_within_bounds(dist_func, [[0], [t/2]])
         bounds_valid = points_within_bounds(X, bounds)
         valid = dist_valid * bounds_valid
         return valid, dist_func
@@ -272,7 +275,7 @@ def points_within_bounds(sample, bounds):
     ----------
     sample : np.ndarray, shape (N, M)
         Array of N points, each with M dimensions.
-    bounds : np.ndarray, shape (M, 2)
+    bounds : np.ndarray, shape (2, M)
         Array of bounds for each dimension, with each row as [lower_bound, upper_bound].
 
     Returns
@@ -280,5 +283,7 @@ def points_within_bounds(sample, bounds):
     np.ndarray, shape (N,)
         Boolean array where 1 means the point respects the bounds, and 0 otherwise.
     """
-    lb, ub = bounds[:, 0], bounds[:, 1]
+    sample = np.atleast_2d(sample.T).T
+    bounds = np.asarray(bounds)
+    lb, ub = bounds[0, :], bounds[1, :]
     return np.all((sample >= lb) & (sample <= ub), axis=1).astype(int)

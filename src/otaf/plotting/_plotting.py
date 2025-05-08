@@ -21,7 +21,8 @@ __all__ = [
     "compare_jacobians",
     "pair_plot",
     "plot_combined_CDF",
-    "save_plot"
+    "save_plot",
+    "plot_gld_pbox_cdf"
 ]
 
 import os
@@ -33,6 +34,8 @@ from itertools import product
 
 import numpy as np
 import sympy as sp
+from scipy.optimize import fminbound
+
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 from matplotlib.patches import Polygon, Rectangle
@@ -1015,3 +1018,48 @@ def save_plot(fig=None, ax=None, filename='plot', folder='.', file_format='png',
     fig.savefig(file_path, format=file_format, dpi=dpi, **kwargs)
 
     return file_path
+
+
+def plot_gld_pbox_cdf(gld_obj, lower_params, upper_params, x_values, xtol=1e-5, labels=None, colors=('tab:blue', 'tab:orange'), fill_color='gray', alpha=0.3, xlabel="X", ylabel="P", title="Probability-Box of the CDF"):
+    """
+    Plot a Probability-Box (P-Box) using two sets of GLD parameters representing the lower and upper bounds of the CDF.
+
+    Parameters
+    ----------
+    gld_obj : object
+        An instance of the GLD class from gldpy.
+    lower_params : array-like
+        Parameters for the lower bound GLD.
+    upper_params : array-like
+        Parameters for the upper bound GLD.
+    x_values : array-like
+        X values where the P-box should be computed.
+    xtol : float, optional
+        Tolerance for numerical CDF computation. Default is 1e-5.
+    labels : tuple of str, optional
+        Labels for the lower and upper bound CDFs. Default is None.
+    colors : tuple of str, optional
+        Colors for the lower and upper bound CDFs. Default is ('tab:blue', 'tab:orange').
+    fill_color : str, optional
+        Color for the filled P-box region. Default is 'gray'.
+    alpha : float, optional
+        Transparency of the filled region. Default is 0.3.
+    """
+
+    # Compute CDF values for the given x_values
+    lower_cdf = gld_obj.CDF_num(x_values, lower_params, xtol=xtol)
+    upper_cdf = gld_obj.CDF_num(x_values, upper_params, xtol=xtol)
+
+    # Plot P-box
+    plt.figure(dpi=150)
+    plt.grid(True)
+    plt.plot(x_values, lower_cdf, color=colors[0], label=labels[0] if labels else 'Lower bound')
+    plt.plot(x_values, upper_cdf, color=colors[1], label=labels[1] if labels else 'Upper bound')
+    plt.fill_between(x_values, lower_cdf, upper_cdf, color=fill_color, alpha=alpha)
+
+    # Labels and title
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.legend()
+    plt.title(title)
+    plt.show()
