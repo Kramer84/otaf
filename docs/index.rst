@@ -28,3 +28,4 @@ Welcome to OTAF's Documentation!
    source/otaf.sensitivity
    source/otaf.surrogate
    source/otaf.uncertainty
+   source/otaf.tolerances
