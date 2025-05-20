@@ -265,7 +265,7 @@ class MiSdofToleranceZones:
 
 def bound_distance(val, lb, ub):
     """Return signed distance of val to bounds (negative if out of bounds)."""
-    return min(val - lb, ub - val) if lb <= val <= ub else val - np.clip(val, lb, ub)
+    return min(val - lb, ub - val)
 
 def points_within_bounds(sample, bounds):
     """

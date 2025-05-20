@@ -47,6 +47,7 @@ class InterfaceLoopBuilder:
         compatibility_loop_handling: Any,
         filtered_gap_matrices: Dict[str, Dict[str, Any]],
         circle_resolution: int = 8,
+        silence_prints=True
     ) -> None:
         """
         Initialize the InterfaceLoopBuilder.
@@ -67,6 +68,13 @@ class InterfaceLoopBuilder:
         self.filtered_gap_matrices = filtered_gap_matrices
         self.CIRCLE_RESOLUTION = circle_resolution
         self.interface_expressions = None
+        self.sp = bool(silence_prints)
+
+    def _print(self, *args):
+        if self.sp:
+            pass
+        else:
+            print(*args)
 
     def matrix_list_taylor_expansion(self, matrix_loop_list: List[Any]) -> Any:
         """
@@ -170,21 +178,21 @@ class InterfaceLoopBuilder:
         performed based on part and surface identifiers.
         """
         BPSP, GMMP = otaf.constants.BASE_PART_SURF_PATTERN, otaf.constants.G_MATRIX_MSTRING_PATTERN
-        print(f"Processing part {idPart}, surface {idSurf} for plane-to-plane interactions.")
+        self._print(f"Processing part {idPart}, surface {idSurf} for plane-to-plane interactions.")
 
         usedGMat = list(self.filtered_gap_matrices[idPart][idSurf]["USED"])
         usedGMatDat = [list(GMMP.fullmatch(ug).groups()) for ug in usedGMat]
         usedInteractingParts = [X[3] for X in usedGMatDat]
         usedInteractingSurfs = [X[4] for X in usedGMatDat]
-        print("usedGMatDat", usedGMatDat)
-        print(f"Found {len(usedGMat)} used gap matrices.")
+        self._print("usedGMatDat", usedGMatDat)
+        self._print(f"Found {len(usedGMat)} used gap matrices.")
 
         unusedGMat = list(self.filtered_gap_matrices[idPart][idSurf]["UNUSED"])
         unusedGMatDat = [list(GMMP.fullmatch(uug).groups()) for uug in unusedGMat]
         unusedInteractingParts = [X[3] for X in unusedGMatDat]
         unusedInteractingSurfs = [X[4] for X in unusedGMatDat]
-        print("unusedGMatDat", unusedGMatDat)
-        print(f"Found {len(unusedGMat)} unused gap matrices.")
+        self._print("unusedGMatDat", unusedGMatDat)
+        self._print(f"Found {len(unusedGMat)} unused gap matrices.")
 
         facingPlaneInteractionMatrixList = []
 
@@ -204,7 +212,7 @@ class InterfaceLoopBuilder:
                     )
             facingPlaneInteractionMatrixList.extend(interactionMatrixLoopList)
             if interactionMatrixLoopList:
-                print(
+                self._print(
                     f"Generated {len(interactionMatrixLoopList)} interaction matrix loops for current matching."
                 )
             facingPlaneInteractionMatrixList.extend(interactionMatrixLoopList)
@@ -308,9 +316,9 @@ class InterfaceLoopBuilder:
         To generate interaction equations for a cylinder:
         >>> equations = get_interface_equations_facing_cylinders("Part1", "SurfaceA")
         >>> for eq in equations:
-        ...     print(eq)
+        ...     self._print(eq)
         """
-        print(f"Processing part {idPart}, surface {idSurf} for cylinder-to-cylinder interactions.")
+        self._print(f"Processing part {idPart}, surface {idSurf} for cylinder-to-cylinder interactions.")
 
         BPSP, GMMP = otaf.constants.BASE_PART_SURF_PATTERN, otaf.constants.G_MATRIX_MSTRING_PATTERN
 
@@ -318,15 +326,15 @@ class InterfaceLoopBuilder:
         usedGMatDat = [list(GMMP.fullmatch(ug).groups()) for ug in usedGMat]
         usedInteractingParts = [X[3] for X in usedGMatDat]
         usedInteractingSurfs = [X[4] for X in usedGMatDat]
-        print("usedGMatDat", usedGMatDat)
-        print(f"Found {len(usedGMat)} used gap matrices.")
+        self._print("usedGMatDat", usedGMatDat)
+        self._print(f"Found {len(usedGMat)} used gap matrices.")
 
         unusedGMat = list(self.filtered_gap_matrices[idPart][idSurf]["UNUSED"])
         unusedGMatDat = [list(GMMP.fullmatch(uug).groups()) for uug in unusedGMat]
         unusedInteractingParts = [X[3] for X in unusedGMatDat]
         unusedInteractingSurfs = [X[4] for X in unusedGMatDat]
-        print("unusedGMatDat", unusedGMatDat)
-        print(f"Found {len(unusedGMat)} unused gap matrices.")
+        self._print("unusedGMatDat", unusedGMatDat)
+        self._print(f"Found {len(unusedGMat)} unused gap matrices.")
 
         facingCylinderInteractionEquationList = []
 
@@ -339,7 +347,7 @@ class InterfaceLoopBuilder:
             interactionEquationLoopList = []
             for j, datGUnused in enumerate(unusedGMatDat):
                 if unused_match[j]:
-                    print(
+                    self._print(
                         f"Matching used and unused gap matrices: {usedGMat[i]} with {unusedGMat[j]}"
                     )
                     cylinder_edge_center_interaction_loop = self._generate_surface_interaction_loop(
@@ -354,10 +362,10 @@ class InterfaceLoopBuilder:
                     interactionEquationLoopList.extend(cylinder_edge_interaction_equations)
 
             facingCylinderInteractionEquationList.extend(interactionEquationLoopList)
-            print(
+            self._print(
                 f"Generated {len(interactionEquationLoopList)} interaction equations for current matching."
             )
-        print(
+        self._print(
             f"Total interaction equations generated: {len(facingCylinderInteractionEquationList)}"
         )
         return facingCylinderInteractionEquationList

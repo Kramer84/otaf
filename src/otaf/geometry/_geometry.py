@@ -719,15 +719,19 @@ def are_planes_facing(
     - The method uses the angle between the normals to determine alignment and checks
       the position of the points relative to each plane.
     - The `max_angle` parameter controls the angular tolerance, approximately ±15° by default.
+    - If the plains are coincident and the angle between the normal is OK they are assumed facing
     """
     if not (
         math.pi - max_angle < angle_between_vectors(normal1, normal2) < math.pi + max_angle
     ):  # Approx 15°
         return False
     # Calculate the vector between the two points
-    point_vector = point2 - point1
-    if np.linalg.norm(point_vector) > atol:
-        return bool(np.dot(point_vector, normal1) > atol and np.dot(-point_vector, normal2) > atol)
+    if not are_planes_coincident(normal1, point1, normal2, point2):
+        point_vector = point2 - point1
+        if np.linalg.norm(point_vector) > atol:
+            return bool(np.dot(point_vector, normal1) > atol and np.dot(-point_vector, normal2) > atol)
+        else:
+            return True
     else:
         return True
 

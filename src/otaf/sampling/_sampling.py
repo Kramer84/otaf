@@ -430,7 +430,7 @@ def generate_imprecise_probabilistic_samples(
     return sampled_permutations()
 
 
-def generate_and_transform_sequence(dim, samplesize, target_distribution, sequence_type="sobol"):
+def generate_and_transform_sequence(dim, samplesize, target_distribution, sequence_type="halton"):
     """
     Generate a low-discrepancy sequence in the unit hypercube and map it to the target distribution space
     using the iso-probabilistic transformation.
