@@ -103,7 +103,7 @@ class MiSdofToleranceZones:
             Distance function for each point.
         """
         bounds = np.array([[-t/2, -t/L], [t/2, t/L]])
-        dist_func = np.abs(X[:, 0]) + np.abs((X[:, 1]*t)/(2*L))
+        dist_func = np.abs(X[:, 0]) + np.abs((X[:, 1]*L)/2) # Here is false in the paper MI-SDOF
         dist_valid = points_within_bounds(dist_func, [[0], [t/2]])
         bounds_valid = points_within_bounds(X, bounds)
         valid = dist_valid * bounds_valid
