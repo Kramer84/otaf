@@ -22,7 +22,8 @@ __all__ = [
     "pair_plot",
     "plot_combined_CDF",
     "save_plot",
-    "plot_gld_pbox_cdf"
+    "plot_gld_pbox_cdf",
+    "plot_gld_pbox_cdf2"
 ]
 
 import os
@@ -1053,6 +1054,55 @@ def plot_gld_pbox_cdf(gld_obj, lower_params, upper_params, x_values, xtol=1e-5, 
     # Plot P-box
     plt.figure(dpi=150)
     plt.grid(True)
+    plt.plot(x_values, lower_cdf, color=colors[0], label=labels[0] if labels else 'Lower bound')
+    plt.plot(x_values, upper_cdf, color=colors[1], label=labels[1] if labels else 'Upper bound')
+    plt.fill_between(x_values, lower_cdf, upper_cdf, color=fill_color, alpha=alpha)
+
+    # Labels and title
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.legend()
+    plt.title(title)
+    plt.show()
+
+
+def plot_gld_pbox_cdf2(gld_obj, param_list, x_values, xtol=1e-5, labels=None, colors=('tab:blue', 'tab:orange'), fill_color='gray', alpha=0.3, xlabel="X", ylabel="P", title="Probability-Box of the CDF"):
+    """
+    Plot a Probability-Box (P-Box) using two sets of GLD parameters representing the lower and upper bounds of the CDF.
+
+    Parameters
+    ----------
+    gld_obj : object
+        An instance of the GLD class from gldpy.
+    lower_params : array-like
+        Parameters for the lower bound GLD.
+    upper_params : array-like
+        Parameters for the upper bound GLD.
+    x_values : array-like
+        X values where the P-box should be computed.
+    xtol : float, optional
+        Tolerance for numerical CDF computation. Default is 1e-5.
+    labels : tuple of str, optional
+        Labels for the lower and upper bound CDFs. Default is None.
+    colors : tuple of str, optional
+        Colors for the lower and upper bound CDFs. Default is ('tab:blue', 'tab:orange').
+    fill_color : str, optional
+        Color for the filled P-box region. Default is 'gray'.
+    alpha : float, optional
+        Transparency of the filled region. Default is 0.3.
+    """
+
+    cdfs = [gld_obj.CDF_num(x_values, params, xtol=xtol) for params in param_list]
+
+    cdf_arr = np.vstack(cdfs)
+
+    lower_cdf = cdf_arr.min(axis=0)
+    upper_cdf = cdf_arr.max(axis=0)
+
+    # Plot P-box
+    plt.figure(dpi=150)
+    plt.grid(True)
+
     plt.plot(x_values, lower_cdf, color=colors[0], label=labels[0] if labels else 'Lower bound')
     plt.plot(x_values, upper_cdf, color=colors[1], label=labels[1] if labels else 'Upper bound')
     plt.fill_between(x_values, lower_cdf, upper_cdf, color=fill_color, alpha=alpha)

@@ -15,6 +15,7 @@ __all__ = [
     "get_tqdm_range",
     "alphabet_generator",
     "threshold_for_percentile_positive_values_below",
+    "bidirectional_string_to_array_conversion"
 ]
 
 import re
@@ -640,3 +641,16 @@ def threshold_for_percentile_positive_values_below(
 
     threshold_value = np.percentile(positive_values, percentile)
     return threshold_value
+
+
+def arr_to_str(x):
+    return "[" + " ".join(f"{num:.6f}" for num in x) + "]"
+
+def str_to_arr(s):
+    return [float(_) for _ in s[1:-1].split()]
+
+def bidirectional_string_to_array_conversion(x):
+    if isinstance(x, str):
+        return str_to_arr(x)
+    else:
+        return arr_to_str(x)
