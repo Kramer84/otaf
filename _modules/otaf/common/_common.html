@@ -104,7 +104,8 @@
     <span class="s2">&quot;get_tqdm_range&quot;</span><span class="p">,</span>
     <span class="s2">&quot;alphabet_generator&quot;</span><span class="p">,</span>
     <span class="s2">&quot;threshold_for_percentile_positive_values_below&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;bidirectional_string_to_array_conversion&quot;</span>
+    <span class="s2">&quot;bidirectional_string_to_array_conversion&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;arrays_close_enough&quot;</span>
 <span class="p">]</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
@@ -787,6 +788,12 @@
         <span class="k">return</span> <span class="n">str_to_arr</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">arr_to_str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="arrays_close_enough">
+<a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.arrays_close_enough">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">arrays_close_enough</span><span class="p">(</span><span class="n">arr1</span><span class="p">,</span> <span class="n">arr2</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">arr1</span><span class="p">,</span> <span class="n">arr2</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="n">tolerance</span><span class="p">)</span></div>
 
 </pre></div>
 
