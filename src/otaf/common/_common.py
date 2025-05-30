@@ -15,7 +15,8 @@ __all__ = [
     "get_tqdm_range",
     "alphabet_generator",
     "threshold_for_percentile_positive_values_below",
-    "bidirectional_string_to_array_conversion"
+    "bidirectional_string_to_array_conversion",
+    "arrays_close_enough"
 ]
 
 import re
@@ -654,3 +655,6 @@ def bidirectional_string_to_array_conversion(x):
         return str_to_arr(x)
     else:
         return arr_to_str(x)
+
+def arrays_close_enough(arr1, arr2, tolerance=1e-6):
+    return np.allclose(arr1, arr2, atol=tolerance)
