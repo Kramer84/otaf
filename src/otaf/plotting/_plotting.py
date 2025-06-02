@@ -133,17 +133,21 @@ def create_open_cylinder(radius, segment, **kwargs):
     return cylinder
 
 
-def create_surface_from_planar_contour(vertices, segments):
+def create_surface_from_planar_contour(vertices, segments=None):
     import triangle
     vertices = np.array(vertices)
-    segments = np.array(segments)
+
+    if segments is not None:
+        segments = np.array(segments)
+        if segments.shape[-1] != 2:
+            raise ValueError(f"The segment array has to be of shape (Mx2), not {segments.shape}")
+
     on_plane, normal = otaf.geometry.are_points_on_2d_plane(vertices, return_normal=True)
     if not on_plane:
         raise ValueError(
             "The provided vertices are not on the same 2D plane. Triangulation not possible."
         )
-    if not segments.shape[-1] == 2:
-        raise ValueError(f"The segment array has to be of shape (Mx2) not {segments.shape}")
+
     # RotationMatrixLocalPlaneToGlobal
     R = pyrot.matrix_from_two_vectors(normal, np.array([0, 0, 1]))
     vertices_proj = np.dot(vertices, R.T)
@@ -152,7 +156,11 @@ def create_surface_from_planar_contour(vertices, segments):
         otaf.geometry.are_points_on_2d_plane(vertices_proj[:, :-1]), np.array([0, 0, 1])
     ), "Some problem"
     vertices_proj_2D = vertices_proj[:, [0, 1]]
-    tri = dict(vertices=vertices_proj_2D, segments=segments)
+
+    tri = dict(vertices=vertices_proj_2D)
+    if segments is not None:
+        tri["segments"] = segments
+
     triangulation = triangle.triangulate(tri, opts="C")
     vertices_tri_2D_proj = np.array(triangulation["vertices"])
     # Back in 3D with extra dimension for inverse transormation

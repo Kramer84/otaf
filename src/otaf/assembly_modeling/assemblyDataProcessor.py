@@ -706,6 +706,51 @@ class AssemblyDataProcessor:
 
         return sphere_clouds
 
+    def generate_functional_planes(
+        self,
+    ) -> list:
+        """
+        Generate planes representing each planar feature in the assembly
+
+        Parameters
+        ----------
+
+        Returns
+        -------
+        list
+            A list of `trimesh` objects for each part and surface.
+
+        Notes
+        -----
+        - The method uses a color palette to assign unique colors to the spheres
+          for each part and surface.
+        - The generated spheres are translated globally based on the `global_translation` parameter.
+        """
+        trimesh_planes = []
+        color_index = 0
+
+        for part_id, surfaces in self.system_data["PARTS"].items():
+            for surf_id, surface_data in surfaces.items():
+                if "POINTS" in surface_data and surface_data['TYPE']=='plane':
+                    vertices = np.array(list(surface_data["POINTS"].values()))
+                    color_hex = otaf.plotting.color_palette_3[
+                        color_index % len(otaf.plotting.color_palette_3)
+                    ]
+                    color_rgba = otaf.plotting.hex_to_rgba(color_hex)
+
+                    spheres = otaf.plotting.spheres_from_point_cloud(
+                        points,
+                        radius=radius,
+                        color=color_rgba,
+                        global_translation=global_translation,
+                    )
+                    sphere_clouds.extend(spheres)
+
+                    color_index += 1
+
+        return sphere_clouds
+
+
     def get_notebook_scene_sphere_clouds(self, radius=0.5, background_hex_color="e6e6e6"):
         """
         Create a 3D notebook scene with sphere clouds representing the system's points.
