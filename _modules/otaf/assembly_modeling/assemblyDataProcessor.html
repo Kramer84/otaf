@@ -803,6 +803,7 @@
 <span class="sd">        - The generated spheres are translated globally based on the `global_translation` parameter.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">sphere_clouds</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">mesh_planes</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">color_index</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="k">for</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">surfaces</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_data</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -861,17 +862,14 @@
                     <span class="p">]</span>
                     <span class="n">color_rgba</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">hex_to_rgba</span><span class="p">(</span><span class="n">color_hex</span><span class="p">)</span>
 
-                    <span class="n">spheres</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">spheres_from_point_cloud</span><span class="p">(</span>
-                        <span class="n">points</span><span class="p">,</span>
-                        <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
-                        <span class="n">color</span><span class="o">=</span><span class="n">color_rgba</span><span class="p">,</span>
-                        <span class="n">global_translation</span><span class="o">=</span><span class="n">global_translation</span><span class="p">,</span>
-                    <span class="p">)</span>
-                    <span class="n">sphere_clouds</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">spheres</span><span class="p">)</span>
+                    <span class="n">planar_mesh</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">create_surface_from_planar_contour</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+                    <span class="n">planar_mesh</span><span class="o">.</span><span class="n">visual</span><span class="o">.</span><span class="n">vertex_colors</span><span class="p">[:,:]</span><span class="o">=</span><span class="n">color_rgba</span>
+
+                    <span class="n">trimesh_planes</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">planar_mesh</span><span class="p">)</span>
 
                     <span class="n">color_index</span> <span class="o">+=</span> <span class="mi">1</span>
 
-        <span class="k">return</span> <span class="n">sphere_clouds</span></div>
+        <span class="k">return</span> <span class="n">trimesh_planes</span></div>
 
 
 
@@ -897,7 +895,8 @@
 <span class="sd">            A scene object rendered in a format suitable for Jupyter Notebook.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">sphere_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_sphere_clouds</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">)</span>
-        <span class="n">scene</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">Scene</span><span class="p">([</span><span class="o">*</span><span class="n">sphere_list</span><span class="p">])</span>
+        <span class="n">plane_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_functional_planes</span><span class="p">()</span>
+        <span class="n">scene</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">Scene</span><span class="p">([</span><span class="o">*</span><span class="n">sphere_list</span><span class="p">,</span> <span class="o">*</span><span class="n">plane_list</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">otaf</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">trimesh_scene_as_notebook_scene</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">background_hex_color</span><span class="p">)</span></div>
 </div>
 
