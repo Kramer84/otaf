@@ -683,6 +683,7 @@ class AssemblyDataProcessor:
         - The generated spheres are translated globally based on the `global_translation` parameter.
         """
         sphere_clouds = []
+        mesh_planes = []
         color_index = 0
 
         for part_id, surfaces in self.system_data["PARTS"].items():
@@ -738,17 +739,14 @@ class AssemblyDataProcessor:
                     ]
                     color_rgba = otaf.plotting.hex_to_rgba(color_hex)
 
-                    spheres = otaf.plotting.spheres_from_point_cloud(
-                        points,
-                        radius=radius,
-                        color=color_rgba,
-                        global_translation=global_translation,
-                    )
-                    sphere_clouds.extend(spheres)
+                    planar_mesh = otaf.plotting.create_surface_from_planar_contour(vertices)
+                    planar_mesh.visual.vertex_colors[:,:]=color_rgba
+
+                    trimesh_planes.extend(planar_mesh)
 
                     color_index += 1
 
-        return sphere_clouds
+        return trimesh_planes
 
 
     def get_notebook_scene_sphere_clouds(self, radius=0.5, background_hex_color="e6e6e6"):
@@ -771,5 +769,6 @@ class AssemblyDataProcessor:
             A scene object rendered in a format suitable for Jupyter Notebook.
         """
         sphere_list = self.generate_sphere_clouds(radius=radius)
-        scene = tr.Scene([*sphere_list])
+        plane_list = self.generate_functional_planes()
+        scene = tr.Scene([*sphere_list, *plane_list])
         return otaf.plotting.trimesh_scene_as_notebook_scene(scene, background_hex_color)
