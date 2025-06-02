@@ -236,17 +236,21 @@
 
 <div class="viewcode-block" id="create_surface_from_planar_contour">
 <a class="viewcode-back" href="../../../source/otaf.plotting.html#otaf.plotting.create_surface_from_planar_contour">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">create_surface_from_planar_contour</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">segments</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_surface_from_planar_contour</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">segments</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">triangle</span>
     <span class="n">vertices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
-    <span class="n">segments</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">segments</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">segments</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">segments</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">segments</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">segments</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The segment array has to be of shape (Mx2), not </span><span class="si">{</span><span class="n">segments</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
     <span class="n">on_plane</span><span class="p">,</span> <span class="n">normal</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">are_points_on_2d_plane</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">return_normal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">on_plane</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">&quot;The provided vertices are not on the same 2D plane. Triangulation not possible.&quot;</span>
         <span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">segments</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The segment array has to be of shape (Mx2) not </span><span class="si">{</span><span class="n">segments</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
     <span class="c1"># RotationMatrixLocalPlaneToGlobal</span>
     <span class="n">R</span> <span class="o">=</span> <span class="n">pyrot</span><span class="o">.</span><span class="n">matrix_from_two_vectors</span><span class="p">(</span><span class="n">normal</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
     <span class="n">vertices_proj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">R</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
@@ -255,7 +259,11 @@
         <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">are_points_on_2d_plane</span><span class="p">(</span><span class="n">vertices_proj</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
     <span class="p">),</span> <span class="s2">&quot;Some problem&quot;</span>
     <span class="n">vertices_proj_2D</span> <span class="o">=</span> <span class="n">vertices_proj</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
-    <span class="n">tri</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="n">vertices_proj_2D</span><span class="p">,</span> <span class="n">segments</span><span class="o">=</span><span class="n">segments</span><span class="p">)</span>
+
+    <span class="n">tri</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="n">vertices_proj_2D</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">segments</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">tri</span><span class="p">[</span><span class="s2">&quot;segments&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">segments</span>
+
     <span class="n">triangulation</span> <span class="o">=</span> <span class="n">triangle</span><span class="o">.</span><span class="n">triangulate</span><span class="p">(</span><span class="n">tri</span><span class="p">,</span> <span class="n">opts</span><span class="o">=</span><span class="s2">&quot;C&quot;</span><span class="p">)</span>
     <span class="n">vertices_tri_2D_proj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">triangulation</span><span class="p">[</span><span class="s2">&quot;vertices&quot;</span><span class="p">])</span>
     <span class="c1"># Back in 3D with extra dimension for inverse transormation</span>

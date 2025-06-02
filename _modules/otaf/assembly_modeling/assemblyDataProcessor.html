@@ -827,6 +827,54 @@
         <span class="k">return</span> <span class="n">sphere_clouds</span></div>
 
 
+<div class="viewcode-block" id="AssemblyDataProcessor.generate_functional_planes">
+<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.AssemblyDataProcessor.generate_functional_planes">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_functional_planes</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate planes representing each planar feature in the assembly</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list</span>
+<span class="sd">            A list of `trimesh` objects for each part and surface.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - The method uses a color palette to assign unique colors to the spheres</span>
+<span class="sd">          for each part and surface.</span>
+<span class="sd">        - The generated spheres are translated globally based on the `global_translation` parameter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">trimesh_planes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">color_index</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">surfaces</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_data</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">surf_id</span><span class="p">,</span> <span class="n">surface_data</span> <span class="ow">in</span> <span class="n">surfaces</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="s2">&quot;POINTS&quot;</span> <span class="ow">in</span> <span class="n">surface_data</span> <span class="ow">and</span> <span class="n">surface_data</span><span class="p">[</span><span class="s1">&#39;TYPE&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;plane&#39;</span><span class="p">:</span>
+                    <span class="n">vertices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">surface_data</span><span class="p">[</span><span class="s2">&quot;POINTS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+                    <span class="n">color_hex</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">color_palette_3</span><span class="p">[</span>
+                        <span class="n">color_index</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">otaf</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">color_palette_3</span><span class="p">)</span>
+                    <span class="p">]</span>
+                    <span class="n">color_rgba</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">hex_to_rgba</span><span class="p">(</span><span class="n">color_hex</span><span class="p">)</span>
+
+                    <span class="n">spheres</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">spheres_from_point_cloud</span><span class="p">(</span>
+                        <span class="n">points</span><span class="p">,</span>
+                        <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
+                        <span class="n">color</span><span class="o">=</span><span class="n">color_rgba</span><span class="p">,</span>
+                        <span class="n">global_translation</span><span class="o">=</span><span class="n">global_translation</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="n">sphere_clouds</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">spheres</span><span class="p">)</span>
+
+                    <span class="n">color_index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="n">sphere_clouds</span></div>
+
+
+
 <div class="viewcode-block" id="AssemblyDataProcessor.get_notebook_scene_sphere_clouds">
 <a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.AssemblyDataProcessor.get_notebook_scene_sphere_clouds">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_notebook_scene_sphere_clouds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">background_hex_color</span><span class="o">=</span><span class="s2">&quot;e6e6e6&quot;</span><span class="p">):</span>

@@ -140,6 +140,7 @@
 <li class="toctree-l4"><a class="reference internal" href="otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.__setitem__"><code class="docutils literal notranslate"><span class="pre">AssemblyDataProcessor.__setitem__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.add_surface_points"><code class="docutils literal notranslate"><span class="pre">AssemblyDataProcessor.add_surface_points()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.generate_expanded_loops"><code class="docutils literal notranslate"><span class="pre">AssemblyDataProcessor.generate_expanded_loops()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.generate_functional_planes"><code class="docutils literal notranslate"><span class="pre">AssemblyDataProcessor.generate_functional_planes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.generate_points_for_surface"><code class="docutils literal notranslate"><span class="pre">AssemblyDataProcessor.generate_points_for_surface()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.generate_sphere_clouds"><code class="docutils literal notranslate"><span class="pre">AssemblyDataProcessor.generate_sphere_clouds()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.get_notebook_scene_sphere_clouds"><code class="docutils literal notranslate"><span class="pre">AssemblyDataProcessor.get_notebook_scene_sphere_clouds()</span></code></a></li>
@@ -265,6 +266,7 @@
 <li class="toctree-l4"><a class="reference internal" href="otaf.assembly_modeling.html#otaf.assembly_modeling.AssemblyDataProcessor.__setitem__"><code class="docutils literal notranslate"><span class="pre">AssemblyDataProcessor.__setitem__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.assembly_modeling.html#otaf.assembly_modeling.AssemblyDataProcessor.add_surface_points"><code class="docutils literal notranslate"><span class="pre">AssemblyDataProcessor.add_surface_points()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.assembly_modeling.html#otaf.assembly_modeling.AssemblyDataProcessor.generate_expanded_loops"><code class="docutils literal notranslate"><span class="pre">AssemblyDataProcessor.generate_expanded_loops()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.assembly_modeling.html#otaf.assembly_modeling.AssemblyDataProcessor.generate_functional_planes"><code class="docutils literal notranslate"><span class="pre">AssemblyDataProcessor.generate_functional_planes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.assembly_modeling.html#otaf.assembly_modeling.AssemblyDataProcessor.generate_points_for_surface"><code class="docutils literal notranslate"><span class="pre">AssemblyDataProcessor.generate_points_for_surface()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.assembly_modeling.html#otaf.assembly_modeling.AssemblyDataProcessor.generate_sphere_clouds"><code class="docutils literal notranslate"><span class="pre">AssemblyDataProcessor.generate_sphere_clouds()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.assembly_modeling.html#otaf.assembly_modeling.AssemblyDataProcessor.get_notebook_scene_sphere_clouds"><code class="docutils literal notranslate"><span class="pre">AssemblyDataProcessor.get_notebook_scene_sphere_clouds()</span></code></a></li>
@@ -906,6 +908,26 @@ and expands them into their detailed forms.</p>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.AssemblyDataProcessor.generate_functional_planes">
+<span class="sig-name descname"><span class="pre">generate_functional_planes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/assembly_modeling/assemblyDataProcessor.html#AssemblyDataProcessor.generate_functional_planes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.AssemblyDataProcessor.generate_functional_planes" title="Link to this definition"></a></dt>
+<dd><p>Generate planes representing each planar feature in the assembly</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of <cite>trimesh</cite> objects for each part and surface.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The method uses a color palette to assign unique colors to the spheres
+for each part and surface.</p></li>
+<li><p>The generated spheres are translated globally based on the <cite>global_translation</cite> parameter.</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">

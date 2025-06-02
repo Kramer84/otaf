@@ -259,6 +259,26 @@ and expands them into their detailed forms.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.generate_functional_planes">
+<span class="sig-name descname"><span class="pre">generate_functional_planes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/assembly_modeling/assemblyDataProcessor.html#AssemblyDataProcessor.generate_functional_planes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.generate_functional_planes" title="Link to this definition"></a></dt>
+<dd><p>Generate planes representing each planar feature in the assembly</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of <cite>trimesh</cite> objects for each part and surface.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The method uses a color palette to assign unique colors to the spheres
+for each part and surface.</p></li>
+<li><p>The generated spheres are translated globally based on the <cite>global_translation</cite> parameter.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.generate_points_for_surface">
 <span class="sig-name descname"><span class="pre">generate_points_for_surface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surf_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/assembly_modeling/assemblyDataProcessor.html#AssemblyDataProcessor.generate_points_for_surface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.generate_points_for_surface" title="Link to this definition"></a></dt>
 <dd><p>Generate points for a surface based on its type and characteristics.</p>
@@ -1920,6 +1940,26 @@ and expands them into their detailed forms.</p>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.assembly_modeling.AssemblyDataProcessor.generate_functional_planes">
+<span class="sig-name descname"><span class="pre">generate_functional_planes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/assembly_modeling/assemblyDataProcessor.html#AssemblyDataProcessor.generate_functional_planes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.assembly_modeling.AssemblyDataProcessor.generate_functional_planes" title="Link to this definition"></a></dt>
+<dd><p>Generate planes representing each planar feature in the assembly</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of <cite>trimesh</cite> objects for each part and surface.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The method uses a color palette to assign unique colors to the spheres
+for each part and surface.</p></li>
+<li><p>The generated spheres are translated globally based on the <cite>global_translation</cite> parameter.</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
