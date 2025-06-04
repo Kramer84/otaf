@@ -33,6 +33,7 @@ __all__ = [
     "do_bounding_boxes_overlap",
     "are_normals_aligned_and_facing",
     "calculate_scalar_projection_factor",
+    "rotation_matrix_from_vectors"
 ]
 
 import math
@@ -1204,3 +1205,56 @@ def calculate_scalar_projection_factor(
       divided by the squared norm of the reference vector.
     """
     return np.dot(vector_to_project, reference_vector) / np.linalg.norm(reference_vector) ** 2
+
+
+def rotation_matrix_from_vectors(vec1, vec2):
+    """
+    Compute the rotation matrix that aligns vec1 to vec2.
+
+    This function returns a 3x3 rotation matrix that rotates `vec1` to align it with `vec2`.
+    It handles edge cases where the vectors are already aligned or opposite.
+
+    Parameters
+    ----------
+    vec1 : array_like
+        A 3-element array representing the source vector.
+    vec2 : array_like
+        A 3-element array representing the target vector.
+
+    Returns
+    -------
+    numpy.ndarray
+        A 3x3 rotation matrix that aligns `vec1` with `vec2`.
+
+    Examples
+    --------
+    >>> vec1 = [1, 0, 0]
+    >>> vec2 = [0, 1, 0]
+    >>> R = rotation_matrix_from_vectors(vec1, vec2)
+    >>> np.allclose(R @ vec1, vec2)
+    True
+    """
+    normalize = lambda v : v / np.linalg.norm(v)
+    a = normalize(vec1)
+    b = normalize(vec2)
+    v = np.cross(a, b)
+    c = np.dot(a, b)
+
+    if np.isclose(c, 1.0):
+        # Already aligned
+        return np.eye(3)
+    if np.isclose(c, -1.0):
+        # Opposite vectors, need 180-degree rotation
+        # Find orthogonal vector
+        orthogonal = np.eye(3)[np.argmin(np.abs(a))]
+        v = np.cross(a, orthogonal)
+        v = normalize(v)
+        H = np.eye(3) - 2 * np.outer(v, v)
+        return H
+
+    s = np.linalg.norm(v)
+    kmat = np.array([[ 0, -v[2], v[1]],
+                     [ v[2], 0, -v[0]],
+                     [-v[1], v[0], 0]])
+    R = np.eye(3) + kmat + (kmat @ kmat) * ((1 - c) / (s**2))
+    return R
