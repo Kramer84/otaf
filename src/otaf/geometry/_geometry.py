@@ -857,7 +857,7 @@ def are_points_on_2d_plane(
     normal_vector = np.cross(p1 - p0, p2 - p0)
     dot_products = np.dot(points - p0, normal_vector)
     if return_normal:
-        return np.allclose(dot_products, 0), normal_vector
+        return np.allclose(dot_products, 0), normal_vector/np.linalg.norm(normal_vector)
     return np.allclose(dot_products, 0)
 
 

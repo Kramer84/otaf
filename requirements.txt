@@ -12,7 +12,8 @@ scikit-learn
 trimesh
 beartype
 triangle
-pytransform3d[all]
+pytransform3d
+pyglet<2
 
 # Documentation dependencies (optional)
 sphinx

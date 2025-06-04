@@ -149,11 +149,11 @@ def create_surface_from_planar_contour(vertices, segments=None):
         )
 
     # RotationMatrixLocalPlaneToGlobal
-    R = pyrot.matrix_from_two_vectors(normal, np.array([0, 0, 1]))
-    vertices_proj = np.dot(vertices, R.T)
+    R = otaf.geometry.rotation_matrix_from_vectors(normal, np.array([0, 0, 1]))
+    vertices_proj = (R @ vertices.T).T
     print(vertices_proj)
     assert np.array_equal(
-        otaf.geometry.are_points_on_2d_plane(vertices_proj[:, :-1]), np.array([0, 0, 1])
+        otaf.geometry.are_points_on_2d_plane(vertices_proj,True)[1], np.array([0, 0, 1])
     ), "Some problem"
     vertices_proj_2D = vertices_proj[:, [0, 1]]
 
@@ -167,7 +167,7 @@ def create_surface_from_planar_contour(vertices, segments=None):
     vertices_tri_3D_proj = np.column_stack(
         [vertices_tri_2D_proj, np.zeros((vertices_tri_2D_proj.shape[0],))]
     )
-    vertices_tri_3D = R.T @ vertices_tri_3D_proj
+    vertices_tri_3D = (R.T @ vertices_tri_3D_proj.T).T
     triangles = np.array(triangulation["triangles"])
 
     planar_mesh = tr.Trimesh(vertices=vertices_tri_3D, faces=triangles)

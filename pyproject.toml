@@ -37,10 +37,11 @@ dependencies = [
     "torcheval",
     "trimesh",
     "beartype",
-    "pytransform3d[all]",
+    "pytransform3d",
     "gldpy",
     "jupyter",
     "ipywidgets",
+    "pyglet<2"
 ]
 
 [project.optional-dependencies]

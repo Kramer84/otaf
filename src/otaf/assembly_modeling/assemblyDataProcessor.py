@@ -729,10 +729,10 @@ class AssemblyDataProcessor:
         """
         trimesh_planes = []
         color_index = 0
-
+        glob_const = self.system_data.get("GLOBAL_CONSTRAINTS", "3D")
         for part_id, surfaces in self.system_data["PARTS"].items():
             for surf_id, surface_data in surfaces.items():
-                if "POINTS" in surface_data and surface_data['TYPE']=='plane':
+                if "POINTS" in surface_data and surface_data['TYPE']=='plane' and ("2D" not in glob_const):
                     vertices = np.array(list(surface_data["POINTS"].values()))
                     color_hex = otaf.plotting.color_palette_3[
                         color_index % len(otaf.plotting.color_palette_3)
@@ -741,10 +741,14 @@ class AssemblyDataProcessor:
 
                     planar_mesh = otaf.plotting.create_surface_from_planar_contour(vertices)
                     planar_mesh.visual.vertex_colors[:,:]=color_rgba
-
-                    trimesh_planes.extend(planar_mesh)
-
+                    #We add the same planar mesh twice but with inverted normals so that it is visible above and below
+                    pmc = planar_mesh.copy()
+                    pmc.invert()
+                    trimesh_planes.extend([planar_mesh, pmc])
                     color_index += 1
+                if "POINTS" in surface_data and surface_data['TYPE']=='plane' and ("2D" in glob_const):
+                    pass
+                    # Should implement somehting to get points on lines, get end points and create 3d paths.
 
         return trimesh_planes
 
