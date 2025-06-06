@@ -481,6 +481,7 @@ def print_sample_in_deviation_domain(
     xlabel="U",
     ylabel="Theta",
     remove_ticks=False,
+    fontsize=15
 ):
     """
     Plots a sample in the deviation domain on the provided matplotlib axis with customizable labels and tick options.
@@ -502,8 +503,8 @@ def print_sample_in_deviation_domain(
     Returns:
     matplotlib.axes.Axes: The axis with the plot.
     """
-    ax.set_xlabel(xlabel)
-    ax.set_ylabel(ylabel)
+    ax.set_xlabel(xlabel, fontsize=fontsize)
+    ax.set_ylabel(ylabel, fontsize=fontsize)
 
     # Plotting boundary lines
     ax.plot([-t_max, 0], [0, theta_max], "r-", lw=3)
@@ -530,7 +531,7 @@ def print_sample_in_deviation_domain(
     y_txt_fnc = lambda i: ytop - 0.1 * (1 + i) * yspan
 
     if r is not None:
-        ax.text(x_txt, y_txt_fnc(2), rf"$r: {r}$", fontsize=15, fontweight="bold")
+        ax.text(x_txt, y_txt_fnc(2), rf"$r: {r}$", fontsize=fontsize, fontweight="bold")
 
     # Optionally remove ticks
     if remove_ticks:
