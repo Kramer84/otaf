@@ -12,12 +12,16 @@ import numpy as np
 import sympy as sp
 
 from beartype import beartype
-from beartype.typing import Dict, List, Tuple, Union, Any, Set
-from beartype.meta import TYPE_CHECKING
+from beartype.typing import Dict, List, Union
 
-from .assemblyModelingBaseObjects import DeviationMatrix, GapMatrix, TransformationMatrix, I4, J4
 from .assemblyDataProcessor import AssemblyDataProcessor
-import otaf
+from .assemblyModelingBaseObjects import DeviationMatrix, GapMatrix, TransformationMatrix
+from .firstOrderMatrixExpansion import FirstOrderMatrixExpansion
+
+from otaf.constants import SURF_TYPE_TO_DEVIATION_DOF, GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF, GAP_TYPE_TO_NULLIFIED_NOMINAL_COMPONENTS, CONTACT_TYPE_TO_GAP_DOF, GLOBAL_CONSTRAINTS_TO_GAP_DOF
+from otaf.common import extract_expressions_with_variables, inverse_mstring, parse_matrix_string
+from otaf.geometry import tfrt
+
 
 
 @beartype
@@ -114,7 +118,7 @@ class CompatibilityLoopHandling:
 
         Returns
         -------
-        list of otaf.GapMatrix or otaf.TransformationMatrix
+        list of GapMatrix or TransformationMatrix
             The corresponding gap matrix or transformation matrix.
 
         Raises
@@ -136,7 +140,7 @@ class CompatibilityLoopHandling:
 
         Returns
         -------
-        list of otaf.DeviationMatrix
+        list of DeviationMatrix
             The corresponding deviation matrix.
 
         Raises
@@ -161,7 +165,7 @@ class CompatibilityLoopHandling:
         return [
             x
             for expr_f in list(self.compatibility_loops_FO_matrices.values())
-            for x in otaf.common.extract_expressions_with_variables(expr_f)
+            for x in extract_expressions_with_variables(expr_f)
         ]
 
     def generate_loop_id_to_matrix_list_dict(
@@ -208,7 +212,7 @@ class CompatibilityLoopHandling:
 
         Parameters
         ----------
-        compatibility_loop_matrix_list : list of otaf.TransformationMatrix, otaf.DeviationMatrix, otaf.GapMatrix
+        compatibility_loop_matrix_list : list of TransformationMatrix, DeviationMatrix, GapMatrix
             List of matrices representing a compatibility loop.
 
         Returns
@@ -216,7 +220,7 @@ class CompatibilityLoopHandling:
         sympy.MatrixBase
             The first-order expansion of the compatibility loop matrices.
         """
-        return otaf.FirstOrderMatrixExpansion(
+        return FirstOrderMatrixExpansion(
             compatibility_loop_matrix_list
         ).compute_first_order_expansion()
 
@@ -233,7 +237,7 @@ class CompatibilityLoopHandling:
 
         Returns
         -------
-        list of otaf.TransformationMatrix, otaf.DeviationMatrix, otaf.GapMatrix
+        list of TransformationMatrix, DeviationMatrix, GapMatrix
             List of matrices corresponding to the expanded loop.
 
         Raises
@@ -244,7 +248,7 @@ class CompatibilityLoopHandling:
         matrix_list = []
         matrix_strings = list(map(str.strip, expanded_loop_str.split("->")))
         for mstring in matrix_strings:
-            elinfo = otaf.common.parse_matrix_string(mstring)
+            elinfo = parse_matrix_string(mstring)
             if elinfo["type"] == "T":
                 t_mat = self.generate_transformation_matrix(elinfo)
                 matrix_list.extend(t_mat)
@@ -272,7 +276,7 @@ class CompatibilityLoopHandling:
 
         Returns
         -------
-        list of otaf.TransformationMatrix
+        list of TransformationMatrix
             A list containing the generated transformation matrix.
 
         Notes
@@ -291,13 +295,13 @@ class CompatibilityLoopHandling:
                 el_info["point2"]
             ]
             frame_end = self.ADP["PARTS"][el_info["part"]][el_info["surface2"]]["FRAME"]
-            t_mat = otaf.TransformationMatrix(
-                initial=otaf.geometry.tfrt(frame_start, point_start),
-                final=otaf.geometry.tfrt(frame_end, point_end),
+            t_mat = TransformationMatrix(
+                initial=tfrt(frame_start, point_start),
+                final=tfrt(frame_end, point_end),
                 name=el_info["mstring"],
             )
             self._transformation_matrix_map[el_info["mstring"]] = [t_mat]
-            self._transformation_matrix_map[otaf.common.inverse_mstring(el_info["mstring"])] = [
+            self._transformation_matrix_map[inverse_mstring(el_info["mstring"])] = [
                 t_mat.get_inverse()
             ]
             return [t_mat]
@@ -319,7 +323,7 @@ class CompatibilityLoopHandling:
 
         Returns
         -------
-        list of otaf.DeviationMatrix
+        list of DeviationMatrix
             A list containing the generated deviation matrix or its inverse, depending on the
             specified configuration.
 
@@ -350,9 +354,9 @@ class CompatibilityLoopHandling:
             surf_type = "-".join(map(str.lower, [surf_type, *constraints]))
             translations = "".join(
                 sorted(
-                    set(otaf.constants.SURF_TYPE_TO_DEVIATION_DOF[surf_type]["translations"])
+                    set(SURF_TYPE_TO_DEVIATION_DOF[surf_type]["translations"])
                     - set(
-                        otaf.constants.GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF[
+                        GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF[
                             self.ADP["GLOBAL_CONSTRAINTS"]
                         ]["translations_2remove"]
                     )
@@ -360,15 +364,15 @@ class CompatibilityLoopHandling:
             )
             rotations = "".join(
                 sorted(
-                    set(otaf.constants.SURF_TYPE_TO_DEVIATION_DOF[surf_type]["rotations"])
+                    set(SURF_TYPE_TO_DEVIATION_DOF[surf_type]["rotations"])
                     - set(
-                        otaf.constants.GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF[
+                        GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF[
                             self.ADP["GLOBAL_CONSTRAINTS"]
                         ]["rotations_2remove"]
                     )
                 )
             )
-            d_mat = otaf.DeviationMatrix(
+            d_mat = DeviationMatrix(
                 index=index,
                 translations=translations,
                 rotations=rotations,
@@ -400,7 +404,7 @@ class CompatibilityLoopHandling:
 
         Returns
         -------
-        list of Union[otaf.GapMatrix, otaf.TransformationMatrix]
+        list of Union[GapMatrix, TransformationMatrix]
             A list containing the generated gap matrix, its nominal transform, or their inverses,
             depending on the configuration.
 
@@ -444,7 +448,7 @@ class CompatibilityLoopHandling:
             surf_type1 = self.ADP["PARTS"][el_info["part1"]][el_info["surface1"]]["TYPE"]
             surf_type2 = self.ADP["PARTS"][el_info["part2"]][el_info["surface2"]]["TYPE"]
 
-            gap_transform_kwargs = otaf.constants.GAP_TYPE_TO_NULLIFIED_NOMINAL_COMPONENTS[
+            gap_transform_kwargs = GAP_TYPE_TO_NULLIFIED_NOMINAL_COMPONENTS[
                 "-".join(map(str.lower, [surf_type1, surf_type2]))
             ]
             nominal_gap_transform = self.calculate_nominal_gap_transform(
@@ -463,8 +467,8 @@ class CompatibilityLoopHandling:
             translations_blocked = "".join(
                 sorted(
                     set(
-                        otaf.constants.CONTACT_TYPE_TO_GAP_DOF[contact_type]["translations_blocked"]
-                        + otaf.constants.GLOBAL_CONSTRAINTS_TO_GAP_DOF[
+                        CONTACT_TYPE_TO_GAP_DOF[contact_type]["translations_blocked"]
+                        + GLOBAL_CONSTRAINTS_TO_GAP_DOF[
                             self.ADP["GLOBAL_CONSTRAINTS"]
                         ]["translations_blocked"]
                         + manual_constraints_translation
@@ -474,15 +478,15 @@ class CompatibilityLoopHandling:
             rotations_blocked = "".join(
                 sorted(
                     set(
-                        otaf.constants.CONTACT_TYPE_TO_GAP_DOF[contact_type]["rotations_blocked"]
-                        + otaf.constants.GLOBAL_CONSTRAINTS_TO_GAP_DOF[
+                        CONTACT_TYPE_TO_GAP_DOF[contact_type]["rotations_blocked"]
+                        + GLOBAL_CONSTRAINTS_TO_GAP_DOF[
                             self.ADP["GLOBAL_CONSTRAINTS"]
                         ]["rotations_blocked"]
                         + manual_constraints_rotation
                     )
                 )
             )
-            g_mat = otaf.GapMatrix(
+            g_mat = GapMatrix(
                 index=index,
                 translations_blocked=translations_blocked,
                 rotations_blocked=rotations_blocked,
@@ -490,7 +494,7 @@ class CompatibilityLoopHandling:
                 name=el_info["mstring"],
             )
             self._gap_matrix_map[el_info["mstring"]] = [g_mat, nominal_gap_transform]
-            self._gap_matrix_map[otaf.common.inverse_mstring(el_info["mstring"])] = [
+            self._gap_matrix_map[inverse_mstring(el_info["mstring"])] = [
                 nominal_gap_transform.get_inverse(),
                 g_mat.get_inverse(),
             ]
@@ -530,7 +534,7 @@ class CompatibilityLoopHandling:
 
         Returns
         -------
-        otaf.TransformationMatrix
+        TransformationMatrix
             The calculated nominal transformation matrix with specified components nullified.
 
         Notes
@@ -554,9 +558,9 @@ class CompatibilityLoopHandling:
         ]
         frame_end = self.ADP["PARTS"][el_info["part2"]][el_info["surface2"]]["FRAME"]
         # Calculate the nominal transformation matrix between the two surfaces
-        nominal_transform = otaf.TransformationMatrix(
-            initial=otaf.geometry.tfrt(frame_start, point_start),
-            final=otaf.geometry.tfrt(frame_end, point_end),
+        nominal_transform = TransformationMatrix(
+            initial=tfrt(frame_start, point_start),
+            final=tfrt(frame_end, point_end),
         )
         # Get the matrix and nullify the components of the translation vector
         nominal_matrix = np.array(nominal_transform.get_matrix(), dtype=float)
@@ -567,4 +571,4 @@ class CompatibilityLoopHandling:
             nominal_matrix[1, -1] = 0.0
         if nullify_z:
             nominal_matrix[2, -1] = 0.0
-        return otaf.TransformationMatrix(index=ID, matrix=nominal_matrix)
+        return TransformationMatrix(index=ID, matrix=nominal_matrix)

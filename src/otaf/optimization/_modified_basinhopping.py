@@ -14,7 +14,6 @@ from scipy.optimize import (
     OptimizeResult,
     minimize,
 )
-import otaf
 
 
 class ModifiedBasinHopping:

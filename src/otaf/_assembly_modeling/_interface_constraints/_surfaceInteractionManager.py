@@ -17,7 +17,11 @@ from beartype.typing import Dict, List, Tuple, Union, Any, Set
 
 from ..assemblyDataProcessor import AssemblyDataProcessor
 
-import otaf
+from otaf.common import tree, merge_with_checks
+from otaf.constants import BASE_PART_SURF_PATTERN
+
+from otaf.geometry import point_dict_to_arrays, are_points_on_2d_plane, are_planes_facing, are_planes_parallel, line_plane_intersection, euclidean_distance, are_normals_aligned_and_facing
+from otaf.exceptions import PointsNotOnPlaneError, NonConcentricCylindersException, ConflictingSurfaceDirectionsException, CylindricalInterferenceGeometricException
 
 
 
@@ -33,7 +37,7 @@ class SurfaceInteractionManager:
     """
     def __init__(self, assemblyDataProcessor:AssemblyDataProcessor):
         self.ADP = assemblyDataProcessor
-        self.facingPointDict = otaf.common.tree()
+        self.facingPointDict = tree()
 
     def get_facing_point_dictionary(self) -> None:
         """
@@ -71,7 +75,7 @@ class SurfaceInteractionManager:
             - Surface types determine the specific interaction processing method used.
         """
         for interaction in surface_data["INTERACTIONS"]:
-            (part_id_interact, surf_id_interact) = otaf.constants.BASE_PART_SURF_PATTERN.fullmatch(
+            (part_id_interact, surf_id_interact) = BASE_PART_SURF_PATTERN.fullmatch(
                 interaction
             ).groups()
             surf_data_interact = self.ADP["PARTS"][part_id_interact][surf_id_interact]
@@ -128,25 +132,25 @@ class SurfaceInteractionManager:
             - Points on both surfaces must be geometrically on the respective planes.
             - If surfaces are not aligned, a warning is logged, and no relationships are established.
         """
-        labels_current, points_current = otaf.geometry.point_dict_to_arrays(
+        labels_current, points_current = point_dict_to_arrays(
             surf_data_current["POINTS"]
         )
-        labels_interact, points_interact = otaf.geometry.point_dict_to_arrays(
+        labels_interact, points_interact = point_dict_to_arrays(
             surf_data_interact["POINTS"]
         )
         if points_current.shape[0] > 2:
-            if not otaf.geometry.are_points_on_2d_plane(points_current):
-                otaf.exceptions.PointsNotOnPlaneError(part_id_current, surf_id_current)
+            if not are_points_on_2d_plane(points_current):
+                PointsNotOnPlaneError(part_id_current, surf_id_current)
         if points_interact.shape[0] > 2:
-            if not otaf.geometry.are_points_on_2d_plane(points_interact):
-                otaf.exceptions.PointsNotOnPlaneError(part_id_interact, surf_id_interact)
+            if not are_points_on_2d_plane(points_interact):
+                PointsNotOnPlaneError(part_id_interact, surf_id_interact)
 
-        if otaf.geometry.are_planes_facing(
+        if are_planes_facing(
             surf_data_current["FRAME"][:, 0],
             surf_data_current["ORIGIN"],
             surf_data_interact["FRAME"][:, 0],
             surf_data_interact["ORIGIN"],
-        ) and otaf.geometry.are_planes_parallel(
+        ) and are_planes_parallel(
             surf_data_current["FRAME"][:, 0], surf_data_interact["FRAME"][:, 0]
         ):
             for point_id_current, point_current in surf_data_current["POINTS"].items():
@@ -201,16 +205,16 @@ class SurfaceInteractionManager:
         frame_interact = surf_data_interact["FRAME"]
 
         # Check if the line connecting point_current and point_interact intersects both planes
-        intersect_point_current = otaf.geometry.line_plane_intersection(
+        intersect_point_current = line_plane_intersection(
             frame_current[:, 0], origin_current, point_interact, frame_interact[:, 0]
         )
-        intersect_point_interact = otaf.geometry.line_plane_intersection(
+        intersect_point_interact = line_plane_intersection(
             frame_interact[:, 0], origin_interact, point_current, frame_current[:, 0]
         )
 
         # Verify that intersection points are within the search radius of the original points
-        distance_current = otaf.geometry.euclidean_distance(point_current, intersect_point_current)
-        distance_interact = otaf.geometry.euclidean_distance(
+        distance_current = euclidean_distance(point_current, intersect_point_current)
+        distance_interact = euclidean_distance(
             point_interact, intersect_point_interact
         )
 
@@ -239,9 +243,9 @@ class SurfaceInteractionManager:
             datSInt (dict): Data of the interacting cylindrical surface, similar to `datSCur`.
 
         Raises:
-            otaf.exceptions.NonConcentricCylindersException: If cylinder normals are not aligned and facing.
-            otaf.exceptions.ConflictingSurfaceDirectionsException: If both cylinders have conflicting surface directions.
-            otaf.exceptions.CylindricalInterferenceGeometricException: If there is geometric interference
+            NonConcentricCylindersException: If cylinder normals are not aligned and facing.
+            ConflictingSurfaceDirectionsException: If both cylinders have conflicting surface directions.
+            CylindricalInterferenceGeometricException: If there is geometric interference
                 based on surface directions and radii.
             ValueError: If the inner and outer cylinders have the same radii, which is not supported.
 
@@ -251,10 +255,10 @@ class SurfaceInteractionManager:
             - Points are generated for only the top and bottom surfaces of the cylinders, with the inner
               cylinder approximated as a line and the outer cylinder using points on its top/bottom surfaces.
         """
-        if not otaf.geometry.are_normals_aligned_and_facing(
+        if not are_normals_aligned_and_facing(
             datSCur["FRAME"][:, 0], datSCur["ORIGIN"], datSInt["FRAME"][:, 0], datSInt["ORIGIN"]
         ):
-            raise otaf.exceptions.NonConcentricCylindersException()  # For the moment concentricity necessary nominal case
+            raise NonConcentricCylindersException()  # For the moment concentricity necessary nominal case
 
         if not "SURFACE_DIRECTION" in datSCur and not "SURFACE_DIRECTION" in datSInt:
             if datSCur["RADIUS"] > datSInt["RADIUS"]:
@@ -271,21 +275,21 @@ class SurfaceInteractionManager:
         else:
             # Check for conflicting surface directions and interfering parts
             if datSCur.get("SURFACE_DIRECTION") == datSInt.get("SURFACE_DIRECTION"):
-                raise otaf.exceptions.ConflictingSurfaceDirectionsException(
+                raise ConflictingSurfaceDirectionsException(
                     idPCur, idSCur, idPInt, idSInt
                 )
             elif (
                 datSCur.get("SURFACE_DIRECTION") == "centrifugal"
                 and datSCur["RADIUS"] > datSInt["RADIUS"]
             ):
-                raise otaf.exceptions.CylindricalInterferenceGeometricException(
+                raise CylindricalInterferenceGeometricException(
                     idPCur, idSCur, idPInt, idSInt, datSCur["RADIUS"], datSInt["RADIUS"]
                 )
             elif (
                 datSInt.get("SURFACE_DIRECTION") == "centrifugal"
                 and datSInt["RADIUS"] > datSCur["RADIUS"]
             ):
-                raise otaf.exceptions.CylindricalInterferenceGeometricException(
+                raise CylindricalInterferenceGeometricException(
                     idPInt, idSInt, idPCur, idSCur, datSInt["RADIUS"], datSCur["RADIUS"]
                 )
             elif datSCur["RADIUS"] == datSInt["RADIUS"]:
@@ -418,13 +422,13 @@ class SurfaceInteractionManager:
             bottomPointInt = datSInt["ORIGIN"] + datSInt["FRAME"][:, 0] * xMinInt
 
             current_points = self.ADP.get_surface_points(idPCur, idSCur)
-            current_points = otaf.common.merge_with_checks(
+            current_points = merge_with_checks(
                 current_points,
                 {f"{idSCur.upper()}1": topPointCur, f"{idSCur.upper()}2": bottomPointCur},
             )
 
             interacting_points = self.ADP.get_surface_points(idPInt, idSInt)
-            interacting_points = otaf.common.merge_with_checks(
+            interacting_points = merge_with_checks(
                 interacting_points,
                 {f"{idSInt.upper()}1": topPointInt, f"{idSInt.upper()}2": bottomPointInt},
             )

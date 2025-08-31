@@ -15,7 +15,29 @@ __requires__ = [
 
 import logging as _logging
 
-import torch
+#Base objects used for assembly modeling and others
+from . import constants
+from . import exceptions
+from . import common
+from . import geometry
+from . import plotting
+
+from . import _assembly_modeling as _asm
+
+#Following are self contained
+from . import sampling
+from . import distribution
+from . import sensitivity
+from . import capabilities
+
+#Following depend sometimes on the above
+from . import uncertainty
+from . import surrogate
+from . import optimization
+from . import tolerances
+from . import example_models
+
+
 
 from ._assembly_modeling import (
     SystemOfConstraintsAssemblyModel,
@@ -28,23 +50,6 @@ from ._assembly_modeling import (
     InterfaceLoopHandling,
     I4, J4
 )
-
-from . import _assembly_modeling as _asm
-from . import geometry
-from . import constants
-from . import plotting
-from . import exceptions
-from . import common
-from . import uncertainty
-from . import surrogate
-from . import sensitivity
-from . import optimization
-from . import sampling
-from . import distribution
-from . import capabilities
-from . import example_models
-from . import tolerances
-
 
 __all__ = [
     "SystemOfConstraintsAssemblyModel",
@@ -71,7 +76,6 @@ __all__ = [
     "tolerances"
 ]
 
-torch._dynamo.config.suppress_errors = True
 
 # Logging setup function
 def setup_logging(filename="otaf_tmp.log", level=_logging.INFO):

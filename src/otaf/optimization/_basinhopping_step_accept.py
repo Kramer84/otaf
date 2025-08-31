@@ -11,8 +11,9 @@ __all__ = [
 
 import numpy as np
 from scipy.optimize import LinearConstraint
-import otaf
 
+from otaf.sampling import validate_and_extract_indices, condition_sample_array
+from otaf.exceptions import timeout as o_timeout
 
 class StepTaking:
     """
@@ -41,7 +42,7 @@ class StepTaking:
             The size of the step to be taken (default: 0.5).
         """
         self.storage = storage  # Use OptimizationStorage to store and manage points
-        self.feature_indices = otaf.sampling.validate_and_extract_indices(
+        self.feature_indices = validate_and_extract_indices(
             defect_description
         )  # Normalize within features
         self.linear_constraints = linear_constraint_from_feature_indices(
@@ -72,7 +73,7 @@ class StepTaking:
             new_x < 0, 0, new_x
         )  # Only positive, needs to be changed if working with imprecise corelation.
 
-        return otaf.sampling.condition_sample_array(
+        return condition_sample_array(
             new_x, self.feature_indices, squared_sum=False
         )  # Normalizing.
 
@@ -95,7 +96,7 @@ class AcceptTest:
 
     def __init__(self, storage, defect_description, distance_threshold=1.0, surrogate_model=None):
         self.storage = storage  # Instance of OptimizationStorage for storing and managing points
-        self.feature_indices = otaf.sampling.validate_and_extract_indices(
+        self.feature_indices = validate_and_extract_indices(
             defect_description
         )  # Normalize within features
         self.linear_constraints = linear_constraint_from_feature_indices(
@@ -143,7 +144,7 @@ class AcceptTest:
         # Accept new point if the function value improves, else use the Metropolis criterion
         return self._accept_based_on_value(f_new, f_old)
 
-    @otaf.exceptions.timeout(seconds=5, error_message="Execution took too long!")
+    @o_timeout(seconds=5, error_message="Execution took too long!")
     def _is_too_close(self, x_new):
         """
         Check if the new point is too close to any existing points in the storage.
@@ -238,7 +239,7 @@ class Callback:
         return self.storage.get_all_data()
 
 
-@otaf.exceptions.timeout(seconds=5, error_message="Execution took too long!")
+@o_timeout(seconds=5, error_message="Execution took too long!")
 def linear_constraint_from_feature_indices(
     feature_indices: list[int], tol: float = 0, keep_feasible: bool = True
 ):

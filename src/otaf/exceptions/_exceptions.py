@@ -25,12 +25,13 @@ __all__ = [
     "PointsNotOnPlaneError",
     "NonConcentricCylindersException",
     "ConflictingSurfaceDirectionsException",
+    "CylindricalInterferenceGeometricException",
     "InvalidAffineTransformException",
 ]
 
-import otaf
 import numpy as np
 
+from otaf.constants import SURFACE_DIRECTIONS, BASE_SURFACE_TYPES
 
 class MissingSurfaceTypeKeyError(KeyError):
     def __init__(self, part_id, surf_id):
@@ -62,13 +63,13 @@ class InvalidInteractionFormatError(ValueError):
 
 class InvalidSurfaceDirectionError(ValueError):
     def __init__(self, surf_dir: str):
-        message = f"The surface direction '{surf_dir}' is not one of the expected ones: {otaf.constants.SURFACE_DIRECTIONS}."
+        message = f"The surface direction '{surf_dir}' is not one of the expected ones: {SURFACE_DIRECTIONS}."
         super().__init__(message)
 
 
 class UnsupportedSurfaceTypeError(ValueError):
     def __init__(self, part_id, surf_id, surf_type):
-        message = f"The type {surf_type} defined for part {part_id} on surface {surf_id} is not a standard surface type and not supported.\n Standard types: {otaf.BASE_SURFACE_TYPES}"
+        message = f"The type {surf_type} defined for part {part_id} on surface {surf_id} is not a standard surface type and not supported.\n Standard types: {BASE_SURFACE_TYPES}"
         super().__init__(message)
 
 

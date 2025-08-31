@@ -12,14 +12,16 @@ from copy import copy
 
 import numpy as np
 import sympy as sp
-import trimesh as tr
 
-from trimesh import viewer
 from beartype import beartype
 from beartype.typing import Dict, List, Tuple, Union, Any, Set, Optional
 
-import otaf
+import otaf.exceptions as otaf_exceptions
+import otaf.constants as  otaf_constants
 
+from otaf.common import validate_dict_keys
+from otaf.geometry import point_dict_to_arrays, are_points_on_2d_plane
+from otaf.plotting import color_palette_3, hex_to_rgba, spheres_from_point_cloud, create_surface_from_planar_contour, trimesh_scene_as_notebook_scene
 
 @beartype
 class AssemblyDataProcessor:
@@ -169,30 +171,30 @@ class AssemblyDataProcessor:
         required_top_level_keys = ["PARTS", "LOOPS", "GLOBAL_CONSTRAINTS"]
         for key in required_top_level_keys:
             if key not in self.system_data:
-                raise otaf.exceptions.MissingKeyError(key, "system_data")
+                raise otaf_exceptions.MissingKeyError(key, "system_data")
             else:
                 if key == "PARTS":
                     part_keys = list(self.system_data["PARTS"].keys())
                     if not all(
                         map(lambda x: x.isdigit(), part_keys)
                     ):  # Check if all part labels are integers
-                        raise otaf.exceptions.InvalidPartLabelError()
+                        raise otaf_exceptions.InvalidPartLabelError()
                     for part_id in part_keys:
                         surf_keys = list(self.system_data["PARTS"][part_id].keys())
                         if not all(
                             map(lambda x: x.islower() and x.isalpha(), surf_keys)
                         ):  # Check if all surface labels are lowercase ascii
-                            raise otaf.exceptions.InvalidSurfaceLabelError()
+                            raise otaf_exceptions.InvalidSurfaceLabelError()
                         for surf_id in surf_keys:
                             part_surf_dict = self.system_data["PARTS"][part_id][surf_id]
                             surf_params = list(part_surf_dict.keys())
                             if "TYPE" in surf_params:
-                                if not part_surf_dict["TYPE"] in otaf.constants.BASE_SURFACE_TYPES:
-                                    raise otaf.exceptions.UnsupportedSurfaceTypeError(
+                                if not part_surf_dict["TYPE"] in otaf_constants.BASE_SURFACE_TYPES:
+                                    raise otaf_exceptions.UnsupportedSurfaceTypeError(
                                         part_id, surf_id, part_surf_dict["TYPE"]
                                     )
                             else:
-                                raise otaf.exceptions.MissingSurfaceTypeKeyError(surf_id, part_id)
+                                raise otaf_exceptions.MissingSurfaceTypeKeyError(surf_id, part_id)
 
                             if "POINTS" not in surf_params:
                                 self.generate_points_for_surface(part_id, surf_id)
@@ -200,12 +202,12 @@ class AssemblyDataProcessor:
                             else:
                                 point_dict = part_surf_dict["POINTS"]
                                 self.validate_point_dict(point_dict)
-                                label_array, point_array = otaf.geometry.point_dict_to_arrays(
+                                label_array, point_array = point_dict_to_arrays(
                                     point_dict
                                 )
                                 label_origin = list(
                                     filter(
-                                        otaf.constants.SURF_ORIGIN_PATTERN.fullmatch, label_array
+                                        otaf_constants.SURF_ORIGIN_PATTERN.fullmatch, label_array
                                     )
                                 )
                                 if label_origin:
@@ -213,33 +215,33 @@ class AssemblyDataProcessor:
                                         point_dict[label_origin[0]], dtype="float64"
                                     )
                                 else:
-                                    raise otaf.exceptions.MissingOriginPointError(part_id, surf_id)
+                                    raise otaf_exceptions.MissingOriginPointError(part_id, surf_id)
 
                             if "INTERACTIONS" in surf_params:
                                 for interaction in part_surf_dict["INTERACTIONS"]:
-                                    if not otaf.constants.BASE_PART_SURF_PATTERN.fullmatch(
+                                    if not otaf_constants.BASE_PART_SURF_PATTERN.fullmatch(
                                         interaction
                                     ):
-                                        raise otaf.exceptions.InvalidInteractionFormatError(
+                                        raise otaf_exceptions.InvalidInteractionFormatError(
                                             interaction
                                         )
 
                             if "SURFACE_DIRECTION" in surf_params:
                                 if (
                                     part_surf_dict["SURFACE_DIRECTION"]
-                                    not in otaf.constants.SURFACE_DIRECTIONS
+                                    not in otaf_constants.SURFACE_DIRECTIONS
                                 ):
-                                    raise otaf.exceptions.InvalidSurfaceDirectionError(
+                                    raise otaf_exceptions.InvalidSurfaceDirectionError(
                                         part_surf_dict["SURFACE_DIRECTION"]
                                     )
 
                 if key == "GLOBAL_CONSTRAINTS":
                     if (
                         self.system_data["GLOBAL_CONSTRAINTS"]
-                        not in otaf.constants.GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF.keys()
+                        not in otaf_constants.GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF.keys()
                     ):
-                        raise otaf.exceptions.InvalidGlobalConstraintError(
-                            otaf.constants.GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF.keys()
+                        raise otaf_exceptions.InvalidGlobalConstraintError(
+                            otaf_constants.GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF.keys()
                         )
                 if key == "LOOPS":
                     loop_keys = self.system_data["LOOPS"].keys()
@@ -271,21 +273,21 @@ class AssemblyDataProcessor:
         - Labels must have consistent prefixes (e.g., "A", "B", etc.) and unique numeric suffixes.
         - The coordinates for all points must be unique.
         """
-        label_array, point_array = otaf.geometry.point_dict_to_arrays(point_dict)
+        label_array, point_array = point_dict_to_arrays(point_dict)
         label_pattern_compliance = list(
-            filter(otaf.constants.SURF_POINT_PATTERN.fullmatch, label_array)
+            filter(otaf_constants.SURF_POINT_PATTERN.fullmatch, label_array)
         )
         if len(label_pattern_compliance) != label_array.shape[0]:
-            raise otaf.exceptions.LabelPatternError()
+            raise otaf_exceptions.LabelPatternError()
         label_prefixes = list(map(lambda X: re.findall(r"^[A-Z]+", X)[0], label_array))
         if len(list(set(label_prefixes))) > 1:
-            raise otaf.exceptions.LabelPrefixError()
+            raise otaf_exceptions.LabelPrefixError()
         label_suffixes = list(map(lambda X: int(re.findall(r"[0-9]+$", X)[0]), label_array))
         if len(list(set(label_suffixes))) < label_array.shape[0]:
-            raise otaf.exceptions.UniqueLabelSuffixError()
+            raise otaf_exceptions.UniqueLabelSuffixError()
         # unique_points = np.unique(point_array, axis=0)
         # if unique_points.shape[0] < point_array.shape[0]:
-        #     raise otaf.exceptions.NonUniqueCoordinatesError()
+        #     raise otaf_exceptions.NonUniqueCoordinatesError()
         # Finding duplicates with their labels and coordinates
         point_to_labels = {}
         for label, point in zip(
@@ -303,7 +305,7 @@ class AssemblyDataProcessor:
             duplicates_formatted = {
                 str(np.array(point)): labels for point, labels in duplicates.items()
             }
-            raise otaf.exceptions.NonUniqueCoordinatesError(duplicates_formatted)
+            raise otaf_exceptions.NonUniqueCoordinatesError(duplicates_formatted)
 
     def add_surface_points(
         self,
@@ -349,9 +351,9 @@ class AssemblyDataProcessor:
         - If the label of a point matches the origin pattern (`SURF_ORIGIN_PATTERN`), the point is set as the surface's origin.
         """
         if part_id not in self.system_data["PARTS"]:
-            raise otaf.exceptions.PartNotFoundError(part_id)
+            raise otaf_exceptions.PartNotFoundError(part_id)
         if surf_id not in self.system_data["PARTS"][part_id]:
-            raise otaf.exceptions.SurfaceNotFoundError(surf_id, part_id)
+            raise otaf_exceptions.SurfaceNotFoundError(surf_id, part_id)
 
         # Ensure the "POINTS" key exists for the given surface
         points = self.system_data["PARTS"][part_id][surf_id].setdefault("POINTS", {})
@@ -365,7 +367,7 @@ class AssemblyDataProcessor:
             if new_point_name in points:
                 if ignore_duplicates and np.array_equal(points[new_point_name], new_point_array):
                     continue
-                raise otaf.exceptions.DuplicatePointError(
+                raise otaf_exceptions.DuplicatePointError(
                     point_name=new_point_name,
                     surf_id=surf_id,
                     part_id=part_id,
@@ -376,7 +378,7 @@ class AssemblyDataProcessor:
 
             for existing_point_name, existing_point_value in points.items():
                 if np.array_equal(existing_point_value, new_point_array):
-                    raise otaf.exceptions.DuplicatePointError(
+                    raise otaf_exceptions.DuplicatePointError(
                         point_name=new_point_name,
                         surf_id=surf_id,
                         part_id=part_id,
@@ -389,7 +391,7 @@ class AssemblyDataProcessor:
             # Add the new point
             points[new_point_name] = new_point_array
 
-            if otaf.constants.SURF_ORIGIN_PATTERN.fullmatch(new_point_name):
+            if otaf_constants.SURF_ORIGIN_PATTERN.fullmatch(new_point_name):
                 self.system_data["PARTS"][part_id][surf_id]["ORIGIN"] = new_point_array
 
     def generate_points_for_surface(self, part_id: str, surf_id: str) -> None:
@@ -414,11 +416,11 @@ class AssemblyDataProcessor:
             If the surface type is not supported.
         """
         surf_data = self.system_data["PARTS"][part_id][surf_id]
-        otaf.common.validate_dict_keys(
+        validate_dict_keys(
             surf_data,
             ["TYPE", "FRAME", "ORIGIN", "INTERACTIONS"],
             f"Surface dictionary for surface {surf_id} on part {part_id}",
-            otaf.constants.SURFACE_DICT_VALUE_CHECKS,
+            otaf_constants.SURFACE_DICT_VALUE_CHECKS,
         )
 
         if surf_data["TYPE"] == "plane":
@@ -426,7 +428,7 @@ class AssemblyDataProcessor:
         elif surf_data["TYPE"] == "cylinder":
             self._generate_points_for_cylinder(part_id, surf_id)
         else:
-            raise otaf.exceptions.UnsupportedSurfaceTypeError(part_id, surf_id, surf_data["TYPE"])
+            raise otaf_exceptions.UnsupportedSurfaceTypeError(part_id, surf_id, surf_data["TYPE"])
 
     def _generate_points_for_plane(self, part_id: str, surf_id: str) -> None:
         """
@@ -455,8 +457,8 @@ class AssemblyDataProcessor:
             # The contour of the surface has been defined in the global frame
             NP = surf_data["CONTOUR_GLOBAL"].shape[0]
             points = surf_data["CONTOUR_GLOBAL"]
-            if not otaf.geometry.are_points_on_2d_plane(points):
-                raise otaf.exceptions.GeometricConditionError("are_points_on_2d_plane")
+            if not are_points_on_2d_plane(points):
+                raise otaf_exceptions.GeometricConditionError("are_points_on_2d_plane")
             contour_point_dict = {
                 key_prefix + str(key): value for key, value in zip(list(range(1, NP + 1)), points)
             }
@@ -537,7 +539,7 @@ class AssemblyDataProcessor:
         for loop_element in split_compact_loop:
             self._validate_loop_element(loop_element)
         part_surf_point = [
-            otaf.constants.LOC_STAMP_PATTERN.search(loop_element).groups()
+            otaf_constants.LOC_STAMP_PATTERN.search(loop_element).groups()
             for loop_element in split_compact_loop
         ]
         first_inter = self._check_loop_order(part_surf_point)
@@ -559,7 +561,7 @@ class AssemblyDataProcessor:
         ValueError
             If the loop element does not match the expected pattern.
         """
-        if not otaf.constants.LOOP_ELEMENT_PATTERN.fullmatch(loop_element):
+        if not otaf_constants.LOOP_ELEMENT_PATTERN.fullmatch(loop_element):
             raise ValueError(f"Invalid loop element: {loop_element}")
 
     def _check_loop_order(self, part_surf_point: List[Tuple[str, str, str]]) -> bool:
@@ -693,12 +695,12 @@ class AssemblyDataProcessor:
             for surf_id, surface_data in surfaces.items():
                 if "POINTS" in surface_data:
                     points = np.array(list(surface_data["POINTS"].values()))
-                    color_hex = otaf.plotting.color_palette_3[
-                        color_index % len(otaf.plotting.color_palette_3)
+                    color_hex = color_palette_3[
+                        color_index % len(color_palette_3)
                     ]
-                    color_rgba = otaf.plotting.hex_to_rgba(color_hex)
+                    color_rgba = hex_to_rgba(color_hex)
 
-                    spheres = otaf.plotting.spheres_from_point_cloud(
+                    spheres = spheres_from_point_cloud(
                         points,
                         radius=radius,
                         color=color_rgba,
@@ -737,12 +739,12 @@ class AssemblyDataProcessor:
             for surf_id, surface_data in surfaces.items():
                 if "POINTS" in surface_data and surface_data['TYPE']=='plane' and ("2D" not in glob_const):
                     vertices = np.array(list(surface_data["POINTS"].values()))
-                    color_hex = otaf.plotting.color_palette_3[
-                        color_index % len(otaf.plotting.color_palette_3)
+                    color_hex = color_palette_3[
+                        color_index % len(color_palette_3)
                     ]
-                    color_rgba = otaf.plotting.hex_to_rgba(color_hex)
+                    color_rgba = hex_to_rgba(color_hex)
 
-                    planar_mesh = otaf.plotting.create_surface_from_planar_contour(vertices)
+                    planar_mesh = create_surface_from_planar_contour(vertices)
                     planar_mesh.visual.vertex_colors[:,:]=color_rgba
                     #We add the same planar mesh twice but with inverted normals so that it is visible above and below
                     pmc = planar_mesh.copy()
@@ -775,7 +777,11 @@ class AssemblyDataProcessor:
         scene
             A scene object rendered in a format suitable for Jupyter Notebook.
         """
+        try :
+            import trimesh as tr
+        except ImportError :
+            raise ImportError('You need Trimesh installed for plotting')
         sphere_list = self.generate_sphere_clouds(radius=radius)
         plane_list = self.generate_functional_planes()
         scene = tr.Scene([*sphere_list, *plane_list])
-        return otaf.plotting.trimesh_scene_as_notebook_scene(scene, background_hex_color)
+        return trimesh_scene_as_notebook_scene(scene, background_hex_color)

@@ -47,7 +47,9 @@ from scipy.spatial.transform import Rotation
 from beartype import beartype
 from beartype.typing import Dict, List, Tuple, Union, Any, Set, Iterable
 
-import otaf
+
+from otaf.exceptions import InvalidAffineTransformException
+
 
 
 @beartype
@@ -74,7 +76,7 @@ def is_affine_transformation_matrix(M: np.ndarray, raise_exception=False) -> boo
 
     Raises
     ------
-    otaf.exceptions.InvalidAffineTransformException
+    InvalidAffineTransformException
         If the matrix is not a valid affine transformation matrix and `raise_exception` is True.
 
     Notes
@@ -83,12 +85,12 @@ def is_affine_transformation_matrix(M: np.ndarray, raise_exception=False) -> boo
     """
     if M.shape != (4, 4):
         if raise_exception:
-            raise otaf.exceptions.InvalidAffineTransformException(M, "Matrix is not 4x4.")
+            raise InvalidAffineTransformException(M, "Matrix is not 4x4.")
         return False
 
     if not np.array_equal(M[3, :], np.array([0, 0, 0, 1])):
         if raise_exception:
-            raise otaf.exceptions.InvalidAffineTransformException(
+            raise InvalidAffineTransformException(
                 M, "Last row of the matrix is not [0, 0, 0, 1]."
             )
         return False
@@ -97,14 +99,14 @@ def is_affine_transformation_matrix(M: np.ndarray, raise_exception=False) -> boo
 
     if not np.allclose(np.dot(P, P.T), np.identity(3)):
         if raise_exception:
-            raise otaf.exceptions.InvalidAffineTransformException(
+            raise InvalidAffineTransformException(
                 M, "Top-left 3x3 submatrix is not a valid rotation matrix."
             )
         return False
 
     if not np.isclose(np.linalg.det(P), 1):
         if raise_exception:
-            raise otaf.exceptions.InvalidAffineTransformException(
+            raise InvalidAffineTransformException(
                 M, "Determinant of the top-left 3x3 submatrix is not 1."
             )
         return False

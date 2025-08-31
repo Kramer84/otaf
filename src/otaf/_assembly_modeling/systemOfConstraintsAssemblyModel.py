@@ -13,12 +13,11 @@ from collections.abc import Iterable
 
 import numpy as np
 import sympy as sp
-import openturns as ot
 
 from beartype import beartype
-from beartype.typing import Dict, List, Tuple, Union, Any, Set, Optional
+from beartype.typing import List, Tuple, Union, Optional
 
-import otaf
+from otaf.common import get_symbol_coef_map, get_symbols_in_expressions
 
 
 @beartype
@@ -296,7 +295,7 @@ class SystemOfConstraintsAssemblyModel:
         symb_rank_map_gap = {str(var): i for i, var in enumerate(self.gap_symbols)}
 
         for i in range(self.nC):
-            symb_coef_map = otaf.common.get_symbol_coef_map(self.compatibility_eqs[i])
+            symb_coef_map = get_symbol_coef_map(self.compatibility_eqs[i])
             for variable, coefficient in symb_coef_map.items():
                 if variable in symb_rank_map_def:
                     A_eq_Def[i, symb_rank_map_def[variable]] = coefficient
@@ -306,7 +305,7 @@ class SystemOfConstraintsAssemblyModel:
                     K_eq[i] += coefficient
 
         for i in range(self.nI):
-            symb_coef_map = otaf.common.get_symbol_coef_map(self.interface_eqs[i])
+            symb_coef_map = get_symbol_coef_map(self.interface_eqs[i])
             for variable, coefficient in symb_coef_map.items():
                 if variable in symb_rank_map_def:
                     A_ub_Def[i, symb_rank_map_def[variable]] = coefficient
@@ -353,10 +352,10 @@ class SystemOfConstraintsAssemblyModel:
         logging.info(
             "[Type: SystemOfConstraintsAssemblyModel] Retrieving free gap and deviation variables."
         )
-        deviation_symbols, gap_symbols = otaf.common.get_symbols_in_expressions(
+        deviation_symbols, gap_symbols = get_symbols_in_expressions(
             self.compatibility_eqs
         )
-        symb_dev_interf, symb_gap_interf = otaf.common.get_symbols_in_expressions(
+        symb_dev_interf, symb_gap_interf = get_symbols_in_expressions(
             self.interface_eqs
         )
         if not set(symb_dev_interf).issubset(deviation_symbols) or not set(

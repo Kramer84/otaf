@@ -49,7 +49,9 @@ import pytransform3d.transformations as pytr
 import pytransform3d.rotations as pyrot
 from beartype import beartype
 from beartype.typing import Dict, List, Tuple, Union, Callable, Optional
-import otaf
+
+from otaf.geometry import point_to_segment_distance, are_points_on_2d_plane, rotation_matrix_from_vectors
+from ._color_palettes import color_palette_1, color_palette_2, color_palette_3
 
 
 @beartype
@@ -123,7 +125,7 @@ def create_open_cylinder(radius, segment, **kwargs):
     """Creates a trimesh object containing a cylinder open on both ends"""
     cylinder = tr.creation.cylinder(radius=radius, segment=segment, **kwargs)
     # Get all points not on outer cylinder surface
-    vertex_axis_distance = otaf.geometry.point_to_segment_distance(
+    vertex_axis_distance = point_to_segment_distance(
         cylinder.vertices, np.array(segment[0]), np.array(segment[1])
     )
     vertex_not_outer_args = np.squeeze(np.argwhere(vertex_axis_distance.round(5) < radius))
@@ -144,18 +146,18 @@ def create_surface_from_planar_contour(vertices, segments=None):
         if segments.shape[-1] != 2:
             raise ValueError(f"The segment array has to be of shape (Mx2), not {segments.shape}")
 
-    on_plane, normal = otaf.geometry.are_points_on_2d_plane(vertices, return_normal=True)
+    on_plane, normal = are_points_on_2d_plane(vertices, return_normal=True)
     if not on_plane:
         raise ValueError(
             "The provided vertices are not on the same 2D plane. Triangulation not possible."
         )
 
     # RotationMatrixLocalPlaneToGlobal
-    R = otaf.geometry.rotation_matrix_from_vectors(normal, np.array([0, 0, 1]))
+    R = rotation_matrix_from_vectors(normal, np.array([0, 0, 1]))
     vertices_proj = (R @ vertices.T).T
     print(vertices_proj)
     assert np.array_equal(
-        otaf.geometry.are_points_on_2d_plane(vertices_proj,True)[1], np.array([0, 0, 1])
+        are_points_on_2d_plane(vertices_proj,True)[1], np.array([0, 0, 1])
     ), "Some problem"
     vertices_proj_2D = vertices_proj[:, [0, 1]]
 
@@ -858,8 +860,8 @@ def compare_jacobians(
     # Plot the background colors based on class_labels
     if class_labels is not None:
         for idx in range(len(indices)):
-            class_color = otaf.plotting.color_palette_2[
-                class_labels[idx] % len(otaf.plotting.color_palette_2)
+            class_color = color_palette_2[
+                class_labels[idx] % len(color_palette_2)
             ]
             plt.gca().add_patch(
                 Rectangle(

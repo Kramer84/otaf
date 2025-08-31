@@ -26,6 +26,7 @@ from torcheval.metrics import R2Score
 import tqdm
 
 import otaf
+from ._base_models import get_custom_mlp_layers, add_gaussian_noise
 
 DEVICE = (
     "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
@@ -155,20 +156,20 @@ class LPNeuralSurrogateTolereancing(nn.Module):
         self.layer_eq = nn.Sequential(
             *otaf.surrogate.get_custom_mlp_layers(
                 [self.nEq, self.nEq + self.output_dim // 2, self.output_dim],
-                activation_class=otaf.torch.nn.CELU,
+                activation_class=torch.nn.CELU,
             )
         )
 
         self.layer_ub = nn.Sequential(
             *otaf.surrogate.get_custom_mlp_layers(
                 [self.nUb, self.nUb + self.output_dim // 2, self.output_dim],
-                activation_class=otaf.torch.nn.CELU,
+                activation_class=torch.nn.CELU,
             )
         )
 
         self.layer_XY = nn.Sequential(
             *otaf.surrogate.get_custom_mlp_layers(
-                [self.input_dim, self.output_dim], activation_class=otaf.torch.nn.CELU
+                [self.input_dim, self.output_dim], activation_class=torch.nn.CELU
             )
         )
 
@@ -185,14 +186,14 @@ class LPNeuralSurrogateTolereancing(nn.Module):
         self.layer_x_rem = nn.Sequential(
             nn.BatchNorm1d(self.input_dim),
             *otaf.surrogate.get_custom_mlp_layers(
-                [self.input_dim, self.input_dim], activation_class=otaf.torch.nn.CELU
+                [self.input_dim, self.input_dim], activation_class=torch.nn.CELU
             ),
         )
 
         self.layer_pred = nn.Sequential(
             *otaf.surrogate.get_custom_mlp_layers(
                 [self.output_dim * 2, (self.output_dim * 3) // 2, self.output_dim],
-                activation_class=otaf.torch.nn.CELU,
+                activation_class=torch.nn.CELU,
             )
         )
 

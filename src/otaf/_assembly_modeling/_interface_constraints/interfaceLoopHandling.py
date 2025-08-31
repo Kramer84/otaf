@@ -2,7 +2,6 @@ from __future__ import annotations
 # -*- coding: utf-8 -*-
 
 __author__ = "Kramer84"
-__all__ = ["InterfaceLoopHandling"]
 
 
 import re
@@ -21,7 +20,8 @@ from ..assemblyDataProcessor import AssemblyDataProcessor
 from ._interfaceLoopBuilder import InterfaceLoopBuilder
 from ._surfaceInteractionManager import SurfaceInteractionManager
 
-import otaf
+from otaf.common import tree, inverse_mstring, parse_matrix_string
+
 
 @beartype
 class InterfaceLoopHandling:
@@ -61,11 +61,11 @@ class InterfaceLoopHandling:
                     gap_matrices.add(token)
 
         # Sometimes we have the gap in two directions,but ony want one, soooo:
-        inverse_gap_matrices = set(map(otaf.common.inverse_mstring, gap_matrices))
+        inverse_gap_matrices = set(map(inverse_mstring, gap_matrices))
         intersection = gap_matrices.intersection(inverse_gap_matrices)
         intersection_list = list(intersection)
         intersection_list_index_map = {inter: i for i, inter in enumerate(intersection_list)}
-        inverse_intersection_list = list(map(otaf.common.inverse_mstring, intersection_list))
+        inverse_intersection_list = list(map(inverse_mstring, intersection_list))
         inverse_intersection_list_indexes = [
             intersection_list_index_map[inter] for inter in inverse_intersection_list
         ]
@@ -93,7 +93,7 @@ class InterfaceLoopHandling:
         added to maintain consistency in the representation of spatial relationships.
         """
         POINT_PATTERN = re.compile(r"^(\d+)([a-z]+)([A-Z]\d+)$")
-        gap_matrix_dict = otaf.common.tree()
+        gap_matrix_dict = tree()
 
         # Step 1: Initialize the gap matrix dictionary
         for part_id, part_data in self.ADP["PARTS"].items():
@@ -116,8 +116,8 @@ class InterfaceLoopHandling:
         for part_id, surfaces in gap_matrix_dict.items():
             for surface_id, gap_matrices in surfaces.items():
                 for gap_matrix in gap_matrices:
-                    parsed = otaf.common.parse_matrix_string(gap_matrix)
-                    inverse_gap_matrix = otaf.common.inverse_mstring(gap_matrix)
+                    parsed = parse_matrix_string(gap_matrix)
+                    inverse_gap_matrix = inverse_mstring(gap_matrix)
                     inv_part_id, inv_surface_id = parsed["part2"], parsed["surface2"]
                     if inverse_gap_matrix not in gap_matrix_dict[inv_part_id][inv_surface_id]:
                         gap_matrix_dict[inv_part_id][inv_surface_id].add(inverse_gap_matrix)
@@ -145,7 +145,7 @@ class InterfaceLoopHandling:
             Dict[str, Dict[str, Dict[str, Set[str]]]]: A nested dictionary categorizing gap matrices
             into 'used' and 'unused' for each part and surface.
         """
-        filtered_dict = otaf.common.tree()
+        filtered_dict = tree()
         for part, surfaces in all_gap_matrices.items():
             for surface, matrix_set in surfaces.items():
                 common_elements = matrix_set.intersection(existing_gap_matrices)

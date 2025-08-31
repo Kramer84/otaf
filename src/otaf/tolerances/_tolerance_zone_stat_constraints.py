@@ -17,8 +17,7 @@ from scipy.optimize import Bounds, LinearConstraint, NonlinearConstraint
 from beartype import beartype
 from beartype.typing import Dict, List, Tuple, Union, Callable, Optional, Sequence, Any
 
-import otaf
-
+from otaf.sampling import scale_sample_with_params, generate_and_transform_sequence
 
 @beartype
 class FeatureLevelStatisticalConstraint:
@@ -87,7 +86,7 @@ class FeatureLevelStatisticalConstraint:
         """
         if self.isNormal :
             self.dist_params = param
-            sample = otaf.sampling.scale_sample_with_params(self.normalSample, param)
+            sample = scale_sample_with_params(self.normalSample, param)
             self.compute_on_sample(sample)
         else :
             self.set_distribution_parameter(param)
@@ -107,7 +106,7 @@ class FeatureLevelStatisticalConstraint:
             # Later we'll use some better generator
             # sample = np.random.normal(size=(self.n_sample, self.n_dof))
             dist = ot.ComposedDistribution([ot.Normal()]*self.n_dof)
-            sample = otaf.sampling.generate_and_transform_sequence(self.n_dof, self.n_sample, dist)
+            sample = generate_and_transform_sequence(self.n_dof, self.n_sample, dist)
             self.normalSample = sample
 
     def set_distribution(self, dist: ot.Distribution) -> None:

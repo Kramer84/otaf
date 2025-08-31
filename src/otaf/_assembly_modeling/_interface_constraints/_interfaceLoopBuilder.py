@@ -16,7 +16,10 @@ from beartype import beartype
 from beartype.typing import Dict, List, Tuple, Union, Any, Set
 
 from ..assemblyDataProcessor import AssemblyDataProcessor
-import otaf
+from ..firstOrderMatrixExpansion import FirstOrderMatrixExpansion
+from otaf.common import extract_expressions_with_variables, parse_matrix_string
+from otaf.constants import BASE_PART_SURF_PATTERN, G_MATRIX_MSTRING_PATTERN
+from otaf.geometry import generate_circle_points
 
 
 @beartype
@@ -79,7 +82,7 @@ class InterfaceLoopBuilder:
         else:
             print(*args)
 
-    def matrix_list_taylor_expansion(self, matrix_loop_list: List[Any]) -> Any:
+    def matrix_list_taylor_expansion(self, matrix_loop_list: List[Any]) -> sp.MatrixBase:
         """
         Compute the first-order Taylor expansion for a list of matrices.
 
@@ -93,7 +96,7 @@ class InterfaceLoopBuilder:
         Any
             Expanded matrices after first-order Taylor expansion.
         """
-        return otaf.FirstOrderMatrixExpansion(matrix_loop_list).compute_first_order_expansion()
+        return FirstOrderMatrixExpansion(matrix_loop_list).compute_first_order_expansion()
 
     ###################################################################################################
 
@@ -137,7 +140,7 @@ class InterfaceLoopBuilder:
                             [
                                 x
                                 for expr in interface_equation_matrix_list
-                                for x in otaf.common.extract_expressions_with_variables(expr)
+                                for x in extract_expressions_with_variables(expr)
                             ]
                         )
                     )
@@ -180,7 +183,7 @@ class InterfaceLoopBuilder:
         to ensure that all potential plane interactions are accounted for. Matching is
         performed based on part and surface identifiers.
         """
-        BPSP, GMMP = otaf.constants.BASE_PART_SURF_PATTERN, otaf.constants.G_MATRIX_MSTRING_PATTERN
+        BPSP, GMMP = BASE_PART_SURF_PATTERN, G_MATRIX_MSTRING_PATTERN
         self._print(f"Processing part {idPart}, surface {idSurf} for plane-to-plane interactions.")
 
         usedGMat = list(self.filtered_gap_matrices[idPart][idSurf]["USED"])
@@ -270,8 +273,8 @@ class InterfaceLoopBuilder:
             f"TP{unusedMatch[3]}{unusedMatch[4]}{usedMatch[5]}{unusedMatch[4]}{unusedMatch[5]}"
         )
 
-        T1_info = otaf.common.parse_matrix_string(T1_name)
-        T2_info = otaf.common.parse_matrix_string(T2_name)
+        T1_info = parse_matrix_string(T1_name)
+        T2_info = parse_matrix_string(T2_name)
 
         T1 = self.CLH.generate_transformation_matrix(T1_info)[0]
         T2 = self.CLH.generate_transformation_matrix(T2_info)[0]
@@ -323,7 +326,7 @@ class InterfaceLoopBuilder:
         """
         self._print(f"Processing part {idPart}, surface {idSurf} for cylinder-to-cylinder interactions.")
 
-        BPSP, GMMP = otaf.constants.BASE_PART_SURF_PATTERN, otaf.constants.G_MATRIX_MSTRING_PATTERN
+        BPSP, GMMP = BASE_PART_SURF_PATTERN, G_MATRIX_MSTRING_PATTERN
 
         usedGMat = list(self.filtered_gap_matrices[idPart][idSurf]["USED"])
         usedGMatDat = [list(GMMP.fullmatch(ug).groups()) for ug in usedGMat]
@@ -414,7 +417,7 @@ class InterfaceLoopBuilder:
         radius1 = self.ADP["PARTS"][datGUsed[0]][datGUsed[1]]["RADIUS"]
         radius2 = self.ADP["PARTS"][datGUsed[3]][datGUsed[4]]["RADIUS"]
         effective_radius = radius1 - radius2 if (radius1 > radius2) else radius2 - radius1
-        cosSinPairs = otaf.geometry.generate_circle_points(
+        cosSinPairs = generate_circle_points(
             1, self.CIRCLE_RESOLUTION
         )  # Generate N,2 array of coordinates
         cylinder_interaction_equations = []

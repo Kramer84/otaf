@@ -45,7 +45,7 @@ from joblib import Parallel, delayed, cpu_count
 from beartype import beartype
 from beartype.typing import Dict, List, Tuple, Union, Callable, Optional
 
-import otaf
+from otaf.common import get_tqdm_range
 
 
 #######################################################################################
@@ -389,7 +389,7 @@ def compute_gap_optimizations_on_sample(
     # Linprog is being depreciated on scipys side, so we switch to milp
 
     if progress_bar:
-        _range = otaf.common.get_tqdm_range()
+        _range = get_tqdm_range()
     else:
         _range = range
 
@@ -512,7 +512,7 @@ def compute_gap_optimizations_on_sample_batch(
             N_cpu_reque = N_points // batch_size
 
         if progress_bar:
-            _range = otaf.common.get_tqdm_range()(0, N_points, batch_size, unit_scale=batch_size)
+            _range = get_tqdm_range()(0, N_points, batch_size, unit_scale=batch_size)
         else:
             _range = range(0, N_points, batch_size)
 
@@ -747,7 +747,7 @@ def compute_gap_optimizations_on_sample_w_steps(
         print("Bounds:", bounds)
 
     if progress_bar:
-        _range = otaf.common.get_tqdm_range()(b_ub.shape[1])
+        _range = get_tqdm_range()(b_ub.shape[1])
     else:
         _range = range(b_ub.shape[1])
 

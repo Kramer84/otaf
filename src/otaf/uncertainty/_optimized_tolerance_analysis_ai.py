@@ -4,7 +4,6 @@ __all__ = ["SocAssemblyAnalysisOptimized"]
 
 import numpy as np
 from typing import List, Optional, Union
-import torch
 import logging
 
 import otaf
@@ -65,11 +64,12 @@ class SocAssemblyAnalysisOptimized:
         return repr_str
 
     def evaluate_binary_classifier(self, X, batch_size=50000, return_on_gpu=False):
+        import torch as tor
         self.binary_classifier.eval()
-        with torch.no_grad():
+        with tor.no_grad():
             return (
                 self.binary_classifier.evaluate_model(
-                    torch.tensor(X, dtype=torch.float32),
+                    tor.tensor(X, dtype=tor.float32),
                     batch_size=batch_size,
                     return_on_gpu=return_on_gpu,
                 )

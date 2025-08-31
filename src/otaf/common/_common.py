@@ -34,7 +34,9 @@ from beartype.typing import List, Union, Dict, Tuple, Optional
 from tqdm import trange
 from tqdm.notebook import trange as trange_notebook
 
-import otaf
+
+from otaf.constants import T_MATRIX_PATTERN, G_MATRIX_MSTRING_PATTERN, BASIS_DICT, D_MATRIX_PATTERN1, D_MATRIX_PATTERN2, D_MATRIX_PATTERN3, G_MATRIX_PATTERN1, G_MATRIX_PATTERN2
+from otaf.exceptions import MissingKeyError
 
 
 @beartype
@@ -79,14 +81,14 @@ def inverse_mstring(matrix_str: str) -> str:
         matrix_type = matrix_str[0]
 
         if matrix_type == "T":
-            match = otaf.constants.T_MATRIX_PATTERN.fullmatch(matrix_str)
+            match = T_MATRIX_PATTERN.fullmatch(matrix_str)
             if not match:
                 raise ValueError(f"Invalid format for Transformation matrix: {matrix_str}")
             part, surface1, point1, surface2, point2 = match.groups()
             return f"TP{part}{surface2}{point2}{surface1}{point1}"
 
         elif matrix_type == "G":
-            match = otaf.constants.G_MATRIX_MSTRING_PATTERN.fullmatch(matrix_str)
+            match = G_MATRIX_MSTRING_PATTERN.fullmatch(matrix_str)
             if not match:
                 raise ValueError(f"Invalid format for Gap matrix: {matrix_str}")
             part1, surface1, point1, part2, surface2, point2 = match.groups()
@@ -200,7 +202,7 @@ def parse_matrix_string(matrix_str: str) -> Dict[str, Union[str, bool]]:
         raise ValueError(f"Wrong type for matrix string {matrix_str}")
 
     if result["type"] == "T":
-        match = otaf.constants.T_MATRIX_PATTERN.fullmatch(matrix_str)
+        match = T_MATRIX_PATTERN.fullmatch(matrix_str)
         if not match:
             raise ValueError(f"Invalid format for Transformation matrix: {matrix_str}")
         if match:
@@ -217,9 +219,9 @@ def parse_matrix_string(matrix_str: str) -> Dict[str, Union[str, bool]]:
         )
 
     elif result["type"] == "D":
-        match1 = otaf.constants.D_MATRIX_PATTERN1.fullmatch(matrix_str)
-        match2 = otaf.constants.D_MATRIX_PATTERN2.fullmatch(matrix_str)
-        match3 = otaf.constants.D_MATRIX_PATTERN3.fullmatch(matrix_str)
+        match1 = D_MATRIX_PATTERN1.fullmatch(matrix_str)
+        match2 = D_MATRIX_PATTERN2.fullmatch(matrix_str)
+        match3 = D_MATRIX_PATTERN3.fullmatch(matrix_str)
         if not any([match1, match2, match3]):
             raise ValueError(f"Invalid format for Deviation matrix: {matrix_str}")
         if match1:
@@ -242,8 +244,8 @@ def parse_matrix_string(matrix_str: str) -> Dict[str, Union[str, bool]]:
         )
 
     elif result["type"] == "G":
-        match1 = otaf.constants.G_MATRIX_PATTERN1.fullmatch(matrix_str)
-        match2 = otaf.constants.G_MATRIX_PATTERN2.fullmatch(matrix_str)
+        match1 = G_MATRIX_PATTERN1.fullmatch(matrix_str)
+        match2 = G_MATRIX_PATTERN2.fullmatch(matrix_str)
         if not any([match1, match2]):
             raise ValueError(f"Invalid format for Gap matrix: {matrix_str}")
         if match1:
@@ -317,11 +319,11 @@ def get_symbols_in_expressions(expr_list: List[sp.Expr]) -> Tuple[List[sp.Symbol
     try :
         deviation_symbols = sorted(
             (symb for symb in free_symbols if "_d_" in str(symb)),
-            key=sort_key,  # otaf.sort_key_by_prefix_and_number
+            key=sort_key,
         )
         gap_symbols = sorted(
             (symb for symb in free_symbols if "_g_" in str(symb)),
-            key=sort_key,  # otaf.sort_key_by_prefix_and_number
+            key=sort_key,
         )
     except ValueError :
         raise ValueError("Symbols must follow naming guidelines")
@@ -436,7 +438,7 @@ def get_SE3_base(index: str) -> sp.MatrixBase:
     The SE(3) base matrix is retrieved from the predefined `BASIS_DICT` in the `otaf.constants` module.
     """
     try:
-        return sp.Matrix(otaf.constants.BASIS_DICT[index]["MATRIX"])
+        return sp.Matrix(BASIS_DICT[index]["MATRIX"])
     except KeyError:
         raise KeyError(f"Index '{index}' not found in BASIS_DICT.")
 
@@ -488,7 +490,7 @@ def validate_dict_keys(
 
     Raises
     ------
-    otaf.exceptions.MissingKeyError
+    MissingKeyError
         If a required key is missing from the dictionary.
     ValueError
         If a value associated with a key fails the validation function provided in `value_checks`.
@@ -500,7 +502,7 @@ def validate_dict_keys(
     """
     for key in keys:
         if key not in dictionary:
-            raise otaf.exceptions.MissingKeyError(key, dictionary_name)
+            raise MissingKeyError(key, dictionary_name)
 
         if value_checks and key in value_checks:
             validator = value_checks[key]

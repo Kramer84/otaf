@@ -11,7 +11,11 @@ import numpy as np
 import sympy as sp
 from beartype import beartype
 from beartype.typing import List, Union, Optional
-import otaf
+
+
+from otaf.constants import BASIS_DICT
+from otaf.common import get_SE3_matrices_from_indices, inverse_mstring
+from otaf.geometry import is_affine_transformation_matrix
 
 
 @beartype
@@ -109,18 +113,18 @@ class DeviationMatrix:
         self.SE3_basis_indices.clear()
         self.variables.clear()
         for i in range(1, 7):  # also sorts
-            axis = otaf.constants.BASIS_DICT[str(i)]["AXIS"]
+            axis = BASIS_DICT[str(i)]["AXIS"]
             if i <= 3:
                 if axis in self._translations:
                     self.SE3_basis_indices.append(i)
-                    var_name = otaf.constants.BASIS_DICT[str(i)]["VARIABLE_D"]
+                    var_name = BASIS_DICT[str(i)]["VARIABLE_D"]
                     self.variables.append(
                         sp.Symbol(f"{var_name}_{self.ID}" if self.ID >= 0 else var_name)
                     )
             else:
                 if axis in self._rotations:
                     self.SE3_basis_indices.append(i)
-                    var_name = otaf.constants.BASIS_DICT[str(i)]["VARIABLE_D"]
+                    var_name = BASIS_DICT[str(i)]["VARIABLE_D"]
                     self.variables.append(
                         sp.Symbol(f"{var_name}_{self.ID}" if self.ID >= 0 else var_name)
                     )
@@ -174,7 +178,7 @@ class DeviationMatrix:
             A list of symbolic matrices corresponding to the SE(3) basis elements.
         """
         logging.info(f"[Type: 'D', ID: {self.ID}] Generating SE3 matrix.")
-        return otaf.common.get_SE3_matrices_from_indices(self.SE3_basis_indices)
+        return get_SE3_matrices_from_indices(self.SE3_basis_indices)
 
     def get_matrix_inverse(self) -> List[sp.MatrixBase]:
         """
@@ -189,7 +193,7 @@ class DeviationMatrix:
             A list of symbolic matrices corresponding to the inverse SE(3) basis elements.
         """
         logging.info(f"[Type: 'D', ID: {self.ID}] Generating inverse SE3 matrix.")
-        return otaf.common.get_SE3_matrices_from_indices(self.SE3_basis_indices, multiplier=-1)
+        return get_SE3_matrices_from_indices(self.SE3_basis_indices, multiplier=-1)
 
 
 @beartype
@@ -273,18 +277,18 @@ class GapMatrix:
         self.SE3_basis_indices.clear()
         self.variables.clear()
         for i in range(1, 7):
-            axis = otaf.constants.BASIS_DICT[str(i)]["AXIS"]
+            axis = BASIS_DICT[str(i)]["AXIS"]
             if i <= 3:
                 if axis not in self._translations_blocked:
                     self.SE3_basis_indices.append(i)
-                    var_name = otaf.constants.BASIS_DICT[str(i)]["VARIABLE_G"]
+                    var_name = BASIS_DICT[str(i)]["VARIABLE_G"]
                     self.variables.append(
                         sp.Symbol(f"{var_name}_{self.ID}" if self.ID >= 0 else var_name)
                     )
             else:
                 if axis not in self._rotations_blocked:
                     self.SE3_basis_indices.append(i)
-                    var_name = otaf.constants.BASIS_DICT[str(i)]["VARIABLE_G"]
+                    var_name = BASIS_DICT[str(i)]["VARIABLE_G"]
                     self.variables.append(
                         sp.Symbol(f"{var_name}_{self.ID}" if self.ID >= 0 else var_name)
                     )
@@ -319,7 +323,7 @@ class GapMatrix:
             translations_blocked=self._translations_blocked,
             rotations_blocked=self._rotations_blocked,
             inverse=(not self.inverse),
-            name=otaf.common.inverse_mstring(self.name),
+            name=inverse_mstring(self.name),
         )
 
     def get_variables(self) -> List[sp.Symbol]:
@@ -350,7 +354,7 @@ class GapMatrix:
             A list of symbolic matrices corresponding to the SE(3) basis elements.
         """
         logging.info(f"[Type: 'G', ID: {self.ID}] Generating SE3 matrix.")
-        return otaf.common.get_SE3_matrices_from_indices(self.SE3_basis_indices)
+        return get_SE3_matrices_from_indices(self.SE3_basis_indices)
 
     def get_matrix_inverse(self) -> List[sp.MatrixBase]:
         """
@@ -365,7 +369,7 @@ class GapMatrix:
             A list of symbolic matrices corresponding to the inverse SE(3) basis elements.
         """
         logging.info(f"[Type: 'G', ID: {self.ID}] Generating inverse SE3 matrix.")
-        return otaf.common.get_SE3_matrices_from_indices(self.SE3_basis_indices, multiplier=-1)
+        return get_SE3_matrices_from_indices(self.SE3_basis_indices, multiplier=-1)
 
 
 @beartype
@@ -431,7 +435,7 @@ class TransformationMatrix:
         self._final = final
         if matrix is not None:
             self._matrix = np.array(matrix, dtype="float64")
-            assert otaf.geometry.is_affine_transformation_matrix(
+            assert is_affine_transformation_matrix(
                 self._matrix
             ), f"The matrix {self._matrix} is not a transformation matrix."
         else:
@@ -472,9 +476,9 @@ class TransformationMatrix:
                 matrix_inverse, matrix_inverse_2
             ), f"Transformation matrix {self.name} wrong."
 
-        assert otaf.geometry.is_affine_transformation_matrix(
+        assert is_affine_transformation_matrix(
             matrix
-        ) and otaf.geometry.is_affine_transformation_matrix(
+        ) and is_affine_transformation_matrix(
             matrix_inverse
         ), f"Transformation matrix {self.name} wrong."
 
@@ -534,14 +538,14 @@ class TransformationMatrix:
             return TransformationMatrix(
                 index=self.ID,
                 matrix=self.get_matrix_inverse(),
-                name=otaf.common.inverse_mstring(self.name),
+                name=inverse_mstring(self.name),
             )
         else:
             return TransformationMatrix(
                 index=self.ID,
                 initial=self._final,
                 final=self._initial,
-                name=otaf.common.inverse_mstring(self.name),
+                name=inverse_mstring(self.name),
             )
 
     def get_matrix(self) -> sp.MatrixBase:

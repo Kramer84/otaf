@@ -3,6 +3,9 @@ from __future__ import annotations
 
 __author__ = "Kramer84"
 
+import torch
+torch._dynamo.config.suppress_errors = True
+
 from ._neural_tolerancing_surrogate import *
 from ._neural_surrogate import *
 from ._loss_functions import *

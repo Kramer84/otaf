@@ -3,6 +3,6 @@ from __future__ import annotations
 
 __author__ = "Kramer84"
 
-from .interfaceLoopHandling import *
+from .interfaceLoopHandling import InterfaceLoopHandling
 
-__all__ = interfaceLoopHandling.__all__
+__all__ = ["InterfaceLoopHandling"]
