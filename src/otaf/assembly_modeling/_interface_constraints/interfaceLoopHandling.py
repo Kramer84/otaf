@@ -19,10 +19,10 @@ from ._surfaceInteractionManager import SurfaceInteractionManager
 
 @beartype
 class InterfaceLoopHandling:
-    def __init__(self, system_data_augmented, compatibility_loop_handling, circle_resolution=8):
-        self.SDA = system_data_augmented
-        self.CLH = compatibility_loop_handling
-        self.surfaceInteractionManager = SurfaceInteractionManager(self.SDA)
+    def __init__(self, assemblyDataProcessor, compatibilityLoopHandling, circle_resolution=8):
+        self.ADP = assemblyDataProcessor
+        self.CLH = compatibilityLoopHandling
+        self.surfaceInteractionManager = SurfaceInteractionManager(self.ADP)
         self.surfaceInteractionManager.get_facing_point_dictionary()
         self.all_gap_matrix_names = self.generate_all_gap_matrix_names()
         self.compatibility_gap_matrix_names = self.extract_unique_gap_matrices_from_expanded_loops()
@@ -31,7 +31,7 @@ class InterfaceLoopHandling:
         )
 
         self.interfaceLoopBuilder = InterfaceLoopBuilder(
-            self.SDA, self.CLH, self.filtered_gap_matrices, circle_resolution=circle_resolution
+            self.ADP, self.CLH, self.filtered_gap_matrices, circle_resolution=circle_resolution
         )
         self.interfaceLoopBuilder.populate_interface_expressions()
 
@@ -45,7 +45,7 @@ class InterfaceLoopHandling:
     def extract_unique_gap_matrices_from_expanded_loops(self) -> Set[str]:
         """Extract unique gap matrices from expanded compatibility loops and return them as a set."""
         gap_matrices = set()
-        for value in self.SDA.compatibility_loops_expanded.values():
+        for value in self.ADP.compatibility_loops_expanded.values():
             tokens = re.split(r"\s+|->", value)
             for token in tokens:
                 if token.startswith("G"):
@@ -87,7 +87,7 @@ class InterfaceLoopHandling:
         gap_matrix_dict = otaf.common.tree()
 
         # Step 1: Initialize the gap matrix dictionary
-        for part_id, part_data in self.SDA["PARTS"].items():
+        for part_id, part_data in self.ADP["PARTS"].items():
             gap_matrix_dict[part_id] = {surf_id: set() for surf_id in part_data.keys()}
 
         # Step 2: Populate the gap matrices

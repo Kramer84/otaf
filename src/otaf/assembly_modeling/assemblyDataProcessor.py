@@ -8,7 +8,6 @@ import logging
 from copy import copy
 
 import numpy as np
-import sympy as sp
 import trimesh as tr
 
 from trimesh import viewer

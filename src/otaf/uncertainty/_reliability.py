@@ -34,13 +34,10 @@ import re
 from time import time
 
 import numpy as np
-import sympy as sp
-import matplotlib.pyplot as plt
 
 from scipy.optimize import linprog, milp, OptimizeResult, LinearConstraint, Bounds
 
 import openturns as ot
-import trimesh as tr
 from functools import partial, lru_cache
 
 from joblib import Parallel, delayed, cpu_count
