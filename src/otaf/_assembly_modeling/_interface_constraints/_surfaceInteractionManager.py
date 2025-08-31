@@ -15,7 +15,10 @@ import sympy as sp
 from beartype import beartype
 from beartype.typing import Dict, List, Tuple, Union, Any, Set
 
+from ..assemblyDataProcessor import AssemblyDataProcessor
+
 import otaf
+
 
 
 @beartype
@@ -28,8 +31,8 @@ class SurfaceInteractionManager:
     interacting surfaces. It supports multiple surface types and ensures the data is structured
     for further analysis or tolerance evaluation.
     """
-    def __init__(self, system_data_augmented):
-        self.SDA = system_data_augmented
+    def __init__(self, assemblyDataProcessor:AssemblyDataProcessor):
+        self.ADP = assemblyDataProcessor
         self.facingPointDict = otaf.common.tree()
 
     def get_facing_point_dictionary(self) -> None:
@@ -42,11 +45,11 @@ class SurfaceInteractionManager:
         and compatibility.
 
         Notes:
-            - Surfaces and points are processed based on the system data stored in `self.SDA`.
+            - Surfaces and points are processed based on the system data stored in `self.ADP`.
             - This method iterates over all parts and their surfaces to establish facing relationships.
         """
         self.facingPointDict.clear()
-        for part_id, part in self.SDA["PARTS"].items():
+        for part_id, part in self.ADP["PARTS"].items():
             for surface_id, surface_data in part.items():
                 self.process_surface_interactions(part_id, surface_id, surface_data)
 
@@ -71,7 +74,7 @@ class SurfaceInteractionManager:
             (part_id_interact, surf_id_interact) = otaf.constants.BASE_PART_SURF_PATTERN.fullmatch(
                 interaction
             ).groups()
-            surf_data_interact = self.SDA["PARTS"][part_id_interact][surf_id_interact]
+            surf_data_interact = self.ADP["PARTS"][part_id_interact][surf_id_interact]
             type_current = surface_data["TYPE"]
             type_interact = surf_data_interact["TYPE"]
 
@@ -225,7 +228,7 @@ class SurfaceInteractionManager:
 
         The method assigns or validates surface directions (centripetal or centrifugal) and raises
         exceptions for conflicts, identical radii, or geometric interference. After validation, it
-        updates the system data (`self.SDA["PARTS"]`) to facilitate tolerance analysis.
+        updates the system data (`self.ADP["PARTS"]`) to facilitate tolerance analysis.
 
         Args:
             idPCur (str): ID of the current part.
@@ -414,13 +417,13 @@ class SurfaceInteractionManager:
             topPointInt = datSInt["ORIGIN"] + datSInt["FRAME"][:, 0] * xMaxInt
             bottomPointInt = datSInt["ORIGIN"] + datSInt["FRAME"][:, 0] * xMinInt
 
-            current_points = self.SDA.get_surface_points(idPCur, idSCur)
+            current_points = self.ADP.get_surface_points(idPCur, idSCur)
             current_points = otaf.common.merge_with_checks(
                 current_points,
                 {f"{idSCur.upper()}1": topPointCur, f"{idSCur.upper()}2": bottomPointCur},
             )
 
-            interacting_points = self.SDA.get_surface_points(idPInt, idSInt)
+            interacting_points = self.ADP.get_surface_points(idPInt, idSInt)
             interacting_points = otaf.common.merge_with_checks(
                 interacting_points,
                 {f"{idSInt.upper()}1": topPointInt, f"{idSInt.upper()}2": bottomPointInt},
@@ -595,8 +598,8 @@ class SurfaceInteractionManager:
 
                 #################################################################################
             try:
-                self.SDA.add_surface_points(idPCur, idSCur, current_points, ignore_duplicates=True)
-                self.SDA.add_surface_points(
+                self.ADP.add_surface_points(idPCur, idSCur, current_points, ignore_duplicates=True)
+                self.ADP.add_surface_points(
                     idPInt, idSInt, interacting_points, ignore_duplicates=True
                 )
             except Exception as e:

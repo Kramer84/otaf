@@ -46,7 +46,7 @@ class InterfaceLoopBuilder:
 
     def __init__(
         self,
-        system_data_augmented: AssemblyDataProcessor,
+        assemblyDataProcessor: AssemblyDataProcessor,
         compatibility_loop_handling: Any,
         filtered_gap_matrices: Dict[str, Dict[str, Any]],
         circle_resolution: int = 8,
@@ -57,7 +57,7 @@ class InterfaceLoopBuilder:
 
         Parameters
         ----------
-        system_data_augmented : Dict[str, Any]
+        assemblyDataProcessor : Dict[str, Any]
             Augmented system data containing part and surface information.
         compatibility_loop_handling : Any
             Compatibility loop handling object for gap matrix mapping and transformations.
@@ -66,7 +66,7 @@ class InterfaceLoopBuilder:
         circle_resolution : int, optional
             Resolution for approximating circular interactions (default is 8).
         """
-        self.SDA = system_data_augmented
+        self.ADP = assemblyDataProcessor
         self.CLH = compatibility_loop_handling
         self.filtered_gap_matrices = filtered_gap_matrices
         self.CIRCLE_RESOLUTION = circle_resolution
@@ -117,7 +117,7 @@ class InterfaceLoopBuilder:
             for idSurf, pointData in surfData.items():
                 # If len(pointData["USED"]) > 1 that could also mean that the cylinder is traversing multiple parts
                 # So a new implementation would be needed then.
-                surfType = self.SDA["PARTS"][idPart][idSurf]["TYPE"]
+                surfType = self.ADP["PARTS"][idPart][idSurf]["TYPE"]
 
                 if surfType == "plane":
                     # plane interaction handling
@@ -411,8 +411,8 @@ class InterfaceLoopBuilder:
         equations ensure that this maximum distance does not exceed the difference
         in radii between the cylinders.
         """
-        radius1 = self.SDA["PARTS"][datGUsed[0]][datGUsed[1]]["RADIUS"]
-        radius2 = self.SDA["PARTS"][datGUsed[3]][datGUsed[4]]["RADIUS"]
+        radius1 = self.ADP["PARTS"][datGUsed[0]][datGUsed[1]]["RADIUS"]
+        radius2 = self.ADP["PARTS"][datGUsed[3]][datGUsed[4]]["RADIUS"]
         effective_radius = radius1 - radius2 if (radius1 > radius2) else radius2 - radius1
         cosSinPairs = otaf.geometry.generate_circle_points(
             1, self.CIRCLE_RESOLUTION
