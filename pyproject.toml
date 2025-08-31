@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "otaf"
-version = "0.1"
+version = "0.2"
 description = "OTAF : Open (mechanical) tolerance analysis framework - A comprehensive framework for modeling 3 dimensional overconstrained mechanical assemblies and doing statistical tolerance analysis."
 readme = "README.md"
 license = {text = "GPL-3.0-only"}

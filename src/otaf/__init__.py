@@ -1,4 +1,6 @@
+from __future__ import annotations
 # -*- coding: utf-8 -*-
+
 __author__ = "Kramer84"
 __requires__ = [
     "numpy",
@@ -15,7 +17,7 @@ import logging as _logging
 
 import torch
 
-from .assembly_modeling import (
+from ._assembly_modeling import (
     SystemOfConstraintsAssemblyModel,
     AssemblyDataProcessor,
     CompatibilityLoopHandling,
@@ -27,6 +29,7 @@ from .assembly_modeling import (
     I4, J4
 )
 
+from . import _assembly_modeling as _asm
 from . import geometry
 from . import constants
 from . import plotting
@@ -42,8 +45,6 @@ from . import capabilities
 from . import example_models
 from . import tolerances
 
-# Remove assembly_modeling from the namespace
-del assembly_modeling
 
 __all__ = [
     "SystemOfConstraintsAssemblyModel",
