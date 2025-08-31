@@ -91,7 +91,6 @@
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;InterfaceLoopHandling&quot;</span><span class="p">]</span>
 
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
@@ -110,7 +109,8 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">._interfaceLoopBuilder</span><span class="w"> </span><span class="kn">import</span> <span class="n">InterfaceLoopBuilder</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">._surfaceInteractionManager</span><span class="w"> </span><span class="kn">import</span> <span class="n">SurfaceInteractionManager</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">otaf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">otaf.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">tree</span><span class="p">,</span> <span class="n">inverse_mstring</span><span class="p">,</span> <span class="n">parse_matrix_string</span>
+
 
 <div class="viewcode-block" id="InterfaceLoopHandling">
 <a class="viewcode-back" href="../../../../source/otaf.html#otaf.InterfaceLoopHandling">[docs]</a>
@@ -157,11 +157,11 @@
                     <span class="n">gap_matrices</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
 
         <span class="c1"># Sometimes we have the gap in two directions,but ony want one, soooo:</span>
-        <span class="n">inverse_gap_matrices</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">otaf</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">inverse_mstring</span><span class="p">,</span> <span class="n">gap_matrices</span><span class="p">))</span>
+        <span class="n">inverse_gap_matrices</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">inverse_mstring</span><span class="p">,</span> <span class="n">gap_matrices</span><span class="p">))</span>
         <span class="n">intersection</span> <span class="o">=</span> <span class="n">gap_matrices</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">inverse_gap_matrices</span><span class="p">)</span>
         <span class="n">intersection_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">intersection</span><span class="p">)</span>
         <span class="n">intersection_list_index_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">inter</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">inter</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">intersection_list</span><span class="p">)}</span>
-        <span class="n">inverse_intersection_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">otaf</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">inverse_mstring</span><span class="p">,</span> <span class="n">intersection_list</span><span class="p">))</span>
+        <span class="n">inverse_intersection_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">inverse_mstring</span><span class="p">,</span> <span class="n">intersection_list</span><span class="p">))</span>
         <span class="n">inverse_intersection_list_indexes</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">intersection_list_index_map</span><span class="p">[</span><span class="n">inter</span><span class="p">]</span> <span class="k">for</span> <span class="n">inter</span> <span class="ow">in</span> <span class="n">inverse_intersection_list</span>
         <span class="p">]</span>
@@ -192,7 +192,7 @@
 <span class="sd">        added to maintain consistency in the representation of spatial relationships.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">POINT_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^(\d+)([a-z]+)([A-Z]\d+)$&quot;</span><span class="p">)</span>
-        <span class="n">gap_matrix_dict</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">tree</span><span class="p">()</span>
+        <span class="n">gap_matrix_dict</span> <span class="o">=</span> <span class="n">tree</span><span class="p">()</span>
 
         <span class="c1"># Step 1: Initialize the gap matrix dictionary</span>
         <span class="k">for</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">part_data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -215,8 +215,8 @@
         <span class="k">for</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">surfaces</span> <span class="ow">in</span> <span class="n">gap_matrix_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">surface_id</span><span class="p">,</span> <span class="n">gap_matrices</span> <span class="ow">in</span> <span class="n">surfaces</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="k">for</span> <span class="n">gap_matrix</span> <span class="ow">in</span> <span class="n">gap_matrices</span><span class="p">:</span>
-                    <span class="n">parsed</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">parse_matrix_string</span><span class="p">(</span><span class="n">gap_matrix</span><span class="p">)</span>
-                    <span class="n">inverse_gap_matrix</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">inverse_mstring</span><span class="p">(</span><span class="n">gap_matrix</span><span class="p">)</span>
+                    <span class="n">parsed</span> <span class="o">=</span> <span class="n">parse_matrix_string</span><span class="p">(</span><span class="n">gap_matrix</span><span class="p">)</span>
+                    <span class="n">inverse_gap_matrix</span> <span class="o">=</span> <span class="n">inverse_mstring</span><span class="p">(</span><span class="n">gap_matrix</span><span class="p">)</span>
                     <span class="n">inv_part_id</span><span class="p">,</span> <span class="n">inv_surface_id</span> <span class="o">=</span> <span class="n">parsed</span><span class="p">[</span><span class="s2">&quot;part2&quot;</span><span class="p">],</span> <span class="n">parsed</span><span class="p">[</span><span class="s2">&quot;surface2&quot;</span><span class="p">]</span>
                     <span class="k">if</span> <span class="n">inverse_gap_matrix</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">gap_matrix_dict</span><span class="p">[</span><span class="n">inv_part_id</span><span class="p">][</span><span class="n">inv_surface_id</span><span class="p">]:</span>
                         <span class="n">gap_matrix_dict</span><span class="p">[</span><span class="n">inv_part_id</span><span class="p">][</span><span class="n">inv_surface_id</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">inverse_gap_matrix</span><span class="p">)</span>
@@ -247,7 +247,7 @@
 <span class="sd">            Dict[str, Dict[str, Dict[str, Set[str]]]]: A nested dictionary categorizing gap matrices</span>
 <span class="sd">            into &#39;used&#39; and &#39;unused&#39; for each part and surface.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">filtered_dict</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">tree</span><span class="p">()</span>
+        <span class="n">filtered_dict</span> <span class="o">=</span> <span class="n">tree</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">part</span><span class="p">,</span> <span class="n">surfaces</span> <span class="ow">in</span> <span class="n">all_gap_matrices</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">surface</span><span class="p">,</span> <span class="n">matrix_set</span> <span class="ow">in</span> <span class="n">surfaces</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="n">common_elements</span> <span class="o">=</span> <span class="n">matrix_set</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">existing_gap_matrices</span><span class="p">)</span>

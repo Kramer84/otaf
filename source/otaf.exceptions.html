@@ -81,6 +81,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">otaf.exceptions package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-otaf.exceptions">Module contents</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.ConflictingSurfaceDirectionsException"><code class="docutils literal notranslate"><span class="pre">ConflictingSurfaceDirectionsException</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.CylindricalInterferenceGeometricException"><code class="docutils literal notranslate"><span class="pre">CylindricalInterferenceGeometricException</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.DuplicatePointError"><code class="docutils literal notranslate"><span class="pre">DuplicatePointError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.GeometricConditionError"><code class="docutils literal notranslate"><span class="pre">GeometricConditionError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.InvalidAffineTransformException"><code class="docutils literal notranslate"><span class="pre">InvalidAffineTransformException</span></code></a><ul>
@@ -157,6 +158,13 @@
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">ConflictingSurfaceDirectionsException</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part_id1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_id1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">part_id2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_id2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#ConflictingSurfaceDirectionsException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.ConflictingSurfaceDirectionsException" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
 <p>Exception raised for conflicting surface directions in cylinder interactions.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.CylindricalInterferenceGeometricException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">CylindricalInterferenceGeometricException</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part_id1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_id1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">part_id2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_id2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#CylindricalInterferenceGeometricException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.CylindricalInterferenceGeometricException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Exception raised for geometric inconsistencies in cylindrical interactions.</p>
 </dd></dl>
 
 <dl class="py exception">

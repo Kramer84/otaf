@@ -123,7 +123,9 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">trange</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.notebook</span><span class="w"> </span><span class="kn">import</span> <span class="n">trange</span> <span class="k">as</span> <span class="n">trange_notebook</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">otaf</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">otaf.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">T_MATRIX_PATTERN</span><span class="p">,</span> <span class="n">G_MATRIX_MSTRING_PATTERN</span><span class="p">,</span> <span class="n">BASIS_DICT</span><span class="p">,</span> <span class="n">D_MATRIX_PATTERN1</span><span class="p">,</span> <span class="n">D_MATRIX_PATTERN2</span><span class="p">,</span> <span class="n">D_MATRIX_PATTERN3</span><span class="p">,</span> <span class="n">G_MATRIX_PATTERN1</span><span class="p">,</span> <span class="n">G_MATRIX_PATTERN2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">otaf.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">MissingKeyError</span>
 
 
 <div class="viewcode-block" id="inverse_mstring">
@@ -170,14 +172,14 @@
         <span class="n">matrix_type</span> <span class="o">=</span> <span class="n">matrix_str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">matrix_type</span> <span class="o">==</span> <span class="s2">&quot;T&quot;</span><span class="p">:</span>
-            <span class="n">match</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">T_MATRIX_PATTERN</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">matrix_str</span><span class="p">)</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">T_MATRIX_PATTERN</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">matrix_str</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid format for Transformation matrix: </span><span class="si">{</span><span class="n">matrix_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">part</span><span class="p">,</span> <span class="n">surface1</span><span class="p">,</span> <span class="n">point1</span><span class="p">,</span> <span class="n">surface2</span><span class="p">,</span> <span class="n">point2</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
             <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;TP</span><span class="si">{</span><span class="n">part</span><span class="si">}{</span><span class="n">surface2</span><span class="si">}{</span><span class="n">point2</span><span class="si">}{</span><span class="n">surface1</span><span class="si">}{</span><span class="n">point1</span><span class="si">}</span><span class="s2">&quot;</span>
 
         <span class="k">elif</span> <span class="n">matrix_type</span> <span class="o">==</span> <span class="s2">&quot;G&quot;</span><span class="p">:</span>
-            <span class="n">match</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">G_MATRIX_MSTRING_PATTERN</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">matrix_str</span><span class="p">)</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">G_MATRIX_MSTRING_PATTERN</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">matrix_str</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid format for Gap matrix: </span><span class="si">{</span><span class="n">matrix_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">part1</span><span class="p">,</span> <span class="n">surface1</span><span class="p">,</span> <span class="n">point1</span><span class="p">,</span> <span class="n">part2</span><span class="p">,</span> <span class="n">surface2</span><span class="p">,</span> <span class="n">point2</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
@@ -297,7 +299,7 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Wrong type for matrix string </span><span class="si">{</span><span class="n">matrix_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;T&quot;</span><span class="p">:</span>
-        <span class="n">match</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">T_MATRIX_PATTERN</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">matrix_str</span><span class="p">)</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">T_MATRIX_PATTERN</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">matrix_str</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid format for Transformation matrix: </span><span class="si">{</span><span class="n">matrix_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
@@ -314,9 +316,9 @@
         <span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;D&quot;</span><span class="p">:</span>
-        <span class="n">match1</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">D_MATRIX_PATTERN1</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">matrix_str</span><span class="p">)</span>
-        <span class="n">match2</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">D_MATRIX_PATTERN2</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">matrix_str</span><span class="p">)</span>
-        <span class="n">match3</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">D_MATRIX_PATTERN3</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">matrix_str</span><span class="p">)</span>
+        <span class="n">match1</span> <span class="o">=</span> <span class="n">D_MATRIX_PATTERN1</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">matrix_str</span><span class="p">)</span>
+        <span class="n">match2</span> <span class="o">=</span> <span class="n">D_MATRIX_PATTERN2</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">matrix_str</span><span class="p">)</span>
+        <span class="n">match3</span> <span class="o">=</span> <span class="n">D_MATRIX_PATTERN3</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">matrix_str</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">([</span><span class="n">match1</span><span class="p">,</span> <span class="n">match2</span><span class="p">,</span> <span class="n">match3</span><span class="p">]):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid format for Deviation matrix: </span><span class="si">{</span><span class="n">matrix_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">match1</span><span class="p">:</span>
@@ -339,8 +341,8 @@
         <span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;G&quot;</span><span class="p">:</span>
-        <span class="n">match1</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">G_MATRIX_PATTERN1</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">matrix_str</span><span class="p">)</span>
-        <span class="n">match2</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">G_MATRIX_PATTERN2</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">matrix_str</span><span class="p">)</span>
+        <span class="n">match1</span> <span class="o">=</span> <span class="n">G_MATRIX_PATTERN1</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">matrix_str</span><span class="p">)</span>
+        <span class="n">match2</span> <span class="o">=</span> <span class="n">G_MATRIX_PATTERN2</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">matrix_str</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">([</span><span class="n">match1</span><span class="p">,</span> <span class="n">match2</span><span class="p">]):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid format for Gap matrix: </span><span class="si">{</span><span class="n">matrix_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">match1</span><span class="p">:</span>
@@ -417,11 +419,11 @@
     <span class="k">try</span> <span class="p">:</span>
         <span class="n">deviation_symbols</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
             <span class="p">(</span><span class="n">symb</span> <span class="k">for</span> <span class="n">symb</span> <span class="ow">in</span> <span class="n">free_symbols</span> <span class="k">if</span> <span class="s2">&quot;_d_&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">symb</span><span class="p">)),</span>
-            <span class="n">key</span><span class="o">=</span><span class="n">sort_key</span><span class="p">,</span>  <span class="c1"># otaf.sort_key_by_prefix_and_number</span>
+            <span class="n">key</span><span class="o">=</span><span class="n">sort_key</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">gap_symbols</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
             <span class="p">(</span><span class="n">symb</span> <span class="k">for</span> <span class="n">symb</span> <span class="ow">in</span> <span class="n">free_symbols</span> <span class="k">if</span> <span class="s2">&quot;_g_&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">symb</span><span class="p">)),</span>
-            <span class="n">key</span><span class="o">=</span><span class="n">sort_key</span><span class="p">,</span>  <span class="c1"># otaf.sort_key_by_prefix_and_number</span>
+            <span class="n">key</span><span class="o">=</span><span class="n">sort_key</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span> <span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Symbols must follow naming guidelines&quot;</span><span class="p">)</span>
@@ -548,7 +550,7 @@
 <span class="sd">    The SE(3) base matrix is retrieved from the predefined `BASIS_DICT` in the `otaf.constants` module.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">(</span><span class="n">otaf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">BASIS_DICT</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="s2">&quot;MATRIX&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">(</span><span class="n">BASIS_DICT</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="s2">&quot;MATRIX&quot;</span><span class="p">])</span>
     <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Index &#39;</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">&#39; not found in BASIS_DICT.&quot;</span><span class="p">)</span></div>
 
@@ -606,7 +608,7 @@
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
-<span class="sd">    otaf.exceptions.MissingKeyError</span>
+<span class="sd">    MissingKeyError</span>
 <span class="sd">        If a required key is missing from the dictionary.</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        If a value associated with a key fails the validation function provided in `value_checks`.</span>
@@ -618,7 +620,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">otaf</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">MissingKeyError</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">dictionary_name</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">MissingKeyError</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">dictionary_name</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">value_checks</span> <span class="ow">and</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">value_checks</span><span class="p">:</span>
             <span class="n">validator</span> <span class="o">=</span> <span class="n">value_checks</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>

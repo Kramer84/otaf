@@ -198,6 +198,7 @@
 <li class="toctree-l1"><a class="reference internal" href="otaf.exceptions.html">otaf.exceptions package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="otaf.exceptions.html#module-otaf.exceptions">Module contents</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.ConflictingSurfaceDirectionsException"><code class="docutils literal notranslate"><span class="pre">ConflictingSurfaceDirectionsException</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.CylindricalInterferenceGeometricException"><code class="docutils literal notranslate"><span class="pre">CylindricalInterferenceGeometricException</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.DuplicatePointError"><code class="docutils literal notranslate"><span class="pre">DuplicatePointError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.GeometricConditionError"><code class="docutils literal notranslate"><span class="pre">GeometricConditionError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.InvalidAffineTransformException"><code class="docutils literal notranslate"><span class="pre">InvalidAffineTransformException</span></code></a><ul>
@@ -1093,7 +1094,7 @@ to nullify specific translation components.</p>
 <dd><p>Apply first-order matrix expansion to a list of compatibility loop matrices.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>compatibility_loop_matrix_list</strong> (<em>list</em><em> of </em><a class="reference internal" href="#otaf.TransformationMatrix" title="otaf.TransformationMatrix"><em>otaf.TransformationMatrix</em></a><em>, </em><a class="reference internal" href="#otaf.DeviationMatrix" title="otaf.DeviationMatrix"><em>otaf.DeviationMatrix</em></a><em>, </em><a class="reference internal" href="#otaf.GapMatrix" title="otaf.GapMatrix"><em>otaf.GapMatrix</em></a>) – List of matrices representing a compatibility loop.</p>
+<dd class="field-odd"><p><strong>compatibility_loop_matrix_list</strong> (<em>list</em><em> of </em><a class="reference internal" href="#otaf.TransformationMatrix" title="otaf.TransformationMatrix"><em>TransformationMatrix</em></a><em>, </em><a class="reference internal" href="#otaf.DeviationMatrix" title="otaf.DeviationMatrix"><em>DeviationMatrix</em></a><em>, </em><a class="reference internal" href="#otaf.GapMatrix" title="otaf.GapMatrix"><em>GapMatrix</em></a>) – List of matrices representing a compatibility loop.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The first-order expansion of the compatibility loop matrices.</p>
@@ -1124,7 +1125,7 @@ compatibility loop, with options to nullify specific components of the translati
 <dd class="field-even"><p>The calculated nominal transformation matrix with specified components nullified.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#otaf.TransformationMatrix" title="otaf.TransformationMatrix">otaf.TransformationMatrix</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#otaf.TransformationMatrix" title="otaf.TransformationMatrix">TransformationMatrix</a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -1182,7 +1183,7 @@ surface type, and relevant constraints.</p>
 specified configuration.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list of <a class="reference internal" href="#otaf.DeviationMatrix" title="otaf.DeviationMatrix">otaf.DeviationMatrix</a></p>
+<dd class="field-odd"><p>list of <a class="reference internal" href="#otaf.DeviationMatrix" title="otaf.DeviationMatrix">DeviationMatrix</a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -1220,7 +1221,7 @@ part and surface identifiers, and relevant constraints.</p>
 depending on the configuration.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list of Union[<a class="reference internal" href="#otaf.GapMatrix" title="otaf.GapMatrix">otaf.GapMatrix</a>, <a class="reference internal" href="#otaf.TransformationMatrix" title="otaf.TransformationMatrix">otaf.TransformationMatrix</a>]</p>
+<dd class="field-odd"><p>list of Union[<a class="reference internal" href="#otaf.GapMatrix" title="otaf.GapMatrix">GapMatrix</a>, <a class="reference internal" href="#otaf.TransformationMatrix" title="otaf.TransformationMatrix">TransformationMatrix</a>]</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -1270,7 +1271,7 @@ of matrices representing the corresponding compatibility loops.</p>
 <dd class="field-even"><p>List of matrices corresponding to the expanded loop.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list of <a class="reference internal" href="#otaf.TransformationMatrix" title="otaf.TransformationMatrix">otaf.TransformationMatrix</a>, <a class="reference internal" href="#otaf.DeviationMatrix" title="otaf.DeviationMatrix">otaf.DeviationMatrix</a>, <a class="reference internal" href="#otaf.GapMatrix" title="otaf.GapMatrix">otaf.GapMatrix</a></p>
+<dd class="field-odd"><p>list of <a class="reference internal" href="#otaf.TransformationMatrix" title="otaf.TransformationMatrix">TransformationMatrix</a>, <a class="reference internal" href="#otaf.DeviationMatrix" title="otaf.DeviationMatrix">DeviationMatrix</a>, <a class="reference internal" href="#otaf.GapMatrix" title="otaf.GapMatrix">GapMatrix</a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>ValueError</strong> – If the matrix type in the string is unknown.</p>
@@ -1291,7 +1292,7 @@ points, and transformation details.</p>
 <dd class="field-even"><p>A list containing the generated transformation matrix.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list of <a class="reference internal" href="#otaf.TransformationMatrix" title="otaf.TransformationMatrix">otaf.TransformationMatrix</a></p>
+<dd class="field-odd"><p>list of <a class="reference internal" href="#otaf.TransformationMatrix" title="otaf.TransformationMatrix">TransformationMatrix</a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -1329,7 +1330,7 @@ the first-order expanded matrices.</p>
 <dd class="field-even"><p>The corresponding deviation matrix.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list of <a class="reference internal" href="#otaf.DeviationMatrix" title="otaf.DeviationMatrix">otaf.DeviationMatrix</a></p>
+<dd class="field-odd"><p>list of <a class="reference internal" href="#otaf.DeviationMatrix" title="otaf.DeviationMatrix">DeviationMatrix</a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>KeyError</strong> – If the specified ID does not exist in the deviation matrix map.</p>
@@ -1349,7 +1350,7 @@ the first-order expanded matrices.</p>
 <dd class="field-even"><p>The corresponding gap matrix or transformation matrix.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list of <a class="reference internal" href="#otaf.GapMatrix" title="otaf.GapMatrix">otaf.GapMatrix</a> or <a class="reference internal" href="#otaf.TransformationMatrix" title="otaf.TransformationMatrix">otaf.TransformationMatrix</a></p>
+<dd class="field-odd"><p>list of <a class="reference internal" href="#otaf.GapMatrix" title="otaf.GapMatrix">GapMatrix</a> or <a class="reference internal" href="#otaf.TransformationMatrix" title="otaf.TransformationMatrix">TransformationMatrix</a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>KeyError</strong> – If the specified ID does not exist in the gap matrix map.</p>

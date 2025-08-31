@@ -134,7 +134,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">otaf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">otaf.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_tqdm_range</span>
 
 
 <span class="c1">#######################################################################################</span>
@@ -525,7 +525,7 @@
     <span class="c1"># Linprog is being depreciated on scipys side, so we switch to milp</span>
 
     <span class="k">if</span> <span class="n">progress_bar</span><span class="p">:</span>
-        <span class="n">_range</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">get_tqdm_range</span><span class="p">()</span>
+        <span class="n">_range</span> <span class="o">=</span> <span class="n">get_tqdm_range</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">_range</span> <span class="o">=</span> <span class="nb">range</span>
 
@@ -654,7 +654,7 @@
             <span class="n">N_cpu_reque</span> <span class="o">=</span> <span class="n">N_points</span> <span class="o">//</span> <span class="n">batch_size</span>
 
         <span class="k">if</span> <span class="n">progress_bar</span><span class="p">:</span>
-            <span class="n">_range</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">get_tqdm_range</span><span class="p">()(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N_points</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">unit_scale</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+            <span class="n">_range</span> <span class="o">=</span> <span class="n">get_tqdm_range</span><span class="p">()(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N_points</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">unit_scale</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N_points</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
 
@@ -898,7 +898,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Bounds:&quot;</span><span class="p">,</span> <span class="n">bounds</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">progress_bar</span><span class="p">:</span>
-        <span class="n">_range</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">get_tqdm_range</span><span class="p">()(</span><span class="n">b_ub</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">_range</span> <span class="o">=</span> <span class="n">get_tqdm_range</span><span class="p">()(</span><span class="n">b_ub</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">b_ub</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 

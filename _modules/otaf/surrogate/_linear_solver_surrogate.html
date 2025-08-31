@@ -115,6 +115,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">tqdm</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">otaf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._base_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_custom_mlp_layers</span><span class="p">,</span> <span class="n">add_gaussian_noise</span>
 
 <span class="n">DEVICE</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;mps&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">mps</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
@@ -246,20 +247,20 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">layer_eq</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
             <span class="o">*</span><span class="n">otaf</span><span class="o">.</span><span class="n">surrogate</span><span class="o">.</span><span class="n">get_custom_mlp_layers</span><span class="p">(</span>
                 <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nEq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nEq</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span><span class="p">],</span>
-                <span class="n">activation_class</span><span class="o">=</span><span class="n">otaf</span><span class="o">.</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">CELU</span><span class="p">,</span>
+                <span class="n">activation_class</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">CELU</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">layer_ub</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
             <span class="o">*</span><span class="n">otaf</span><span class="o">.</span><span class="n">surrogate</span><span class="o">.</span><span class="n">get_custom_mlp_layers</span><span class="p">(</span>
                 <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nUb</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nUb</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span><span class="p">],</span>
-                <span class="n">activation_class</span><span class="o">=</span><span class="n">otaf</span><span class="o">.</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">CELU</span><span class="p">,</span>
+                <span class="n">activation_class</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">CELU</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">layer_XY</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
             <span class="o">*</span><span class="n">otaf</span><span class="o">.</span><span class="n">surrogate</span><span class="o">.</span><span class="n">get_custom_mlp_layers</span><span class="p">(</span>
-                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span><span class="p">],</span> <span class="n">activation_class</span><span class="o">=</span><span class="n">otaf</span><span class="o">.</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">CELU</span>
+                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span><span class="p">],</span> <span class="n">activation_class</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">CELU</span>
             <span class="p">)</span>
         <span class="p">)</span>
 
@@ -276,14 +277,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">layer_x_rem</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
             <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm1d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span><span class="p">),</span>
             <span class="o">*</span><span class="n">otaf</span><span class="o">.</span><span class="n">surrogate</span><span class="o">.</span><span class="n">get_custom_mlp_layers</span><span class="p">(</span>
-                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span><span class="p">],</span> <span class="n">activation_class</span><span class="o">=</span><span class="n">otaf</span><span class="o">.</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">CELU</span>
+                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span><span class="p">],</span> <span class="n">activation_class</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">CELU</span>
             <span class="p">),</span>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">layer_pred</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
             <span class="o">*</span><span class="n">otaf</span><span class="o">.</span><span class="n">surrogate</span><span class="o">.</span><span class="n">get_custom_mlp_layers</span><span class="p">(</span>
                 <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span><span class="p">],</span>
-                <span class="n">activation_class</span><span class="o">=</span><span class="n">otaf</span><span class="o">.</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">CELU</span><span class="p">,</span>
+                <span class="n">activation_class</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">CELU</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="p">)</span>
 

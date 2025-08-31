@@ -114,12 +114,13 @@
     <span class="s2">&quot;PointsNotOnPlaneError&quot;</span><span class="p">,</span>
     <span class="s2">&quot;NonConcentricCylindersException&quot;</span><span class="p">,</span>
     <span class="s2">&quot;ConflictingSurfaceDirectionsException&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CylindricalInterferenceGeometricException&quot;</span><span class="p">,</span>
     <span class="s2">&quot;InvalidAffineTransformException&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">otaf</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">otaf.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">SURFACE_DIRECTIONS</span><span class="p">,</span> <span class="n">BASE_SURFACE_TYPES</span>
 
 <div class="viewcode-block" id="MissingSurfaceTypeKeyError">
 <a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.MissingSurfaceTypeKeyError">[docs]</a>
@@ -168,7 +169,7 @@
 <a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.InvalidSurfaceDirectionError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">InvalidSurfaceDirectionError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surf_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;The surface direction &#39;</span><span class="si">{</span><span class="n">surf_dir</span><span class="si">}</span><span class="s2">&#39; is not one of the expected ones: </span><span class="si">{</span><span class="n">otaf</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">SURFACE_DIRECTIONS</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;The surface direction &#39;</span><span class="si">{</span><span class="n">surf_dir</span><span class="si">}</span><span class="s2">&#39; is not one of the expected ones: </span><span class="si">{</span><span class="n">SURFACE_DIRECTIONS</span><span class="si">}</span><span class="s2">.&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
 
 
@@ -177,7 +178,7 @@
 <a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.UnsupportedSurfaceTypeError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">UnsupportedSurfaceTypeError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">,</span> <span class="n">surf_type</span><span class="p">):</span>
-        <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;The type </span><span class="si">{</span><span class="n">surf_type</span><span class="si">}</span><span class="s2"> defined for part </span><span class="si">{</span><span class="n">part_id</span><span class="si">}</span><span class="s2"> on surface </span><span class="si">{</span><span class="n">surf_id</span><span class="si">}</span><span class="s2"> is not a standard surface type and not supported.</span><span class="se">\n</span><span class="s2"> Standard types: </span><span class="si">{</span><span class="n">otaf</span><span class="o">.</span><span class="n">BASE_SURFACE_TYPES</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;The type </span><span class="si">{</span><span class="n">surf_type</span><span class="si">}</span><span class="s2"> defined for part </span><span class="si">{</span><span class="n">part_id</span><span class="si">}</span><span class="s2"> on surface </span><span class="si">{</span><span class="n">surf_id</span><span class="si">}</span><span class="s2"> is not a standard surface type and not supported.</span><span class="se">\n</span><span class="s2"> Standard types: </span><span class="si">{</span><span class="n">BASE_SURFACE_TYPES</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
 
 
@@ -357,12 +358,15 @@
 
 
 
+<div class="viewcode-block" id="CylindricalInterferenceGeometricException">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.CylindricalInterferenceGeometricException">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CylindricalInterferenceGeometricException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised for geometric inconsistencies in cylindrical interactions.&quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id1</span><span class="p">,</span> <span class="n">surface_id1</span><span class="p">,</span> <span class="n">part_id2</span><span class="p">,</span> <span class="n">surface_id2</span><span class="p">,</span> <span class="n">radius1</span><span class="p">,</span> <span class="n">radius2</span><span class="p">):</span>
         <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Geometric inconsistency or interference in cylindrical interaction: Part </span><span class="si">{</span><span class="n">part_id1</span><span class="si">}</span><span class="s2">, Surface </span><span class="si">{</span><span class="n">surface_id1</span><span class="si">}</span><span class="s2"> (Radius: </span><span class="si">{</span><span class="n">radius1</span><span class="si">}</span><span class="s2">) and Part </span><span class="si">{</span><span class="n">part_id2</span><span class="si">}</span><span class="s2">, Surface </span><span class="si">{</span><span class="n">surface_id2</span><span class="si">}</span><span class="s2"> (Radius: </span><span class="si">{</span><span class="n">radius2</span><span class="si">}</span><span class="s2">)&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="InvalidAffineTransformException">

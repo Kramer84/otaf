@@ -102,12 +102,11 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">otaf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">otaf.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_symbol_coef_map</span><span class="p">,</span> <span class="n">get_symbols_in_expressions</span>
 
 
 <div class="viewcode-block" id="SystemOfConstraintsAssemblyModel">
@@ -395,7 +394,7 @@
         <span class="n">symb_rank_map_gap</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">var</span><span class="p">):</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">var</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span><span class="p">)}</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nC</span><span class="p">):</span>
-            <span class="n">symb_coef_map</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">get_symbol_coef_map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compatibility_eqs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">symb_coef_map</span> <span class="o">=</span> <span class="n">get_symbol_coef_map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compatibility_eqs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
             <span class="k">for</span> <span class="n">variable</span><span class="p">,</span> <span class="n">coefficient</span> <span class="ow">in</span> <span class="n">symb_coef_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="k">if</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">symb_rank_map_def</span><span class="p">:</span>
                     <span class="n">A_eq_Def</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">symb_rank_map_def</span><span class="p">[</span><span class="n">variable</span><span class="p">]]</span> <span class="o">=</span> <span class="n">coefficient</span>
@@ -405,7 +404,7 @@
                     <span class="n">K_eq</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">coefficient</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nI</span><span class="p">):</span>
-            <span class="n">symb_coef_map</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">get_symbol_coef_map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interface_eqs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">symb_coef_map</span> <span class="o">=</span> <span class="n">get_symbol_coef_map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interface_eqs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
             <span class="k">for</span> <span class="n">variable</span><span class="p">,</span> <span class="n">coefficient</span> <span class="ow">in</span> <span class="n">symb_coef_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="k">if</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">symb_rank_map_def</span><span class="p">:</span>
                     <span class="n">A_ub_Def</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">symb_rank_map_def</span><span class="p">[</span><span class="n">variable</span><span class="p">]]</span> <span class="o">=</span> <span class="n">coefficient</span>
@@ -455,10 +454,10 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Retrieving free gap and deviation variables.&quot;</span>
         <span class="p">)</span>
-        <span class="n">deviation_symbols</span><span class="p">,</span> <span class="n">gap_symbols</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">get_symbols_in_expressions</span><span class="p">(</span>
+        <span class="n">deviation_symbols</span><span class="p">,</span> <span class="n">gap_symbols</span> <span class="o">=</span> <span class="n">get_symbols_in_expressions</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">compatibility_eqs</span>
         <span class="p">)</span>
-        <span class="n">symb_dev_interf</span><span class="p">,</span> <span class="n">symb_gap_interf</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">get_symbols_in_expressions</span><span class="p">(</span>
+        <span class="n">symb_dev_interf</span><span class="p">,</span> <span class="n">symb_gap_interf</span> <span class="o">=</span> <span class="n">get_symbols_in_expressions</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">interface_eqs</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">symb_dev_interf</span><span class="p">)</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">deviation_symbols</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span>
