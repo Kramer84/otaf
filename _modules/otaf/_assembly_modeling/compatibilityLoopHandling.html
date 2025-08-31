@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>otaf.assembly_modeling.compatibilityLoopHandling &mdash; otaf 0.1 documentation</title>
+  <title>otaf._assembly_modeling.compatibilityLoopHandling &mdash; otaf 0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
@@ -77,7 +77,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">otaf.assembly_modeling.compatibilityLoopHandling</li>
+      <li class="breadcrumb-item active">otaf._assembly_modeling.compatibilityLoopHandling</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -86,10 +86,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for otaf.assembly_modeling.compatibilityLoopHandling</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+  <h1>Source code for otaf._assembly_modeling.compatibilityLoopHandling</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;CompatibilityLoopHandling&quot;</span><span class="p">]</span>
+
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
@@ -107,7 +110,7 @@
 
 
 <div class="viewcode-block" id="CompatibilityLoopHandling">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.CompatibilityLoopHandling">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.CompatibilityLoopHandling">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">CompatibilityLoopHandling</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -164,8 +167,8 @@
 <span class="sd">        to nullify specific translation components.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="CompatibilityLoopHandling.__init__">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.CompatibilityLoopHandling.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">assemblyDataProcessor</span><span class="p">:</span> <span class="s2">&quot;AssemblyDataProcessor&quot;</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.CompatibilityLoopHandling.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">assemblyDataProcessor</span><span class="p">:</span> <span class="n">AssemblyDataProcessor</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the `CompatibilityLoopHandling` object with system data.</span>
 
@@ -192,10 +195,10 @@
 
 
 <div class="viewcode-block" id="CompatibilityLoopHandling.get_gap_matrix_by_id">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.CompatibilityLoopHandling.get_gap_matrix_by_id">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.CompatibilityLoopHandling.get_gap_matrix_by_id">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_gap_matrix_by_id</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">ID</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="s2">&quot;GapMatrix&quot;</span><span class="p">,</span> <span class="s2">&quot;TransformationMatrix&quot;</span><span class="p">]]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">GapMatrix</span><span class="p">,</span> <span class="n">TransformationMatrix</span><span class="p">]]:</span>
 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve a gap matrix by its identifier.</span>
@@ -220,8 +223,8 @@
 
 
 <div class="viewcode-block" id="CompatibilityLoopHandling.get_deviation_matrix_by_id">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.CompatibilityLoopHandling.get_deviation_matrix_by_id">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_deviation_matrix_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ID</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="s2">&quot;DeviationMatrix&quot;</span><span class="p">]]:</span>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.CompatibilityLoopHandling.get_deviation_matrix_by_id">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_deviation_matrix_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ID</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">DeviationMatrix</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve a deviation matrix by its identifier.</span>
 
@@ -245,7 +248,7 @@
 
 
 <div class="viewcode-block" id="CompatibilityLoopHandling.get_compatibility_expression_from_FO_matrices">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.CompatibilityLoopHandling.get_compatibility_expression_from_FO_matrices">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.CompatibilityLoopHandling.get_compatibility_expression_from_FO_matrices">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_compatibility_expression_from_FO_matrices</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate symbolic expressions representing compatibility constraints.</span>
@@ -265,10 +268,10 @@
 
 
 <div class="viewcode-block" id="CompatibilityLoopHandling.generate_loop_id_to_matrix_list_dict">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.CompatibilityLoopHandling.generate_loop_id_to_matrix_list_dict">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.CompatibilityLoopHandling.generate_loop_id_to_matrix_list_dict">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate_loop_id_to_matrix_list_dict</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="s2">&quot;TransformationMatrix&quot;</span><span class="p">,</span> <span class="s2">&quot;DeviationMatrix&quot;</span><span class="p">,</span> <span class="s2">&quot;GapMatrix&quot;</span><span class="p">]]]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">TransformationMatrix</span><span class="p">,</span> <span class="n">DeviationMatrix</span><span class="p">,</span> <span class="n">GapMatrix</span><span class="p">]]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a dictionary mapping compatibility loop IDs to lists of matrices.</span>
 
@@ -286,7 +289,7 @@
 
 
 <div class="viewcode-block" id="CompatibilityLoopHandling.generate_FO_loop_matrices">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.CompatibilityLoopHandling.generate_FO_loop_matrices">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.CompatibilityLoopHandling.generate_FO_loop_matrices">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate_FO_loop_matrices</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate first-order expanded matrices for compatibility loops.</span>
@@ -304,11 +307,11 @@
 
 
 <div class="viewcode-block" id="CompatibilityLoopHandling.apply_FO_matrix_expansion_to_matrix_loop_list">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.CompatibilityLoopHandling.apply_FO_matrix_expansion_to_matrix_loop_list">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.CompatibilityLoopHandling.apply_FO_matrix_expansion_to_matrix_loop_list">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">apply_FO_matrix_expansion_to_matrix_loop_list</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">compatibility_loop_matrix_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span>
-            <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;TransformationMatrix&quot;</span><span class="p">,</span> <span class="s2">&quot;DeviationMatrix&quot;</span><span class="p">,</span> <span class="s2">&quot;GapMatrix&quot;</span><span class="p">]</span>
+            <span class="n">Union</span><span class="p">[</span><span class="n">TransformationMatrix</span><span class="p">,</span> <span class="n">DeviationMatrix</span><span class="p">,</span> <span class="n">GapMatrix</span><span class="p">]</span>
         <span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -330,10 +333,10 @@
 
 
 <div class="viewcode-block" id="CompatibilityLoopHandling.generate_matrices_from_expanded_loop">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.CompatibilityLoopHandling.generate_matrices_from_expanded_loop">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.CompatibilityLoopHandling.generate_matrices_from_expanded_loop">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate_matrices_from_expanded_loop</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">expanded_loop_str</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="s2">&quot;TransformationMatrix&quot;</span><span class="p">,</span> <span class="s2">&quot;DeviationMatrix&quot;</span><span class="p">,</span> <span class="s2">&quot;GapMatrix&quot;</span><span class="p">]]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">TransformationMatrix</span><span class="p">,</span> <span class="n">DeviationMatrix</span><span class="p">,</span> <span class="n">GapMatrix</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate matrices for a compatibility loop from its expanded string representation.</span>
 
@@ -373,8 +376,8 @@
 
 
 <div class="viewcode-block" id="CompatibilityLoopHandling.generate_transformation_matrix">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.CompatibilityLoopHandling.generate_transformation_matrix">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">generate_transformation_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">el_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;TransformationMatrix&quot;</span><span class="p">]:</span>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.CompatibilityLoopHandling.generate_transformation_matrix">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_transformation_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">el_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">TransformationMatrix</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate a transformation matrix from loop element information.</span>
 
@@ -420,8 +423,8 @@
 
 
 <div class="viewcode-block" id="CompatibilityLoopHandling.generate_deviation_matrix">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.CompatibilityLoopHandling.generate_deviation_matrix">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">generate_deviation_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">el_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;DeviationMatrix&quot;</span><span class="p">]:</span>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.CompatibilityLoopHandling.generate_deviation_matrix">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_deviation_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">el_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">DeviationMatrix</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate a deviation matrix based on loop element information.</span>
 
@@ -502,10 +505,10 @@
 
 
 <div class="viewcode-block" id="CompatibilityLoopHandling.generate_gap_matrix">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.CompatibilityLoopHandling.generate_gap_matrix">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.CompatibilityLoopHandling.generate_gap_matrix">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate_gap_matrix</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">el_info</span><span class="p">:</span> <span class="nb">dict</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="s2">&quot;GapMatrix&quot;</span><span class="p">,</span> <span class="s2">&quot;TransformationMatrix&quot;</span><span class="p">]]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">GapMatrix</span><span class="p">,</span> <span class="n">TransformationMatrix</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate a gap matrix based on loop element information.</span>
 
@@ -623,7 +626,7 @@
 
 
 <div class="viewcode-block" id="CompatibilityLoopHandling.calculate_nominal_gap_transform">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.CompatibilityLoopHandling.calculate_nominal_gap_transform">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.CompatibilityLoopHandling.calculate_nominal_gap_transform">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">calculate_nominal_gap_transform</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">el_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
@@ -631,7 +634,7 @@
         <span class="n">nullify_x</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">nullify_y</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">nullify_z</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;TransformationMatrix&quot;</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransformationMatrix</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the nominal transformation matrix between two surfaces in a gap.</span>
 

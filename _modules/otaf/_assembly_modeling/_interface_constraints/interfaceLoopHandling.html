@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>otaf.assembly_modeling._interface_constraints.interfaceLoopHandling &mdash; otaf 0.1 documentation</title>
+  <title>otaf._assembly_modeling._interface_constraints.interfaceLoopHandling &mdash; otaf 0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
 
@@ -77,7 +77,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">otaf.assembly_modeling._interface_constraints.interfaceLoopHandling</li>
+      <li class="breadcrumb-item active">otaf._assembly_modeling._interface_constraints.interfaceLoopHandling</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -86,10 +86,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for otaf.assembly_modeling._interface_constraints.interfaceLoopHandling</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+  <h1>Source code for otaf._assembly_modeling._interface_constraints.interfaceLoopHandling</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;InterfaceLoopHandling&quot;</span><span class="p">]</span>
+
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
@@ -102,17 +105,23 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Set</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">otaf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..compatibilityLoopHandling</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompatibilityLoopHandling</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..assemblyDataProcessor</span><span class="w"> </span><span class="kn">import</span> <span class="n">AssemblyDataProcessor</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">._interfaceLoopBuilder</span><span class="w"> </span><span class="kn">import</span> <span class="n">InterfaceLoopBuilder</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">._surfaceInteractionManager</span><span class="w"> </span><span class="kn">import</span> <span class="n">SurfaceInteractionManager</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">otaf</span>
+
 <div class="viewcode-block" id="InterfaceLoopHandling">
-<a class="viewcode-back" href="../../../../source/otaf.assembly_modeling.html#otaf.InterfaceLoopHandling">[docs]</a>
+<a class="viewcode-back" href="../../../../source/otaf.html#otaf.InterfaceLoopHandling">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">InterfaceLoopHandling</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">assemblyDataProcessor</span><span class="p">,</span> <span class="n">compatibilityLoopHandling</span><span class="p">,</span> <span class="n">circle_resolution</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">assemblyDataProcessor</span><span class="p">:</span><span class="n">AssemblyDataProcessor</span><span class="p">,</span>
+        <span class="n">compatibility_loop_handling</span><span class="p">:</span><span class="n">CompatibilityLoopHandling</span><span class="p">,</span>
+        <span class="n">circle_resolution</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span> <span class="o">=</span> <span class="n">assemblyDataProcessor</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">CLH</span> <span class="o">=</span> <span class="n">compatibilityLoopHandling</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CLH</span> <span class="o">=</span> <span class="n">compatibility_loop_handling</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">surfaceInteractionManager</span> <span class="o">=</span> <span class="n">SurfaceInteractionManager</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">surfaceInteractionManager</span><span class="o">.</span><span class="n">get_facing_point_dictionary</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">all_gap_matrix_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_all_gap_matrix_names</span><span class="p">()</span>
@@ -131,13 +140,13 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">surfaceInteractionManager</span><span class="o">.</span><span class="n">facingPointDict</span>
 
 <div class="viewcode-block" id="InterfaceLoopHandling.get_interface_loop_expressions">
-<a class="viewcode-back" href="../../../../source/otaf.assembly_modeling.html#otaf.InterfaceLoopHandling.get_interface_loop_expressions">[docs]</a>
+<a class="viewcode-back" href="../../../../source/otaf.html#otaf.InterfaceLoopHandling.get_interface_loop_expressions">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_interface_loop_expressions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">interfaceLoopBuilder</span><span class="o">.</span><span class="n">interface_expressions</span></div>
 
 
 <div class="viewcode-block" id="InterfaceLoopHandling.extract_unique_gap_matrices_from_expanded_loops">
-<a class="viewcode-back" href="../../../../source/otaf.assembly_modeling.html#otaf.InterfaceLoopHandling.extract_unique_gap_matrices_from_expanded_loops">[docs]</a>
+<a class="viewcode-back" href="../../../../source/otaf.html#otaf.InterfaceLoopHandling.extract_unique_gap_matrices_from_expanded_loops">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">extract_unique_gap_matrices_from_expanded_loops</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract unique gap matrices from expanded compatibility loops and return them as a set.&quot;&quot;&quot;</span>
         <span class="n">gap_matrices</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -168,7 +177,7 @@
 
 
 <div class="viewcode-block" id="InterfaceLoopHandling.generate_all_gap_matrix_names">
-<a class="viewcode-back" href="../../../../source/otaf.assembly_modeling.html#otaf.InterfaceLoopHandling.generate_all_gap_matrix_names">[docs]</a>
+<a class="viewcode-back" href="../../../../source/otaf.html#otaf.InterfaceLoopHandling.generate_all_gap_matrix_names">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate_all_gap_matrix_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate and return a dictionary of gap matrix names based on facing points.</span>
@@ -216,7 +225,7 @@
 
 
 <div class="viewcode-block" id="InterfaceLoopHandling.filter_gap_matrices">
-<a class="viewcode-back" href="../../../../source/otaf.assembly_modeling.html#otaf.InterfaceLoopHandling.filter_gap_matrices">[docs]</a>
+<a class="viewcode-back" href="../../../../source/otaf.html#otaf.InterfaceLoopHandling.filter_gap_matrices">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">filter_gap_matrices</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">existing_gap_matrices</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">all_gap_matrices</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]]:</span>

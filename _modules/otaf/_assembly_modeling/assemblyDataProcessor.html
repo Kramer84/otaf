@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>otaf.assembly_modeling.assemblyDataProcessor &mdash; otaf 0.1 documentation</title>
+  <title>otaf._assembly_modeling.assemblyDataProcessor &mdash; otaf 0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
@@ -77,7 +77,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">otaf.assembly_modeling.assemblyDataProcessor</li>
+      <li class="breadcrumb-item active">otaf._assembly_modeling.assemblyDataProcessor</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -86,10 +86,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for otaf.assembly_modeling.assemblyDataProcessor</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+  <h1>Source code for otaf._assembly_modeling.assemblyDataProcessor</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;AssemblyDataProcessor&quot;</span><span class="p">]</span>
+
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
@@ -97,6 +100,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">copy</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">trimesh</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tr</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">trimesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">viewer</span>
@@ -107,7 +111,7 @@
 
 
 <div class="viewcode-block" id="AssemblyDataProcessor">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">AssemblyDataProcessor</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -147,7 +151,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">compatibility_loops_expanded</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="AssemblyDataProcessor.__getitem__">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.__getitem__">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor.__getitem__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve data associated with a key from the system data.</span>
@@ -166,7 +170,7 @@
 
 
 <div class="viewcode-block" id="AssemblyDataProcessor.__setitem__">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.__setitem__">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor.__setitem__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set a value in the system data for a given key.</span>
@@ -182,7 +186,7 @@
 
 
 <div class="viewcode-block" id="AssemblyDataProcessor.__repr__">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.__repr__">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor.__repr__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate a string representation of the system data.</span>
@@ -196,7 +200,7 @@
 
 
 <div class="viewcode-block" id="AssemblyDataProcessor.get_surface_points">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.get_surface_points">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor.get_surface_points">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_surface_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve a copy of the points associated with a specific surface.</span>
@@ -237,7 +241,7 @@
         <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;PARTS&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;LOOPS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;COMPATIBILITY&quot;</span><span class="p">:</span> <span class="p">{}},</span> <span class="s2">&quot;GLOBAL_CONSTRAINTS&quot;</span><span class="p">:</span> <span class="s2">&quot;3D&quot;</span><span class="p">}</span>
 
 <div class="viewcode-block" id="AssemblyDataProcessor.validate_system_data_structure">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.validate_system_data_structure">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor.validate_system_data_structure">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">validate_system_data_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Validate the structure and integrity of the system data.</span>
@@ -348,7 +352,7 @@
 
 
 <div class="viewcode-block" id="AssemblyDataProcessor.validate_point_dict">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.validate_point_dict">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor.validate_point_dict">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">validate_point_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Validate a dictionary of points for compliance with labeling, formatting, and uniqueness rules.</span>
@@ -411,7 +415,7 @@
 
 
 <div class="viewcode-block" id="AssemblyDataProcessor.add_surface_points">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.add_surface_points">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor.add_surface_points">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_surface_points</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">part_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -501,7 +505,7 @@
 
 
 <div class="viewcode-block" id="AssemblyDataProcessor.generate_points_for_surface">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.generate_points_for_surface">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor.generate_points_for_surface">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate_points_for_surface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate points for a surface based on its type and characteristics.</span>
@@ -606,7 +610,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_surface_points</span><span class="p">(</span><span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">,</span> <span class="n">point_dict</span><span class="p">)</span>
 
 <div class="viewcode-block" id="AssemblyDataProcessor.generate_expanded_loops">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.generate_expanded_loops">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor.generate_expanded_loops">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate_expanded_loops</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate the full representation of compatibility loops and store them as an attribute.</span>
@@ -770,7 +774,7 @@
             <span class="p">]</span>
 
 <div class="viewcode-block" id="AssemblyDataProcessor.generate_sphere_clouds">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.generate_sphere_clouds">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor.generate_sphere_clouds">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate_sphere_clouds</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">radius</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
@@ -828,7 +832,7 @@
 
 
 <div class="viewcode-block" id="AssemblyDataProcessor.generate_functional_planes">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.generate_functional_planes">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor.generate_functional_planes">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate_functional_planes</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
@@ -877,7 +881,7 @@
 
 
 <div class="viewcode-block" id="AssemblyDataProcessor.get_notebook_scene_sphere_clouds">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.assembly_modeling.assemblyDataProcessor.AssemblyDataProcessor.get_notebook_scene_sphere_clouds">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor.get_notebook_scene_sphere_clouds">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_notebook_scene_sphere_clouds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">background_hex_color</span><span class="o">=</span><span class="s2">&quot;e6e6e6&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a 3D notebook scene with sphere clouds representing the system&#39;s points.</span>

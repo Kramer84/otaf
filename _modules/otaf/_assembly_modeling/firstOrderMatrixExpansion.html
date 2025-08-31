@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>otaf.assembly_modeling.firstOrderMatrixExpansion &mdash; otaf 0.1 documentation</title>
+  <title>otaf._assembly_modeling.firstOrderMatrixExpansion &mdash; otaf 0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
@@ -77,7 +77,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">otaf.assembly_modeling.firstOrderMatrixExpansion</li>
+      <li class="breadcrumb-item active">otaf._assembly_modeling.firstOrderMatrixExpansion</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -86,8 +86,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for otaf.assembly_modeling.firstOrderMatrixExpansion</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+  <h1>Source code for otaf._assembly_modeling.firstOrderMatrixExpansion</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;FirstOrderMatrixExpansion&quot;</span><span class="p">]</span>
 
@@ -101,7 +103,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">.assemblyModelingBaseObjects</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeviationMatrix</span><span class="p">,</span> <span class="n">GapMatrix</span><span class="p">,</span> <span class="n">TransformationMatrix</span><span class="p">,</span> <span class="n">I4</span><span class="p">,</span> <span class="n">J4</span>
 
 <div class="viewcode-block" id="FirstOrderMatrixExpansion">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.FirstOrderMatrixExpansion">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.FirstOrderMatrixExpansion">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">FirstOrderMatrixExpansion</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -115,7 +117,7 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">matrix_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span>
-            <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;DeviationMatrix&quot;</span><span class="p">,</span> <span class="s2">&quot;GapMatrix&quot;</span><span class="p">,</span> <span class="s2">&quot;TransformationMatrix&quot;</span><span class="p">,</span> <span class="s2">&quot;I4&quot;</span><span class="p">,</span> <span class="s2">&quot;J4&quot;</span><span class="p">]</span>
+            <span class="n">Union</span><span class="p">[</span><span class="n">DeviationMatrix</span><span class="p">,</span> <span class="n">GapMatrix</span><span class="p">,</span> <span class="n">TransformationMatrix</span><span class="p">,</span> <span class="n">I4</span><span class="p">,</span> <span class="n">J4</span><span class="p">]</span>
         <span class="p">],</span>
     <span class="p">):</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
@@ -124,7 +126,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">matrix_list</span> <span class="o">=</span> <span class="n">matrix_list</span>
 
 <div class="viewcode-block" id="FirstOrderMatrixExpansion.compute_first_order_expansion">
-<a class="viewcode-back" href="../../../source/otaf.assembly_modeling.html#otaf.FirstOrderMatrixExpansion.compute_first_order_expansion">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.FirstOrderMatrixExpansion.compute_first_order_expansion">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_first_order_expansion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the first-order Taylor expansion of a matrix product.</span>
