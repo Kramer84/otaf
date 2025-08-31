@@ -1,4 +1,6 @@
+from __future__ import annotations
 # -*- coding: utf-8 -*-
+
 __author__ = "Kramer84"
 __all__ = ["color_palette_1", "color_palette_2", "color_palette_3"]
 

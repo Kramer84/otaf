@@ -1,4 +1,6 @@
+from __future__ import annotations
 # -*- coding: utf-8 -*-
+
 __author__ = "Kramer84"
 __all__ = ["FirstOrderMatrixExpansion"]
 
@@ -24,7 +26,7 @@ class FirstOrderMatrixExpansion:
     def __init__(
         self,
         matrix_list: List[
-            Union["DeviationMatrix", "GapMatrix", "TransformationMatrix", "I4", "J4"]
+            Union[DeviationMatrix, GapMatrix, TransformationMatrix, I4, J4]
         ],
     ):
         logging.info(

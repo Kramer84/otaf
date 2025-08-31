@@ -1,4 +1,6 @@
+from __future__ import annotations
 # -*- coding: utf-8 -*-
+
 __author__ = "Kramer84"
 __all__ = [
     "plot_points_3D",

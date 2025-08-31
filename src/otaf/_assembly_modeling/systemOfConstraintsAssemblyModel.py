@@ -1,6 +1,9 @@
-# -*- coding: utf-8 -*-"geometry.py"
+from __future__ import annotations
+# -*- coding: utf-8 -*-
+
 __author__ = "Kramer84"
 __all__ = ["SystemOfConstraintsAssemblyModel"]
+
 
 import re
 import logging

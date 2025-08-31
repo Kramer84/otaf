@@ -1,6 +1,9 @@
+from __future__ import annotations
 # -*- coding: utf-8 -*-
+
 __author__ = "Kramer84"
 __all__ = ["DeviationMatrix", "GapMatrix", "TransformationMatrix", "I4", "J4"]
+
 
 import re
 import logging

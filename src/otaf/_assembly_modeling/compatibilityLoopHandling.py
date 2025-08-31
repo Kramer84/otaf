@@ -1,6 +1,9 @@
+from __future__ import annotations
 # -*- coding: utf-8 -*-
+
 __author__ = "Kramer84"
 __all__ = ["CompatibilityLoopHandling"]
+
 
 import re
 import logging
@@ -72,7 +75,7 @@ class CompatibilityLoopHandling:
         Calculate the nominal transformation matrix between two surfaces in a gap, with options
         to nullify specific translation components.
     """
-    def __init__(self, assemblyDataProcessor: "AssemblyDataProcessor"):
+    def __init__(self, assemblyDataProcessor: AssemblyDataProcessor):
         """
         Initialize the `CompatibilityLoopHandling` object with system data.
 
@@ -99,7 +102,7 @@ class CompatibilityLoopHandling:
 
     def get_gap_matrix_by_id(
         self, ID: Union[str, int]
-    ) -> List[Union["GapMatrix", "TransformationMatrix"]]:
+    ) -> List[Union[GapMatrix, TransformationMatrix]]:
 
         """
         Retrieve a gap matrix by its identifier.
@@ -122,7 +125,7 @@ class CompatibilityLoopHandling:
         id_map = {str(mat[0].ID): key for key, mat in self._gap_matrix_map.items()}
         return self._gap_matrix_map[id_map[str(ID)]]
 
-    def get_deviation_matrix_by_id(self, ID: Union[str, int]) -> List[Union["DeviationMatrix"]]:
+    def get_deviation_matrix_by_id(self, ID: Union[str, int]) -> List[Union[DeviationMatrix]]:
         """
         Retrieve a deviation matrix by its identifier.
 
@@ -163,7 +166,7 @@ class CompatibilityLoopHandling:
 
     def generate_loop_id_to_matrix_list_dict(
         self,
-    ) -> Dict[str, List[Union["TransformationMatrix", "DeviationMatrix", "GapMatrix"]]]:
+    ) -> Dict[str, List[Union[TransformationMatrix, DeviationMatrix, GapMatrix]]]:
         """
         Create a dictionary mapping compatibility loop IDs to lists of matrices.
 
@@ -197,7 +200,7 @@ class CompatibilityLoopHandling:
     def apply_FO_matrix_expansion_to_matrix_loop_list(
         self,
         compatibility_loop_matrix_list: List[
-            Union["TransformationMatrix", "DeviationMatrix", "GapMatrix"]
+            Union[TransformationMatrix, DeviationMatrix, GapMatrix]
         ],
     ) -> sp.MatrixBase:
         """
@@ -219,7 +222,7 @@ class CompatibilityLoopHandling:
 
     def generate_matrices_from_expanded_loop(
         self, expanded_loop_str: str
-    ) -> List[Union["TransformationMatrix", "DeviationMatrix", "GapMatrix"]]:
+    ) -> List[Union[TransformationMatrix, DeviationMatrix, GapMatrix]]:
         """
         Generate matrices for a compatibility loop from its expanded string representation.
 
@@ -257,7 +260,7 @@ class CompatibilityLoopHandling:
                 raise exc
         return matrix_list
 
-    def generate_transformation_matrix(self, el_info: dict) -> List["TransformationMatrix"]:
+    def generate_transformation_matrix(self, el_info: dict) -> List[TransformationMatrix]:
         """
         Generate a transformation matrix from loop element information.
 
@@ -301,7 +304,7 @@ class CompatibilityLoopHandling:
         else:
             return self._transformation_matrix_map[el_info["mstring"]]
 
-    def generate_deviation_matrix(self, el_info: dict) -> List["DeviationMatrix"]:
+    def generate_deviation_matrix(self, el_info: dict) -> List[DeviationMatrix]:
         """
         Generate a deviation matrix based on loop element information.
 
@@ -382,7 +385,7 @@ class CompatibilityLoopHandling:
 
     def generate_gap_matrix(
         self, el_info: dict
-    ) -> List[Union["GapMatrix", "TransformationMatrix"]]:
+    ) -> List[Union[GapMatrix, TransformationMatrix]]:
         """
         Generate a gap matrix based on loop element information.
 
@@ -505,7 +508,7 @@ class CompatibilityLoopHandling:
         nullify_x: bool = True,
         nullify_y: bool = True,
         nullify_z: bool = True,
-    ) -> "TransformationMatrix":
+    ) -> TransformationMatrix:
         """
         Calculate the nominal transformation matrix between two surfaces in a gap.
 
