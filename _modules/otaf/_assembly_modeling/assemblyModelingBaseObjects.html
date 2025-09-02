@@ -728,6 +728,8 @@
 
 
 
+<div class="viewcode-block" id="I4">
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.I4">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">I4</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class representing a 4x4 identity matrix.</span>
@@ -743,6 +745,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">TYPE</span> <span class="o">=</span> <span class="s2">&quot;I4&quot;</span>
 
+<div class="viewcode-block" id="I4.get_matrix">
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.I4.get_matrix">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate a 4x4 identity matrix.</span>
@@ -753,8 +757,11 @@
 <span class="sd">            A symbolic representation of a 4x4 identity matrix.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[Type: I4] Generating 4x4 identity matrix.&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span></div>
 
+
+<div class="viewcode-block" id="I4.get_matrix_inverse">
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.I4.get_matrix_inverse">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_matrix_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate the inverse of the 4x4 identity matrix.</span>
@@ -767,9 +774,13 @@
 <span class="sd">            A symbolic representation of the 4x4 identity matrix.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[Type: I4] Generating inverse 4x4 identity matrix.&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_matrix</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_matrix</span><span class="p">()</span></div>
+</div>
 
 
+
+<div class="viewcode-block" id="J4">
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.J4">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">J4</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class representing a 4x4 rotation matrix for a 180° rotation around the z-axis.</span>
@@ -785,6 +796,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">TYPE</span> <span class="o">=</span> <span class="s2">&quot;J4&quot;</span>
 
+<div class="viewcode-block" id="J4.get_matrix">
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.J4.get_matrix">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate a 4x4 rotation matrix representing a 180° rotation around the z-axis.</span>
@@ -802,8 +815,11 @@
         <span class="n">J4</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
         <span class="n">J4</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="n">J4</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
-        <span class="k">return</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">(</span><span class="n">J4</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">(</span><span class="n">J4</span><span class="p">)</span></div>
 
+
+<div class="viewcode-block" id="J4.get_matrix_inverse">
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.J4.get_matrix_inverse">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_matrix_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate the inverse of the 4x4 rotation matrix.</span>
@@ -817,7 +833,9 @@
 <span class="sd">            A symbolic representation of the 4x4 rotation matrix for a 180° z-axis rotation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[Type: J4] Generating inverse 4x4 rotation matrix.&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_matrix</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_matrix</span><span class="p">()</span></div>
+</div>
+
 </pre></div>
 
            </div>

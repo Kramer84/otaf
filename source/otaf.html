@@ -74,7 +74,9 @@
 <li class="toctree-l4"><a class="reference internal" href="#otaf.DeviationMatrix"><code class="docutils literal notranslate"><span class="pre">DeviationMatrix</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#otaf.FirstOrderMatrixExpansion"><code class="docutils literal notranslate"><span class="pre">FirstOrderMatrixExpansion</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#otaf.GapMatrix"><code class="docutils literal notranslate"><span class="pre">GapMatrix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.I4"><code class="docutils literal notranslate"><span class="pre">I4</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#otaf.InterfaceLoopHandling"><code class="docutils literal notranslate"><span class="pre">InterfaceLoopHandling</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.J4"><code class="docutils literal notranslate"><span class="pre">J4</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#otaf.SystemOfConstraintsAssemblyModel"><code class="docutils literal notranslate"><span class="pre">SystemOfConstraintsAssemblyModel</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#otaf.TransformationMatrix"><code class="docutils literal notranslate"><span class="pre">TransformationMatrix</span></code></a></li>
 </ul>
@@ -1466,7 +1468,7 @@ defined during initialization.</p>
 <p>Initialize the FirstOrderMatrixExpansion class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>matrix_list</strong> (<em>List</em><em>[</em><em>Union</em><em>[</em><a class="reference internal" href="#otaf.DeviationMatrix" title="otaf.DeviationMatrix"><em>otaf.DeviationMatrix</em></a><em>, </em><a class="reference internal" href="#otaf.GapMatrix" title="otaf.GapMatrix"><em>otaf.GapMatrix</em></a><em>, </em><a class="reference internal" href="#otaf.TransformationMatrix" title="otaf.TransformationMatrix"><em>otaf.TransformationMatrix</em></a><em>, </em><em>otaf.I4</em><em>, </em><em>otaf.J4</em><em>]</em><em>]</em>) – List of matrices to be used in the first-order Taylor expansion.</p>
+<dd class="field-odd"><p><strong>matrix_list</strong> (<em>List</em><em>[</em><em>Union</em><em>[</em><a class="reference internal" href="#otaf.DeviationMatrix" title="otaf.DeviationMatrix"><em>otaf.DeviationMatrix</em></a><em>, </em><a class="reference internal" href="#otaf.GapMatrix" title="otaf.GapMatrix"><em>otaf.GapMatrix</em></a><em>, </em><a class="reference internal" href="#otaf.TransformationMatrix" title="otaf.TransformationMatrix"><em>otaf.TransformationMatrix</em></a><em>, </em><a class="reference internal" href="#otaf.I4" title="otaf.I4"><em>otaf.I4</em></a><em>, </em><a class="reference internal" href="#otaf.J4" title="otaf.J4"><em>otaf.J4</em></a><em>]</em><em>]</em>) – List of matrices to be used in the first-order Taylor expansion.</p>
 </dd>
 </dl>
 <dl class="py method">
@@ -1588,6 +1590,44 @@ that are not blocked, as defined during initialization.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="otaf.I4">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">I4</span></span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#I4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.I4" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class representing a 4x4 identity matrix.</p>
+<p>The identity matrix is commonly used in transformations as a neutral element, where no
+translation or rotation is applied.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.I4.get_matrix">
+<span class="sig-name descname"><span class="pre">get_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#I4.get_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.I4.get_matrix" title="Link to this definition"></a></dt>
+<dd><p>Generate a 4x4 identity matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A symbolic representation of a 4x4 identity matrix.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>sympy.MatrixBase</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.I4.get_matrix_inverse">
+<span class="sig-name descname"><span class="pre">get_matrix_inverse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#I4.get_matrix_inverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.I4.get_matrix_inverse" title="Link to this definition"></a></dt>
+<dd><p>Generate the inverse of the 4x4 identity matrix.</p>
+<p>Since the inverse of an identity matrix is itself, this method returns the same matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A symbolic representation of the 4x4 identity matrix.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>sympy.MatrixBase</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="otaf.InterfaceLoopHandling">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">InterfaceLoopHandling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">assemblyDataProcessor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compatibility_loop_handling</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">circle_resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/_interface_constraints/interfaceLoopHandling.html#InterfaceLoopHandling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.InterfaceLoopHandling" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -1664,6 +1704,52 @@ added to maintain consistency in the representation of spatial relationships.</p
 <dt class="sig sig-object py" id="otaf.InterfaceLoopHandling.get_interface_loop_expressions">
 <span class="sig-name descname"><span class="pre">get_interface_loop_expressions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/_interface_constraints/interfaceLoopHandling.html#InterfaceLoopHandling.get_interface_loop_expressions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.InterfaceLoopHandling.get_interface_loop_expressions" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="otaf.J4">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">J4</span></span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#J4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.J4" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class representing a 4x4 rotation matrix for a 180° rotation around the z-axis.</p>
+<p>This matrix is often used to represent a transformation involving a half-turn
+rotation in a Cartesian coordinate system.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.J4.get_matrix">
+<span class="sig-name descname"><span class="pre">get_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#J4.get_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.J4.get_matrix" title="Link to this definition"></a></dt>
+<dd><p>Generate a 4x4 rotation matrix representing a 180° rotation around the z-axis.</p>
+<dl class="simple">
+<dt>The matrix is constructed as follows:</dt><dd><ul class="simple">
+<li><p>The x-axis and y-axis are negated.</p></li>
+<li><p>The z-axis and translation remain unchanged.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A symbolic representation of a 4x4 rotation matrix for a 180° z-axis rotation.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>sympy.MatrixBase</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.J4.get_matrix_inverse">
+<span class="sig-name descname"><span class="pre">get_matrix_inverse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#J4.get_matrix_inverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.J4.get_matrix_inverse" title="Link to this definition"></a></dt>
+<dd><p>Generate the inverse of the 4x4 rotation matrix.</p>
+<p>Since the inverse of a 180° rotation around the z-axis is the same rotation,
+this method returns the same matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A symbolic representation of the 4x4 rotation matrix for a 180° z-axis rotation.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>sympy.MatrixBase</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
