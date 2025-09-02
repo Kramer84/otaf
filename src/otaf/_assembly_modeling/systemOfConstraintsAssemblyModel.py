@@ -133,6 +133,32 @@ class SystemOfConstraintsAssemblyModel:
         ) = self.generateConstraintMatrices()
         logging.info("[Type: SystemOfConstraintsAssemblyModel] Matrix representation obtained.")
 
+    def __repr__(self) -> str:
+        """Compact textual summary with matrices for the LP."""
+        def arr_str(a) -> str:
+            if a is None:
+                return "None"
+            with np.printoptions(precision=6, suppress=True, linewidth=120, threshold=256):
+                return np.array2string(np.asarray(a))
+        head = (
+            f"SystemOfConstraintsAssemblyModel("
+            f"nD={self.nD}, nG={self.nG}, nC={self.nC}, nI={self.nI})\n"
+            f"Deviations: [{', '.join(map(str, self.deviation_symbols))}]\n"
+            f"Gaps      : [{', '.join(map(str, self.gap_symbols))}]\n"
+            "Forms:  A_eq_Def·X + A_eq_Gap·Y + K_eq = 0\n"
+            "        A_ub_Def·X + A_ub_Gap·Y + K_ub ≥ 0\n"
+        )
+        sections = [
+            ("A_eq_Def", self.A_eq_Def),
+            ("A_eq_Gap", self.A_eq_Gap),
+            ("K_eq",     self.K_eq),
+            ("A_ub_Def", self.A_ub_Def),
+            ("A_ub_Gap", self.A_ub_Gap),
+            ("K_ub",     self.K_ub),
+        ]
+        body = "\n".join(f"{name} =\n{arr_str(val)}" for name, val in sections)
+        return head + body
+
     def __call__(
         self,
         deviation_array: Union[np.ndarray, Iterable],
