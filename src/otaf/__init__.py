@@ -2,78 +2,87 @@ from __future__ import annotations
 # -*- coding: utf-8 -*-
 
 __author__ = "Kramer84"
-__requires__ = [
-    "numpy",
-    "sympy",
-    "openturns",
-    "scipy",
-    "matplotlib",
-    "joblib",
-    "beartype",
-    "trimesh",
-]
+__requires__ = ["numpy", "sympy", "openturns", "scipy", "matplotlib",
+                "joblib", "beartype", "trimesh"]
 
 import logging as _logging
+import importlib as _importlib
+from typing import TYPE_CHECKING as _TYPE_CHECKING
 
-#Base objects used for assembly modeling and others
-from . import constants
-from . import exceptions
-from . import common
-from . import geometry
-from . import plotting
+# --- Eager core (small, foundational) ----------------------------------------
+from . import constants, exceptions, common, geometry
 
-from . import _assembly_modeling as _asm
+# --- Lazy submodules ---------------------------------------------------------
+_lazy_submodules = {
+    "plotting": f"{__name__}.plotting",
+    "sampling": f"{__name__}.sampling",
+    "distribution": f"{__name__}.distribution",
+    "sensitivity": f"{__name__}.sensitivity",
+    "capabilities": f"{__name__}.capabilities",
+    "uncertainty": f"{__name__}.uncertainty",
+    "surrogate": f"{__name__}.surrogate",
+    "optimization": f"{__name__}.optimization",
+    "tolerances": f"{__name__}.tolerances",
+    "example_models": f"{__name__}.example_models",
+}
 
-#Following are self contained
-from . import sampling
-from . import distribution
-from . import sensitivity
-from . import capabilities
+# --- Lazy re-exports from _assembly_modeling ---------------------------------
+_reexports = {
+    "SystemOfConstraintsAssemblyModel": "_assembly_modeling",
+    "AssemblyDataProcessor": "_assembly_modeling",
+    "CompatibilityLoopHandling": "_assembly_modeling",
+    "DeviationMatrix": "_assembly_modeling",
+    "TransformationMatrix": "_assembly_modeling",
+    "FirstOrderMatrixExpansion": "_assembly_modeling",
+    "GapMatrix": "_assembly_modeling",
+    "InterfaceLoopHandling": "_assembly_modeling",
+    "I4": "_assembly_modeling",
+    "J4": "_assembly_modeling",
+}
 
-#Following depend sometimes on the above
-from . import uncertainty
-from . import surrogate
-from . import optimization
-from . import tolerances
-from . import example_models
+def __getattr__(name: str):
+    # lazy submodule?
+    target = _lazy_submodules.get(name)
+    if target is not None:
+        mod = _importlib.import_module(target)
+        globals()[name] = mod
+        return mod
 
+    # lazy re-export?
+    modname = _reexports.get(name)
+    if modname is not None:
+        mod = _importlib.import_module(f".{modname}", __name__)
+        obj = getattr(mod, name)
+        globals()[name] = obj
+        return obj
 
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
-from ._assembly_modeling import (
-    SystemOfConstraintsAssemblyModel,
-    AssemblyDataProcessor,
-    CompatibilityLoopHandling,
-    DeviationMatrix,
-    TransformationMatrix,
-    FirstOrderMatrixExpansion,
-    GapMatrix,
-    InterfaceLoopHandling,
-    I4, J4
-)
+def __dir__():
+    # advertise lazy names so IDEs/dir() see them
+    return sorted(set(list(globals().keys()) + list(_lazy_submodules) + list(_reexports)))
+
+# For static type checkers only
+if _TYPE_CHECKING:
+    from . import sampling, distribution, sensitivity, capabilities
+    from . import uncertainty, surrogate, optimization, tolerances, example_models
+    from ._assembly_modeling import (  # type: ignore[F401]
+        SystemOfConstraintsAssemblyModel, AssemblyDataProcessor, CompatibilityLoopHandling,
+        DeviationMatrix, TransformationMatrix, FirstOrderMatrixExpansion,
+        GapMatrix, InterfaceLoopHandling, I4, J4
+    )
+    # if you moved plotting to lazy:
+    # from . import plotting
 
 __all__ = [
-    "SystemOfConstraintsAssemblyModel",
-    "AssemblyDataProcessor",
-    "CompatibilityLoopHandling",
-    "DeviationMatrix",
-    "TransformationMatrix",
-    "FirstOrderMatrixExpansion",
-    "GapMatrix",
-    "InterfaceLoopHandling",
-    "geometry",
-    "constants",
-    "plotting",
-    "exceptions",
-    "common",
-    "uncertainty",
-    "surrogate",
-    "sensitivity",
-    "optimization",
-    "sampling",
-    "distribution",
-    "capabilities",
-    "example_models",
-    "tolerances"
+    # re-exported classes (resolve lazily at first access)
+    "SystemOfConstraintsAssemblyModel", "AssemblyDataProcessor", "CompatibilityLoopHandling",
+    "DeviationMatrix", "TransformationMatrix", "FirstOrderMatrixExpansion",
+    "GapMatrix", "InterfaceLoopHandling", "I4", "J4",
+    # subpackages
+    "geometry", "constants", "plotting", "exceptions", "common",
+    "uncertainty", "surrogate", "sensitivity", "optimization",
+    "sampling", "distribution", "capabilities", "example_models", "tolerances",
 ]
 
 
