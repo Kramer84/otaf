@@ -228,8 +228,7 @@ network-based surrogate models, may also require further refinement.
 📜 License
 ----------
 
-This project is licensed under the **GNU General Public License v3.0
-(GPLv3)**. For details, see the
+This project is licensed under the **MIT License**. For details, see the
 `LICENSE <https://github.com/Kramer84/otaf/blob/main/LICENSE>`__ file.
 
 --------------
