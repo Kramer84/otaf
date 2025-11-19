@@ -170,7 +170,7 @@ We welcome contributions! Whether you're reporting a bug, suggesting a feature, 
 
 ## 📜 License
 
-This project is licensed under the **GNU General Public License v3.0 (GPLv3)**. For details, see the [LICENSE](https://github.com/Kramer84/otaf/blob/main/LICENSE) file.
+This project is licensed under the **MIT License**. For details, see the [LICENSE](https://github.com/Kramer84/otaf/blob/main/LICENSE) file.
 
 ---
 
