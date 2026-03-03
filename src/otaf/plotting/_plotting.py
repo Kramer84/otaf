@@ -25,7 +25,9 @@ __all__ = [
     "plot_combined_CDF",
     "save_plot",
     "plot_gld_pbox_cdf",
-    "plot_gld_pbox_cdf2"
+    "plot_gld_pbox_cdf2",
+    "calculate_graph_layout",
+    "generate_topological_tikz"
 ]
 
 import os
@@ -1129,12 +1131,12 @@ def plot_gld_pbox_cdf2(gld_obj, param_list, x_values, xtol=1e-5, labels=None, co
     plt.title(title)
     plt.show()
 
-def calculate_graph_layout(system_data_augmented, R_part=15, r_feat=2, d_feat=1.5, margin=1.5, part_spacing=45):
+
+def calculate_graph_layout(data, R_part=15, r_feat=2, d_feat=1.5, margin=1.5, part_spacing=45, seed=42):
     """
     Creates the graph-based representation and computes all spatial coordinates.
     Includes an iterative untangling step to prevent crossing interaction edges.
     """
-    data = system_data_augmented.system_data
     parts = data.get('PARTS', {})
 
     # --- 1. MACRO LAYOUT: Position the Parts ---
@@ -1147,10 +1149,26 @@ def calculate_graph_layout(system_data_augmented, R_part=15, r_feat=2, d_feat=1.
             for inter in f_data.get('INTERACTIONS', []):
                 target_p = inter[1]
                 if target_p in parts:
-                    G_macro.add_edge(p_id, target_p)
+                    # We add weights so the layout algorithm knows these are connected,
+                    # but we keep the weight low so the attraction isn't overpowering
+                    if G_macro.has_edge(p_id, target_p):
+                        G_macro[p_id][target_p]['weight'] += 0.1
+                    else:
+                        G_macro.add_edge(p_id, target_p, weight=0.1)
 
-    # Scale restricts the bounding box; max distance is roughly `part_spacing`
-    part_positions = nx.spring_layout(G_macro, scale=part_spacing/2.0, seed=42)
+    # Calculate optimal distance based on the size of the parts to guarantee no overlap
+    # We want the distance between centers to be at least 2.5 * R_part
+    optimal_dist = (2.5 * R_part) / (part_spacing / 2.0)
+
+    # k is the optimal distance between nodes. Increasing it forces nodes apart.
+    # iterations are increased to allow the algorithm to settle the strong repulsions.
+    part_positions = nx.spring_layout(
+        G_macro,
+        k=optimal_dist * 2.5, # Double the required distance to be safe
+        scale=part_spacing,   # Expand the bounding box
+        iterations=100,
+        seed=seed
+    )
 
     # --- 2. MICRO LAYOUT: Initialization ---
     R_arc = R_part - r_feat - margin
@@ -1177,11 +1195,9 @@ def calculate_graph_layout(system_data_augmented, R_part=15, r_feat=2, d_feat=1.
 
         part_base_angles[p_id] = base_angle
 
-        # Initial arbitrary order mapping
         f_ids = list(features.keys())
         feature_order[p_id] = f_ids
 
-        # Initial position assignment
         n_features = len(f_ids)
         start_angle = base_angle - (n_features - 1) * d_theta / 2
         for idx, f_id in enumerate(f_ids):
@@ -1217,12 +1233,10 @@ def calculate_graph_layout(system_data_augmented, R_part=15, r_feat=2, d_feat=1.
 
                 target_angles.append((rel_ang, f_id))
 
-            # Sort the features strictly by their relative target angle
             target_angles.sort(key=lambda x: x[0])
             new_f_ids = [x[1] for x in target_angles]
             feature_order[p_id] = new_f_ids
 
-            # Update feature positions immediately based on the new sorted order
             n_features = len(new_f_ids)
             start_angle = base_angle - (n_features - 1) * d_theta / 2
             for idx, f_id in enumerate(new_f_ids):
@@ -1234,21 +1248,51 @@ def calculate_graph_layout(system_data_augmented, R_part=15, r_feat=2, d_feat=1.
     return part_positions, feature_positions
 
 
-def generate_topological_tikz(system_data_augmented, part_positions, feature_positions, R_part=15, r_feat=2, scale=0.15):
+def generate_topological_tikz(data, part_positions, feature_positions, color_palette=color_palette_2, R_part=15, r_feat=2, scale=0.15):
     """
-    Outputs the raw TikZ string. Loops are uniquely colored, closed, plain-styled,
-    and dynamically separated when overlapping. Interaction labels are pushed to loop edges.
+    Outputs the raw TikZ string. Features are colored by their interaction group,
+    and loops are uniquely colored using the provided palette.
+    Interaction labels are drawn only once per pair to prevent clutter.
     """
-    data = system_data_augmented.system_data
     parts = data.get('PARTS', {})
     loops = data.get('LOOPS', {}).get('COMPATIBILITY', {})
 
+    # --- FIND CONNECTED FEATURE COMPONENTS ---
+    G_feat = nx.Graph()
+    for p_id, features in parts.items():
+        for f_id in features.keys():
+            G_feat.add_node(f"P{p_id}{f_id}")
+
+    for p_id, features in parts.items():
+        for f_id, f_data in features.items():
+            start_node = f"P{p_id}{f_id}"
+            for inter in f_data.get('INTERACTIONS', []):
+                end_node = f"P{inter[1]}{inter[2]}"
+                G_feat.add_edge(start_node, end_node)
+
+    feature_color_map = {}
+    color_index = 0
+
+    for component in nx.connected_components(G_feat):
+        for node in component:
+            feature_color_map[node] = color_index
+        color_index += 1
+
+    loop_color_offset = color_index
+
+    # --- START TIKZ GENERATION ---
     output = []
     output.append(r"\begin{tikzpicture}[>=stealth]")
+
+    output.append("  %% Dynamic Palette Definitions")
+    for i in range(min(len(color_palette), color_index + len(loops))):
+        hex_val = color_palette[i].lstrip('#').upper()
+        output.append(rf"  \definecolor{{pal_{i}}}{{HTML}}{{{hex_val}}}")
+
     output.append(r"  \tikzstyle{part_circle} = [draw, fill=blue!5, thick]")
 
     scaled_f_size = r_feat * 2 * scale
-    output.append(r"  \tikzstyle{feat_node} = [circle, draw, fill=white, inner sep=0pt, minimum size=" + f"{scaled_f_size:.2f}" + r"cm, font=\scriptsize]")
+    output.append(r"  \tikzstyle{feat_node} = [circle, draw, inner sep=0pt, minimum size=" + f"{scaled_f_size:.2f}" + r"cm, font=\scriptsize]")
 
     scaled_R_part = R_part * scale
 
@@ -1267,9 +1311,10 @@ def generate_topological_tikz(system_data_augmented, part_positions, feature_pos
             fx_scaled, fy_scaled = fx * scale, fy * scale
 
             is_perfect = "PERFECT" in f_data.get('CONSTRAINTS_D', [])
-            color = "black" if is_perfect else "orange"
+            border_color = "black" if is_perfect else "pal_" + str(feature_color_map[node_id] % len(color_palette))
 
-            output.append(rf"  \node[feat_node, draw={color}] ({node_id}) at ({fx_scaled:.3f}, {fy_scaled:.3f}) {{{f_id.upper()}}};")
+            c_idx = feature_color_map[node_id] % len(color_palette)
+            output.append(rf"  \node[feat_node, draw={border_color}, fill=pal_{c_idx}!30] ({node_id}) at ({fx_scaled:.3f}, {fy_scaled:.3f}) {{{f_id.upper()}}};")
 
     # --- 2. PRE-COMPUTE INTERACTION LABELS ---
     interaction_labels = {}
@@ -1282,23 +1327,20 @@ def generate_topological_tikz(system_data_augmented, part_positions, feature_pos
                     t_p, t_f = inter[1], inter[2]
                     start_node = f"P{p_id}{f_id}"
                     end_node = f"P{t_p}{t_f}"
-                    # Use a sorted tuple to make it undirectional for dictionary mapping
                     pair = tuple(sorted([start_node, end_node]))
                     interaction_labels[pair] = label
 
     # --- 3. DRAW CLOSED LOOPS ---
     output.append("\n  %% Loops")
-
-    # Define a color palette for the loops
-    loop_colors = ["red", "blue", "green!60!black", "orange", "purple", "cyan", "magenta", "brown"]
-    edge_bends = {} # Tracks how many times a specific directional edge has been drawn
+    edge_bends = {}
+    drawn_labels = set() # Track which interaction labels have already been rendered
 
     for l_idx, (l_id, path_str) in enumerate(loops.items()):
-        color = loop_colors[l_idx % len(loop_colors)]
+        c_idx = (loop_color_offset + l_idx) % len(color_palette)
+        color = f"pal_{c_idx}"
 
         nodes = [n[:3] for n in path_str.split(" -> ")]
 
-        # Close the loop mathematically if not already closed
         if len(nodes) > 1 and nodes[0] != nodes[-1]:
             nodes.append(nodes[0])
 
@@ -1307,25 +1349,36 @@ def generate_topological_tikz(system_data_augmented, part_positions, feature_pos
             v = nodes[i+1]
 
             if u in feature_positions and v in feature_positions:
-                # Track parallel directional edges to increase the bend radius
                 pair_dir = (u, v)
                 if pair_dir not in edge_bends:
-                    edge_bends[pair_dir] = 20
+                    edge_bends[pair_dir] = 0
                 else:
-                    edge_bends[pair_dir] += 15 # Push overlapping lines out by 15 degrees
+                    edge_bends[pair_dir] += 10 # Gentler offset for overlapping edges
 
-                bend = edge_bends[pair_dir]
+                part_u = u[1:-1]
+                part_v = v[1:-1]
 
-                # Check if this routing step is actually crossing an interaction threshold
+                # Distinct bend logic for intra-part vs inter-part
+                if part_u == part_v:
+                    # Same part: Force a wide, loose arc to expose the arrowhead
+                    bend_val = 50 + edge_bends[pair_dir]
+                    bend_str = f"bend right={bend_val}, looseness=1.5"
+                else:
+                    # Different parts: Gentle bend to avoid inverting into the part circle
+                    bend_val = 15 + edge_bends[pair_dir]
+                    bend_str = f"bend right={bend_val}"
+
                 pair_undir = tuple(sorted([u, v]))
                 label = interaction_labels.get(pair_undir, "")
 
-                if label:
+                # Only draw the label if it hasn't been drawn yet for this node pair
+                if label and pair_undir not in drawn_labels:
                     node_str = rf" node[midway, sloped, above, font=\tiny, text=black] {{{label}}}"
+                    drawn_labels.add(pair_undir)
                 else:
                     node_str = ""
 
-                output.append(rf"  \path[draw, ->, {color}, ultra thick] ({u}) to[bend right={bend}] {node_str} ({v});")
+                output.append(rf"  \path[draw, ->, {color}, ultra thick] ({u}) to[{bend_str}] {node_str} ({v});")
 
     output.append(r"\end{tikzpicture}")
     return "\n".join(output)
