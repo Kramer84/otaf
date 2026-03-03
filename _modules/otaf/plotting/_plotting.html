@@ -124,7 +124,9 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">product</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">fminbound</span>
 
@@ -1284,6 +1286,207 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
+
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_graph_layout</span><span class="p">(</span><span class="n">system_data_augmented</span><span class="p">,</span> <span class="n">R_part</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">r_feat</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">d_feat</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">part_spacing</span><span class="o">=</span><span class="mi">45</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates the graph-based representation and computes all spatial coordinates.</span>
+<span class="sd">    Includes an iterative untangling step to prevent crossing interaction edges.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">system_data_augmented</span><span class="o">.</span><span class="n">system_data</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;PARTS&#39;</span><span class="p">,</span> <span class="p">{})</span>
+
+    <span class="c1"># --- 1. MACRO LAYOUT: Position the Parts ---</span>
+    <span class="n">G_macro</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">p_id</span> <span class="ow">in</span> <span class="n">parts</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">G_macro</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">p_id</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">p_id</span><span class="p">,</span> <span class="n">features</span> <span class="ow">in</span> <span class="n">parts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">f_id</span><span class="p">,</span> <span class="n">f_data</span> <span class="ow">in</span> <span class="n">features</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">inter</span> <span class="ow">in</span> <span class="n">f_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;INTERACTIONS&#39;</span><span class="p">,</span> <span class="p">[]):</span>
+                <span class="n">target_p</span> <span class="o">=</span> <span class="n">inter</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">target_p</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">:</span>
+                    <span class="n">G_macro</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">p_id</span><span class="p">,</span> <span class="n">target_p</span><span class="p">)</span>
+
+    <span class="c1"># Scale restricts the bounding box; max distance is roughly `part_spacing`</span>
+    <span class="n">part_positions</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">spring_layout</span><span class="p">(</span><span class="n">G_macro</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">part_spacing</span><span class="o">/</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+    <span class="c1"># --- 2. MICRO LAYOUT: Initialization ---</span>
+    <span class="n">R_arc</span> <span class="o">=</span> <span class="n">R_part</span> <span class="o">-</span> <span class="n">r_feat</span> <span class="o">-</span> <span class="n">margin</span>
+    <span class="n">chord_len</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">r_feat</span> <span class="o">+</span> <span class="n">d_feat</span>
+    <span class="n">d_theta</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="n">chord_len</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">R_arc</span><span class="p">))</span>
+
+    <span class="n">feature_positions</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">part_base_angles</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">feature_order</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">p_id</span><span class="p">,</span> <span class="n">features</span> <span class="ow">in</span> <span class="n">parts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">px</span><span class="p">,</span> <span class="n">py</span> <span class="o">=</span> <span class="n">part_positions</span><span class="p">[</span><span class="n">p_id</span><span class="p">]</span>
+
+        <span class="n">interacting_vectors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">neighbor</span> <span class="ow">in</span> <span class="n">G_macro</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">p_id</span><span class="p">):</span>
+            <span class="n">nx_pos</span><span class="p">,</span> <span class="n">ny_pos</span> <span class="o">=</span> <span class="n">part_positions</span><span class="p">[</span><span class="n">neighbor</span><span class="p">]</span>
+            <span class="n">interacting_vectors</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">nx_pos</span> <span class="o">-</span> <span class="n">px</span><span class="p">,</span> <span class="n">ny_pos</span> <span class="o">-</span> <span class="n">py</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">interacting_vectors</span><span class="p">:</span>
+            <span class="n">avg_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">interacting_vectors</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">base_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">avg_vec</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">avg_vec</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">base_angle</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">part_base_angles</span><span class="p">[</span><span class="n">p_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">base_angle</span>
+
+        <span class="c1"># Initial arbitrary order mapping</span>
+        <span class="n">f_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">feature_order</span><span class="p">[</span><span class="n">p_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">f_ids</span>
+
+        <span class="c1"># Initial position assignment</span>
+        <span class="n">n_features</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">f_ids</span><span class="p">)</span>
+        <span class="n">start_angle</span> <span class="o">=</span> <span class="n">base_angle</span> <span class="o">-</span> <span class="p">(</span><span class="n">n_features</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">d_theta</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">f_id</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">f_ids</span><span class="p">):</span>
+            <span class="n">angle</span> <span class="o">=</span> <span class="n">start_angle</span> <span class="o">+</span> <span class="n">idx</span> <span class="o">*</span> <span class="n">d_theta</span>
+            <span class="n">fx</span> <span class="o">=</span> <span class="n">px</span> <span class="o">+</span> <span class="n">R_arc</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+            <span class="n">fy</span> <span class="o">=</span> <span class="n">py</span> <span class="o">+</span> <span class="n">R_arc</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+            <span class="n">feature_positions</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;P</span><span class="si">{</span><span class="n">p_id</span><span class="si">}{</span><span class="n">f_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">fx</span><span class="p">,</span> <span class="n">fy</span><span class="p">)</span>
+
+    <span class="c1"># --- 3. UNTANGLING ITERATIONS ---</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">p_id</span><span class="p">,</span> <span class="n">features</span> <span class="ow">in</span> <span class="n">parts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">px</span><span class="p">,</span> <span class="n">py</span> <span class="o">=</span> <span class="n">part_positions</span><span class="p">[</span><span class="n">p_id</span><span class="p">]</span>
+            <span class="n">base_angle</span> <span class="o">=</span> <span class="n">part_base_angles</span><span class="p">[</span><span class="n">p_id</span><span class="p">]</span>
+            <span class="n">f_ids</span> <span class="o">=</span> <span class="n">feature_order</span><span class="p">[</span><span class="n">p_id</span><span class="p">]</span>
+
+            <span class="n">target_angles</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">f_id</span> <span class="ow">in</span> <span class="n">f_ids</span><span class="p">:</span>
+                <span class="n">f_data</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="n">f_id</span><span class="p">]</span>
+                <span class="n">targets</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">inter</span> <span class="ow">in</span> <span class="n">f_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;INTERACTIONS&#39;</span><span class="p">,</span> <span class="p">[]):</span>
+                    <span class="n">t_p</span><span class="p">,</span> <span class="n">t_f</span> <span class="o">=</span> <span class="n">inter</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">inter</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                    <span class="n">t_node</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;P</span><span class="si">{</span><span class="n">t_p</span><span class="si">}{</span><span class="n">t_f</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="k">if</span> <span class="n">t_node</span> <span class="ow">in</span> <span class="n">feature_positions</span><span class="p">:</span>
+                        <span class="n">targets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">feature_positions</span><span class="p">[</span><span class="n">t_node</span><span class="p">])</span>
+
+                <span class="k">if</span> <span class="n">targets</span><span class="p">:</span>
+                    <span class="n">avg_tx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">targets</span><span class="p">])</span>
+                    <span class="n">avg_ty</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">targets</span><span class="p">])</span>
+                    <span class="n">t_ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">avg_ty</span> <span class="o">-</span> <span class="n">py</span><span class="p">,</span> <span class="n">avg_tx</span> <span class="o">-</span> <span class="n">px</span><span class="p">)</span>
+                    <span class="n">rel_ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">t_ang</span> <span class="o">-</span> <span class="n">base_angle</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">t_ang</span> <span class="o">-</span> <span class="n">base_angle</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">rel_ang</span> <span class="o">=</span> <span class="mi">0</span>
+
+                <span class="n">target_angles</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">rel_ang</span><span class="p">,</span> <span class="n">f_id</span><span class="p">))</span>
+
+            <span class="c1"># Sort the features strictly by their relative target angle</span>
+            <span class="n">target_angles</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">new_f_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">target_angles</span><span class="p">]</span>
+            <span class="n">feature_order</span><span class="p">[</span><span class="n">p_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_f_ids</span>
+
+            <span class="c1"># Update feature positions immediately based on the new sorted order</span>
+            <span class="n">n_features</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_f_ids</span><span class="p">)</span>
+            <span class="n">start_angle</span> <span class="o">=</span> <span class="n">base_angle</span> <span class="o">-</span> <span class="p">(</span><span class="n">n_features</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">d_theta</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">f_id</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">new_f_ids</span><span class="p">):</span>
+                <span class="n">angle</span> <span class="o">=</span> <span class="n">start_angle</span> <span class="o">+</span> <span class="n">idx</span> <span class="o">*</span> <span class="n">d_theta</span>
+                <span class="n">fx</span> <span class="o">=</span> <span class="n">px</span> <span class="o">+</span> <span class="n">R_arc</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+                <span class="n">fy</span> <span class="o">=</span> <span class="n">py</span> <span class="o">+</span> <span class="n">R_arc</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+                <span class="n">feature_positions</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;P</span><span class="si">{</span><span class="n">p_id</span><span class="si">}{</span><span class="n">f_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">fx</span><span class="p">,</span> <span class="n">fy</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">part_positions</span><span class="p">,</span> <span class="n">feature_positions</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_topological_tikz</span><span class="p">(</span><span class="n">system_data_augmented</span><span class="p">,</span> <span class="n">part_positions</span><span class="p">,</span> <span class="n">feature_positions</span><span class="p">,</span> <span class="n">R_part</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">r_feat</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.15</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Outputs the raw TikZ string. Loops are uniquely colored, closed, plain-styled,</span>
+<span class="sd">    and dynamically separated when overlapping. Interaction labels are pushed to loop edges.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">system_data_augmented</span><span class="o">.</span><span class="n">system_data</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;PARTS&#39;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="n">loops</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;LOOPS&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;COMPATIBILITY&#39;</span><span class="p">,</span> <span class="p">{})</span>
+
+    <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\begin</span><span class="si">{tikzpicture}</span><span class="s2">[&gt;=stealth]&quot;</span><span class="p">)</span>
+    <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;  \tikzstyle</span><span class="si">{part_circle}</span><span class="s2"> = [draw, fill=blue!5, thick]&quot;</span><span class="p">)</span>
+
+    <span class="n">scaled_f_size</span> <span class="o">=</span> <span class="n">r_feat</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">scale</span>
+    <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;  \tikzstyle</span><span class="si">{feat_node}</span><span class="s2"> = [circle, draw, fill=white, inner sep=0pt, minimum size=&quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">scaled_f_size</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">&quot;cm, font=\scriptsize]&quot;</span><span class="p">)</span>
+
+    <span class="n">scaled_R_part</span> <span class="o">=</span> <span class="n">R_part</span> <span class="o">*</span> <span class="n">scale</span>
+
+    <span class="c1"># --- 1. DRAW PARTS AND FEATURES ---</span>
+    <span class="k">for</span> <span class="n">p_id</span><span class="p">,</span> <span class="n">features</span> <span class="ow">in</span> <span class="n">parts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">  %% Part </span><span class="si">{</span><span class="n">p_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">px</span><span class="p">,</span> <span class="n">py</span> <span class="o">=</span> <span class="n">part_positions</span><span class="p">[</span><span class="n">p_id</span><span class="p">]</span>
+        <span class="n">px_scaled</span><span class="p">,</span> <span class="n">py_scaled</span> <span class="o">=</span> <span class="n">px</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span> <span class="n">py</span> <span class="o">*</span> <span class="n">scale</span>
+
+        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;  \draw[part_circle] (</span><span class="si">{</span><span class="n">px_scaled</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">py_scaled</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">) circle (</span><span class="si">{</span><span class="n">scaled_R_part</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">);&quot;</span><span class="p">)</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;  \node[font=\bfseries\large, gray] at (</span><span class="si">{</span><span class="n">px_scaled</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">py_scaled</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">) </span><span class="se">{{</span><span class="s2">Part </span><span class="si">{</span><span class="n">p_id</span><span class="si">}</span><span class="se">}}</span><span class="s2">;&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">f_id</span><span class="p">,</span> <span class="n">f_data</span> <span class="ow">in</span> <span class="n">features</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">node_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;P</span><span class="si">{</span><span class="n">p_id</span><span class="si">}{</span><span class="n">f_id</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">fx</span><span class="p">,</span> <span class="n">fy</span> <span class="o">=</span> <span class="n">feature_positions</span><span class="p">[</span><span class="n">node_id</span><span class="p">]</span>
+            <span class="n">fx_scaled</span><span class="p">,</span> <span class="n">fy_scaled</span> <span class="o">=</span> <span class="n">fx</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span> <span class="n">fy</span> <span class="o">*</span> <span class="n">scale</span>
+
+            <span class="n">is_perfect</span> <span class="o">=</span> <span class="s2">&quot;PERFECT&quot;</span> <span class="ow">in</span> <span class="n">f_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;CONSTRAINTS_D&#39;</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;black&quot;</span> <span class="k">if</span> <span class="n">is_perfect</span> <span class="k">else</span> <span class="s2">&quot;orange&quot;</span>
+
+            <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;  \node[feat_node, draw=</span><span class="si">{</span><span class="n">color</span><span class="si">}</span><span class="s2">] (</span><span class="si">{</span><span class="n">node_id</span><span class="si">}</span><span class="s2">) at (</span><span class="si">{</span><span class="n">fx_scaled</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">fy_scaled</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">) </span><span class="se">{{</span><span class="si">{</span><span class="n">f_id</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="se">}}</span><span class="s2">;&quot;</span><span class="p">)</span>
+
+    <span class="c1"># --- 2. PRE-COMPUTE INTERACTION LABELS ---</span>
+    <span class="n">interaction_labels</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">p_id</span><span class="p">,</span> <span class="n">features</span> <span class="ow">in</span> <span class="n">parts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">f_id</span><span class="p">,</span> <span class="n">f_data</span> <span class="ow">in</span> <span class="n">features</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">constraint_g</span> <span class="o">=</span> <span class="n">f_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;CONSTRAINTS_G&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="n">constraint_g</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="n">constraint_g</span> <span class="o">!=</span> <span class="s1">&#39;FLOATING&#39;</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">label</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">inter</span> <span class="ow">in</span> <span class="n">f_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;INTERACTIONS&#39;</span><span class="p">,</span> <span class="p">[]):</span>
+                    <span class="n">t_p</span><span class="p">,</span> <span class="n">t_f</span> <span class="o">=</span> <span class="n">inter</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">inter</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                    <span class="n">start_node</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;P</span><span class="si">{</span><span class="n">p_id</span><span class="si">}{</span><span class="n">f_id</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="n">end_node</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;P</span><span class="si">{</span><span class="n">t_p</span><span class="si">}{</span><span class="n">t_f</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="c1"># Use a sorted tuple to make it undirectional for dictionary mapping</span>
+                    <span class="n">pair</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">([</span><span class="n">start_node</span><span class="p">,</span> <span class="n">end_node</span><span class="p">]))</span>
+                    <span class="n">interaction_labels</span><span class="p">[</span><span class="n">pair</span><span class="p">]</span> <span class="o">=</span> <span class="n">label</span>
+
+    <span class="c1"># --- 3. DRAW CLOSED LOOPS ---</span>
+    <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">  </span><span class="si">%%</span><span class="s2"> Loops&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Define a color palette for the loops</span>
+    <span class="n">loop_colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;green!60!black&quot;</span><span class="p">,</span> <span class="s2">&quot;orange&quot;</span><span class="p">,</span> <span class="s2">&quot;purple&quot;</span><span class="p">,</span> <span class="s2">&quot;cyan&quot;</span><span class="p">,</span> <span class="s2">&quot;magenta&quot;</span><span class="p">,</span> <span class="s2">&quot;brown&quot;</span><span class="p">]</span>
+    <span class="n">edge_bends</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># Tracks how many times a specific directional edge has been drawn</span>
+
+    <span class="k">for</span> <span class="n">l_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">l_id</span><span class="p">,</span> <span class="n">path_str</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">loops</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">loop_colors</span><span class="p">[</span><span class="n">l_idx</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">loop_colors</span><span class="p">)]</span>
+
+        <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">path_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; -&gt; &quot;</span><span class="p">)]</span>
+
+        <span class="c1"># Close the loop mathematically if not already closed</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">nodes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">nodes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">feature_positions</span> <span class="ow">and</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">feature_positions</span><span class="p">:</span>
+                <span class="c1"># Track parallel directional edges to increase the bend radius</span>
+                <span class="n">pair_dir</span> <span class="o">=</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">pair_dir</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">edge_bends</span><span class="p">:</span>
+                    <span class="n">edge_bends</span><span class="p">[</span><span class="n">pair_dir</span><span class="p">]</span> <span class="o">=</span> <span class="mi">20</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">edge_bends</span><span class="p">[</span><span class="n">pair_dir</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">15</span> <span class="c1"># Push overlapping lines out by 15 degrees</span>
+
+                <span class="n">bend</span> <span class="o">=</span> <span class="n">edge_bends</span><span class="p">[</span><span class="n">pair_dir</span><span class="p">]</span>
+
+                <span class="c1"># Check if this routing step is actually crossing an interaction threshold</span>
+                <span class="n">pair_undir</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">([</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">]))</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="n">interaction_labels</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pair_undir</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">label</span><span class="p">:</span>
+                    <span class="n">node_str</span> <span class="o">=</span> <span class="sa">rf</span><span class="s2">&quot; node[midway, sloped, above, font=\tiny, text=black] </span><span class="se">{{</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="se">}}</span><span class="s2">&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">node_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+                <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;  \path[draw, -&gt;, </span><span class="si">{</span><span class="n">color</span><span class="si">}</span><span class="s2">, ultra thick] (</span><span class="si">{</span><span class="n">u</span><span class="si">}</span><span class="s2">) to[bend right=</span><span class="si">{</span><span class="n">bend</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">node_str</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">);&quot;</span><span class="p">)</span>
+
+    <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\end</span><span class="si">{tikzpicture}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
 </pre></div>
 
            </div>
