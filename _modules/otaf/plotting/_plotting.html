@@ -114,7 +114,9 @@
     <span class="s2">&quot;plot_combined_CDF&quot;</span><span class="p">,</span>
     <span class="s2">&quot;save_plot&quot;</span><span class="p">,</span>
     <span class="s2">&quot;plot_gld_pbox_cdf&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;plot_gld_pbox_cdf2&quot;</span>
+    <span class="s2">&quot;plot_gld_pbox_cdf2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;calculate_graph_layout&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;generate_topological_tikz&quot;</span>
 <span class="p">]</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
@@ -1287,12 +1289,14 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">calculate_graph_layout</span><span class="p">(</span><span class="n">system_data_augmented</span><span class="p">,</span> <span class="n">R_part</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">r_feat</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">d_feat</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">part_spacing</span><span class="o">=</span><span class="mi">45</span><span class="p">):</span>
+
+<div class="viewcode-block" id="calculate_graph_layout">
+<a class="viewcode-back" href="../../../source/otaf.plotting.html#otaf.plotting.calculate_graph_layout">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_graph_layout</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">R_part</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">r_feat</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">d_feat</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">part_spacing</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Creates the graph-based representation and computes all spatial coordinates.</span>
 <span class="sd">    Includes an iterative untangling step to prevent crossing interaction edges.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">system_data_augmented</span><span class="o">.</span><span class="n">system_data</span>
     <span class="n">parts</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;PARTS&#39;</span><span class="p">,</span> <span class="p">{})</span>
 
     <span class="c1"># --- 1. MACRO LAYOUT: Position the Parts ---</span>
@@ -1305,10 +1309,26 @@
             <span class="k">for</span> <span class="n">inter</span> <span class="ow">in</span> <span class="n">f_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;INTERACTIONS&#39;</span><span class="p">,</span> <span class="p">[]):</span>
                 <span class="n">target_p</span> <span class="o">=</span> <span class="n">inter</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">target_p</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">:</span>
-                    <span class="n">G_macro</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">p_id</span><span class="p">,</span> <span class="n">target_p</span><span class="p">)</span>
+                    <span class="c1"># We add weights so the layout algorithm knows these are connected,</span>
+                    <span class="c1"># but we keep the weight low so the attraction isn&#39;t overpowering</span>
+                    <span class="k">if</span> <span class="n">G_macro</span><span class="o">.</span><span class="n">has_edge</span><span class="p">(</span><span class="n">p_id</span><span class="p">,</span> <span class="n">target_p</span><span class="p">):</span>
+                        <span class="n">G_macro</span><span class="p">[</span><span class="n">p_id</span><span class="p">][</span><span class="n">target_p</span><span class="p">][</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mf">0.1</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">G_macro</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">p_id</span><span class="p">,</span> <span class="n">target_p</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 
-    <span class="c1"># Scale restricts the bounding box; max distance is roughly `part_spacing`</span>
-    <span class="n">part_positions</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">spring_layout</span><span class="p">(</span><span class="n">G_macro</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">part_spacing</span><span class="o">/</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+    <span class="c1"># Calculate optimal distance based on the size of the parts to guarantee no overlap</span>
+    <span class="c1"># We want the distance between centers to be at least 2.5 * R_part</span>
+    <span class="n">optimal_dist</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">R_part</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">part_spacing</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
+
+    <span class="c1"># k is the optimal distance between nodes. Increasing it forces nodes apart.</span>
+    <span class="c1"># iterations are increased to allow the algorithm to settle the strong repulsions.</span>
+    <span class="n">part_positions</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">spring_layout</span><span class="p">(</span>
+        <span class="n">G_macro</span><span class="p">,</span>
+        <span class="n">k</span><span class="o">=</span><span class="n">optimal_dist</span> <span class="o">*</span> <span class="mf">2.5</span><span class="p">,</span> <span class="c1"># Double the required distance to be safe</span>
+        <span class="n">scale</span><span class="o">=</span><span class="n">part_spacing</span><span class="p">,</span>   <span class="c1"># Expand the bounding box</span>
+        <span class="n">iterations</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">seed</span><span class="o">=</span><span class="n">seed</span>
+    <span class="p">)</span>
 
     <span class="c1"># --- 2. MICRO LAYOUT: Initialization ---</span>
     <span class="n">R_arc</span> <span class="o">=</span> <span class="n">R_part</span> <span class="o">-</span> <span class="n">r_feat</span> <span class="o">-</span> <span class="n">margin</span>
@@ -1335,11 +1355,9 @@
 
         <span class="n">part_base_angles</span><span class="p">[</span><span class="n">p_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">base_angle</span>
 
-        <span class="c1"># Initial arbitrary order mapping</span>
         <span class="n">f_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
         <span class="n">feature_order</span><span class="p">[</span><span class="n">p_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">f_ids</span>
 
-        <span class="c1"># Initial position assignment</span>
         <span class="n">n_features</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">f_ids</span><span class="p">)</span>
         <span class="n">start_angle</span> <span class="o">=</span> <span class="n">base_angle</span> <span class="o">-</span> <span class="p">(</span><span class="n">n_features</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">d_theta</span> <span class="o">/</span> <span class="mi">2</span>
         <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">f_id</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">f_ids</span><span class="p">):</span>
@@ -1375,12 +1393,10 @@
 
                 <span class="n">target_angles</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">rel_ang</span><span class="p">,</span> <span class="n">f_id</span><span class="p">))</span>
 
-            <span class="c1"># Sort the features strictly by their relative target angle</span>
             <span class="n">target_angles</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="n">new_f_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">target_angles</span><span class="p">]</span>
             <span class="n">feature_order</span><span class="p">[</span><span class="n">p_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_f_ids</span>
 
-            <span class="c1"># Update feature positions immediately based on the new sorted order</span>
             <span class="n">n_features</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_f_ids</span><span class="p">)</span>
             <span class="n">start_angle</span> <span class="o">=</span> <span class="n">base_angle</span> <span class="o">-</span> <span class="p">(</span><span class="n">n_features</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">d_theta</span> <span class="o">/</span> <span class="mi">2</span>
             <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">f_id</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">new_f_ids</span><span class="p">):</span>
@@ -1389,24 +1405,57 @@
                 <span class="n">fy</span> <span class="o">=</span> <span class="n">py</span> <span class="o">+</span> <span class="n">R_arc</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
                 <span class="n">feature_positions</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;P</span><span class="si">{</span><span class="n">p_id</span><span class="si">}{</span><span class="n">f_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">fx</span><span class="p">,</span> <span class="n">fy</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">part_positions</span><span class="p">,</span> <span class="n">feature_positions</span>
+    <span class="k">return</span> <span class="n">part_positions</span><span class="p">,</span> <span class="n">feature_positions</span></div>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">generate_topological_tikz</span><span class="p">(</span><span class="n">system_data_augmented</span><span class="p">,</span> <span class="n">part_positions</span><span class="p">,</span> <span class="n">feature_positions</span><span class="p">,</span> <span class="n">R_part</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">r_feat</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.15</span><span class="p">):</span>
+
+<div class="viewcode-block" id="generate_topological_tikz">
+<a class="viewcode-back" href="../../../source/otaf.plotting.html#otaf.plotting.generate_topological_tikz">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_topological_tikz</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">part_positions</span><span class="p">,</span> <span class="n">feature_positions</span><span class="p">,</span> <span class="n">color_palette</span><span class="o">=</span><span class="n">color_palette_2</span><span class="p">,</span> <span class="n">R_part</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">r_feat</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.15</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Outputs the raw TikZ string. Loops are uniquely colored, closed, plain-styled,</span>
-<span class="sd">    and dynamically separated when overlapping. Interaction labels are pushed to loop edges.</span>
+<span class="sd">    Outputs the raw TikZ string. Features are colored by their interaction group,</span>
+<span class="sd">    and loops are uniquely colored using the provided palette.</span>
+<span class="sd">    Interaction labels are drawn only once per pair to prevent clutter.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">system_data_augmented</span><span class="o">.</span><span class="n">system_data</span>
     <span class="n">parts</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;PARTS&#39;</span><span class="p">,</span> <span class="p">{})</span>
     <span class="n">loops</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;LOOPS&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;COMPATIBILITY&#39;</span><span class="p">,</span> <span class="p">{})</span>
 
+    <span class="c1"># --- FIND CONNECTED FEATURE COMPONENTS ---</span>
+    <span class="n">G_feat</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">p_id</span><span class="p">,</span> <span class="n">features</span> <span class="ow">in</span> <span class="n">parts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">f_id</span> <span class="ow">in</span> <span class="n">features</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">G_feat</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;P</span><span class="si">{</span><span class="n">p_id</span><span class="si">}{</span><span class="n">f_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">p_id</span><span class="p">,</span> <span class="n">features</span> <span class="ow">in</span> <span class="n">parts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">f_id</span><span class="p">,</span> <span class="n">f_data</span> <span class="ow">in</span> <span class="n">features</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">start_node</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;P</span><span class="si">{</span><span class="n">p_id</span><span class="si">}{</span><span class="n">f_id</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">for</span> <span class="n">inter</span> <span class="ow">in</span> <span class="n">f_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;INTERACTIONS&#39;</span><span class="p">,</span> <span class="p">[]):</span>
+                <span class="n">end_node</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;P</span><span class="si">{</span><span class="n">inter</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}{</span><span class="n">inter</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">G_feat</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">start_node</span><span class="p">,</span> <span class="n">end_node</span><span class="p">)</span>
+
+    <span class="n">feature_color_map</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">color_index</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">connected_components</span><span class="p">(</span><span class="n">G_feat</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">component</span><span class="p">:</span>
+            <span class="n">feature_color_map</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="n">color_index</span>
+        <span class="n">color_index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">loop_color_offset</span> <span class="o">=</span> <span class="n">color_index</span>
+
+    <span class="c1"># --- START TIKZ GENERATION ---</span>
     <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\begin</span><span class="si">{tikzpicture}</span><span class="s2">[&gt;=stealth]&quot;</span><span class="p">)</span>
+
+    <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;  </span><span class="si">%%</span><span class="s2"> Dynamic Palette Definitions&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">color_palette</span><span class="p">),</span> <span class="n">color_index</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">loops</span><span class="p">))):</span>
+        <span class="n">hex_val</span> <span class="o">=</span> <span class="n">color_palette</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;  \definecolor</span><span class="se">{{</span><span class="s2">pal_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="se">}}{{</span><span class="s2">HTML</span><span class="se">}}{{</span><span class="si">{</span><span class="n">hex_val</span><span class="si">}</span><span class="se">}}</span><span class="s2">&quot;</span><span class="p">)</span>
+
     <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;  \tikzstyle</span><span class="si">{part_circle}</span><span class="s2"> = [draw, fill=blue!5, thick]&quot;</span><span class="p">)</span>
 
     <span class="n">scaled_f_size</span> <span class="o">=</span> <span class="n">r_feat</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">scale</span>
-    <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;  \tikzstyle</span><span class="si">{feat_node}</span><span class="s2"> = [circle, draw, fill=white, inner sep=0pt, minimum size=&quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">scaled_f_size</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">&quot;cm, font=\scriptsize]&quot;</span><span class="p">)</span>
+    <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;  \tikzstyle</span><span class="si">{feat_node}</span><span class="s2"> = [circle, draw, inner sep=0pt, minimum size=&quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">scaled_f_size</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">&quot;cm, font=\scriptsize]&quot;</span><span class="p">)</span>
 
     <span class="n">scaled_R_part</span> <span class="o">=</span> <span class="n">R_part</span> <span class="o">*</span> <span class="n">scale</span>
 
@@ -1425,9 +1474,10 @@
             <span class="n">fx_scaled</span><span class="p">,</span> <span class="n">fy_scaled</span> <span class="o">=</span> <span class="n">fx</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span> <span class="n">fy</span> <span class="o">*</span> <span class="n">scale</span>
 
             <span class="n">is_perfect</span> <span class="o">=</span> <span class="s2">&quot;PERFECT&quot;</span> <span class="ow">in</span> <span class="n">f_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;CONSTRAINTS_D&#39;</span><span class="p">,</span> <span class="p">[])</span>
-            <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;black&quot;</span> <span class="k">if</span> <span class="n">is_perfect</span> <span class="k">else</span> <span class="s2">&quot;orange&quot;</span>
+            <span class="n">border_color</span> <span class="o">=</span> <span class="s2">&quot;black&quot;</span> <span class="k">if</span> <span class="n">is_perfect</span> <span class="k">else</span> <span class="s2">&quot;pal_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">feature_color_map</span><span class="p">[</span><span class="n">node_id</span><span class="p">]</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">color_palette</span><span class="p">))</span>
 
-            <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;  \node[feat_node, draw=</span><span class="si">{</span><span class="n">color</span><span class="si">}</span><span class="s2">] (</span><span class="si">{</span><span class="n">node_id</span><span class="si">}</span><span class="s2">) at (</span><span class="si">{</span><span class="n">fx_scaled</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">fy_scaled</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">) </span><span class="se">{{</span><span class="si">{</span><span class="n">f_id</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="se">}}</span><span class="s2">;&quot;</span><span class="p">)</span>
+            <span class="n">c_idx</span> <span class="o">=</span> <span class="n">feature_color_map</span><span class="p">[</span><span class="n">node_id</span><span class="p">]</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">color_palette</span><span class="p">)</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;  \node[feat_node, draw=</span><span class="si">{</span><span class="n">border_color</span><span class="si">}</span><span class="s2">, fill=pal_</span><span class="si">{</span><span class="n">c_idx</span><span class="si">}</span><span class="s2">!30] (</span><span class="si">{</span><span class="n">node_id</span><span class="si">}</span><span class="s2">) at (</span><span class="si">{</span><span class="n">fx_scaled</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">fy_scaled</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">) </span><span class="se">{{</span><span class="si">{</span><span class="n">f_id</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="se">}}</span><span class="s2">;&quot;</span><span class="p">)</span>
 
     <span class="c1"># --- 2. PRE-COMPUTE INTERACTION LABELS ---</span>
     <span class="n">interaction_labels</span> <span class="o">=</span> <span class="p">{}</span>
@@ -1440,23 +1490,20 @@
                     <span class="n">t_p</span><span class="p">,</span> <span class="n">t_f</span> <span class="o">=</span> <span class="n">inter</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">inter</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
                     <span class="n">start_node</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;P</span><span class="si">{</span><span class="n">p_id</span><span class="si">}{</span><span class="n">f_id</span><span class="si">}</span><span class="s2">&quot;</span>
                     <span class="n">end_node</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;P</span><span class="si">{</span><span class="n">t_p</span><span class="si">}{</span><span class="n">t_f</span><span class="si">}</span><span class="s2">&quot;</span>
-                    <span class="c1"># Use a sorted tuple to make it undirectional for dictionary mapping</span>
                     <span class="n">pair</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">([</span><span class="n">start_node</span><span class="p">,</span> <span class="n">end_node</span><span class="p">]))</span>
                     <span class="n">interaction_labels</span><span class="p">[</span><span class="n">pair</span><span class="p">]</span> <span class="o">=</span> <span class="n">label</span>
 
     <span class="c1"># --- 3. DRAW CLOSED LOOPS ---</span>
     <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">  </span><span class="si">%%</span><span class="s2"> Loops&quot;</span><span class="p">)</span>
-
-    <span class="c1"># Define a color palette for the loops</span>
-    <span class="n">loop_colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;green!60!black&quot;</span><span class="p">,</span> <span class="s2">&quot;orange&quot;</span><span class="p">,</span> <span class="s2">&quot;purple&quot;</span><span class="p">,</span> <span class="s2">&quot;cyan&quot;</span><span class="p">,</span> <span class="s2">&quot;magenta&quot;</span><span class="p">,</span> <span class="s2">&quot;brown&quot;</span><span class="p">]</span>
-    <span class="n">edge_bends</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># Tracks how many times a specific directional edge has been drawn</span>
+    <span class="n">edge_bends</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">drawn_labels</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span> <span class="c1"># Track which interaction labels have already been rendered</span>
 
     <span class="k">for</span> <span class="n">l_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">l_id</span><span class="p">,</span> <span class="n">path_str</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">loops</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-        <span class="n">color</span> <span class="o">=</span> <span class="n">loop_colors</span><span class="p">[</span><span class="n">l_idx</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">loop_colors</span><span class="p">)]</span>
+        <span class="n">c_idx</span> <span class="o">=</span> <span class="p">(</span><span class="n">loop_color_offset</span> <span class="o">+</span> <span class="n">l_idx</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">color_palette</span><span class="p">)</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;pal_</span><span class="si">{</span><span class="n">c_idx</span><span class="si">}</span><span class="s2">&quot;</span>
 
         <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">path_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; -&gt; &quot;</span><span class="p">)]</span>
 
-        <span class="c1"># Close the loop mathematically if not already closed</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">nodes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">nodes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
             <span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
@@ -1465,28 +1512,40 @@
             <span class="n">v</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
 
             <span class="k">if</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">feature_positions</span> <span class="ow">and</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">feature_positions</span><span class="p">:</span>
-                <span class="c1"># Track parallel directional edges to increase the bend radius</span>
                 <span class="n">pair_dir</span> <span class="o">=</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">pair_dir</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">edge_bends</span><span class="p">:</span>
-                    <span class="n">edge_bends</span><span class="p">[</span><span class="n">pair_dir</span><span class="p">]</span> <span class="o">=</span> <span class="mi">20</span>
+                    <span class="n">edge_bends</span><span class="p">[</span><span class="n">pair_dir</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">edge_bends</span><span class="p">[</span><span class="n">pair_dir</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">15</span> <span class="c1"># Push overlapping lines out by 15 degrees</span>
+                    <span class="n">edge_bends</span><span class="p">[</span><span class="n">pair_dir</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">10</span> <span class="c1"># Gentler offset for overlapping edges</span>
 
-                <span class="n">bend</span> <span class="o">=</span> <span class="n">edge_bends</span><span class="p">[</span><span class="n">pair_dir</span><span class="p">]</span>
+                <span class="n">part_u</span> <span class="o">=</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">part_v</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
-                <span class="c1"># Check if this routing step is actually crossing an interaction threshold</span>
+                <span class="c1"># Distinct bend logic for intra-part vs inter-part</span>
+                <span class="k">if</span> <span class="n">part_u</span> <span class="o">==</span> <span class="n">part_v</span><span class="p">:</span>
+                    <span class="c1"># Same part: Force a wide, loose arc to expose the arrowhead</span>
+                    <span class="n">bend_val</span> <span class="o">=</span> <span class="mi">50</span> <span class="o">+</span> <span class="n">edge_bends</span><span class="p">[</span><span class="n">pair_dir</span><span class="p">]</span>
+                    <span class="n">bend_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;bend right=</span><span class="si">{</span><span class="n">bend_val</span><span class="si">}</span><span class="s2">, looseness=1.5&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Different parts: Gentle bend to avoid inverting into the part circle</span>
+                    <span class="n">bend_val</span> <span class="o">=</span> <span class="mi">15</span> <span class="o">+</span> <span class="n">edge_bends</span><span class="p">[</span><span class="n">pair_dir</span><span class="p">]</span>
+                    <span class="n">bend_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;bend right=</span><span class="si">{</span><span class="n">bend_val</span><span class="si">}</span><span class="s2">&quot;</span>
+
                 <span class="n">pair_undir</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">([</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">]))</span>
                 <span class="n">label</span> <span class="o">=</span> <span class="n">interaction_labels</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pair_undir</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 
-                <span class="k">if</span> <span class="n">label</span><span class="p">:</span>
+                <span class="c1"># Only draw the label if it hasn&#39;t been drawn yet for this node pair</span>
+                <span class="k">if</span> <span class="n">label</span> <span class="ow">and</span> <span class="n">pair_undir</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">drawn_labels</span><span class="p">:</span>
                     <span class="n">node_str</span> <span class="o">=</span> <span class="sa">rf</span><span class="s2">&quot; node[midway, sloped, above, font=\tiny, text=black] </span><span class="se">{{</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="se">}}</span><span class="s2">&quot;</span>
+                    <span class="n">drawn_labels</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">pair_undir</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">node_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
-                <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;  \path[draw, -&gt;, </span><span class="si">{</span><span class="n">color</span><span class="si">}</span><span class="s2">, ultra thick] (</span><span class="si">{</span><span class="n">u</span><span class="si">}</span><span class="s2">) to[bend right=</span><span class="si">{</span><span class="n">bend</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">node_str</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">);&quot;</span><span class="p">)</span>
+                <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;  \path[draw, -&gt;, </span><span class="si">{</span><span class="n">color</span><span class="si">}</span><span class="s2">, ultra thick] (</span><span class="si">{</span><span class="n">u</span><span class="si">}</span><span class="s2">) to[</span><span class="si">{</span><span class="n">bend_str</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">node_str</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">);&quot;</span><span class="p">)</span>
 
     <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\end</span><span class="si">{tikzpicture}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output</span><span class="p">)</span></div>
+
 </pre></div>
 
            </div>
