@@ -35,7 +35,9 @@ from time import time
 import logging
 from itertools import product
 
+import networkx as nx
 import numpy as np
+
 import sympy as sp
 from scipy.optimize import fminbound
 
@@ -1126,3 +1128,204 @@ def plot_gld_pbox_cdf2(gld_obj, param_list, x_values, xtol=1e-5, labels=None, co
     plt.legend()
     plt.title(title)
     plt.show()
+
+def calculate_graph_layout(system_data_augmented, R_part=15, r_feat=2, d_feat=1.5, margin=1.5, part_spacing=45):
+    """
+    Creates the graph-based representation and computes all spatial coordinates.
+    Includes an iterative untangling step to prevent crossing interaction edges.
+    """
+    data = system_data_augmented.system_data
+    parts = data.get('PARTS', {})
+
+    # --- 1. MACRO LAYOUT: Position the Parts ---
+    G_macro = nx.Graph()
+    for p_id in parts.keys():
+        G_macro.add_node(p_id)
+
+    for p_id, features in parts.items():
+        for f_id, f_data in features.items():
+            for inter in f_data.get('INTERACTIONS', []):
+                target_p = inter[1]
+                if target_p in parts:
+                    G_macro.add_edge(p_id, target_p)
+
+    # Scale restricts the bounding box; max distance is roughly `part_spacing`
+    part_positions = nx.spring_layout(G_macro, scale=part_spacing/2.0, seed=42)
+
+    # --- 2. MICRO LAYOUT: Initialization ---
+    R_arc = R_part - r_feat - margin
+    chord_len = 2 * r_feat + d_feat
+    d_theta = 2 * np.arcsin(chord_len / (2 * R_arc))
+
+    feature_positions = {}
+    part_base_angles = {}
+    feature_order = {}
+
+    for p_id, features in parts.items():
+        px, py = part_positions[p_id]
+
+        interacting_vectors = []
+        for neighbor in G_macro.neighbors(p_id):
+            nx_pos, ny_pos = part_positions[neighbor]
+            interacting_vectors.append([nx_pos - px, ny_pos - py])
+
+        if interacting_vectors:
+            avg_vec = np.mean(interacting_vectors, axis=0)
+            base_angle = np.arctan2(avg_vec[1], avg_vec[0])
+        else:
+            base_angle = 0
+
+        part_base_angles[p_id] = base_angle
+
+        # Initial arbitrary order mapping
+        f_ids = list(features.keys())
+        feature_order[p_id] = f_ids
+
+        # Initial position assignment
+        n_features = len(f_ids)
+        start_angle = base_angle - (n_features - 1) * d_theta / 2
+        for idx, f_id in enumerate(f_ids):
+            angle = start_angle + idx * d_theta
+            fx = px + R_arc * np.cos(angle)
+            fy = py + R_arc * np.sin(angle)
+            feature_positions[f"P{p_id}{f_id}"] = (fx, fy)
+
+    # --- 3. UNTANGLING ITERATIONS ---
+    for _ in range(5):
+        for p_id, features in parts.items():
+            px, py = part_positions[p_id]
+            base_angle = part_base_angles[p_id]
+            f_ids = feature_order[p_id]
+
+            target_angles = []
+            for f_id in f_ids:
+                f_data = features[f_id]
+                targets = []
+                for inter in f_data.get('INTERACTIONS', []):
+                    t_p, t_f = inter[1], inter[2]
+                    t_node = f"P{t_p}{t_f}"
+                    if t_node in feature_positions:
+                        targets.append(feature_positions[t_node])
+
+                if targets:
+                    avg_tx = np.mean([t[0] for t in targets])
+                    avg_ty = np.mean([t[1] for t in targets])
+                    t_ang = np.arctan2(avg_ty - py, avg_tx - px)
+                    rel_ang = np.arctan2(np.sin(t_ang - base_angle), np.cos(t_ang - base_angle))
+                else:
+                    rel_ang = 0
+
+                target_angles.append((rel_ang, f_id))
+
+            # Sort the features strictly by their relative target angle
+            target_angles.sort(key=lambda x: x[0])
+            new_f_ids = [x[1] for x in target_angles]
+            feature_order[p_id] = new_f_ids
+
+            # Update feature positions immediately based on the new sorted order
+            n_features = len(new_f_ids)
+            start_angle = base_angle - (n_features - 1) * d_theta / 2
+            for idx, f_id in enumerate(new_f_ids):
+                angle = start_angle + idx * d_theta
+                fx = px + R_arc * np.cos(angle)
+                fy = py + R_arc * np.sin(angle)
+                feature_positions[f"P{p_id}{f_id}"] = (fx, fy)
+
+    return part_positions, feature_positions
+
+
+def generate_topological_tikz(system_data_augmented, part_positions, feature_positions, R_part=15, r_feat=2, scale=0.15):
+    """
+    Outputs the raw TikZ string. Loops are uniquely colored, closed, plain-styled,
+    and dynamically separated when overlapping. Interaction labels are pushed to loop edges.
+    """
+    data = system_data_augmented.system_data
+    parts = data.get('PARTS', {})
+    loops = data.get('LOOPS', {}).get('COMPATIBILITY', {})
+
+    output = []
+    output.append(r"\begin{tikzpicture}[>=stealth]")
+    output.append(r"  \tikzstyle{part_circle} = [draw, fill=blue!5, thick]")
+
+    scaled_f_size = r_feat * 2 * scale
+    output.append(r"  \tikzstyle{feat_node} = [circle, draw, fill=white, inner sep=0pt, minimum size=" + f"{scaled_f_size:.2f}" + r"cm, font=\scriptsize]")
+
+    scaled_R_part = R_part * scale
+
+    # --- 1. DRAW PARTS AND FEATURES ---
+    for p_id, features in parts.items():
+        output.append(f"\n  %% Part {p_id}")
+        px, py = part_positions[p_id]
+        px_scaled, py_scaled = px * scale, py * scale
+
+        output.append(rf"  \draw[part_circle] ({px_scaled:.3f}, {py_scaled:.3f}) circle ({scaled_R_part:.3f});")
+        output.append(rf"  \node[font=\bfseries\large, gray] at ({px_scaled:.3f}, {py_scaled:.3f}) {{Part {p_id}}};")
+
+        for f_id, f_data in features.items():
+            node_id = f"P{p_id}{f_id}"
+            fx, fy = feature_positions[node_id]
+            fx_scaled, fy_scaled = fx * scale, fy * scale
+
+            is_perfect = "PERFECT" in f_data.get('CONSTRAINTS_D', [])
+            color = "black" if is_perfect else "orange"
+
+            output.append(rf"  \node[feat_node, draw={color}] ({node_id}) at ({fx_scaled:.3f}, {fy_scaled:.3f}) {{{f_id.upper()}}};")
+
+    # --- 2. PRE-COMPUTE INTERACTION LABELS ---
+    interaction_labels = {}
+    for p_id, features in parts.items():
+        for f_id, f_data in features.items():
+            constraint_g = f_data.get('CONSTRAINTS_G', [''])[0]
+            label = constraint_g.lower() if constraint_g != 'FLOATING' else ""
+            if label:
+                for inter in f_data.get('INTERACTIONS', []):
+                    t_p, t_f = inter[1], inter[2]
+                    start_node = f"P{p_id}{f_id}"
+                    end_node = f"P{t_p}{t_f}"
+                    # Use a sorted tuple to make it undirectional for dictionary mapping
+                    pair = tuple(sorted([start_node, end_node]))
+                    interaction_labels[pair] = label
+
+    # --- 3. DRAW CLOSED LOOPS ---
+    output.append("\n  %% Loops")
+
+    # Define a color palette for the loops
+    loop_colors = ["red", "blue", "green!60!black", "orange", "purple", "cyan", "magenta", "brown"]
+    edge_bends = {} # Tracks how many times a specific directional edge has been drawn
+
+    for l_idx, (l_id, path_str) in enumerate(loops.items()):
+        color = loop_colors[l_idx % len(loop_colors)]
+
+        nodes = [n[:3] for n in path_str.split(" -> ")]
+
+        # Close the loop mathematically if not already closed
+        if len(nodes) > 1 and nodes[0] != nodes[-1]:
+            nodes.append(nodes[0])
+
+        for i in range(len(nodes)-1):
+            u = nodes[i]
+            v = nodes[i+1]
+
+            if u in feature_positions and v in feature_positions:
+                # Track parallel directional edges to increase the bend radius
+                pair_dir = (u, v)
+                if pair_dir not in edge_bends:
+                    edge_bends[pair_dir] = 20
+                else:
+                    edge_bends[pair_dir] += 15 # Push overlapping lines out by 15 degrees
+
+                bend = edge_bends[pair_dir]
+
+                # Check if this routing step is actually crossing an interaction threshold
+                pair_undir = tuple(sorted([u, v]))
+                label = interaction_labels.get(pair_undir, "")
+
+                if label:
+                    node_str = rf" node[midway, sloped, above, font=\tiny, text=black] {{{label}}}"
+                else:
+                    node_str = ""
+
+                output.append(rf"  \path[draw, ->, {color}, ultra thick] ({u}) to[bend right={bend}] {node_str} ({v});")
+
+    output.append(r"\end{tikzpicture}")
+    return "\n".join(output)

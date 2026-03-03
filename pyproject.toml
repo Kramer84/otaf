@@ -32,6 +32,7 @@ dependencies = [
     "openturns",
     "matplotlib",
     "tqdm",
+    "networkx",
     "joblib",
     "torch",
     "torcheval",
