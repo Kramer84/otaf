@@ -8,7 +8,6 @@ __all__ = [
     "parse_matrix_string",
     "get_symbols_in_expressions",
     "extract_expressions_with_variables",
-    "round_floats_in_expression",
     "get_symbol_coef_map",
     "get_SE3_base",
     "get_SE3_matrices_from_indices",
@@ -356,19 +355,6 @@ def extract_expressions_with_variables(m: sp.MatrixBase) -> List[sp.Expr]:
     """
     indices = [(0, 1), (0, 2), (1, 2), (0, 3), (1, 3), (2, 3)]
     return [m[i, j] for i, j in indices if len(m[i, j].free_symbols) > 0]
-
-
-@beartype
-def round_floats_in_expression(ex: sp.Expr, rnd: int = 6) -> sp.Expr:
-    """
-    Round floating-point numbers in a SymPy expression.
-    """
-    # Use .atoms(sp.Float) to find all SymPy float objects
-    substitutions = {
-        f: round(f, rnd) for f in ex.atoms(sp.Float)
-    }
-    return ex.subs(substitutions)
-
 
 @beartype
 def get_symbol_coef_map(expr: sp.Expr, rnd: int = 8) -> Dict[str, float]:
