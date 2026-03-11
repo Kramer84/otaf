@@ -237,6 +237,7 @@
 <li class="toctree-l2"><a class="reference internal" href="otaf.geometry.html#module-otaf.geometry">Module contents</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="otaf.geometry.html#otaf.geometry.angle_between_planes"><code class="docutils literal notranslate"><span class="pre">angle_between_planes()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.geometry.html#otaf.geometry.angle_between_vectors"><code class="docutils literal notranslate"><span class="pre">angle_between_vectors()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.geometry.html#otaf.geometry.are_lines_collinear"><code class="docutils literal notranslate"><span class="pre">are_lines_collinear()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.geometry.html#otaf.geometry.are_normals_aligned_and_facing"><code class="docutils literal notranslate"><span class="pre">are_normals_aligned_and_facing()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.geometry.html#otaf.geometry.are_planes_coincident"><code class="docutils literal notranslate"><span class="pre">are_planes_coincident()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.geometry.html#otaf.geometry.are_planes_facing"><code class="docutils literal notranslate"><span class="pre">are_planes_facing()</span></code></a></li>
@@ -322,7 +323,7 @@
 <li class="toctree-l3"><a class="reference internal" href="otaf.plotting.html#otaf.plotting.calculate_graph_layout"><code class="docutils literal notranslate"><span class="pre">calculate_graph_layout()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.plotting.html#otaf.plotting.calculate_sample_in_deviation_domain"><code class="docutils literal notranslate"><span class="pre">calculate_sample_in_deviation_domain()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.plotting.html#otaf.plotting.compare_jacobians"><code class="docutils literal notranslate"><span class="pre">compare_jacobians()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="otaf.plotting.html#otaf.plotting.create_open_cylinder"><code class="docutils literal notranslate"><span class="pre">create_open_cylinder()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.plotting.html#otaf.plotting.create_open_cylinder_mesh"><code class="docutils literal notranslate"><span class="pre">create_open_cylinder_mesh()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.plotting.html#otaf.plotting.create_surface_from_planar_contour"><code class="docutils literal notranslate"><span class="pre">create_surface_from_planar_contour()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.plotting.html#otaf.plotting.generate_topological_tikz"><code class="docutils literal notranslate"><span class="pre">generate_topological_tikz()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.plotting.html#otaf.plotting.hex_to_rgba"><code class="docutils literal notranslate"><span class="pre">hex_to_rgba()</span></code></a></li>
@@ -670,6 +671,31 @@ and expands them into their detailed forms.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.AssemblyDataProcessor.generate_functional_cylinders">
+<span class="sig-name descname"><span class="pre">generate_functional_cylinders</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyDataProcessor.html#AssemblyDataProcessor.generate_functional_cylinders"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.AssemblyDataProcessor.generate_functional_cylinders" title="Link to this definition"></a></dt>
+<dd><p>Generate open cylinders for 3D cylindrical features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.AssemblyDataProcessor.generate_functional_lines">
+<span class="sig-name descname"><span class="pre">generate_functional_lines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyDataProcessor.html#AssemblyDataProcessor.generate_functional_lines"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.AssemblyDataProcessor.generate_functional_lines" title="Link to this definition"></a></dt>
+<dd><p>Generate cylinders representing 2D lines for planar features in a 2D system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>radius</strong> (<em>float</em>)</p>
 </dd>
 </dl>
 </dd></dl>

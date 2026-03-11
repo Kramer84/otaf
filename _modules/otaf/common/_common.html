@@ -467,22 +467,11 @@
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">round_floats_in_expression</span><span class="p">(</span><span class="n">ex</span><span class="p">:</span> <span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">,</span> <span class="n">rnd</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Round floating-point numbers in a SymPy expression to a specified number of decimal places.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    ex : sympy.Expr</span>
-<span class="sd">        SymPy expression containing floating-point numbers to be rounded.</span>
-<span class="sd">    rnd : int, optional</span>
-<span class="sd">        Number of decimal places to round to (default is 6).</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    sympy.Expr</span>
-<span class="sd">        A new SymPy expression with all floating-point numbers rounded to the specified decimal places.</span>
+<span class="sd">    Round floating-point numbers in a SymPy expression.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Use .atoms(sp.Float) to find all SymPy float objects</span>
     <span class="n">substitutions</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="n">a</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">rnd</span><span class="p">))</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">sp</span><span class="o">.</span><span class="n">preorder_traversal</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">rnd</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">ex</span><span class="o">.</span><span class="n">atoms</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">Float</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">ex</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">substitutions</span><span class="p">)</span></div>
 

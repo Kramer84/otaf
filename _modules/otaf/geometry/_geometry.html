@@ -124,7 +124,8 @@
     <span class="s2">&quot;do_bounding_boxes_overlap&quot;</span><span class="p">,</span>
     <span class="s2">&quot;are_normals_aligned_and_facing&quot;</span><span class="p">,</span>
     <span class="s2">&quot;calculate_scalar_projection_factor&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;rotation_matrix_from_vectors&quot;</span>
+    <span class="s2">&quot;rotation_matrix_from_vectors&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;are_lines_collinear&quot;</span>
 <span class="p">]</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
@@ -1449,6 +1450,57 @@
                      <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">]])</span>
     <span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="n">kmat</span> <span class="o">+</span> <span class="p">(</span><span class="n">kmat</span> <span class="o">@</span> <span class="n">kmat</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">c</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">s</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">R</span></div>
+
+
+
+<div class="viewcode-block" id="are_lines_collinear">
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.are_lines_collinear">[docs]</a>
+<span class="nd">@beartype</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">are_lines_collinear</span><span class="p">(</span>
+    <span class="n">dir1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">point1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">dir2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">point2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">atol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-9</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if two lines in 3D space are collinear (i.e., they lie on the exact same infinite line).</span>
+
+<span class="sd">    This function verifies that the two direction vectors are parallel and that the vector</span>
+<span class="sd">    connecting their origins is also parallel to the direction vectors. This is useful for</span>
+<span class="sd">    validating concentricity between cylinders regardless of axial offsets.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dir1 : numpy.ndarray</span>
+<span class="sd">        A 1D NumPy array representing the direction vector of the first line.</span>
+<span class="sd">    point1 : numpy.ndarray</span>
+<span class="sd">        A 1D NumPy array representing a point on the first line.</span>
+<span class="sd">    dir2 : numpy.ndarray</span>
+<span class="sd">        A 1D NumPy array representing the direction vector of the second line.</span>
+<span class="sd">    point2 : numpy.ndarray</span>
+<span class="sd">        A 1D NumPy array representing a point on the second line.</span>
+<span class="sd">    atol : float, optional</span>
+<span class="sd">        Absolute tolerance for geometric comparisons (default is 1e-9).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        True if the lines are collinear within the given tolerance, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># 1. Verify direction vectors are parallel (cross product is near zero)</span>
+    <span class="n">cross_dirs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">dir1</span><span class="p">,</span> <span class="n">dir2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">cross_dirs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">atol</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="c1"># 2. Verify the vector connecting the origins is parallel to the direction vectors</span>
+    <span class="n">point_vector</span> <span class="o">=</span> <span class="n">point2</span> <span class="o">-</span> <span class="n">point1</span>
+    <span class="c1"># If the origins are virtually identical, the lines are perfectly collinear</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">point_vector</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">atol</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="c1"># Cross product of the point vector and dir1 must be near zero</span>
+    <span class="c1"># This proves there is no radial shift between the two infinite lines</span>
+    <span class="n">cross_points_dir</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">point_vector</span><span class="p">,</span> <span class="n">dir1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">cross_points_dir</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">atol</span><span class="p">)</span></div>
 
 </pre></div>
 

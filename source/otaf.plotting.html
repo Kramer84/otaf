@@ -87,7 +87,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.calculate_graph_layout"><code class="docutils literal notranslate"><span class="pre">calculate_graph_layout()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.calculate_sample_in_deviation_domain"><code class="docutils literal notranslate"><span class="pre">calculate_sample_in_deviation_domain()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.compare_jacobians"><code class="docutils literal notranslate"><span class="pre">compare_jacobians()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.create_open_cylinder"><code class="docutils literal notranslate"><span class="pre">create_open_cylinder()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.create_open_cylinder_mesh"><code class="docutils literal notranslate"><span class="pre">create_open_cylinder_mesh()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.create_surface_from_planar_contour"><code class="docutils literal notranslate"><span class="pre">create_surface_from_planar_contour()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.generate_topological_tikz"><code class="docutils literal notranslate"><span class="pre">generate_topological_tikz()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.hex_to_rgba"><code class="docutils literal notranslate"><span class="pre">hex_to_rgba()</span></code></a></li>
@@ -200,9 +200,19 @@ None: Displays a bar plot for visual comparison.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="otaf.plotting.create_open_cylinder">
-<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">create_open_cylinder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segment</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#create_open_cylinder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.create_open_cylinder" title="Link to this definition"></a></dt>
-<dd><p>Creates a trimesh object containing a cylinder open on both ends</p>
+<dt class="sig sig-object py" id="otaf.plotting.create_open_cylinder_mesh">
+<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">create_open_cylinder_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sections</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#create_open_cylinder_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.create_open_cylinder_mesh" title="Link to this definition"></a></dt>
+<dd><p>Creates a trimesh cylinder open on both ends and applies a transformation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> (<em>float</em>)</p></li>
+<li><p><strong>height</strong> (<em>float</em>)</p></li>
+<li><p><strong>transform</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>sections</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -508,22 +518,22 @@ object: The modified graph object.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.plotting.spheres_from_point_cloud">
-<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">spheres_from_point_cloud</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.1,</span> <span class="pre">0.1,</span> <span class="pre">0.1,</span> <span class="pre">1.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">global_translation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([0,</span> <span class="pre">0,</span> <span class="pre">0])</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#spheres_from_point_cloud"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.spheres_from_point_cloud" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">spheres_from_point_cloud</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[100,</span> <span class="pre">100,</span> <span class="pre">100,</span> <span class="pre">255]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">global_translation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([0,</span> <span class="pre">0,</span> <span class="pre">0])</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#spheres_from_point_cloud"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.spheres_from_point_cloud" title="Link to this definition"></a></dt>
 <dd><p>Create a list of spheres from a point cloud.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pc</strong> (<em>np.ndarray</em>) – The point cloud as an Nx3 numpy array, where N is the number of points.</p></li>
 <li><p><strong>radius</strong> (<em>float</em><em>, </em><em>optional</em>) – The radius of the spheres. Defaults to 1.0.</p></li>
-<li><p><strong>color</strong> (<em>List</em><em>[</em><em>float</em><em>]</em><em>, </em><em>optional</em>) – The color of the spheres as an RGBA list. Defaults to [0.1, 0.1, 0.1, 1.0].</p></li>
+<li><p><strong>color</strong> (<em>List</em><em>[</em><em>float</em><em>]</em><em>, </em><em>optional</em>) – The color of the spheres as an RGBA list. Defaults to gray.</p></li>
 <li><p><strong>global_translation</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – A translation vector to apply to all spheres. Defaults to [0, 0, 0].</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of tr Trimesh objects representing the spheres.</p>
+<dd class="field-even"><p>A list of tr.Trimesh objects representing the spheres.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List[tr Trimesh]</p>
+<dd class="field-odd"><p>List[tr.Trimesh]</p>
 </dd>
 </dl>
 </dd></dl>

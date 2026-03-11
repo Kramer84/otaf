@@ -95,7 +95,7 @@
     <span class="s2">&quot;plot_points_3D&quot;</span><span class="p">,</span>
     <span class="s2">&quot;trimesh_scene_as_notebook_scene&quot;</span><span class="p">,</span>
     <span class="s2">&quot;spheres_from_point_cloud&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;create_open_cylinder&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;create_open_cylinder_mesh&quot;</span><span class="p">,</span>
     <span class="s2">&quot;create_surface_from_planar_contour&quot;</span><span class="p">,</span>
     <span class="s2">&quot;hex_to_rgba&quot;</span><span class="p">,</span>
     <span class="s2">&quot;plot_single_transform&quot;</span><span class="p">,</span>
@@ -199,10 +199,10 @@
     <span class="n">pc</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="n">color</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="mf">0.1</span><span class="p">,</span>
-        <span class="mf">0.1</span><span class="p">,</span>
-        <span class="mf">0.1</span><span class="p">,</span>
-        <span class="mf">1.0</span><span class="p">,</span>
+        <span class="mi">100</span><span class="p">,</span>
+        <span class="mi">100</span><span class="p">,</span>
+        <span class="mi">100</span><span class="p">,</span>
+        <span class="mi">255</span><span class="p">,</span>
     <span class="p">],</span>
     <span class="n">global_translation</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">tr</span><span class="o">.</span><span class="n">Trimesh</span><span class="p">]:</span>
@@ -211,35 +211,50 @@
 <span class="sd">    Args:</span>
 <span class="sd">        pc (np.ndarray): The point cloud as an Nx3 numpy array, where N is the number of points.</span>
 <span class="sd">        radius (float, optional): The radius of the spheres. Defaults to 1.0.</span>
-<span class="sd">        color (List[float], optional): The color of the spheres as an RGBA list. Defaults to [0.1, 0.1, 0.1, 1.0].</span>
+<span class="sd">        color (List[float], optional): The color of the spheres as an RGBA list. Defaults to gray.</span>
 <span class="sd">        global_translation (np.ndarray, optional): A translation vector to apply to all spheres. Defaults to [0, 0, 0].</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        List[tr Trimesh]: A list of tr Trimesh objects representing the spheres.</span>
+<span class="sd">        List[tr.Trimesh]: A list of tr.Trimesh objects representing the spheres.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">spheres</span> <span class="o">=</span> <span class="p">[</span><span class="n">tr</span><span class="o">.</span><span class="n">creation</span><span class="o">.</span><span class="n">icosphere</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span> <span class="n">face_colors</span><span class="o">=</span><span class="n">color</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">pc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
-    <span class="n">spheres</span> <span class="o">=</span> <span class="p">[</span><span class="n">spheres</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">apply_translation</span><span class="p">(</span><span class="n">pc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">global_translation</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">pc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+    <span class="n">spheres</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">pc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">sph</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">creation</span><span class="o">.</span><span class="n">icosphere</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">)</span>
+        <span class="n">sph</span><span class="o">.</span><span class="n">visual</span><span class="o">.</span><span class="n">vertex_colors</span> <span class="o">=</span> <span class="n">color</span>
+        <span class="n">sph</span><span class="o">.</span><span class="n">apply_translation</span><span class="p">(</span><span class="n">pc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">global_translation</span><span class="p">)</span>
+        <span class="n">spheres</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sph</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">spheres</span></div>
 
 
 
-<div class="viewcode-block" id="create_open_cylinder">
-<a class="viewcode-back" href="../../../source/otaf.plotting.html#otaf.plotting.create_open_cylinder">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">create_open_cylinder</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">segment</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a trimesh object containing a cylinder open on both ends&quot;&quot;&quot;</span>
-    <span class="n">cylinder</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">creation</span><span class="o">.</span><span class="n">cylinder</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span> <span class="n">segment</span><span class="o">=</span><span class="n">segment</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="c1"># Get all points not on outer cylinder surface</span>
-    <span class="n">vertex_axis_distance</span> <span class="o">=</span> <span class="n">point_to_segment_distance</span><span class="p">(</span>
-        <span class="n">cylinder</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">segment</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">segment</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    <span class="p">)</span>
-    <span class="n">vertex_not_outer_args</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">vertex_axis_distance</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">radius</span><span class="p">))</span>
-    <span class="n">faces_to_remove</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">cylinder</span><span class="o">.</span><span class="n">faces</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vertex_not_outer_args</span><span class="p">:</span>
-        <span class="n">faces_to_remove</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">cylinder</span><span class="o">.</span><span class="n">faces</span> <span class="o">==</span> <span class="n">v</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">faces_to_remove</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">faces_to_remove</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="n">cylinder</span><span class="o">.</span><span class="n">update_faces</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">faces_to_remove</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">cylinder</span></div>
+<div class="viewcode-block" id="create_open_cylinder_mesh">
+<a class="viewcode-back" href="../../../source/otaf.plotting.html#otaf.plotting.create_open_cylinder_mesh">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_open_cylinder_mesh</span><span class="p">(</span><span class="n">radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">transform</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">sections</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a trimesh cylinder open on both ends and applies a transformation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">temp_cyl</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">creation</span><span class="o">.</span><span class="n">cylinder</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">sections</span><span class="o">=</span><span class="n">sections</span><span class="p">)</span>
+
+    <span class="c1"># Identify cap center vertices (local Z is +/- height/2)</span>
+    <span class="n">z_limit</span> <span class="o">=</span> <span class="n">height</span> <span class="o">/</span> <span class="mf">2.0</span>
+    <span class="n">center_v_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">temp_cyl</span><span class="o">.</span><span class="n">vertices</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">1e-5</span><span class="p">)</span> <span class="o">&amp;</span>
+        <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">temp_cyl</span><span class="o">.</span><span class="n">vertices</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">1e-5</span><span class="p">)</span> <span class="o">&amp;</span>
+        <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">temp_cyl</span><span class="o">.</span><span class="n">vertices</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">-</span> <span class="n">z_limit</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-5</span><span class="p">)</span>
+    <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># Filter faces: keep only those that DON&#39;T use a cap center vertex</span>
+    <span class="n">face_mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">temp_cyl</span><span class="o">.</span><span class="n">faces</span><span class="p">,</span> <span class="n">center_v_indices</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Process=False prevents trimesh from trying to &quot;fix&quot; the open ends</span>
+    <span class="n">cyl</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">Trimesh</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="n">temp_cyl</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="n">temp_cyl</span><span class="o">.</span><span class="n">faces</span><span class="p">[</span><span class="n">face_mask</span><span class="p">],</span> <span class="n">process</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">cyl</span><span class="o">.</span><span class="n">remove_unreferenced_vertices</span><span class="p">()</span>
+
+    <span class="c1"># Apply global transform</span>
+    <span class="n">cyl</span><span class="o">.</span><span class="n">apply_transform</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cyl</span></div>
 
 
 <div class="viewcode-block" id="create_surface_from_planar_contour">

@@ -110,7 +110,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">otaf.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_dict_keys</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">otaf.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">point_dict_to_arrays</span><span class="p">,</span> <span class="n">are_points_on_2d_plane</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">otaf.plotting</span><span class="w"> </span><span class="kn">import</span> <span class="n">color_palette_3</span><span class="p">,</span> <span class="n">hex_to_rgba</span><span class="p">,</span> <span class="n">spheres_from_point_cloud</span><span class="p">,</span> <span class="n">create_surface_from_planar_contour</span><span class="p">,</span> <span class="n">trimesh_scene_as_notebook_scene</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">otaf.plotting</span><span class="w"> </span><span class="kn">import</span> <span class="n">color_palette_3</span><span class="p">,</span> <span class="n">hex_to_rgba</span><span class="p">,</span> <span class="n">spheres_from_point_cloud</span><span class="p">,</span> <span class="n">create_surface_from_planar_contour</span><span class="p">,</span> <span class="n">trimesh_scene_as_notebook_scene</span><span class="p">,</span> <span class="n">create_open_cylinder_mesh</span>
 
 <div class="viewcode-block" id="AssemblyDataProcessor">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor">[docs]</a>
@@ -775,6 +775,24 @@
                 <span class="sa">f</span><span class="s2">&quot;Di</span><span class="si">{</span><span class="n">p_start</span><span class="si">}{</span><span class="n">s_start</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
             <span class="p">]</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_feature_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper method to ensure consistent colors across all plotting functions</span>
+<span class="sd">        for a given part and surface feature.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Build the color map once and cache it</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_feature_color_map&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_feature_color_map</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">color_index</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">p_id</span><span class="p">,</span> <span class="n">surfaces</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PARTS&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">s_id</span> <span class="ow">in</span> <span class="n">surfaces</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="n">color_hex</span> <span class="o">=</span> <span class="n">color_palette_3</span><span class="p">[</span><span class="n">color_index</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">color_palette_3</span><span class="p">)]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_feature_color_map</span><span class="p">[(</span><span class="n">p_id</span><span class="p">,</span> <span class="n">s_id</span><span class="p">)]</span> <span class="o">=</span> <span class="n">hex_to_rgba</span><span class="p">(</span><span class="n">color_hex</span><span class="p">)</span>
+                    <span class="n">color_index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># Return the assigned color (fallback to the first color if not found)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_feature_color_map</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">),</span> <span class="n">hex_to_rgba</span><span class="p">(</span><span class="n">color_palette_3</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
 <div class="viewcode-block" id="AssemblyDataProcessor.generate_sphere_clouds">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor.generate_sphere_clouds">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate_sphere_clouds</span><span class="p">(</span>
@@ -809,16 +827,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">sphere_clouds</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">mesh_planes</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">color_index</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="k">for</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">surfaces</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_data</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">surf_id</span><span class="p">,</span> <span class="n">surface_data</span> <span class="ow">in</span> <span class="n">surfaces</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="k">if</span> <span class="s2">&quot;POINTS&quot;</span> <span class="ow">in</span> <span class="n">surface_data</span><span class="p">:</span>
                     <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">surface_data</span><span class="p">[</span><span class="s2">&quot;POINTS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
-                    <span class="n">color_hex</span> <span class="o">=</span> <span class="n">color_palette_3</span><span class="p">[</span>
-                        <span class="n">color_index</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">color_palette_3</span><span class="p">)</span>
-                    <span class="p">]</span>
-                    <span class="n">color_rgba</span> <span class="o">=</span> <span class="n">hex_to_rgba</span><span class="p">(</span><span class="n">color_hex</span><span class="p">)</span>
+                    <span class="n">color_rgba</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_feature_color</span><span class="p">(</span><span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">)</span>
 
                     <span class="n">spheres</span> <span class="o">=</span> <span class="n">spheres_from_point_cloud</span><span class="p">(</span>
                         <span class="n">points</span><span class="p">,</span>
@@ -828,9 +842,96 @@
                     <span class="p">)</span>
                     <span class="n">sphere_clouds</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">spheres</span><span class="p">)</span>
 
-                    <span class="n">color_index</span> <span class="o">+=</span> <span class="mi">1</span>
-
         <span class="k">return</span> <span class="n">sphere_clouds</span></div>
+
+
+<div class="viewcode-block" id="AssemblyDataProcessor.generate_functional_lines">
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor.generate_functional_lines">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_functional_lines</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate cylinders representing 2D lines for planar features in a 2D system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span> <span class="p">:</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">trimesh</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tr</span>
+        <span class="k">except</span> <span class="ne">ImportError</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s1">&#39;You need Trimesh installed for plotting&#39;</span><span class="p">)</span>
+
+        <span class="n">trimesh_lines</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">surfaces</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_data</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">surf_id</span><span class="p">,</span> <span class="n">surface_data</span> <span class="ow">in</span> <span class="n">surfaces</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="s2">&quot;POINTS&quot;</span> <span class="ow">in</span> <span class="n">surface_data</span> <span class="ow">and</span> <span class="n">surface_data</span><span class="p">[</span><span class="s1">&#39;TYPE&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;plane&#39;</span><span class="p">:</span>
+                    <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">surface_data</span><span class="p">[</span><span class="s2">&quot;POINTS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+
+                    <span class="c1"># Assuming points are ordered to define a path/line</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+                        <span class="n">color_rgba</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_feature_color</span><span class="p">(</span><span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">)</span>
+
+                        <span class="c1"># Create a cylinder for each segment in the point set</span>
+                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                            <span class="n">segment</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]])</span>
+                            <span class="n">cylinder</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">creation</span><span class="o">.</span><span class="n">cylinder</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span> <span class="n">segment</span><span class="o">=</span><span class="n">segment</span><span class="p">)</span>
+                            <span class="n">cylinder</span><span class="o">.</span><span class="n">visual</span><span class="o">.</span><span class="n">vertex_colors</span><span class="p">[:,:]</span> <span class="o">=</span> <span class="n">color_rgba</span>
+                            <span class="n">trimesh_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cylinder</span><span class="p">)</span>
+
+                        <span class="n">color_index</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">trimesh_lines</span></div>
+
+
+<div class="viewcode-block" id="AssemblyDataProcessor.generate_functional_cylinders">
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor.generate_functional_cylinders">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_functional_cylinders</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate open cylinders for 3D cylindrical features.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">trimesh</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tr</span>
+        <span class="n">trimesh_cylinders</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">surfaces</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_data</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">surf_id</span><span class="p">,</span> <span class="n">surface_data</span> <span class="ow">in</span> <span class="n">surfaces</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">surface_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;TYPE&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;cylinder&#39;</span><span class="p">:</span>
+                    <span class="c1"># 1. Geometric Extraction - Strict access to throw KeyError if missing</span>
+                    <span class="n">radius</span> <span class="o">=</span> <span class="n">surface_data</span><span class="p">[</span><span class="s1">&#39;RADIUS&#39;</span><span class="p">]</span>
+                    <span class="n">extent</span> <span class="o">=</span> <span class="n">surface_data</span><span class="p">[</span><span class="s1">&#39;EXTENT_LOCAL&#39;</span><span class="p">]</span>
+                    <span class="n">height</span> <span class="o">=</span> <span class="n">extent</span><span class="p">[</span><span class="s1">&#39;x_max&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">extent</span><span class="p">[</span><span class="s1">&#39;x_min&#39;</span><span class="p">]</span>
+                    <span class="n">offset</span> <span class="o">=</span> <span class="p">(</span><span class="n">extent</span><span class="p">[</span><span class="s1">&#39;x_max&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">extent</span><span class="p">[</span><span class="s1">&#39;x_min&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.0</span>
+
+                    <span class="c1"># 2. Coordinate Transformation</span>
+                    <span class="n">frame</span> <span class="o">=</span> <span class="n">surface_data</span><span class="p">[</span><span class="s1">&#39;FRAME&#39;</span><span class="p">]</span>
+                    <span class="n">origin</span> <span class="o">=</span> <span class="n">surface_data</span><span class="p">[</span><span class="s1">&#39;ORIGIN&#39;</span><span class="p">]</span>
+                    <span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+                    <span class="n">matrix</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span>
+                    <span class="n">matrix</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">origin</span>
+
+                    <span class="c1"># Align Trimesh Z-axis (default) to local X-axis</span>
+                    <span class="n">local_transform</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">transformations</span><span class="o">.</span><span class="n">rotation_matrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+                    <span class="n">local_transform</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">offset</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+                    <span class="n">final_matrix</span> <span class="o">=</span> <span class="n">matrix</span> <span class="o">@</span> <span class="n">local_transform</span>
+
+                    <span class="c1"># 3. Create and Open the Cylinder</span>
+                    <span class="n">cyl</span> <span class="o">=</span> <span class="n">create_open_cylinder_mesh</span><span class="p">(</span>
+                        <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
+                        <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+                        <span class="n">transform</span><span class="o">=</span><span class="n">final_matrix</span><span class="p">,</span>
+                        <span class="n">sections</span><span class="o">=</span><span class="mi">64</span>
+                    <span class="p">)</span>
+
+                    <span class="c1"># 4. Visuals and Double-Sided Mesh</span>
+                    <span class="n">color_rgba</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_feature_color</span><span class="p">(</span><span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">)</span>
+
+                    <span class="n">cyl</span><span class="o">.</span><span class="n">visual</span><span class="o">.</span><span class="n">vertex_colors</span><span class="p">[:,:]</span> <span class="o">=</span> <span class="n">color_rgba</span>
+
+                    <span class="c1"># Create inverted copy with the same color</span>
+                    <span class="n">cyl_inverted</span> <span class="o">=</span> <span class="n">cyl</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                    <span class="n">cyl_inverted</span><span class="o">.</span><span class="n">invert</span><span class="p">()</span>
+                    <span class="n">cyl_inverted</span><span class="o">.</span><span class="n">visual</span><span class="o">.</span><span class="n">vertex_colors</span><span class="p">[:,:]</span> <span class="o">=</span> <span class="n">color_rgba</span>
+
+                    <span class="n">trimesh_cylinders</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">cyl</span><span class="p">,</span> <span class="n">cyl_inverted</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">trimesh_cylinders</span></div>
 
 
 <div class="viewcode-block" id="AssemblyDataProcessor.generate_functional_planes">
@@ -855,30 +956,33 @@
 <span class="sd">          for each part and surface.</span>
 <span class="sd">        - The generated spheres are translated globally based on the `global_translation` parameter.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">trimesh_planes</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">color_index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">all_meshes</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">glob_const</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;GLOBAL_CONSTRAINTS&quot;</span><span class="p">,</span> <span class="s2">&quot;3D&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Handle 2D case separately as requested</span>
+        <span class="k">if</span> <span class="s2">&quot;2D&quot;</span> <span class="ow">in</span> <span class="n">glob_const</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_functional_lines</span><span class="p">()</span>
+
+        <span class="c1"># 2. Handle 3D Cylinders</span>
+        <span class="n">all_meshes</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_functional_cylinders</span><span class="p">())</span>
+
         <span class="k">for</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">surfaces</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_data</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">surf_id</span><span class="p">,</span> <span class="n">surface_data</span> <span class="ow">in</span> <span class="n">surfaces</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="k">if</span> <span class="s2">&quot;POINTS&quot;</span> <span class="ow">in</span> <span class="n">surface_data</span> <span class="ow">and</span> <span class="n">surface_data</span><span class="p">[</span><span class="s1">&#39;TYPE&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;plane&#39;</span> <span class="ow">and</span> <span class="p">(</span><span class="s2">&quot;2D&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">glob_const</span><span class="p">):</span>
                     <span class="n">vertices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">surface_data</span><span class="p">[</span><span class="s2">&quot;POINTS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
-                    <span class="n">color_hex</span> <span class="o">=</span> <span class="n">color_palette_3</span><span class="p">[</span>
-                        <span class="n">color_index</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">color_palette_3</span><span class="p">)</span>
-                    <span class="p">]</span>
-                    <span class="n">color_rgba</span> <span class="o">=</span> <span class="n">hex_to_rgba</span><span class="p">(</span><span class="n">color_hex</span><span class="p">)</span>
+                    <span class="n">color_rgba</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_feature_color</span><span class="p">(</span><span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">)</span>
 
                     <span class="n">planar_mesh</span> <span class="o">=</span> <span class="n">create_surface_from_planar_contour</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
                     <span class="n">planar_mesh</span><span class="o">.</span><span class="n">visual</span><span class="o">.</span><span class="n">vertex_colors</span><span class="p">[:,:]</span><span class="o">=</span><span class="n">color_rgba</span>
                     <span class="c1">#We add the same planar mesh twice but with inverted normals so that it is visible above and below</span>
                     <span class="n">pmc</span> <span class="o">=</span> <span class="n">planar_mesh</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
                     <span class="n">pmc</span><span class="o">.</span><span class="n">invert</span><span class="p">()</span>
-                    <span class="n">trimesh_planes</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">planar_mesh</span><span class="p">,</span> <span class="n">pmc</span><span class="p">])</span>
-                    <span class="n">color_index</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">all_meshes</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">planar_mesh</span><span class="p">,</span> <span class="n">pmc</span><span class="p">])</span>
                 <span class="k">if</span> <span class="s2">&quot;POINTS&quot;</span> <span class="ow">in</span> <span class="n">surface_data</span> <span class="ow">and</span> <span class="n">surface_data</span><span class="p">[</span><span class="s1">&#39;TYPE&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;plane&#39;</span> <span class="ow">and</span> <span class="p">(</span><span class="s2">&quot;2D&quot;</span> <span class="ow">in</span> <span class="n">glob_const</span><span class="p">):</span>
                     <span class="k">pass</span>
                     <span class="c1"># Should implement somehting to get points on lines, get end points and create 3d paths.</span>
 
-        <span class="k">return</span> <span class="n">trimesh_planes</span></div>
+        <span class="k">return</span> <span class="n">all_meshes</span></div>
 
 
 
