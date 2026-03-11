@@ -6,7 +6,7 @@ __all__ = [
     "plot_points_3D",
     "trimesh_scene_as_notebook_scene",
     "spheres_from_point_cloud",
-    "create_open_cylinder",
+    "create_open_cylinder_mesh",
     "create_surface_from_planar_contour",
     "hex_to_rgba",
     "plot_single_transform",
@@ -102,10 +102,10 @@ def spheres_from_point_cloud(
     pc: np.ndarray,
     radius: float = 1.0,
     color: Union[Tuple[int, int, int, float], List[Union[float, int]], np.ndarray] = [
-        0.1,
-        0.1,
-        0.1,
-        1.0,
+        100,
+        100,
+        100,
+        255,
     ],
     global_translation: Union[List[Union[float, int]], np.ndarray] = np.array([0, 0, 0]),
 ) -> List[tr.Trimesh]:
@@ -114,32 +114,47 @@ def spheres_from_point_cloud(
     Args:
         pc (np.ndarray): The point cloud as an Nx3 numpy array, where N is the number of points.
         radius (float, optional): The radius of the spheres. Defaults to 1.0.
-        color (List[float], optional): The color of the spheres as an RGBA list. Defaults to [0.1, 0.1, 0.1, 1.0].
+        color (List[float], optional): The color of the spheres as an RGBA list. Defaults to gray.
         global_translation (np.ndarray, optional): A translation vector to apply to all spheres. Defaults to [0, 0, 0].
 
     Returns:
-        List[tr Trimesh]: A list of tr Trimesh objects representing the spheres.
+        List[tr.Trimesh]: A list of tr.Trimesh objects representing the spheres.
     """
-    spheres = [tr.creation.icosphere(radius=radius, face_colors=color) for i in range(pc.shape[0])]
-    spheres = [spheres[i].apply_translation(pc[i] + global_translation) for i in range(pc.shape[0])]
+    spheres = []
+    for i in range(pc.shape[0]):
+        sph = tr.creation.icosphere(radius=radius)
+        sph.visual.vertex_colors = color
+        sph.apply_translation(pc[i] + global_translation)
+        spheres.append(sph)
     return spheres
 
 
-def create_open_cylinder(radius, segment, **kwargs):
-    """Creates a trimesh object containing a cylinder open on both ends"""
-    cylinder = tr.creation.cylinder(radius=radius, segment=segment, **kwargs)
-    # Get all points not on outer cylinder surface
-    vertex_axis_distance = point_to_segment_distance(
-        cylinder.vertices, np.array(segment[0]), np.array(segment[1])
-    )
-    vertex_not_outer_args = np.squeeze(np.argwhere(vertex_axis_distance.round(5) < radius))
-    faces_to_remove = np.zeros(cylinder.faces.shape[0])
-    for v in vertex_not_outer_args:
-        faces_to_remove += np.where(cylinder.faces == v, 1, 0).sum(axis=-1)
-    faces_to_remove = np.where(faces_to_remove > 0, 1, 0)
-    cylinder.update_faces((1 - faces_to_remove).astype(bool))
-    return cylinder
+def create_open_cylinder_mesh(radius: float, height: float, transform: np.ndarray, sections: int = 64):
+    """
+    Creates a trimesh cylinder open on both ends and applies a transformation.
+    """
 
+    temp_cyl = tr.creation.cylinder(radius=radius, height=height, sections=sections)
+
+    # Identify cap center vertices (local Z is +/- height/2)
+    z_limit = height / 2.0
+    center_v_indices = np.where(
+        (np.abs(temp_cyl.vertices[:, 0]) < 1e-5) &
+        (np.abs(temp_cyl.vertices[:, 1]) < 1e-5) &
+        (np.abs(np.abs(temp_cyl.vertices[:, 2]) - z_limit) < 1e-5)
+    )[0]
+
+    # Filter faces: keep only those that DON'T use a cap center vertex
+    face_mask = ~np.any(np.isin(temp_cyl.faces, center_v_indices), axis=1)
+
+    # Process=False prevents trimesh from trying to "fix" the open ends
+    cyl = tr.Trimesh(vertices=temp_cyl.vertices, faces=temp_cyl.faces[face_mask], process=False)
+    cyl.remove_unreferenced_vertices()
+
+    # Apply global transform
+    cyl.apply_transform(transform)
+
+    return cyl
 
 def create_surface_from_planar_contour(vertices, segments=None):
     import triangle

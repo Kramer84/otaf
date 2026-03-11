@@ -20,7 +20,7 @@ from ..assemblyDataProcessor import AssemblyDataProcessor
 from otaf.common import tree, merge_with_checks
 from otaf.constants import BASE_PART_SURF_PATTERN
 
-from otaf.geometry import point_dict_to_arrays, are_points_on_2d_plane, are_planes_facing, are_planes_parallel, line_plane_intersection, euclidean_distance, are_normals_aligned_and_facing
+from otaf.geometry import point_dict_to_arrays, are_points_on_2d_plane, are_planes_facing, are_planes_parallel, line_plane_intersection, euclidean_distance, are_normals_aligned_and_facing, are_lines_collinear
 from otaf.exceptions import PointsNotOnPlaneError, NonConcentricCylindersException, ConflictingSurfaceDirectionsException, CylindricalInterferenceGeometricException
 
 
@@ -255,10 +255,11 @@ class SurfaceInteractionManager:
             - Points are generated for only the top and bottom surfaces of the cylinders, with the inner
               cylinder approximated as a line and the outer cylinder using points on its top/bottom surfaces.
         """
-        if not are_normals_aligned_and_facing(
+        # Removing this test cause maybe unnecessary
+        if not are_lines_collinear(
             datSCur["FRAME"][:, 0], datSCur["ORIGIN"], datSInt["FRAME"][:, 0], datSInt["ORIGIN"]
         ):
-            raise NonConcentricCylindersException()  # For the moment concentricity necessary nominal case
+            raise NonConcentricCylindersException(idPCur, idSCur, idPInt, idSInt)  # For the moment concentricity necessary nominal case
 
         if not "SURFACE_DIRECTION" in datSCur and not "SURFACE_DIRECTION" in datSInt:
             if datSCur["RADIUS"] > datSInt["RADIUS"]:
@@ -542,7 +543,7 @@ class SurfaceInteractionManager:
                         logging.debug("\t", "IF STATEMENT 1, FACING")
 
                 elif xMaxIntInCur < xMinCur:  # Adding point tu interacting part
-                    bottomPointIntAdd = datInt["ORIGIN"] + datSInt["FRAME"][:, 0] * xMinCurInInt
+                    bottomPointIntAdd = datSInt["ORIGIN"] + datSInt["FRAME"][:, 0] * xMinCurInInt
                     if not any(
                         [
                             bool(np.array_equal(bottomPointIntAdd, pnt))

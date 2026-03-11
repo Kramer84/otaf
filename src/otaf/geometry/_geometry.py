@@ -35,7 +35,8 @@ __all__ = [
     "do_bounding_boxes_overlap",
     "are_normals_aligned_and_facing",
     "calculate_scalar_projection_factor",
-    "rotation_matrix_from_vectors"
+    "rotation_matrix_from_vectors",
+    "are_lines_collinear"
 ]
 
 import math
@@ -1262,3 +1263,51 @@ def rotation_matrix_from_vectors(vec1, vec2):
                      [-v[1], v[0], 0]])
     R = np.eye(3) + kmat + (kmat @ kmat) * ((1 - c) / (s**2))
     return R
+
+
+@beartype
+def are_lines_collinear(
+    dir1: np.ndarray,
+    point1: np.ndarray,
+    dir2: np.ndarray,
+    point2: np.ndarray,
+    atol: float = 1e-9,
+) -> bool:
+    """
+    Check if two lines in 3D space are collinear (i.e., they lie on the exact same infinite line).
+
+    This function verifies that the two direction vectors are parallel and that the vector
+    connecting their origins is also parallel to the direction vectors. This is useful for
+    validating concentricity between cylinders regardless of axial offsets.
+
+    Parameters
+    ----------
+    dir1 : numpy.ndarray
+        A 1D NumPy array representing the direction vector of the first line.
+    point1 : numpy.ndarray
+        A 1D NumPy array representing a point on the first line.
+    dir2 : numpy.ndarray
+        A 1D NumPy array representing the direction vector of the second line.
+    point2 : numpy.ndarray
+        A 1D NumPy array representing a point on the second line.
+    atol : float, optional
+        Absolute tolerance for geometric comparisons (default is 1e-9).
+
+    Returns
+    -------
+    bool
+        True if the lines are collinear within the given tolerance, False otherwise.
+    """
+    # 1. Verify direction vectors are parallel (cross product is near zero)
+    cross_dirs = np.cross(dir1, dir2)
+    if np.linalg.norm(cross_dirs) > atol:
+        return False
+    # 2. Verify the vector connecting the origins is parallel to the direction vectors
+    point_vector = point2 - point1
+    # If the origins are virtually identical, the lines are perfectly collinear
+    if np.linalg.norm(point_vector) <= atol:
+        return True
+    # Cross product of the point vector and dir1 must be near zero
+    # This proves there is no radial shift between the two infinite lines
+    cross_points_dir = np.cross(point_vector, dir1)
+    return bool(np.linalg.norm(cross_points_dir) <= atol)

@@ -361,22 +361,11 @@ def extract_expressions_with_variables(m: sp.MatrixBase) -> List[sp.Expr]:
 @beartype
 def round_floats_in_expression(ex: sp.Expr, rnd: int = 6) -> sp.Expr:
     """
-    Round floating-point numbers in a SymPy expression to a specified number of decimal places.
-
-    Parameters
-    ----------
-    ex : sympy.Expr
-        SymPy expression containing floating-point numbers to be rounded.
-    rnd : int, optional
-        Number of decimal places to round to (default is 6).
-
-    Returns
-    -------
-    sympy.Expr
-        A new SymPy expression with all floating-point numbers rounded to the specified decimal places.
+    Round floating-point numbers in a SymPy expression.
     """
+    # Use .atoms(sp.Float) to find all SymPy float objects
     substitutions = {
-        a: round(a, int(rnd)) for a in sp.preorder_traversal(ex) if isinstance(a, float)
+        f: round(f, rnd) for f in ex.atoms(sp.Float)
     }
     return ex.subs(substitutions)
 

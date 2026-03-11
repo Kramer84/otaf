@@ -21,7 +21,7 @@ import otaf.constants as  otaf_constants
 
 from otaf.common import validate_dict_keys
 from otaf.geometry import point_dict_to_arrays, are_points_on_2d_plane
-from otaf.plotting import color_palette_3, hex_to_rgba, spheres_from_point_cloud, create_surface_from_planar_contour, trimesh_scene_as_notebook_scene
+from otaf.plotting import color_palette_3, hex_to_rgba, spheres_from_point_cloud, create_surface_from_planar_contour, trimesh_scene_as_notebook_scene, create_open_cylinder_mesh
 
 @beartype
 class AssemblyDataProcessor:
@@ -657,6 +657,24 @@ class AssemblyDataProcessor:
                 f"Di{p_start}{s_start}",
             ]
 
+    def _get_feature_color(self, part_id, surf_id):
+        """
+        Helper method to ensure consistent colors across all plotting functions
+        for a given part and surface feature.
+        """
+        # Build the color map once and cache it
+        if not hasattr(self, '_feature_color_map'):
+            self._feature_color_map = {}
+            color_index = 0
+            for p_id, surfaces in self.system_data.get("PARTS", {}).items():
+                for s_id in surfaces.keys():
+                    color_hex = color_palette_3[color_index % len(color_palette_3)]
+                    self._feature_color_map[(p_id, s_id)] = hex_to_rgba(color_hex)
+                    color_index += 1
+
+        # Return the assigned color (fallback to the first color if not found)
+        return self._feature_color_map.get((part_id, surf_id), hex_to_rgba(color_palette_3[0]))
+
     def generate_sphere_clouds(
         self,
         radius: Union[float, int] = 0.5,
@@ -689,16 +707,12 @@ class AssemblyDataProcessor:
         """
         sphere_clouds = []
         mesh_planes = []
-        color_index = 0
 
         for part_id, surfaces in self.system_data["PARTS"].items():
             for surf_id, surface_data in surfaces.items():
                 if "POINTS" in surface_data:
                     points = np.array(list(surface_data["POINTS"].values()))
-                    color_hex = color_palette_3[
-                        color_index % len(color_palette_3)
-                    ]
-                    color_rgba = hex_to_rgba(color_hex)
+                    color_rgba = self._get_feature_color(part_id, surf_id)
 
                     spheres = spheres_from_point_cloud(
                         points,
@@ -708,9 +722,90 @@ class AssemblyDataProcessor:
                     )
                     sphere_clouds.extend(spheres)
 
-                    color_index += 1
-
         return sphere_clouds
+
+    def generate_functional_lines(
+        self,
+        radius: float = 0.05
+    ) -> list:
+        """
+        Generate cylinders representing 2D lines for planar features in a 2D system.
+        """
+        try :
+            import trimesh as tr
+        except ImportError :
+            raise ImportError('You need Trimesh installed for plotting')
+
+        trimesh_lines = []
+
+        for part_id, surfaces in self.system_data["PARTS"].items():
+            for surf_id, surface_data in surfaces.items():
+                if "POINTS" in surface_data and surface_data['TYPE'] == 'plane':
+                    points = np.array(list(surface_data["POINTS"].values()))
+
+                    # Assuming points are ordered to define a path/line
+                    if len(points) >= 2:
+                        color_rgba = self._get_feature_color(part_id, surf_id)
+
+                        # Create a cylinder for each segment in the point set
+                        for i in range(len(points) - 1):
+                            segment = np.vstack([points[i], points[i+1]])
+                            cylinder = tr.creation.cylinder(radius=radius, segment=segment)
+                            cylinder.visual.vertex_colors[:,:] = color_rgba
+                            trimesh_lines.append(cylinder)
+
+                        color_index += 1
+        return trimesh_lines
+
+    def generate_functional_cylinders(self) -> list:
+        """
+        Generate open cylinders for 3D cylindrical features.
+        """
+        import trimesh as tr
+        trimesh_cylinders = []
+
+        for part_id, surfaces in self.system_data["PARTS"].items():
+            for surf_id, surface_data in surfaces.items():
+                if surface_data.get('TYPE') == 'cylinder':
+                    # 1. Geometric Extraction - Strict access to throw KeyError if missing
+                    radius = surface_data['RADIUS']
+                    extent = surface_data['EXTENT_LOCAL']
+                    height = extent['x_max'] - extent['x_min']
+                    offset = (extent['x_max'] + extent['x_min']) / 2.0
+
+                    # 2. Coordinate Transformation
+                    frame = surface_data['FRAME']
+                    origin = surface_data['ORIGIN']
+                    matrix = np.eye(4)
+                    matrix[:3, :3] = frame
+                    matrix[:3, 3] = origin
+
+                    # Align Trimesh Z-axis (default) to local X-axis
+                    local_transform = tr.transformations.rotation_matrix(np.pi/2, [0, 1, 0])
+                    local_transform[:3, 3] = [offset, 0, 0]
+                    final_matrix = matrix @ local_transform
+
+                    # 3. Create and Open the Cylinder
+                    cyl = create_open_cylinder_mesh(
+                        radius=radius,
+                        height=height,
+                        transform=final_matrix,
+                        sections=64
+                    )
+
+                    # 4. Visuals and Double-Sided Mesh
+                    color_rgba = self._get_feature_color(part_id, surf_id)
+
+                    cyl.visual.vertex_colors[:,:] = color_rgba
+
+                    # Create inverted copy with the same color
+                    cyl_inverted = cyl.copy()
+                    cyl_inverted.invert()
+                    cyl_inverted.visual.vertex_colors[:,:] = color_rgba
+
+                    trimesh_cylinders.extend([cyl, cyl_inverted])
+
+        return trimesh_cylinders
 
     def generate_functional_planes(
         self,
@@ -732,30 +827,33 @@ class AssemblyDataProcessor:
           for each part and surface.
         - The generated spheres are translated globally based on the `global_translation` parameter.
         """
-        trimesh_planes = []
-        color_index = 0
+        all_meshes = []
         glob_const = self.system_data.get("GLOBAL_CONSTRAINTS", "3D")
+
+        # Handle 2D case separately as requested
+        if "2D" in glob_const:
+            return self.generate_functional_lines()
+
+        # 2. Handle 3D Cylinders
+        all_meshes.extend(self.generate_functional_cylinders())
+
         for part_id, surfaces in self.system_data["PARTS"].items():
             for surf_id, surface_data in surfaces.items():
                 if "POINTS" in surface_data and surface_data['TYPE']=='plane' and ("2D" not in glob_const):
                     vertices = np.array(list(surface_data["POINTS"].values()))
-                    color_hex = color_palette_3[
-                        color_index % len(color_palette_3)
-                    ]
-                    color_rgba = hex_to_rgba(color_hex)
+                    color_rgba = self._get_feature_color(part_id, surf_id)
 
                     planar_mesh = create_surface_from_planar_contour(vertices)
                     planar_mesh.visual.vertex_colors[:,:]=color_rgba
                     #We add the same planar mesh twice but with inverted normals so that it is visible above and below
                     pmc = planar_mesh.copy()
                     pmc.invert()
-                    trimesh_planes.extend([planar_mesh, pmc])
-                    color_index += 1
+                    all_meshes.extend([planar_mesh, pmc])
                 if "POINTS" in surface_data and surface_data['TYPE']=='plane' and ("2D" in glob_const):
                     pass
                     # Should implement somehting to get points on lines, get end points and create 3d paths.
 
-        return trimesh_planes
+        return all_meshes
 
 
     def get_notebook_scene_sphere_clouds(self, radius=0.5, background_hex_color="e6e6e6"):
