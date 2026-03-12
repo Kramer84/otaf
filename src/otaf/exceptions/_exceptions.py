@@ -26,6 +26,7 @@ __all__ = [
     "NonConcentricCylindersException",
     "ConflictingSurfaceDirectionsException",
     "CylindricalInterferenceGeometricException",
+    "NoAxialOverlapException",
     "InvalidAffineTransformException",
 ]
 
@@ -208,6 +209,18 @@ class CylindricalInterferenceGeometricException(Exception):
 
     def __init__(self, part_id1, surface_id1, part_id2, surface_id2, radius1, radius2):
         message = f"Geometric inconsistency or interference in cylindrical interaction: Part {part_id1}, Surface {surface_id1} (Radius: {radius1}) and Part {part_id2}, Surface {surface_id2} (Radius: {radius2})"
+        super().__init__(message)
+
+
+class NoAxialOverlapException(Exception):
+    """Exception raised when two interacting cylinders have no physical overlap along their axis."""
+
+    def __init__(self, part_id1, surface_id1, part_id2, surface_id2):
+        message = (
+            f"No axial overlap in cylindrical interaction: "
+            f"Part {part_id1}, Surface {surface_id1} and "
+            f"Part {part_id2}, Surface {surface_id2} are separated along their axis."
+        )
         super().__init__(message)
 
 

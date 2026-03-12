@@ -518,6 +518,50 @@ class SystemOfConstraintsAssemblyModel:
 
         return unique_classes, sizes
 
+    def test_zero_deviation_feasibility(self) -> dict:
+        """
+        Test if the assembly is feasible with zero manufacturing deviations.
+
+        Uses scipy.optimize.milp to solve the system where X (deviations) = 0.
+
+        Returns
+        -------
+        dict
+            A dictionary containing the 'success' status, the 'status' code,
+            and the resulting 'gap_values' (x).
+        """
+        from scipy.optimize import milp, LinearConstraint
+        # 1. Create a zero deviation array for 1 sample: shape (1, nD)
+        zero_deviations = np.zeros((1, self.nD))
+
+        # 2. Get the LP components using the existing __call__ logic
+        # k=0 because we only have one set of deviations
+        k = 0
+        c, a_ub, b_ub, a_eq, b_eq, bounds = self.__call__(zero_deviations)
+
+        # 3. Format bounds for milp (requires a Bounds object or similar)
+        from scipy.optimize import Bounds
+        milp_bounds = Bounds(bounds[:, 0], bounds[:, 1])
+
+        # 4. Execute MILP
+        res = milp(
+            c=c,
+            bounds=milp_bounds,
+            constraints=(
+                LinearConstraint(a_ub, -np.inf, b_ub[:, k]),
+                LinearConstraint(a_eq, b_eq[:, k], b_eq[:, k]),
+            ),
+            options={"disp": False, "presolve": True},
+        )
+
+        return {
+            "success": res.success,
+            "status": res.status,
+            "message": res.message,
+            "gap_values": res.x if res.success else None,
+            "objective": res.fun if res.success else None
+        }
+
 
 @beartype
 def get_gap_symbol_bounds(gap_symbols: List[sp.Symbol]) -> np.ndarray:

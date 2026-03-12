@@ -102,15 +102,17 @@ class InterfaceLoopHandling:
         # Step 2: Populate the gap matrices
         for part_id, surfaces in self.facing_point_dictionary.items():
             for surface_id, points in surfaces.items():
-                for point_id, facing_point in points.items():
-                    match = POINT_PATTERN.fullmatch(facing_point)
-                    if match:
-                        (facing_part_id, facing_surface_id, facing_point_id) = match.groups()
-                    else:
-                        continue
+                for point_id, facing_points_set in points.items():
+                    # Unpack the set of interacting points
+                    for facing_point in facing_points_set:
+                        match = POINT_PATTERN.fullmatch(facing_point)
+                        if match:
+                            (facing_part_id, facing_surface_id, facing_point_id) = match.groups()
+                        else:
+                            continue
 
-                    gap_matrix_name = f"GP{part_id}{surface_id}{point_id}P{facing_part_id}{facing_surface_id}{facing_point_id}"
-                    gap_matrix_dict[part_id][surface_id].add(gap_matrix_name)
+                        gap_matrix_name = f"GP{part_id}{surface_id}{point_id}P{facing_part_id}{facing_surface_id}{facing_point_id}"
+                        gap_matrix_dict[part_id][surface_id].add(gap_matrix_name)
 
         # Step 3: Repopulate missing gap matrices by inverting existing ones
         for part_id, surfaces in gap_matrix_dict.items():

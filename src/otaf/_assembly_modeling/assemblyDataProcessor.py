@@ -542,6 +542,16 @@ class AssemblyDataProcessor:
             otaf_constants.LOC_STAMP_PATTERN.search(loop_element).groups()
             for loop_element in split_compact_loop
         ]
+
+        # Two-element loop: pure inter-part contact, no closure needed
+        if len(part_surf_point) == 2:
+            ps, ss, pts = part_surf_point[0]
+            pe, se, pte = part_surf_point[1]
+            if ps == pe:
+                raise ValueError("Two-element loop must be inter-part.")
+            return " -> ".join([f"D{ps}{ss}", f"GP{ps}{ss}{pts}P{pe}{se}{pte}", f"Di{pe}{se}"])
+
+
         first_inter = self._check_loop_order(part_surf_point)
         expanded_loop = self._generate_expanded_loop(part_surf_point)
         expanded_loop += self._handle_loop_closure(part_surf_point, first_inter)
@@ -753,8 +763,6 @@ class AssemblyDataProcessor:
                             cylinder = tr.creation.cylinder(radius=radius, segment=segment)
                             cylinder.visual.vertex_colors[:,:] = color_rgba
                             trimesh_lines.append(cylinder)
-
-                        color_index += 1
         return trimesh_lines
 
     def generate_functional_cylinders(self) -> list:
