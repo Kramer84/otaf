@@ -660,6 +660,16 @@
             <span class="n">otaf_constants</span><span class="o">.</span><span class="n">LOC_STAMP_PATTERN</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">loop_element</span><span class="p">)</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">loop_element</span> <span class="ow">in</span> <span class="n">split_compact_loop</span>
         <span class="p">]</span>
+
+        <span class="c1"># Two-element loop: pure inter-part contact, no closure needed</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">part_surf_point</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">ps</span><span class="p">,</span> <span class="n">ss</span><span class="p">,</span> <span class="n">pts</span> <span class="o">=</span> <span class="n">part_surf_point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">pe</span><span class="p">,</span> <span class="n">se</span><span class="p">,</span> <span class="n">pte</span> <span class="o">=</span> <span class="n">part_surf_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">ps</span> <span class="o">==</span> <span class="n">pe</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Two-element loop must be inter-part.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">&quot; -&gt; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;D</span><span class="si">{</span><span class="n">ps</span><span class="si">}{</span><span class="n">ss</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;GP</span><span class="si">{</span><span class="n">ps</span><span class="si">}{</span><span class="n">ss</span><span class="si">}{</span><span class="n">pts</span><span class="si">}</span><span class="s2">P</span><span class="si">{</span><span class="n">pe</span><span class="si">}{</span><span class="n">se</span><span class="si">}{</span><span class="n">pte</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Di</span><span class="si">{</span><span class="n">pe</span><span class="si">}{</span><span class="n">se</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">])</span>
+
+
         <span class="n">first_inter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_loop_order</span><span class="p">(</span><span class="n">part_surf_point</span><span class="p">)</span>
         <span class="n">expanded_loop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_expanded_loop</span><span class="p">(</span><span class="n">part_surf_point</span><span class="p">)</span>
         <span class="n">expanded_loop</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_loop_closure</span><span class="p">(</span><span class="n">part_surf_point</span><span class="p">,</span> <span class="n">first_inter</span><span class="p">)</span>
@@ -876,8 +886,6 @@
                             <span class="n">cylinder</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">creation</span><span class="o">.</span><span class="n">cylinder</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span> <span class="n">segment</span><span class="o">=</span><span class="n">segment</span><span class="p">)</span>
                             <span class="n">cylinder</span><span class="o">.</span><span class="n">visual</span><span class="o">.</span><span class="n">vertex_colors</span><span class="p">[:,:]</span> <span class="o">=</span> <span class="n">color_rgba</span>
                             <span class="n">trimesh_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cylinder</span><span class="p">)</span>
-
-                        <span class="n">color_index</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">trimesh_lines</span></div>
 
 

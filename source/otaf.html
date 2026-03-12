@@ -217,6 +217,7 @@
 <li class="toctree-l3"><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.MissingKeyError"><code class="docutils literal notranslate"><span class="pre">MissingKeyError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.MissingOriginPointError"><code class="docutils literal notranslate"><span class="pre">MissingOriginPointError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.MissingSurfaceTypeKeyError"><code class="docutils literal notranslate"><span class="pre">MissingSurfaceTypeKeyError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.NoAxialOverlapException"><code class="docutils literal notranslate"><span class="pre">NoAxialOverlapException</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.NonConcentricCylindersException"><code class="docutils literal notranslate"><span class="pre">NonConcentricCylindersException</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.NonUniqueCoordinatesError"><code class="docutils literal notranslate"><span class="pre">NonUniqueCoordinatesError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.NonUniqueLabelError"><code class="docutils literal notranslate"><span class="pre">NonUniqueLabelError</span></code></a></li>
@@ -2178,6 +2179,22 @@ of variables associated with each class index and returns two lists:
 <li><p>Each deviation symbol is assumed to contain the class identifier in the format <cite>_d_X</cite>.</p></li>
 <li><p>The method uses a regular expression to extract the class identifier and counts occurrences for each class.</p></li>
 </ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.SystemOfConstraintsAssemblyModel.test_zero_deviation_feasibility">
+<span class="sig-name descname"><span class="pre">test_zero_deviation_feasibility</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/systemOfConstraintsAssemblyModel.html#SystemOfConstraintsAssemblyModel.test_zero_deviation_feasibility"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.SystemOfConstraintsAssemblyModel.test_zero_deviation_feasibility" title="Link to this definition"></a></dt>
+<dd><p>Test if the assembly is feasible with zero manufacturing deviations.</p>
+<p>Uses scipy.optimize.milp to solve the system where X (deviations) = 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary containing the ‘success’ status, the ‘status’ code,
+and the resulting ‘gap_values’ (x).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">

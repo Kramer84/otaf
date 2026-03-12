@@ -631,6 +631,53 @@
         <span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">class_size_map</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">unique_classes</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="n">unique_classes</span><span class="p">,</span> <span class="n">sizes</span></div>
+
+
+<div class="viewcode-block" id="SystemOfConstraintsAssemblyModel.test_zero_deviation_feasibility">
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.test_zero_deviation_feasibility">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_zero_deviation_feasibility</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test if the assembly is feasible with zero manufacturing deviations.</span>
+
+<span class="sd">        Uses scipy.optimize.milp to solve the system where X (deviations) = 0.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            A dictionary containing the &#39;success&#39; status, the &#39;status&#39; code,</span>
+<span class="sd">            and the resulting &#39;gap_values&#39; (x).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">milp</span><span class="p">,</span> <span class="n">LinearConstraint</span>
+        <span class="c1"># 1. Create a zero deviation array for 1 sample: shape (1, nD)</span>
+        <span class="n">zero_deviations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nD</span><span class="p">))</span>
+
+        <span class="c1"># 2. Get the LP components using the existing __call__ logic</span>
+        <span class="c1"># k=0 because we only have one set of deviations</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">c</span><span class="p">,</span> <span class="n">a_ub</span><span class="p">,</span> <span class="n">b_ub</span><span class="p">,</span> <span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="n">zero_deviations</span><span class="p">)</span>
+
+        <span class="c1"># 3. Format bounds for milp (requires a Bounds object or similar)</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bounds</span>
+        <span class="n">milp_bounds</span> <span class="o">=</span> <span class="n">Bounds</span><span class="p">(</span><span class="n">bounds</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># 4. Execute MILP</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">milp</span><span class="p">(</span>
+            <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span>
+            <span class="n">bounds</span><span class="o">=</span><span class="n">milp_bounds</span><span class="p">,</span>
+            <span class="n">constraints</span><span class="o">=</span><span class="p">(</span>
+                <span class="n">LinearConstraint</span><span class="p">(</span><span class="n">a_ub</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">b_ub</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]),</span>
+                <span class="n">LinearConstraint</span><span class="p">(</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="p">[:,</span> <span class="n">k</span><span class="p">],</span> <span class="n">b_eq</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]),</span>
+            <span class="p">),</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;disp&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;presolve&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="n">res</span><span class="o">.</span><span class="n">success</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">res</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">res</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+            <span class="s2">&quot;gap_values&quot;</span><span class="p">:</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span> <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">success</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;objective&quot;</span><span class="p">:</span> <span class="n">res</span><span class="o">.</span><span class="n">fun</span> <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">success</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">}</span></div>
 </div>
 
 

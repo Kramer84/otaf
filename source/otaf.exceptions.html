@@ -99,6 +99,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.MissingKeyError"><code class="docutils literal notranslate"><span class="pre">MissingKeyError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.MissingOriginPointError"><code class="docutils literal notranslate"><span class="pre">MissingOriginPointError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.MissingSurfaceTypeKeyError"><code class="docutils literal notranslate"><span class="pre">MissingSurfaceTypeKeyError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.NoAxialOverlapException"><code class="docutils literal notranslate"><span class="pre">NoAxialOverlapException</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.NonConcentricCylindersException"><code class="docutils literal notranslate"><span class="pre">NonConcentricCylindersException</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.NonUniqueCoordinatesError"><code class="docutils literal notranslate"><span class="pre">NonUniqueCoordinatesError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.exceptions.NonUniqueLabelError"><code class="docutils literal notranslate"><span class="pre">NonUniqueLabelError</span></code></a></li>
@@ -276,6 +277,13 @@
 <dt class="sig sig-object py" id="otaf.exceptions.MissingSurfaceTypeKeyError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">MissingSurfaceTypeKeyError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surf_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#MissingSurfaceTypeKeyError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.MissingSurfaceTypeKeyError" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">KeyError</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.NoAxialOverlapException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">NoAxialOverlapException</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part_id1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_id1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">part_id2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_id2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#NoAxialOverlapException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.NoAxialOverlapException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Exception raised when two interacting cylinders have no physical overlap along their axis.</p>
 </dd></dl>
 
 <dl class="py exception">
