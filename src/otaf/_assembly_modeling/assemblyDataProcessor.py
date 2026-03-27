@@ -8,7 +8,7 @@ __all__ = ["AssemblyDataProcessor"]
 import re
 import logging
 
-from copy import copy
+from copy import copy, deepcopy
 
 import numpy as np
 import sympy as sp
@@ -56,7 +56,7 @@ class AssemblyDataProcessor:
             is created and initialized.
         """
         self.system_data = (
-            system_data if system_data is not None else self._initialize_empty_system_data()
+            deepcopy(system_data) if system_data is not None else self._initialize_empty_system_data()
         )
         self.validate_system_data_structure()
         self.compatibility_loops_expanded = None

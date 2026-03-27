@@ -454,7 +454,7 @@ class SurfaceInteractionManager:
                         current_points[idPntCur] = topPointCurAdd
                         pspstr = f"{idPInt}{idSInt}{idSInt.upper()}1"
                         self.facingPointDict[idPCur][idSCur].setdefault(idPntCur ,set()).add(pspstr)
-                        logging.debug("\t", "IF STATEMENT 1, NOT FACING")
+                        logging.debug("\tIF STATEMENT 1, NOT FACING")
 
                 elif xMaxIntInCur > xMaxCur:
                     # We add a new point interacting part
@@ -470,13 +470,13 @@ class SurfaceInteractionManager:
                         interacting_points[idPntInt] = topPointIntAdd
                         pspstr = f"{idPCur}{idSCur}{idSCur.upper()}1"
                         self.facingPointDict[idPInt][idSInt].setdefault(idPntInt ,set()).add(pspstr)
-                        logging.debug("\t", "IF STATEMENT 2, NOT FACING")
+                        logging.debug("\tIF STATEMENT 2, NOT FACING")
 
                 elif xMaxIntInCur == xMaxCur:
                     # No point needs to be added.
                     pspstr = f"{idPInt}{idSInt}{idSInt.upper()}1"
                     self.facingPointDict[idPCur][idSCur].setdefault(f"{idSCur.upper()}1" ,set()).add(pspstr)
-                    logging.debug("\t", "IF STATEMENT 3, NOT FACING")
+                    logging.debug("\tIF STATEMENT 3, NOT FACING")
 
                 ####################################################################################
 
@@ -495,7 +495,7 @@ class SurfaceInteractionManager:
                         current_points[idPntCur] = bottomPointCurAdd
                         pspstr = f"{idPInt}{idSInt}{idSInt.upper()}2"
                         self.facingPointDict[idPCur][idSCur].setdefault(idPntCur ,set()).add(pspstr)
-                        logging.debug("\t", "IF STATEMENT 4, NOT FACING")
+                        logging.debug("\tIF STATEMENT 4, NOT FACING")
 
                 elif xMinIntInCur < xMinCur:
                     # We add a new point interacting part
@@ -511,13 +511,13 @@ class SurfaceInteractionManager:
                         interacting_points[idPntInt] = bottomPointIntAdd
                         pspstr = f"{idPCur}{idSCur}{idSCur.upper()}2"
                         self.facingPointDict[idPInt][idSInt].setdefault(idPntInt ,set()).add(pspstr)
-                        logging.debug("\t", "IF STATEMENT 5, NOT FACING")
+                        logging.debug("\tIF STATEMENT 5, NOT FACING")
 
                 elif xMinIntInCur == xMinCur:
                     # No point needs to be added.
                     pspstr = f"{idPInt}{idSInt}{idSInt.upper()}2"
                     self.facingPointDict[idPCur][idSCur].setdefault(f"{idSCur.upper()}2" ,set()).add(pspstr)
-                    logging.debug("\t", "IF STATEMENT 6, NOT FACING")
+                    logging.debug("\tIF STATEMENT 6, NOT FACING")
                 #################################################################################
 
             elif normsFacing:
@@ -546,7 +546,7 @@ class SurfaceInteractionManager:
                         current_points[idPntCur] = bottomPointCurAdd
                         pspstr = f"{idPInt}{idSInt}{idSInt.upper()}1"
                         self.facingPointDict[idPCur][idSCur].setdefault(idPntCur ,set()).add(pspstr)
-                        logging.debug("\t", "IF STATEMENT 1, FACING")
+                        logging.debug("\tIF STATEMENT 1, FACING")
 
                 elif xMaxIntInCur < xMinCur:  # Adding point tu interacting part
                     bottomPointIntAdd = datSInt["ORIGIN"] + datSInt["FRAME"][:, 0] * xMinCurInInt
@@ -561,12 +561,12 @@ class SurfaceInteractionManager:
                         interacting_points[idPntInt] = bottomPointIntAdd
                         pspstr = f"{idPCur}{idSCur}{idSCur.upper()}2"
                         self.facingPointDict[idPInt][idSInt].setdefault(idPntInt ,set()).add(pspstr)
-                        logging.debug("\t", "IF STATEMENT 2, FACING")
+                        logging.debug("\tIF STATEMENT 2, FACING")
 
                 elif xMaxIntInCur == xMinCur:
                     pspstr = f"{idPInt}{idSInt}{idSInt.upper()}1"
                     self.facingPointDict[idPCur][idSCur].setdefault(f"{idSCur.upper()}2" ,set()).add(pspstr)
-                    logging.debug("\t", "IF STATEMENT 3, FACING")
+                    logging.debug("\tIF STATEMENT 3, FACING")
 
                 ####################################################################################
 
@@ -583,7 +583,7 @@ class SurfaceInteractionManager:
                         current_points[idPntCur] = topPointCurAdd
                         pspstr = f"{idPInt}{idSInt}{idSInt.upper()}2"
                         self.facingPointDict[idPCur][idSCur].setdefault(idPntCur ,set()).add(pspstr)
-                        logging.debug("\t", "IF STATEMENT 4, FACING")
+                        logging.debug("\tIF STATEMENT 4, FACING")
 
                 elif xMinIntInCur > xMaxCur:
                     # We add a new lower point on the interacting part
@@ -599,13 +599,13 @@ class SurfaceInteractionManager:
                         interacting_points[idPntInt] = topPointIntAdd
                         pspstr = f"{idPCur}{idSCur}{idSCur.upper()}1"
                         self.facingPointDict[idPInt][idSInt].setdefault(idPntInt ,set()).add(pspstr)
-                        logging.debug("\t", "IF STATEMENT 5, FACING")
+                        logging.debug("\tIF STATEMENT 5, FACING")
 
                 elif xMinIntInCur == xMaxCur:
                     # No point needs to be added.
                     pspstr = f"{idPInt}{idSInt}{idSInt.upper()}2"
                     self.facingPointDict[idPCur][idSCur].setdefault(f"{idSCur.upper()}1" ,set()).add(pspstr)
-                    logging.debug("\t", "IF STATEMENT 6, FACING")
+                    logging.debug("\tIF STATEMENT 6, FACING")
 
                 #################################################################################
             try:
