@@ -97,7 +97,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">copy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">copy</span><span class="p">,</span> <span class="n">deepcopy</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
@@ -147,7 +147,7 @@
 <span class="sd">            is created and initialized.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">system_data</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">system_data</span> <span class="k">if</span> <span class="n">system_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_empty_system_data</span><span class="p">()</span>
+            <span class="n">deepcopy</span><span class="p">(</span><span class="n">system_data</span><span class="p">)</span> <span class="k">if</span> <span class="n">system_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_empty_system_data</span><span class="p">()</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">validate_system_data_structure</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">compatibility_loops_expanded</span> <span class="o">=</span> <span class="kc">None</span>
