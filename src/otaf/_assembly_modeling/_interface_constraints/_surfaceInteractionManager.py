@@ -255,12 +255,13 @@ class SurfaceInteractionManager:
             - Points are generated for only the top and bottom surfaces of the cylinders, with the inner
               cylinder approximated as a line and the outer cylinder using points on its top/bottom surfaces.
         """
-        # Removing this test cause maybe unnecessary
+        # Checking if nominal cylinder axes are well aligned
         if not are_lines_collinear(
             datSCur["FRAME"][:, 0], datSCur["ORIGIN"], datSInt["FRAME"][:, 0], datSInt["ORIGIN"]
         ):
             raise NonConcentricCylindersException(idPCur, idSCur, idPInt, idSInt)  # For the moment concentricity necessary nominal case
 
+        # Determining if a feature is a hole or a axis if not pre-defined.
         if not "SURFACE_DIRECTION" in datSCur and not "SURFACE_DIRECTION" in datSInt:
             if datSCur["RADIUS"] > datSInt["RADIUS"]:
                 datSCur["SURFACE_DIRECTION"] = "centripetal"
@@ -270,9 +271,10 @@ class SurfaceInteractionManager:
                 datSInt["SURFACE_DIRECTION"] = "centripetal"
             else:
                 raise ValueError(
-                    "Inner and outer cylinder walls have the same radii: Not yet supported."
+                    "Inner and outer cylinder walls have the same radii: Not (yet) supported."
                 )
 
+        # Checking surface direction validity if already defined
         else:
             # Check for conflicting surface directions and interfering parts
             if datSCur.get("SURFACE_DIRECTION") == datSInt.get("SURFACE_DIRECTION"):
@@ -399,7 +401,7 @@ class SurfaceInteractionManager:
         logging.debug(
             f"Processing cylinder-cylinder interaction for part {idPCur} / surface {idSCur} and part {idPInt} / surface {idSInt}."
         )
-        logging.debug(f"Cylinder revolution axes are {None if normsFacing else 'not'} facing.")
+        logging.debug(f"Cylinder revolution axes are {'' if normsFacing else 'not'} facing.")
         logging.debug(
             f"Start cylinder to end cylinder origin vector in local {vecCur2IntLocal.round(3)} and global {vecCur2IntGlobal.round(3)} coordinates"
         )
