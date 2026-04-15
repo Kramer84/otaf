@@ -242,6 +242,17 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No system data dictionary wa passed, initializing empty one&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;PARTS&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;LOOPS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;COMPATIBILITY&quot;</span><span class="p">:</span> <span class="p">{}},</span> <span class="s2">&quot;GLOBAL_CONSTRAINTS&quot;</span><span class="p">:</span> <span class="s2">&quot;3D&quot;</span><span class="p">}</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">_is_single_feature_part</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determine if a part is modeled with a single functional feature.</span>
+<span class="sd">        Assumes feature keys are purely lowercase alphabetic strings.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">feature_keys</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_data</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">][</span><span class="n">part_id</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">islower</span><span class="p">()</span> <span class="ow">and</span> <span class="n">k</span><span class="o">.</span><span class="n">isalpha</span><span class="p">()</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_keys</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+
 <div class="viewcode-block" id="AssemblyDataProcessor.validate_system_data_structure">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor.validate_system_data_structure">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">validate_system_data_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -729,7 +740,8 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_generate_expanded_loop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_surf_point</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate the main sequence of the expanded loop.</span>
+<span class="sd">        Generate the main sequence of the expanded loop, omitting defect</span>
+<span class="sd">        transformations for single-feature parts.</span>
 
 <span class="sd">        This method processes the list of part-surface-point combinations to create the expanded loop,</span>
 <span class="sd">        excluding the closure.</span>
@@ -744,14 +756,19 @@
 <span class="sd">        List[str]</span>
 <span class="sd">            A list of strings representing the main sequence of the expanded loop.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">[</span>
-            <span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;TP</span><span class="si">{</span><span class="n">ps</span><span class="si">}{</span><span class="n">ss</span><span class="si">}{</span><span class="n">pts</span><span class="si">}{</span><span class="n">se</span><span class="si">}{</span><span class="n">pte</span><span class="si">}</span><span class="s2">&quot;</span>
-                <span class="k">if</span> <span class="n">ps</span> <span class="o">==</span> <span class="n">pe</span>
-                <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;D</span><span class="si">{</span><span class="n">ps</span><span class="si">}{</span><span class="n">ss</span><span class="si">}</span><span class="s2"> -&gt; GP</span><span class="si">{</span><span class="n">ps</span><span class="si">}{</span><span class="n">ss</span><span class="si">}{</span><span class="n">pts</span><span class="si">}</span><span class="s2">P</span><span class="si">{</span><span class="n">pe</span><span class="si">}{</span><span class="n">se</span><span class="si">}{</span><span class="n">pte</span><span class="si">}</span><span class="s2"> -&gt; Di</span><span class="si">{</span><span class="n">pe</span><span class="si">}{</span><span class="n">se</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
-            <span class="k">for</span> <span class="p">(</span><span class="n">ps</span><span class="p">,</span> <span class="n">ss</span><span class="p">,</span> <span class="n">pts</span><span class="p">),</span> <span class="p">(</span><span class="n">pe</span><span class="p">,</span> <span class="n">se</span><span class="p">,</span> <span class="n">pte</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">part_surf_point</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">part_surf_point</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
-        <span class="p">]</span>
+        <span class="n">sequence</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">ps</span><span class="p">,</span> <span class="n">ss</span><span class="p">,</span> <span class="n">pts</span><span class="p">),</span> <span class="p">(</span><span class="n">pe</span><span class="p">,</span> <span class="n">se</span><span class="p">,</span> <span class="n">pte</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">part_surf_point</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">part_surf_point</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+            <span class="k">if</span> <span class="n">ps</span> <span class="o">==</span> <span class="n">pe</span><span class="p">:</span>
+                <span class="n">sequence</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;TP</span><span class="si">{</span><span class="n">ps</span><span class="si">}{</span><span class="n">ss</span><span class="si">}{</span><span class="n">pts</span><span class="si">}{</span><span class="n">se</span><span class="si">}{</span><span class="n">pte</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_single_feature_part</span><span class="p">(</span><span class="n">ps</span><span class="p">):</span>
+                    <span class="n">sequence</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;D</span><span class="si">{</span><span class="n">ps</span><span class="si">}{</span><span class="n">ss</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                <span class="n">sequence</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;GP</span><span class="si">{</span><span class="n">ps</span><span class="si">}{</span><span class="n">ss</span><span class="si">}{</span><span class="n">pts</span><span class="si">}</span><span class="s2">P</span><span class="si">{</span><span class="n">pe</span><span class="si">}{</span><span class="n">se</span><span class="si">}{</span><span class="n">pte</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_single_feature_part</span><span class="p">(</span><span class="n">pe</span><span class="p">):</span>
+                    <span class="n">sequence</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Di</span><span class="si">{</span><span class="n">pe</span><span class="si">}{</span><span class="n">se</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">sequence</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_handle_loop_closure</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">part_surf_point</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="n">first_inter</span><span class="p">:</span> <span class="nb">bool</span>
@@ -778,12 +795,17 @@
         <span class="n">p_end</span><span class="p">,</span> <span class="n">s_end</span><span class="p">,</span> <span class="n">pt_end</span> <span class="o">=</span> <span class="n">part_surf_point</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">first_inter</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;TP</span><span class="si">{</span><span class="n">p_start</span><span class="si">}{</span><span class="n">s_end</span><span class="si">}{</span><span class="n">pt_end</span><span class="si">}{</span><span class="n">s_start</span><span class="si">}{</span><span class="n">pt_start</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[</span>
-                <span class="sa">f</span><span class="s2">&quot;D</span><span class="si">{</span><span class="n">p_end</span><span class="si">}{</span><span class="n">s_end</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s2">&quot;GP</span><span class="si">{</span><span class="n">p_end</span><span class="si">}{</span><span class="n">s_end</span><span class="si">}{</span><span class="n">pt_end</span><span class="si">}</span><span class="s2">P</span><span class="si">{</span><span class="n">p_start</span><span class="si">}{</span><span class="n">s_start</span><span class="si">}{</span><span class="n">pt_start</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s2">&quot;Di</span><span class="si">{</span><span class="n">p_start</span><span class="si">}{</span><span class="n">s_start</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-            <span class="p">]</span>
+
+        <span class="n">closure</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_single_feature_part</span><span class="p">(</span><span class="n">p_end</span><span class="p">):</span>
+            <span class="n">closure</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;D</span><span class="si">{</span><span class="n">p_end</span><span class="si">}{</span><span class="n">s_end</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">closure</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;GP</span><span class="si">{</span><span class="n">p_end</span><span class="si">}{</span><span class="n">s_end</span><span class="si">}{</span><span class="n">pt_end</span><span class="si">}</span><span class="s2">P</span><span class="si">{</span><span class="n">p_start</span><span class="si">}{</span><span class="n">s_start</span><span class="si">}{</span><span class="n">pt_start</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_single_feature_part</span><span class="p">(</span><span class="n">p_start</span><span class="p">):</span>
+            <span class="n">closure</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Di</span><span class="si">{</span><span class="n">p_start</span><span class="si">}{</span><span class="n">s_start</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">closure</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_feature_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
