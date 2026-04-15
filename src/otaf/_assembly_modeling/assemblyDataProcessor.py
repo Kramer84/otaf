@@ -689,6 +689,27 @@ class AssemblyDataProcessor:
 
         return closure
 
+
+
+
+    #################################################################################
+    ##
+    ##
+    ##   BELOW HERE ONLY PLOTTING RELATED FUNCTIONS
+    ##
+    ##
+    ##
+    ##
+    ##
+    ##
+    ##
+    ##
+    ##
+    ##
+    ##
+    #################################################################################
+
+
     def _get_feature_color(self, part_id, surf_id):
         """
         Helper method to ensure consistent colors across all plotting functions

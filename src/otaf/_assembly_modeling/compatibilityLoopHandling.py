@@ -15,13 +15,12 @@ from beartype import beartype
 from beartype.typing import Dict, List, Union
 
 from .assemblyDataProcessor import AssemblyDataProcessor
-from .assemblyModelingBaseObjects import DeviationMatrix, GapMatrix, TransformationMatrix
+from .assemblyModelingBaseObjects import DeviationMatrix, GapMatrix, TransformationMatrix, I4, J4
 from .firstOrderMatrixExpansion import FirstOrderMatrixExpansion
 
 from otaf.constants import SURF_TYPE_TO_DEVIATION_DOF, GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF, GAP_TYPE_TO_NULLIFIED_NOMINAL_COMPONENTS, CONTACT_TYPE_TO_GAP_DOF, GLOBAL_CONSTRAINTS_TO_GAP_DOF
 from otaf.common import extract_expressions_with_variables, inverse_mstring, parse_matrix_string
 from otaf.geometry import tfrt
-
 
 
 @beartype
@@ -170,7 +169,7 @@ class CompatibilityLoopHandling:
 
     def generate_loop_id_to_matrix_list_dict(
         self,
-    ) -> Dict[str, List[Union[TransformationMatrix, DeviationMatrix, GapMatrix]]]:
+    ) -> Dict[str, List[Union[TransformationMatrix, DeviationMatrix, GapMatrix, I4, J4]]]:
         """
         Create a dictionary mapping compatibility loop IDs to lists of matrices.
 
@@ -204,7 +203,7 @@ class CompatibilityLoopHandling:
     def apply_FO_matrix_expansion_to_matrix_loop_list(
         self,
         compatibility_loop_matrix_list: List[
-            Union[TransformationMatrix, DeviationMatrix, GapMatrix]
+            Union[TransformationMatrix, DeviationMatrix, GapMatrix, I4, J4]
         ],
     ) -> sp.MatrixBase:
         """
@@ -226,7 +225,7 @@ class CompatibilityLoopHandling:
 
     def generate_matrices_from_expanded_loop(
         self, expanded_loop_str: str
-    ) -> List[Union[TransformationMatrix, DeviationMatrix, GapMatrix]]:
+    ) -> List[Union[TransformationMatrix, DeviationMatrix, GapMatrix, I4, J4]]:
         """
         Generate matrices for a compatibility loop from its expanded string representation.
 
@@ -389,7 +388,7 @@ class CompatibilityLoopHandling:
 
     def generate_gap_matrix(
         self, el_info: dict
-    ) -> List[Union[GapMatrix, TransformationMatrix]]:
+    ) -> List[Union[GapMatrix, TransformationMatrix, I4, J4]]:
         """
         Generate a gap matrix based on loop element information.
 
@@ -512,7 +511,7 @@ class CompatibilityLoopHandling:
         nullify_x: bool = True,
         nullify_y: bool = True,
         nullify_z: bool = True,
-    ) -> TransformationMatrix:
+    ) -> Union[TransformationMatrix, I4, J4]:
         """
         Calculate the nominal transformation matrix between two surfaces in a gap.
 
@@ -571,4 +570,9 @@ class CompatibilityLoopHandling:
             nominal_matrix[1, -1] = 0.0
         if nullify_z:
             nominal_matrix[2, -1] = 0.0
-        return TransformationMatrix(index=ID, matrix=nominal_matrix)
+
+        if bool((nominal_matrix == np.identity(4)).all()):
+            logging.debug("The nominal transformation at the gap transformation {ID} is the indentity")
+            return I4()
+        else:
+            return TransformationMatrix(index=ID, matrix=nominal_matrix)

@@ -599,6 +599,13 @@ class I4:
         Sets the matrix type to "I4".
         """
         self.TYPE = "I4"
+        self.ID = -1
+
+    def __repr__(self):
+        """
+        Generate a string representation of I4.
+        """
+        return f"I4 Identity Matrix"
 
     def get_matrix(self) -> sp.MatrixBase:
         """
@@ -611,6 +618,9 @@ class I4:
         """
         logging.info("[Type: I4] Generating 4x4 identity matrix.")
         return sp.Matrix(np.identity(4).tolist())
+
+    def get_inverse(self):
+        return self
 
     def get_matrix_inverse(self) -> sp.MatrixBase:
         """
@@ -641,6 +651,13 @@ class J4:
         Sets the matrix type to "J4".
         """
         self.TYPE = "J4"
+        self.ID = -1
+
+    def __repr__(self):
+        """
+        Generate a string representation of J4.
+        """
+        return f"J4 Rotation Matrix"
 
     def get_matrix(self) -> sp.MatrixBase:
         """
@@ -660,6 +677,9 @@ class J4:
         J4[0, 0] *= -1
         J4[1, 1] *= -1
         return sp.Matrix(J4)
+
+    def get_inverse(self):
+        return self
 
     def get_matrix_inverse(self) -> sp.MatrixBase:
         """

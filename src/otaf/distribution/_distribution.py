@@ -24,10 +24,10 @@ from beartype.typing import Dict, List, Tuple, Union, Callable, Optional, Sequen
 @beartype
 def get_composed_normal_defect_distribution(
     defect_names: List[Union[str, sp.Symbol]],
-    mu_list: Optional[List[Union[int, float]]] = [],
-    sigma_list: Optional[List[Union[int, float]]] = [],
-    mu_dict: Optional[Dict[str, Union[int, float]]] = {},
-    sigma_dict: Optional[Dict[str, Union[int, float]]] = {},
+    mu_list: Optional[List[Union[int, float]]] = None,
+    sigma_list: Optional[List[Union[int, float]]] = None,
+    mu_dict: Optional[Dict[str, Union[int, float]]] = None,
+    sigma_dict: Optional[Dict[str, Union[int, float]]] = None,
 ) -> ot.ComposedDistribution:
     """Create a composed distribution of defects based on their names and associated standard deviations.
 
