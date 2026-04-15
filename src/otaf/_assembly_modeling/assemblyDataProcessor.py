@@ -139,6 +139,17 @@ class AssemblyDataProcessor:
         logging.info("No system data dictionary wa passed, initializing empty one")
         return {"PARTS": {}, "LOOPS": {"COMPATIBILITY": {}}, "GLOBAL_CONSTRAINTS": "3D"}
 
+    def _is_single_feature_part(self, part_id: str) -> bool:
+        """
+        Determine if a part is modeled with a single functional feature.
+        Assumes feature keys are purely lowercase alphabetic strings.
+        """
+        feature_keys = [
+            k for k in self.system_data["PARTS"][part_id].keys()
+            if k.islower() and k.isalpha()
+        ]
+        return len(feature_keys) == 1
+
     def validate_system_data_structure(self):
         """
         Validate the structure and integrity of the system data.
@@ -611,7 +622,8 @@ class AssemblyDataProcessor:
 
     def _generate_expanded_loop(self, part_surf_point: List[Tuple[str, str, str]]) -> List[str]:
         """
-        Generate the main sequence of the expanded loop.
+        Generate the main sequence of the expanded loop, omitting defect
+        transformations for single-feature parts.
 
         This method processes the list of part-surface-point combinations to create the expanded loop,
         excluding the closure.
@@ -626,14 +638,19 @@ class AssemblyDataProcessor:
         List[str]
             A list of strings representing the main sequence of the expanded loop.
         """
-        return [
-            (
-                f"TP{ps}{ss}{pts}{se}{pte}"
-                if ps == pe
-                else f"D{ps}{ss} -> GP{ps}{ss}{pts}P{pe}{se}{pte} -> Di{pe}{se}"
-            )
-            for (ps, ss, pts), (pe, se, pte) in zip(part_surf_point[:-1], part_surf_point[1:])
-        ]
+        sequence = []
+        for (ps, ss, pts), (pe, se, pte) in zip(part_surf_point[:-1], part_surf_point[1:]):
+            if ps == pe:
+                sequence.append(f"TP{ps}{ss}{pts}{se}{pte}")
+            else:
+                if not self._is_single_feature_part(ps):
+                    sequence.append(f"D{ps}{ss}")
+
+                sequence.append(f"GP{ps}{ss}{pts}P{pe}{se}{pte}")
+
+                if not self._is_single_feature_part(pe):
+                    sequence.append(f"Di{pe}{se}")
+        return sequence
 
     def _handle_loop_closure(
         self, part_surf_point: List[Tuple[str, str, str]], first_inter: bool
@@ -660,12 +677,17 @@ class AssemblyDataProcessor:
         p_end, s_end, pt_end = part_surf_point[-1]
         if first_inter:
             return [f"TP{p_start}{s_end}{pt_end}{s_start}{pt_start}"]
-        else:
-            return [
-                f"D{p_end}{s_end}",
-                f"GP{p_end}{s_end}{pt_end}P{p_start}{s_start}{pt_start}",
-                f"Di{p_start}{s_start}",
-            ]
+
+        closure = []
+        if not self._is_single_feature_part(p_end):
+            closure.append(f"D{p_end}{s_end}")
+
+        closure.append(f"GP{p_end}{s_end}{pt_end}P{p_start}{s_start}{pt_start}")
+
+        if not self._is_single_feature_part(p_start):
+            closure.append(f"Di{p_start}{s_start}")
+
+        return closure
 
     def _get_feature_color(self, part_id, surf_id):
         """
