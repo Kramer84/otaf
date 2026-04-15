@@ -104,13 +104,12 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.assemblyDataProcessor</span><span class="w"> </span><span class="kn">import</span> <span class="n">AssemblyDataProcessor</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.assemblyModelingBaseObjects</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeviationMatrix</span><span class="p">,</span> <span class="n">GapMatrix</span><span class="p">,</span> <span class="n">TransformationMatrix</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.assemblyModelingBaseObjects</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeviationMatrix</span><span class="p">,</span> <span class="n">GapMatrix</span><span class="p">,</span> <span class="n">TransformationMatrix</span><span class="p">,</span> <span class="n">I4</span><span class="p">,</span> <span class="n">J4</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.firstOrderMatrixExpansion</span><span class="w"> </span><span class="kn">import</span> <span class="n">FirstOrderMatrixExpansion</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">otaf.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">SURF_TYPE_TO_DEVIATION_DOF</span><span class="p">,</span> <span class="n">GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF</span><span class="p">,</span> <span class="n">GAP_TYPE_TO_NULLIFIED_NOMINAL_COMPONENTS</span><span class="p">,</span> <span class="n">CONTACT_TYPE_TO_GAP_DOF</span><span class="p">,</span> <span class="n">GLOBAL_CONSTRAINTS_TO_GAP_DOF</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">otaf.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_expressions_with_variables</span><span class="p">,</span> <span class="n">inverse_mstring</span><span class="p">,</span> <span class="n">parse_matrix_string</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">otaf.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">tfrt</span>
-
 
 
 <div class="viewcode-block" id="CompatibilityLoopHandling">
@@ -275,7 +274,7 @@
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.CompatibilityLoopHandling.generate_loop_id_to_matrix_list_dict">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate_loop_id_to_matrix_list_dict</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">TransformationMatrix</span><span class="p">,</span> <span class="n">DeviationMatrix</span><span class="p">,</span> <span class="n">GapMatrix</span><span class="p">]]]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">TransformationMatrix</span><span class="p">,</span> <span class="n">DeviationMatrix</span><span class="p">,</span> <span class="n">GapMatrix</span><span class="p">,</span> <span class="n">I4</span><span class="p">,</span> <span class="n">J4</span><span class="p">]]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a dictionary mapping compatibility loop IDs to lists of matrices.</span>
 
@@ -315,7 +314,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">apply_FO_matrix_expansion_to_matrix_loop_list</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">compatibility_loop_matrix_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span>
-            <span class="n">Union</span><span class="p">[</span><span class="n">TransformationMatrix</span><span class="p">,</span> <span class="n">DeviationMatrix</span><span class="p">,</span> <span class="n">GapMatrix</span><span class="p">]</span>
+            <span class="n">Union</span><span class="p">[</span><span class="n">TransformationMatrix</span><span class="p">,</span> <span class="n">DeviationMatrix</span><span class="p">,</span> <span class="n">GapMatrix</span><span class="p">,</span> <span class="n">I4</span><span class="p">,</span> <span class="n">J4</span><span class="p">]</span>
         <span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -340,7 +339,7 @@
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.CompatibilityLoopHandling.generate_matrices_from_expanded_loop">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate_matrices_from_expanded_loop</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">expanded_loop_str</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">TransformationMatrix</span><span class="p">,</span> <span class="n">DeviationMatrix</span><span class="p">,</span> <span class="n">GapMatrix</span><span class="p">]]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">TransformationMatrix</span><span class="p">,</span> <span class="n">DeviationMatrix</span><span class="p">,</span> <span class="n">GapMatrix</span><span class="p">,</span> <span class="n">I4</span><span class="p">,</span> <span class="n">J4</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate matrices for a compatibility loop from its expanded string representation.</span>
 
@@ -512,7 +511,7 @@
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.CompatibilityLoopHandling.generate_gap_matrix">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate_gap_matrix</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">el_info</span><span class="p">:</span> <span class="nb">dict</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">GapMatrix</span><span class="p">,</span> <span class="n">TransformationMatrix</span><span class="p">]]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">GapMatrix</span><span class="p">,</span> <span class="n">TransformationMatrix</span><span class="p">,</span> <span class="n">I4</span><span class="p">,</span> <span class="n">J4</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate a gap matrix based on loop element information.</span>
 
@@ -638,7 +637,7 @@
         <span class="n">nullify_x</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">nullify_y</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">nullify_z</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransformationMatrix</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">TransformationMatrix</span><span class="p">,</span> <span class="n">I4</span><span class="p">,</span> <span class="n">J4</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the nominal transformation matrix between two surfaces in a gap.</span>
 
@@ -697,7 +696,12 @@
             <span class="n">nominal_matrix</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="k">if</span> <span class="n">nullify_z</span><span class="p">:</span>
             <span class="n">nominal_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="k">return</span> <span class="n">TransformationMatrix</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">ID</span><span class="p">,</span> <span class="n">matrix</span><span class="o">=</span><span class="n">nominal_matrix</span><span class="p">)</span></div>
+
+        <span class="k">if</span> <span class="nb">bool</span><span class="p">((</span><span class="n">nominal_matrix</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">all</span><span class="p">()):</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;The nominal transformation at the gap transformation </span><span class="si">{ID}</span><span class="s2"> is the indentity&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">I4</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">TransformationMatrix</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">ID</span><span class="p">,</span> <span class="n">matrix</span><span class="o">=</span><span class="n">nominal_matrix</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

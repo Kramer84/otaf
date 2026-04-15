@@ -1011,7 +1011,7 @@ expansions for compatibility loops.</p>
 <dd><p>Create a dictionary mapping loop IDs to matrix lists for compatibility loops.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict[str, list[<a class="reference internal" href="#otaf.TransformationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix"><em>TransformationMatrix</em></a> | <a class="reference internal" href="#otaf.DeviationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix"><em>DeviationMatrix</em></a> | <a class="reference internal" href="#otaf.GapMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.GapMatrix"><em>GapMatrix</em></a>]]</p>
+<dd class="field-odd"><p>dict[str, list[<a class="reference internal" href="#otaf.TransformationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix"><em>TransformationMatrix</em></a> | <a class="reference internal" href="#otaf.DeviationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix"><em>DeviationMatrix</em></a> | <a class="reference internal" href="#otaf.GapMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.GapMatrix"><em>GapMatrix</em></a> | <a class="reference internal" href="#otaf.I4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.I4"><em>I4</em></a> | <a class="reference internal" href="#otaf.J4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.J4"><em>J4</em></a>]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1033,7 +1033,7 @@ expansions for compatibility loops.</p>
 <dd><p>Apply first-order matrix expansion to a list of compatibility loop matrices.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>compatibility_loop_matrix_list</strong> (<em>list</em><em>[</em><a class="reference internal" href="#otaf.TransformationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix"><em>TransformationMatrix</em></a><em> | </em><a class="reference internal" href="#otaf.DeviationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix"><em>DeviationMatrix</em></a><em> | </em><a class="reference internal" href="#otaf.GapMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.GapMatrix"><em>GapMatrix</em></a><em>]</em>)</p>
+<dd class="field-odd"><p><strong>compatibility_loop_matrix_list</strong> (<em>list</em><em>[</em><a class="reference internal" href="#otaf.TransformationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix"><em>TransformationMatrix</em></a><em> | </em><a class="reference internal" href="#otaf.DeviationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix"><em>DeviationMatrix</em></a><em> | </em><a class="reference internal" href="#otaf.GapMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.GapMatrix"><em>GapMatrix</em></a><em> | </em><a class="reference internal" href="#otaf.I4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.I4"><em>I4</em></a><em> | </em><a class="reference internal" href="#otaf.J4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.J4"><em>J4</em></a><em>]</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><em>MatrixBase</em></p>
@@ -1050,7 +1050,7 @@ expansions for compatibility loops.</p>
 <dd class="field-odd"><p><strong>expanded_loop_str</strong> (<em>str</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list[<a class="reference internal" href="#otaf.TransformationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix"><em>TransformationMatrix</em></a> | <a class="reference internal" href="#otaf.DeviationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix"><em>DeviationMatrix</em></a> | <a class="reference internal" href="#otaf.GapMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.GapMatrix"><em>GapMatrix</em></a>]</p>
+<dd class="field-even"><p>list[<a class="reference internal" href="#otaf.TransformationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix"><em>TransformationMatrix</em></a> | <a class="reference internal" href="#otaf.DeviationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix"><em>DeviationMatrix</em></a> | <a class="reference internal" href="#otaf.GapMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.GapMatrix"><em>GapMatrix</em></a> | <a class="reference internal" href="#otaf.I4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.I4"><em>I4</em></a> | <a class="reference internal" href="#otaf.J4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.J4"><em>J4</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1092,7 +1092,7 @@ expansions for compatibility loops.</p>
 <dd class="field-odd"><p><strong>el_info</strong> (<em>dict</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list[<a class="reference internal" href="#otaf.GapMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.GapMatrix"><em>GapMatrix</em></a> | <a class="reference internal" href="#otaf.TransformationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix"><em>TransformationMatrix</em></a>]</p>
+<dd class="field-even"><p>list[<a class="reference internal" href="#otaf.GapMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.GapMatrix"><em>GapMatrix</em></a> | <a class="reference internal" href="#otaf.TransformationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix"><em>TransformationMatrix</em></a> | <a class="reference internal" href="#otaf.I4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.I4"><em>I4</em></a> | <a class="reference internal" href="#otaf.J4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.J4"><em>J4</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1113,7 +1113,7 @@ to nullify specific translation components.</p>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#otaf.TransformationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix"><em>TransformationMatrix</em></a></p>
+<dd class="field-even"><p><a class="reference internal" href="#otaf.TransformationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix"><em>TransformationMatrix</em></a> | <a class="reference internal" href="#otaf.I4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.I4"><em>I4</em></a> | <a class="reference internal" href="#otaf.J4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.J4"><em>J4</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1178,7 +1178,7 @@ to compute the nominal transformation matrix.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#otaf.TransformationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix"><em>TransformationMatrix</em></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#otaf.TransformationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix"><em>TransformationMatrix</em></a> | <a class="reference internal" href="#otaf.I4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.I4"><em>I4</em></a> | <a class="reference internal" href="#otaf.J4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.J4"><em>J4</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1269,7 +1269,7 @@ blocked degrees of freedom in the generated gap matrix.</p></li>
 <dd class="field-even"><p><strong>el_info</strong> (<em>dict</em>)</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[<a class="reference internal" href="#otaf.GapMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.GapMatrix"><em>GapMatrix</em></a> | <a class="reference internal" href="#otaf.TransformationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix"><em>TransformationMatrix</em></a>]</p>
+<dd class="field-odd"><p>list[<a class="reference internal" href="#otaf.GapMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.GapMatrix"><em>GapMatrix</em></a> | <a class="reference internal" href="#otaf.TransformationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix"><em>TransformationMatrix</em></a> | <a class="reference internal" href="#otaf.I4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.I4"><em>I4</em></a> | <a class="reference internal" href="#otaf.J4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.J4"><em>J4</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1625,6 +1625,17 @@ that are not blocked, as defined during initialization.</p>
 <p>The identity matrix is commonly used in transformations as a neutral element, where no
 translation or rotation is applied.</p>
 <dl class="py method">
+<dt class="sig sig-object py" id="otaf.I4.__repr__">
+<span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#I4.__repr__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.I4.__repr__" title="Link to this definition"></a></dt>
+<dd><p>Generate a string representation of I4.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.I4.get_inverse">
+<span class="sig-name descname"><span class="pre">get_inverse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#I4.get_inverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.I4.get_inverse" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="otaf.I4.get_matrix">
 <span class="sig-name descname"><span class="pre">get_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#I4.get_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.I4.get_matrix" title="Link to this definition"></a></dt>
 <dd><p>Generate a 4x4 identity matrix.</p>
@@ -1742,6 +1753,17 @@ added to maintain consistency in the representation of spatial relationships.</p
 <p>Class representing a 4x4 rotation matrix for a 180° rotation around the z-axis.</p>
 <p>This matrix is often used to represent a transformation involving a half-turn
 rotation in a Cartesian coordinate system.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.J4.__repr__">
+<span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#J4.__repr__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.J4.__repr__" title="Link to this definition"></a></dt>
+<dd><p>Generate a string representation of J4.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.J4.get_inverse">
+<span class="sig-name descname"><span class="pre">get_inverse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#J4.get_inverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.J4.get_inverse" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.J4.get_matrix">
 <span class="sig-name descname"><span class="pre">get_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#J4.get_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.J4.get_matrix" title="Link to this definition"></a></dt>

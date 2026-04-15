@@ -744,6 +744,16 @@
 <span class="sd">        Sets the matrix type to &quot;I4&quot;.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">TYPE</span> <span class="o">=</span> <span class="s2">&quot;I4&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ID</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+<div class="viewcode-block" id="I4.__repr__">
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.I4.__repr__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate a string representation of I4.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;I4 Identity Matrix&quot;</span></div>
+
 
 <div class="viewcode-block" id="I4.get_matrix">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.I4.get_matrix">[docs]</a>
@@ -758,6 +768,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[Type: I4] Generating 4x4 identity matrix.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="I4.get_inverse">
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.I4.get_inverse">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
 
 
 <div class="viewcode-block" id="I4.get_matrix_inverse">
@@ -795,6 +811,16 @@
 <span class="sd">        Sets the matrix type to &quot;J4&quot;.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">TYPE</span> <span class="o">=</span> <span class="s2">&quot;J4&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ID</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+<div class="viewcode-block" id="J4.__repr__">
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.J4.__repr__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate a string representation of J4.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;J4 Rotation Matrix&quot;</span></div>
+
 
 <div class="viewcode-block" id="J4.get_matrix">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.J4.get_matrix">[docs]</a>
@@ -816,6 +842,12 @@
         <span class="n">J4</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="n">J4</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="k">return</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">(</span><span class="n">J4</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="J4.get_inverse">
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.J4.get_inverse">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
 
 
 <div class="viewcode-block" id="J4.get_matrix_inverse">
