@@ -2,9 +2,6 @@ from __future__ import annotations
 # -*- coding: utf-8 -*-
 
 __author__ = "Kramer84"
-__all__ = [
-
-]
 
 import copy
 import logging
@@ -23,7 +20,7 @@ import otaf
 X1 = 99.8   # Nominal Length of the male piece
 X2 = 100.0  # Nominal Length of the female piece
 X3 = 10.0   # Nominal height of the pieces
-t = 0.2*sqrt(2)    # Tolerance for X1 and X2. (95% conform)  (= t/2)
+t = 0.2*np.sqrt(2)    # Tolerance for X1 and X2. (95% conform)  (= t/2)
 
 # Global coordinate system
 R0 = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])

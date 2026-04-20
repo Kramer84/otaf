@@ -2,9 +2,6 @@ from __future__ import annotations
 # -*- coding: utf-8 -*-
 
 __author__ = "Kramer84"
-__all__ = [
-
-]
 
 import copy
 import logging
@@ -36,23 +33,23 @@ N_PARTS = NX * NY + 2 #Number of pins plus the 2 holed plates
 LX = (NX - 1) * EH + 2*LB
 LY = (NY - 1) * EH + 2*LB
 
-contour_points = ar([[0,0,0],[LX,0,0],[LX,LY,0],[0,LY,0]])
+contour_points = np.array([[0,0,0],[LX,0,0],[LX,LY,0],[0,LY,0]])
 
-R0 = ar([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+R0 = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
 x_, y_, z_ = R0[0], R0[1], R0[2]
 
-Frame1 = ar([z_,y_,-x_])
-Frame2 = ar([-z_,y_,x_])
+Frame1 = np.array([z_,y_,-x_])
+Frame2 = np.array([-z_,y_,x_])
 
 system_data = {
     "PARTS" : {
         '0' : {
             "a" : {
                 "FRAME": Frame1,
-                "POINTS": {'A0' : ar([0,0,0]),
-                           'A1' : ar([LX,0,0]),
-                           'A2' : ar([LX,LY,0]),
-                           'A3' : ar([0,LY,0]),
+                "POINTS": {'A0' : np.array([0,0,0]),
+                           'A1' : np.array([LX,0,0]),
+                           'A2' : np.array([LX,LY,0]),
+                           'A3' : np.array([0,LY,0]),
                         },
                 "TYPE": "plane",
                 "INTERACTIONS": ['P1a'],
@@ -63,10 +60,10 @@ system_data = {
         '1' : {
             "a" : {
                 "FRAME": Frame2,
-                "POINTS": {'A0' : ar([0,0,0]),
-                           'A1' : ar([LX,0,0]),
-                           'A2' : ar([LX,LY,0]),
-                           'A3' : ar([0,LY,0]),
+                "POINTS": {'A0' : np.array([0,0,0]),
+                           'A1' : np.array([LX,0,0]),
+                           'A2' : np.array([LX,LY,0]),
+                           'A3' : np.array([0,LY,0]),
                         },
                 "TYPE": "plane",
                 "INTERACTIONS": ['P0a'],
@@ -87,7 +84,7 @@ next(alpha_gen) # skipping 'a' as it has already been used above
 part_id = 2 # Start part index for pins
 for i in range(NX):
     for j in range(NY):
-        pcor = ar([LB+i*EH, LB+j*EH, 0]) # Point coordinate for hole / pins
+        pcor = np.array([LB+i*EH, LB+j*EH, 0]) # Point coordinate for hole / pins
         slab = next(alpha_gen) # Surface label, same for each mating pin so its easeir to track
         # Creating pin
         system_data["PARTS"][str(part_id)] = {}
@@ -106,7 +103,7 @@ for i in range(NX):
         # Adding hole to part 0
         system_data["PARTS"]["0"][slab] = {
             "FRAME": Frame1,
-            "ORIGIN": pcor + ar([0,0,-hPlate/2]), # The cylinder modeling the hole feature is below the planar feature
+            "ORIGIN": pcor + np.array([0,0,-hPlate/2]), # The cylinder modeling the hole feature is below the planar feature
             "TYPE": "cylinder",
             "RADIUS": Dext / 2,
             "EXTENT_LOCAL": {"x_max": hPlate/2, "x_min": -hPlate/2},
@@ -116,7 +113,7 @@ for i in range(NX):
         # Adding hole to part 1
         system_data["PARTS"]["1"][slab] = {
             "FRAME": Frame2,
-            "ORIGIN": pcor  + ar([0,0,hPlate/2]), # The cylinder modeling the hole feature is above the planar
+            "ORIGIN": pcor  + np.array([0,0,hPlate/2]), # The cylinder modeling the hole feature is above the planar
             "TYPE": "cylinder",
             "RADIUS": Dext / 2,
             "EXTENT_LOCAL": {"x_max": hPlate/2, "x_min": -hPlate/2},

@@ -3,8 +3,8 @@ from __future__ import annotations
 
 __author__ = "Kramer84"
 
-from .models_2_D import _model_4dof
-from .models_3_D import _model_8dof
+from . import models_2_D
+from . import models_3_D
+from . import model_dumas_cython
 
-
-__all__ = _model.__all__
+__all__ = models_2_D.__all__ + models_3_D.__all__ + model_dumas_cython.__all__
