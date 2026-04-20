@@ -50,7 +50,35 @@ g : const double[:] (Size: 17) - Clearance torsor components (jeux)
 L : const double[:] (Size: 11) - Nominal lengths (L[0] = l1 ... L[10] = l11)
 d_max : double - Maximum functional displacement
 """
+x_full_labels = [
+    # Planar Features
+    "w_1a1", "alpha_1a1", "beta_1a1",      # Plane 1a
+    "w_2a2", "alpha_2a2", "beta_2a2",      # Plane 2a
 
+    # Cylindrical Features
+    "u_1b1", "v_1b1", "alpha_1b1", "beta_1b1", # Cylinder 1b
+    "u_2b2", "v_2b2", "alpha_2b2", "beta_2b2", # Cylinder 2b
+    "u_1c1", "v_1c1", "alpha_1c1", "beta_1c1", # Cylinder 1c
+    "u_2c2", "v_2c2", "alpha_2c2", "beta_2c2", # Cylinder 2c
+
+    # Diameters
+    "d_1b", "d_3b", "d_1c", "d_4c",
+
+    # Functional Surfaces
+    "u_1g1", "v_1g1",                      # Plane 1g
+    "u_2g2", "v_2g2"                       # Plane 2g
+]
+
+g_labels = [
+    "u_1a2a", "v_1a2a", "gamma_1a2a",      # Plane-to-plane clearance
+    "u_3b1b", "v_3b1b", "w_3b1b",          # Pin 3 to Hole 1b clearance
+    "alpha_3b1b", "beta_3b1b", "gamma_3b1b",
+    "u_4c1c", "v_4c1c", "w_4c1c",          # Pin 4 to Hole 1c clearance
+    "alpha_4c1c", "beta_4c1c", "gamma_4c1c",
+    "u_2g1g_1", "u_2g1g_2"                 # Functional surface clearances
+]
+
+L_labels = [f"l{i}" for i in range(1, 12)]
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
