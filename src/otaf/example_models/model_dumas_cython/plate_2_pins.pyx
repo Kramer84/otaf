@@ -46,6 +46,7 @@ g : const double[:] (Size: 17) - Clearance torsor components (jeux)
     g[9] : u_4c1c, g[10] : v_4c1c, g[11] : w_4c1c
     g[12] : alpha_4c1c, g[13] : beta_4c1c, g[14] : gamma_4c1c
     g[15] : u_2g1g, g[16] : u_2g1g
+    optional  g[16] : s (slack variable)
 
 L : const double[:] (Size: 11) - Nominal lengths (L[0] = l1 ... L[10] = l11)
 d_max : double - Maximum functional displacement
@@ -159,6 +160,46 @@ cdef void _compute_interface_constraints(
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
+@cython.initializedcheck(False)
+cdef void _compute_interface_constraints_slack(
+    const double[:] x_full,
+    const double[:] g, #additional slack variable for gaps
+    const double[:] L,
+    double d_max,
+    double[:] Cc,
+    double[:] Ci
+) nogil:
+    """
+    Computes the interface constraints (Ci <= 0).
+
+    Outputs (Mutated in-place):
+    ---------------------------
+    Ci : double[:] (Size: 4)  - Interface constraints
+    """
+
+    # 1. Unpack Diameters and compute gaps
+    cdef double gap_b = (x_full[22] - x_full[23]) / 2.0
+    cdef double gap_c = (x_full[24] - x_full[25]) / 2.0
+
+    # 2. Inequality Constraints (Ci)
+    cdef double temp_1, temp_2
+
+    Ci[0] = (g[3] * g[3]) + (g[4] * g[4]) - (gap_b * gap_b) + g[16]
+
+    temp_1 = g[3] + L[2] * g[1]
+    temp_2 = g[4] - L[2] * g[0]
+    Ci[1] = (temp_1 * temp_1) + (temp_2 * temp_2) - (gap_b * gap_b) + g[16]
+
+    Ci[2] = (g[12] * g[12]) + (g[13] * g[13]) - (gap_c * gap_c) + g[16]
+
+    temp_1 = g[12] + L[3] * g[10]
+    temp_2 = g[13] - L[3] * g[9]
+    Ci[3] = (temp_1 * temp_1) + (temp_2 * temp_2) - (gap_c * gap_c) + g[16]
+
+
+
+@cython.boundscheck(False)
+@cython.wraparound(False)
 @cython.cdivision(True)
 cdef void _convert_points_to_base(const double[:] xp, const double[:] L, double[:] x_full) nogil:
     """
@@ -228,7 +269,7 @@ def objective_function(g, d_max):
     return d_max - (g[15] + g[16])
 
 
-def constraints_eq_base(g, x_full, L, d_max):
+def constraints_eq_base(g=None, x_full=None, L=None, d_max=None):
     """
     Equality constraints (Cc = 0) using the DIRECT rotations vector (x_full).
     Returns a numpy array of size 14.
@@ -252,7 +293,7 @@ def constraints_eq_points(g, x_points, L, d_max):
     return Cc
 
 
-def constraints_ineq(g, x_full, L, d_max):
+def constraints_ineq(g=None, x_full=None, L=None, d_max=None):
     """
     Inequality constraints (Ci <= 0).
     Returns a numpy array of size 4.
@@ -266,5 +307,22 @@ def constraints_ineq(g, x_full, L, d_max):
     cdef np.ndarray[np.float64_t, ndim=1] dummy_Cc = np.empty(1, dtype=np.float64)
 
     _compute_interface_constraints(x_full, g, L, d_max, dummy_Cc, Ci)
+
+    return Ci
+
+def constraints_ineq_slack(g=None, x_full=None, L=None, d_max=None):
+    """
+    Inequality constraints (Ci <= 0).
+    Returns a numpy array of size 4.
+    Note: For scipy.optimize, 'ineq' constraints are generally defined as C(x) >= 0.
+    If you use SciPy's default SLSQP, you should return `-Ci` in your wrapper definition.
+    """
+    cdef np.ndarray[np.float64_t, ndim=1] Ci = np.empty(4, dtype=np.float64)
+
+    # Note: Passed a dummy Cc array to match the _compute_interface_constraints
+    # signature provided in your snippet, even though it isn't mutated there.
+    cdef np.ndarray[np.float64_t, ndim=1] dummy_Cc = np.empty(1, dtype=np.float64)
+
+    _compute_interface_constraints_slack(x_full, g, L, d_max, dummy_Cc, Ci)
 
     return Ci
