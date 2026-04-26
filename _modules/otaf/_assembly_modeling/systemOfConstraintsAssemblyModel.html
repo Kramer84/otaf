@@ -165,7 +165,11 @@
 <div class="viewcode-block" id="SystemOfConstraintsAssemblyModel.__init__">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">compatibility_eqs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">],</span> <span class="n">interface_eqs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">],</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">compatibility_eqs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">interface_eqs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">matrices</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the SystemOfConstraintsAssemblyModel.</span>
@@ -192,39 +196,65 @@
 <span class="sd">        - The number of compatibility and interface equations are determined during initialization.</span>
 <span class="sd">        - Variables are extracted and classified as deviation or gap variables.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Initializing SystemOfConstraintsAssemblyModel with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">compatibility_eqs</span><span class="p">)</span><span class="si">}</span><span class="s2"> compatibility equations and </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">interface_eqs</span><span class="p">)</span><span class="si">}</span><span class="s2"> interface equations.&quot;</span>
-        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">compatibility_eqs</span> <span class="o">=</span> <span class="n">compatibility_eqs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">interface_eqs</span> <span class="o">=</span> <span class="n">interface_eqs</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">nC</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compatibility_eqs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nI</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interface_eqs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">deviation_symbols</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extractFreeGapAndDeviationVariables</span><span class="p">()</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Derived deviation symbols: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">deviation_symbols</span><span class="si">}</span><span class="s2">, gap symbols: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compatibility_eqs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface_eqs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Initializing SystemOfConstraintsAssemblyModel with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">compatibility_eqs</span><span class="p">)</span><span class="si">}</span><span class="s2"> compatibility equations and </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">interface_eqs</span><span class="p">)</span><span class="si">}</span><span class="s2"> interface equations.&quot;</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nC</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compatibility_eqs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nI</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interface_eqs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deviation_symbols</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extractFreeGapAndDeviationVariables</span><span class="p">()</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Derived deviation symbols: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">deviation_symbols</span><span class="si">}</span><span class="s2">, gap symbols: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">nD</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">deviation_symbols</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nG</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nD</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">deviation_symbols</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nG</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span><span class="p">)</span>
+            <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">A_eq_Def</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">A_eq_Gap</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">K_eq</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">A_ub_Def</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">A_ub_Gap</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">K_ub</span><span class="p">,</span>
+            <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generateConstraintMatrices</span><span class="p">()</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Matrix representation obtained.&quot;</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">matrices</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Initializing directly from matrices.&quot;</span><span class="p">)</span>
+            <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">A_eq_Def</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">A_eq_Gap</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">K_eq</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">A_ub_Def</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">A_ub_Gap</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">K_ub</span><span class="p">,</span>
+            <span class="p">)</span> <span class="o">=</span> <span class="n">matrices</span>
+
+            <span class="c1"># Columns represent variables (nD, nG), rows represent equations (nC, nI)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nD</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">A_eq_Def</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nG</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">A_eq_Gap</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nC</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">A_eq_Def</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nI</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">A_ub_Def</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="c1"># Generate dummy symbols so __repr__ and __call__ do not crash</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deviation_symbols</span> <span class="o">=</span> <span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;d_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nD</span><span class="p">)]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span> <span class="o">=</span> <span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;g_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nG</span><span class="p">)]</span>
+
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Matrix representation loaded from direct input.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Must provide either (compatibility_eqs and interface_eqs) or matrices.&quot;</span><span class="p">)</span>
+
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Number of deviation symbols (nD): </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nD</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Number of gap symbols (nG): </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nG</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="p">)</span>
+        <span class="p">)</span></div>
 
-        <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">A_eq_Def</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">A_eq_Gap</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">K_eq</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">A_ub_Def</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">A_ub_Gap</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">K_ub</span><span class="p">,</span>
-        <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generateConstraintMatrices</span><span class="p">()</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Matrix representation obtained.&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SystemOfConstraintsAssemblyModel.__repr__">
