@@ -72,7 +72,11 @@ class SystemOfConstraintsAssemblyModel:
         Verbosity level for logging (default is 0).
     """
     def __init__(
-        self, compatibility_eqs: List[sp.Expr], interface_eqs: List[sp.Expr], verbose: int = 0
+        self,
+        compatibility_eqs: Optional[List[sp.Expr]] = None,
+        interface_eqs: Optional[List[sp.Expr]] = None,
+        matrices: Optional[List[np.ndarray]] = None,
+        verbose: int = 0
     ) -> None:
         """
         Initialize the SystemOfConstraintsAssemblyModel.
@@ -99,23 +103,58 @@ class SystemOfConstraintsAssemblyModel:
         - The number of compatibility and interface equations are determined during initialization.
         - Variables are extracted and classified as deviation or gap variables.
         """
-        logging.info(
-            f"[Type: SystemOfConstraintsAssemblyModel] Initializing SystemOfConstraintsAssemblyModel with {len(compatibility_eqs)} compatibility equations and {len(interface_eqs)} interface equations."
-        )
         self.verbose = verbose
-
         self.compatibility_eqs = compatibility_eqs
         self.interface_eqs = interface_eqs
 
-        self.nC = len(self.compatibility_eqs)
-        self.nI = len(self.interface_eqs)
-        self.deviation_symbols, self.gap_symbols = self.extractFreeGapAndDeviationVariables()
-        logging.info(
-            f"[Type: SystemOfConstraintsAssemblyModel] Derived deviation symbols: {self.deviation_symbols}, gap symbols: {self.gap_symbols}"
-        )
+        if self.compatibility_eqs is not None and self.interface_eqs is not None :
+            logging.info(
+                f"[Type: SystemOfConstraintsAssemblyModel] Initializing SystemOfConstraintsAssemblyModel with {len(compatibility_eqs)} compatibility equations and {len(interface_eqs)} interface equations."
+            )
+            self.nC = len(self.compatibility_eqs)
+            self.nI = len(self.interface_eqs)
+            self.deviation_symbols, self.gap_symbols = self.extractFreeGapAndDeviationVariables()
+            logging.info(
+                f"[Type: SystemOfConstraintsAssemblyModel] Derived deviation symbols: {self.deviation_symbols}, gap symbols: {self.gap_symbols}"
+            )
 
-        self.nD = len(self.deviation_symbols)
-        self.nG = len(self.gap_symbols)
+            self.nD = len(self.deviation_symbols)
+            self.nG = len(self.gap_symbols)
+            (
+                self.A_eq_Def,
+                self.A_eq_Gap,
+                self.K_eq,
+                self.A_ub_Def,
+                self.A_ub_Gap,
+                self.K_ub,
+            ) = self.generateConstraintMatrices()
+            logging.info("[Type: SystemOfConstraintsAssemblyModel] Matrix representation obtained.")
+
+        elif matrices is not None:
+            logging.info("[Type: SystemOfConstraintsAssemblyModel] Initializing directly from matrices.")
+            (
+                self.A_eq_Def,
+                self.A_eq_Gap,
+                self.K_eq,
+                self.A_ub_Def,
+                self.A_ub_Gap,
+                self.K_ub,
+            ) = matrices
+
+            # Columns represent variables (nD, nG), rows represent equations (nC, nI)
+            self.nD = self.A_eq_Def.shape[1]
+            self.nG = self.A_eq_Gap.shape[1]
+            self.nC = self.A_eq_Def.shape[0]
+            self.nI = self.A_ub_Def.shape[0]
+
+            # Generate dummy symbols so __repr__ and __call__ do not crash
+            self.deviation_symbols = [sp.Symbol(f"d_{i}") for i in range(self.nD)]
+            self.gap_symbols = [sp.Symbol(f"g_{i}") for i in range(self.nG)]
+
+            logging.info("[Type: SystemOfConstraintsAssemblyModel] Matrix representation loaded from direct input.")
+        else:
+            raise ValueError("Must provide either (compatibility_eqs and interface_eqs) or matrices.")
+
         logging.info(
             f"[Type: SystemOfConstraintsAssemblyModel] Number of deviation symbols (nD): {self.nD}"
         )
@@ -123,15 +162,6 @@ class SystemOfConstraintsAssemblyModel:
             f"[Type: SystemOfConstraintsAssemblyModel] Number of gap symbols (nG): {self.nG}"
         )
 
-        (
-            self.A_eq_Def,
-            self.A_eq_Gap,
-            self.K_eq,
-            self.A_ub_Def,
-            self.A_ub_Gap,
-            self.K_ub,
-        ) = self.generateConstraintMatrices()
-        logging.info("[Type: SystemOfConstraintsAssemblyModel] Matrix representation obtained.")
 
     def __repr__(self) -> str:
         """Compact textual summary with matrices for the LP."""

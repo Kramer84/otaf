@@ -46,7 +46,7 @@ g : const double[:] (Size: 17) - Clearance torsor components (jeux)
     g[9] : u_4c1c, g[10] : v_4c1c, g[11] : w_4c1c
     g[12] : alpha_4c1c, g[13] : beta_4c1c, g[14] : gamma_4c1c
     g[15] : u_2g1g, g[16] : u_2g1g
-    optional  g[16] : s (slack variable)
+    optional  g[17] : s (slack variable)
 
 L : const double[:] (Size: 11) - Nominal lengths (L[0] = l1 ... L[10] = l11)
 d_max : double - Maximum functional displacement
