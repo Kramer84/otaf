@@ -25,7 +25,7 @@ __all__ = [
     "plot_combined_CDF",
     "save_plot",
     "plot_gld_pbox_cdf",
-    "plot_gld_pbox_cdf2",
+    "plot_ensemble_gld_pbox_cdf",
     "calculate_graph_layout",
     "generate_topological_tikz"
 ]
@@ -1055,31 +1055,35 @@ def save_plot(fig=None, ax=None, filename='plot', folder='.', file_format='png',
 
 def plot_gld_pbox_cdf(gld_obj, lower_params, upper_params, x_values, xtol=1e-5, labels=None, colors=('tab:blue', 'tab:orange'), fill_color='gray', alpha=0.3, xlabel="X", ylabel="P", title="Probability-Box of the CDF"):
     """
-    Plot a Probability-Box (P-Box) using two sets of GLD parameters representing the lower and upper bounds of the CDF.
+    Plot a Probability-Box (P-Box) using two specific sets of GLD parameters representing the lower and upper bounds of the CDF.
 
     Parameters
     ----------
     gld_obj : object
-        An instance of the GLD class from gldpy.
+        An instance of the GLD class from gldpy used to compute the numerical CDF.
     lower_params : array-like
-        Parameters for the lower bound GLD.
+        Parameters for the lower bound Generalized Lambda Distribution.
     upper_params : array-like
-        Parameters for the upper bound GLD.
+        Parameters for the upper bound Generalized Lambda Distribution.
     x_values : array-like
-        X values where the P-box should be computed.
+        The sequence of x-coordinates where the P-box bounds should be evaluated.
     xtol : float, optional
         Tolerance for numerical CDF computation. Default is 1e-5.
     labels : tuple of str, optional
-        Labels for the lower and upper bound CDFs. Default is None.
+        Labels for the lower and upper bound CDFs in the legend. Default is None (uses generic labels).
     colors : tuple of str, optional
-        Colors for the lower and upper bound CDFs. Default is ('tab:blue', 'tab:orange').
+        Colors for the lower and upper bound CDF lines. Default is ('tab:blue', 'tab:orange').
     fill_color : str, optional
-        Color for the filled P-box region. Default is 'gray'.
+        Color used to shade the area between the bounds. Default is 'gray'.
     alpha : float, optional
-        Transparency of the filled region. Default is 0.3.
+        Transparency level of the filled region between the bounds (0.0 to 1.0). Default is 0.3.
+    xlabel : str, optional
+        Label for the X-axis. Default is "X".
+    ylabel : str, optional
+        Label for the Y-axis. Default is "P".
+    title : str, optional
+        Title of the plot. Default is "Probability-Box of the CDF".
     """
-
-    # Compute CDF values for the given x_values
     lower_cdf = gld_obj.CDF_num(x_values, lower_params, xtol=xtol)
     upper_cdf = gld_obj.CDF_num(x_values, upper_params, xtol=xtol)
 
@@ -1098,54 +1102,123 @@ def plot_gld_pbox_cdf(gld_obj, lower_params, upper_params, x_values, xtol=1e-5, 
     plt.show()
 
 
-def plot_gld_pbox_cdf2(gld_obj, param_list, x_values, xtol=1e-5, labels=None, colors=('tab:blue', 'tab:orange'), fill_color='gray', alpha=0.3, xlabel="X", ylabel="P", title="Probability-Box of the CDF"):
+def plot_ensemble_gld_pbox_cdf(gld_obj, param_list, x_values, xtol=1e-5,
+                               labels=('Lower bound', 'Upper bound'),
+                               colors=('tab:blue', 'tab:orange'),
+                               fill_color='gray', alpha=0.3,
+                               xlabel="Slack Threshold", ylabel="Probability of Failure (Pf)",
+                               title="Probability-Box of the CDF",
+                               add_zoom=False, zoom_x_range=(-0.05, 0.05), zoom_y_range=(1e-6, 0.1),
+                               inset_log_y=False):
     """
-    Plot a Probability-Box (P-Box) using two sets of GLD parameters representing the lower and upper bounds of the CDF.
+    Plot a Probability-Box (P-Box) by evaluating an ensemble of GLD parameter sets,
+    with an optional zoomed-in inset axis to analyze critical thresholds (e.g., slack = 0).
 
     Parameters
     ----------
-    gld_obj : object
-        An instance of the GLD class from gldpy.
-    lower_params : array-like
-        Parameters for the lower bound GLD.
-    upper_params : array-like
-        Parameters for the upper bound GLD.
-    x_values : array-like
-        X values where the P-box should be computed.
-    xtol : float, optional
-        Tolerance for numerical CDF computation. Default is 1e-5.
-    labels : tuple of str, optional
-        Labels for the lower and upper bound CDFs. Default is None.
-    colors : tuple of str, optional
-        Colors for the lower and upper bound CDFs. Default is ('tab:blue', 'tab:orange').
-    fill_color : str, optional
-        Color for the filled P-box region. Default is 'gray'.
-    alpha : float, optional
-        Transparency of the filled region. Default is 0.3.
+    [... previous parameters remain the same ...]
+    add_zoom : bool, optional
+        If True, adds a zoomed inset plot to the figure.
+    zoom_x_range : tuple of float, optional
+        The (xmin, xmax) limits for the zoomed inset. Default is (-0.05, 0.05).
+    zoom_y_range : tuple of float, optional
+        The (ymin, ymax) limits for the zoomed inset. Default is (1e-6, 0.1).
+    inset_log_y : bool, optional
+        If True, applies a logarithmic scale to the Y-axis of the zoomed inset.
     """
 
-    cdfs = [gld_obj.CDF_num(x_values, params, xtol=xtol) for params in param_list]
+    # Compute the ensemble bounds
 
-    cdf_arr = np.vstack(cdfs)
+    def compute_fast_pbox_bounds(param_list, x_values):
+        print("using fast pbox bounds")
+        # 1. Define a dense grid of probabilities (Y-axis)
+        p_values = np.linspace(1e-6, 1 - 1e-6, 3000)
 
-    lower_cdf = cdf_arr.min(axis=0)
-    upper_cdf = cdf_arr.max(axis=0)
+        # 2. Reshape parameters for vectorized evaluation
+        p = p_values[np.newaxis, :]       # Shape: (1, 3000)
+        p0 = param_list[:, 0:1]           # Shape: (5000, 1)
+        p1 = param_list[:, 1:2]
+        p2 = param_list[:, 2:3]
+        p3 = param_list[:, 3:4]
 
-    # Plot P-box
-    plt.figure(dpi=150)
-    plt.grid(True)
+        # 3. Vectorized Quantile function evaluation for all 5000 sets at once
+        term1 = (1 - p2) * (p**p3 - 1) / p3
+        term2 = p2 * ((1 - p)**p3 - 1) / p3
+        q_matrix = p0 + (term1 - term2) * p1  # Shape: (5000, 3000)
 
-    plt.plot(x_values, lower_cdf, color=colors[0], label=labels[0] if labels else 'Lower bound')
-    plt.plot(x_values, upper_cdf, color=colors[1], label=labels[1] if labels else 'Upper bound')
-    plt.fill_between(x_values, lower_cdf, upper_cdf, color=fill_color, alpha=alpha)
+        # 4. CREATE THE COMPOSITE ENVELOPE (Your step)
+        # Here we take the pointwise min/max across all 5000 distributions (axis=0).
+        # This forms a single boundary line composed of the extreme edges of all crossing curves.
+        composite_min_q = q_matrix.min(axis=0)  # Shape: (3000,) -> Left-most boundary
+        composite_max_q = q_matrix.max(axis=0)  # Shape: (3000,) -> Right-most boundary
 
-    # Labels and title
-    plt.xlabel(xlabel)
-    plt.ylabel(ylabel)
-    plt.legend()
-    plt.title(title)
+        # 5. Interpolate back to your requested x_values
+        # The minimum quantiles (left boundary) correspond to the maximum CDF values (upper bound)
+        upper_cdf = np.interp(x_values, composite_min_q, p_values, left=0.0, right=1.0)
+
+        # The maximum quantiles (right boundary) correspond to the minimum CDF values (lower bound)
+        lower_cdf = np.interp(x_values, composite_max_q, p_values, left=0.0, right=1.0)
+
+        return lower_cdf, upper_cdf
+
+    lower_cdf, upper_cdf = compute_fast_pbox_bounds(params, x_values)
+    #cdfs = [gld_obj.CDF_num(x_values, params, xtol=xtol) for params in param_list]
+    #cdf_arr = np.vstack(cdfs)
+    #lower_cdf = cdf_arr.min(axis=0)
+    #upper_cdf = cdf_arr.max(axis=0)
+
+    # Initialize the main figure and axis
+    fig, ax = plt.subplots(figsize=(10, 6), dpi=150)
+
+    # Plot main P-box
+    ax.plot(x_values, lower_cdf, color=colors[0], label=labels[0], linewidth=1.5)
+    ax.plot(x_values, upper_cdf, color=colors[1], label=labels[1], linewidth=1.5)
+    ax.fill_between(x_values, lower_cdf, upper_cdf, color=fill_color, alpha=alpha, label='Epistemic Uncertainty')
+
+    # Add a prominent vertical line for the exact 0.0 failure threshold
+    ax.axvline(0.0, color='red', linestyle='--', linewidth=1, label='Failure Threshold (Slack = 0)')
+
+    # Main plot formatting
+    ax.set_xlabel(xlabel, fontweight='bold')
+    ax.set_ylabel(ylabel, fontweight='bold')
+    ax.set_title(title, pad=15)
+    ax.grid(True, linestyle=':', alpha=0.7)
+
+    # --- Zoom Inset Logic ---
+    if add_zoom:
+        # Create an inset axis. The bounds [x0, y0, width, height] are in relative figure fractions.
+        # Positioned in the bottom right here, but can be adjusted based on data shape.
+        axins = ax.inset_axes([0.55, 0.15, 0.4, 0.4])
+
+        # Plot the exact same data on the inset
+        axins.plot(x_values, lower_cdf, color=colors[0], linewidth=2)
+        axins.plot(x_values, upper_cdf, color=colors[1], linewidth=2)
+        axins.fill_between(x_values, lower_cdf, upper_cdf, color=fill_color, alpha=alpha)
+        axins.axvline(0.0, color='red', linestyle='--', linewidth=1)
+
+        # Apply zoom limits
+        axins.set_xlim(zoom_x_range)
+        axins.set_ylim(zoom_y_range)
+
+        # Apply log scale if requested
+        if inset_log_y:
+            axins.set_yscale('log')
+            axins.set_ylabel('Log Pf', fontsize=8)
+
+        # Formatting for inset
+        axins.grid(True, linestyle=':', alpha=0.5, which='both')
+        axins.tick_params(axis='both', which='major', labelsize=8)
+
+        # Draw the bounding box on the main axes and the connecting lines
+        # This replaces the "circle" request with a standard, publication-ready zoom indicator
+        ax.indicate_inset_zoom(axins, edgecolor="black", linewidth=1.5, alpha=0.8)
+
+    # Legends
+    # Place legend outside or upper left to avoid covering the inset
+    ax.legend(loc='upper left', framealpha=0.9)
+
+    plt.tight_layout()
     plt.show()
-
 
 def calculate_graph_layout(data, R_part=15, r_feat=2, d_feat=1.5, margin=1.5, part_spacing=45, seed=42):
     """
