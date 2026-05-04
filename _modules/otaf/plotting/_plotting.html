@@ -114,7 +114,7 @@
     <span class="s2">&quot;plot_combined_CDF&quot;</span><span class="p">,</span>
     <span class="s2">&quot;save_plot&quot;</span><span class="p">,</span>
     <span class="s2">&quot;plot_gld_pbox_cdf&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;plot_gld_pbox_cdf2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;plot_ensemble_gld_pbox_cdf&quot;</span><span class="p">,</span>
     <span class="s2">&quot;calculate_graph_layout&quot;</span><span class="p">,</span>
     <span class="s2">&quot;generate_topological_tikz&quot;</span>
 <span class="p">]</span>
@@ -1209,31 +1209,35 @@
 <a class="viewcode-back" href="../../../source/otaf.plotting.html#otaf.plotting.plot_gld_pbox_cdf">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_gld_pbox_cdf</span><span class="p">(</span><span class="n">gld_obj</span><span class="p">,</span> <span class="n">lower_params</span><span class="p">,</span> <span class="n">upper_params</span><span class="p">,</span> <span class="n">x_values</span><span class="p">,</span> <span class="n">xtol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;tab:blue&#39;</span><span class="p">,</span> <span class="s1">&#39;tab:orange&#39;</span><span class="p">),</span> <span class="n">fill_color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Probability-Box of the CDF&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Plot a Probability-Box (P-Box) using two sets of GLD parameters representing the lower and upper bounds of the CDF.</span>
+<span class="sd">    Plot a Probability-Box (P-Box) using two specific sets of GLD parameters representing the lower and upper bounds of the CDF.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    gld_obj : object</span>
-<span class="sd">        An instance of the GLD class from gldpy.</span>
+<span class="sd">        An instance of the GLD class from gldpy used to compute the numerical CDF.</span>
 <span class="sd">    lower_params : array-like</span>
-<span class="sd">        Parameters for the lower bound GLD.</span>
+<span class="sd">        Parameters for the lower bound Generalized Lambda Distribution.</span>
 <span class="sd">    upper_params : array-like</span>
-<span class="sd">        Parameters for the upper bound GLD.</span>
+<span class="sd">        Parameters for the upper bound Generalized Lambda Distribution.</span>
 <span class="sd">    x_values : array-like</span>
-<span class="sd">        X values where the P-box should be computed.</span>
+<span class="sd">        The sequence of x-coordinates where the P-box bounds should be evaluated.</span>
 <span class="sd">    xtol : float, optional</span>
 <span class="sd">        Tolerance for numerical CDF computation. Default is 1e-5.</span>
 <span class="sd">    labels : tuple of str, optional</span>
-<span class="sd">        Labels for the lower and upper bound CDFs. Default is None.</span>
+<span class="sd">        Labels for the lower and upper bound CDFs in the legend. Default is None (uses generic labels).</span>
 <span class="sd">    colors : tuple of str, optional</span>
-<span class="sd">        Colors for the lower and upper bound CDFs. Default is (&#39;tab:blue&#39;, &#39;tab:orange&#39;).</span>
+<span class="sd">        Colors for the lower and upper bound CDF lines. Default is (&#39;tab:blue&#39;, &#39;tab:orange&#39;).</span>
 <span class="sd">    fill_color : str, optional</span>
-<span class="sd">        Color for the filled P-box region. Default is &#39;gray&#39;.</span>
+<span class="sd">        Color used to shade the area between the bounds. Default is &#39;gray&#39;.</span>
 <span class="sd">    alpha : float, optional</span>
-<span class="sd">        Transparency of the filled region. Default is 0.3.</span>
+<span class="sd">        Transparency level of the filled region between the bounds (0.0 to 1.0). Default is 0.3.</span>
+<span class="sd">    xlabel : str, optional</span>
+<span class="sd">        Label for the X-axis. Default is &quot;X&quot;.</span>
+<span class="sd">    ylabel : str, optional</span>
+<span class="sd">        Label for the Y-axis. Default is &quot;P&quot;.</span>
+<span class="sd">    title : str, optional</span>
+<span class="sd">        Title of the plot. Default is &quot;Probability-Box of the CDF&quot;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c1"># Compute CDF values for the given x_values</span>
     <span class="n">lower_cdf</span> <span class="o">=</span> <span class="n">gld_obj</span><span class="o">.</span><span class="n">CDF_num</span><span class="p">(</span><span class="n">x_values</span><span class="p">,</span> <span class="n">lower_params</span><span class="p">,</span> <span class="n">xtol</span><span class="o">=</span><span class="n">xtol</span><span class="p">)</span>
     <span class="n">upper_cdf</span> <span class="o">=</span> <span class="n">gld_obj</span><span class="o">.</span><span class="n">CDF_num</span><span class="p">(</span><span class="n">x_values</span><span class="p">,</span> <span class="n">upper_params</span><span class="p">,</span> <span class="n">xtol</span><span class="o">=</span><span class="n">xtol</span><span class="p">)</span>
 
@@ -1253,56 +1257,125 @@
 
 
 
-<div class="viewcode-block" id="plot_gld_pbox_cdf2">
-<a class="viewcode-back" href="../../../source/otaf.plotting.html#otaf.plotting.plot_gld_pbox_cdf2">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">plot_gld_pbox_cdf2</span><span class="p">(</span><span class="n">gld_obj</span><span class="p">,</span> <span class="n">param_list</span><span class="p">,</span> <span class="n">x_values</span><span class="p">,</span> <span class="n">xtol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;tab:blue&#39;</span><span class="p">,</span> <span class="s1">&#39;tab:orange&#39;</span><span class="p">),</span> <span class="n">fill_color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Probability-Box of the CDF&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_ensemble_gld_pbox_cdf">
+<a class="viewcode-back" href="../../../source/otaf.plotting.html#otaf.plotting.plot_ensemble_gld_pbox_cdf">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_ensemble_gld_pbox_cdf</span><span class="p">(</span><span class="n">gld_obj</span><span class="p">,</span> <span class="n">param_list</span><span class="p">,</span> <span class="n">x_values</span><span class="p">,</span> <span class="n">xtol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span>
+                               <span class="n">labels</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;Lower bound&#39;</span><span class="p">,</span> <span class="s1">&#39;Upper bound&#39;</span><span class="p">),</span>
+                               <span class="n">colors</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;tab:blue&#39;</span><span class="p">,</span> <span class="s1">&#39;tab:orange&#39;</span><span class="p">),</span>
+                               <span class="n">fill_color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+                               <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Slack Threshold&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Probability of Failure (Pf)&quot;</span><span class="p">,</span>
+                               <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Probability-Box of the CDF&quot;</span><span class="p">,</span>
+                               <span class="n">add_zoom</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">zoom_x_range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">),</span> <span class="n">zoom_y_range</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-6</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span>
+                               <span class="n">inset_log_y</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Plot a Probability-Box (P-Box) using two sets of GLD parameters representing the lower and upper bounds of the CDF.</span>
+<span class="sd">    Plot a Probability-Box (P-Box) by evaluating an ensemble of GLD parameter sets,</span>
+<span class="sd">    with an optional zoomed-in inset axis to analyze critical thresholds (e.g., slack = 0).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    gld_obj : object</span>
-<span class="sd">        An instance of the GLD class from gldpy.</span>
-<span class="sd">    lower_params : array-like</span>
-<span class="sd">        Parameters for the lower bound GLD.</span>
-<span class="sd">    upper_params : array-like</span>
-<span class="sd">        Parameters for the upper bound GLD.</span>
-<span class="sd">    x_values : array-like</span>
-<span class="sd">        X values where the P-box should be computed.</span>
-<span class="sd">    xtol : float, optional</span>
-<span class="sd">        Tolerance for numerical CDF computation. Default is 1e-5.</span>
-<span class="sd">    labels : tuple of str, optional</span>
-<span class="sd">        Labels for the lower and upper bound CDFs. Default is None.</span>
-<span class="sd">    colors : tuple of str, optional</span>
-<span class="sd">        Colors for the lower and upper bound CDFs. Default is (&#39;tab:blue&#39;, &#39;tab:orange&#39;).</span>
-<span class="sd">    fill_color : str, optional</span>
-<span class="sd">        Color for the filled P-box region. Default is &#39;gray&#39;.</span>
-<span class="sd">    alpha : float, optional</span>
-<span class="sd">        Transparency of the filled region. Default is 0.3.</span>
+<span class="sd">    [... previous parameters remain the same ...]</span>
+<span class="sd">    add_zoom : bool, optional</span>
+<span class="sd">        If True, adds a zoomed inset plot to the figure.</span>
+<span class="sd">    zoom_x_range : tuple of float, optional</span>
+<span class="sd">        The (xmin, xmax) limits for the zoomed inset. Default is (-0.05, 0.05).</span>
+<span class="sd">    zoom_y_range : tuple of float, optional</span>
+<span class="sd">        The (ymin, ymax) limits for the zoomed inset. Default is (1e-6, 0.1).</span>
+<span class="sd">    inset_log_y : bool, optional</span>
+<span class="sd">        If True, applies a logarithmic scale to the Y-axis of the zoomed inset.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">cdfs</span> <span class="o">=</span> <span class="p">[</span><span class="n">gld_obj</span><span class="o">.</span><span class="n">CDF_num</span><span class="p">(</span><span class="n">x_values</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">xtol</span><span class="o">=</span><span class="n">xtol</span><span class="p">)</span> <span class="k">for</span> <span class="n">params</span> <span class="ow">in</span> <span class="n">param_list</span><span class="p">]</span>
+    <span class="c1"># Compute the ensemble bounds</span>
 
-    <span class="n">cdf_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">cdfs</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_fast_pbox_bounds</span><span class="p">(</span><span class="n">param_list</span><span class="p">,</span> <span class="n">x_values</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;using fast pbox bounds&quot;</span><span class="p">)</span>
+        <span class="c1"># 1. Define a dense grid of probabilities (Y-axis)</span>
+        <span class="n">p_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1e-6</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="mi">3000</span><span class="p">)</span>
 
-    <span class="n">lower_cdf</span> <span class="o">=</span> <span class="n">cdf_arr</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">upper_cdf</span> <span class="o">=</span> <span class="n">cdf_arr</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># 2. Reshape parameters for vectorized evaluation</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">p_values</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>       <span class="c1"># Shape: (1, 3000)</span>
+        <span class="n">p0</span> <span class="o">=</span> <span class="n">param_list</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>           <span class="c1"># Shape: (5000, 1)</span>
+        <span class="n">p1</span> <span class="o">=</span> <span class="n">param_list</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">p2</span> <span class="o">=</span> <span class="n">param_list</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">p3</span> <span class="o">=</span> <span class="n">param_list</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span>
 
-    <span class="c1"># Plot P-box</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># 3. Vectorized Quantile function evaluation for all 5000 sets at once</span>
+        <span class="n">term1</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">p</span><span class="o">**</span><span class="n">p3</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">p3</span>
+        <span class="n">term2</span> <span class="o">=</span> <span class="n">p2</span> <span class="o">*</span> <span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p</span><span class="p">)</span><span class="o">**</span><span class="n">p3</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">p3</span>
+        <span class="n">q_matrix</span> <span class="o">=</span> <span class="n">p0</span> <span class="o">+</span> <span class="p">(</span><span class="n">term1</span> <span class="o">-</span> <span class="n">term2</span><span class="p">)</span> <span class="o">*</span> <span class="n">p1</span>  <span class="c1"># Shape: (5000, 3000)</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_values</span><span class="p">,</span> <span class="n">lower_cdf</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">labels</span> <span class="k">else</span> <span class="s1">&#39;Lower bound&#39;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_values</span><span class="p">,</span> <span class="n">upper_cdf</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">labels</span> <span class="k">else</span> <span class="s1">&#39;Upper bound&#39;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">x_values</span><span class="p">,</span> <span class="n">lower_cdf</span><span class="p">,</span> <span class="n">upper_cdf</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">fill_color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
+        <span class="c1"># 4. CREATE THE COMPOSITE ENVELOPE (Your step)</span>
+        <span class="c1"># Here we take the pointwise min/max across all 5000 distributions (axis=0).</span>
+        <span class="c1"># This forms a single boundary line composed of the extreme edges of all crossing curves.</span>
+        <span class="n">composite_min_q</span> <span class="o">=</span> <span class="n">q_matrix</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Shape: (3000,) -&gt; Left-most boundary</span>
+        <span class="n">composite_max_q</span> <span class="o">=</span> <span class="n">q_matrix</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Shape: (3000,) -&gt; Right-most boundary</span>
 
-    <span class="c1"># Labels and title</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="c1"># 5. Interpolate back to your requested x_values</span>
+        <span class="c1"># The minimum quantiles (left boundary) correspond to the maximum CDF values (upper bound)</span>
+        <span class="n">upper_cdf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">x_values</span><span class="p">,</span> <span class="n">composite_min_q</span><span class="p">,</span> <span class="n">p_values</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+
+        <span class="c1"># The maximum quantiles (right boundary) correspond to the minimum CDF values (lower bound)</span>
+        <span class="n">lower_cdf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">x_values</span><span class="p">,</span> <span class="n">composite_max_q</span><span class="p">,</span> <span class="n">p_values</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">lower_cdf</span><span class="p">,</span> <span class="n">upper_cdf</span>
+
+    <span class="n">lower_cdf</span><span class="p">,</span> <span class="n">upper_cdf</span> <span class="o">=</span> <span class="n">compute_fast_pbox_bounds</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">x_values</span><span class="p">)</span>
+    <span class="c1">#cdfs = [gld_obj.CDF_num(x_values, params, xtol=xtol) for params in param_list]</span>
+    <span class="c1">#cdf_arr = np.vstack(cdfs)</span>
+    <span class="c1">#lower_cdf = cdf_arr.min(axis=0)</span>
+    <span class="c1">#upper_cdf = cdf_arr.max(axis=0)</span>
+
+    <span class="c1"># Initialize the main figure and axis</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+
+    <span class="c1"># Plot main P-box</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_values</span><span class="p">,</span> <span class="n">lower_cdf</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_values</span><span class="p">,</span> <span class="n">upper_cdf</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">x_values</span><span class="p">,</span> <span class="n">lower_cdf</span><span class="p">,</span> <span class="n">upper_cdf</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">fill_color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Epistemic Uncertainty&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Add a prominent vertical line for the exact 0.0 failure threshold</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Failure Threshold (Slack = 0)&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Main plot formatting</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+
+    <span class="c1"># --- Zoom Inset Logic ---</span>
+    <span class="k">if</span> <span class="n">add_zoom</span><span class="p">:</span>
+        <span class="c1"># Create an inset axis. The bounds [x0, y0, width, height] are in relative figure fractions.</span>
+        <span class="c1"># Positioned in the bottom right here, but can be adjusted based on data shape.</span>
+        <span class="n">axins</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">inset_axes</span><span class="p">([</span><span class="mf">0.55</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">])</span>
+
+        <span class="c1"># Plot the exact same data on the inset</span>
+        <span class="n">axins</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_values</span><span class="p">,</span> <span class="n">lower_cdf</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">axins</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_values</span><span class="p">,</span> <span class="n">upper_cdf</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">axins</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">x_values</span><span class="p">,</span> <span class="n">lower_cdf</span><span class="p">,</span> <span class="n">upper_cdf</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">fill_color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
+        <span class="n">axins</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Apply zoom limits</span>
+        <span class="n">axins</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">zoom_x_range</span><span class="p">)</span>
+        <span class="n">axins</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">zoom_y_range</span><span class="p">)</span>
+
+        <span class="c1"># Apply log scale if requested</span>
+        <span class="k">if</span> <span class="n">inset_log_y</span><span class="p">:</span>
+            <span class="n">axins</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+            <span class="n">axins</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Log Pf&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+        <span class="c1"># Formatting for inset</span>
+        <span class="n">axins</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">)</span>
+        <span class="n">axins</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+        <span class="c1"># Draw the bounding box on the main axes and the connecting lines</span>
+        <span class="c1"># This replaces the &quot;circle&quot; request with a standard, publication-ready zoom indicator</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">indicate_inset_zoom</span><span class="p">(</span><span class="n">axins</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+
+    <span class="c1"># Legends</span>
+    <span class="c1"># Place legend outside or upper left to avoid covering the inset</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">,</span> <span class="n">framealpha</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
-
 
 
 <div class="viewcode-block" id="calculate_graph_layout">

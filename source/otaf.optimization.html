@@ -98,17 +98,12 @@
 <li class="toctree-l4"><a class="reference internal" href="#otaf.optimization.ModifiedBasinHopping.take_step"><code class="docutils literal notranslate"><span class="pre">ModifiedBasinHopping.take_step()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#otaf.optimization.OptimizationStorage"><code class="docutils literal notranslate"><span class="pre">OptimizationStorage</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#otaf.optimization.OptimizationStorage.__iter__"><code class="docutils literal notranslate"><span class="pre">OptimizationStorage.__iter__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#otaf.optimization.OptimizationStorage.add_point"><code class="docutils literal notranslate"><span class="pre">OptimizationStorage.add_point()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#otaf.optimization.OptimizationStorage.apply_checks_to_all"><code class="docutils literal notranslate"><span class="pre">OptimizationStorage.apply_checks_to_all()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#otaf.optimization.OptimizationStorage.check_bounds"><code class="docutils literal notranslate"><span class="pre">OptimizationStorage.check_bounds()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#otaf.optimization.OptimizationStorage.check_constraints"><code class="docutils literal notranslate"><span class="pre">OptimizationStorage.check_constraints()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#otaf.optimization.OptimizationStorage.clear_storage"><code class="docutils literal notranslate"><span class="pre">OptimizationStorage.clear_storage()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#otaf.optimization.OptimizationStorage.filter_points"><code class="docutils literal notranslate"><span class="pre">OptimizationStorage.filter_points()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#otaf.optimization.OptimizationStorage.get_all_data"><code class="docutils literal notranslate"><span class="pre">OptimizationStorage.get_all_data()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#otaf.optimization.OptimizationStorage.get_points_by_source"><code class="docutils literal notranslate"><span class="pre">OptimizationStorage.get_points_by_source()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#otaf.optimization.OptimizationStorage.iter_points"><code class="docutils literal notranslate"><span class="pre">OptimizationStorage.iter_points()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.optimization.OptimizationTracker"><code class="docutils literal notranslate"><span class="pre">OptimizationTracker</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.optimization.OptimizationTracker.filter_points"><code class="docutils literal notranslate"><span class="pre">OptimizationTracker.filter_points()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.optimization.OptimizationTracker.get_data"><code class="docutils literal notranslate"><span class="pre">OptimizationTracker.get_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.optimization.OptimizationTracker.to_dataframe"><code class="docutils literal notranslate"><span class="pre">OptimizationTracker.to_dataframe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.optimization.OptimizationTracker.update_constraint_data"><code class="docutils literal notranslate"><span class="pre">OptimizationTracker.update_constraint_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.optimization.OptimizationTracker.update_objective_data"><code class="docutils literal notranslate"><span class="pre">OptimizationTracker.update_objective_data()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.optimization.StepTaking"><code class="docutils literal notranslate"><span class="pre">StepTaking</span></code></a><ul>
@@ -276,161 +271,40 @@ bool or None</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="otaf.optimization.OptimizationStorage">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.optimization.</span></span><span class="sig-name descname"><span class="pre">OptimizationStorage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraint_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationStorage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationStorage" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="otaf.optimization.OptimizationTracker">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.optimization.</span></span><span class="sig-name descname"><span class="pre">OptimizationTracker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraint_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision_decimals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationTracker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationTracker" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Class to store, manage, and analyze optimization data. This class keeps track of points explored during optimization,
-whether generated by a global or local optimizer, and verifies if the points respect user-defined constraints and bounds.</p>
-<section id="key-features">
-<h3>Key Features:<a class="headerlink" href="#key-features" title="Link to this heading"></a></h3>
-<ul class="simple">
-<li><p>Stores each point’s coordinates and the corresponding objective function value.</p></li>
-<li><p>Tracks whether each point was generated by a local or global optimization method.</p></li>
-<li><p>Automatically checks if points respect user-specified variable bounds.</p></li>
-<li><p>Evaluates whether points satisfy given constraints (passed via a constraint function).</p></li>
-<li><p>Offers utility methods to filter, manage, and query stored data.</p></li>
-</ul>
-</section>
-<section id="id3">
-<h3>Parameters:<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
-<dl class="simple">
-<dt>bounds<span class="classifier">list of tuple or None, optional</span></dt><dd><p>List of tuples defining (lower, upper) bounds for each variable. If None, no bounds are applied (default: None).</p>
-</dd>
-<dt>constraint_function<span class="classifier">callable or None, optional</span></dt><dd><p>A function that takes a point (array-like) as input and returns a boolean indicating whether the point satisfies
-the constraints (True if satisfied, False otherwise). If None, no constraints are applied (default: None).</p>
-</dd>
-</dl>
-</section>
-<section id="id4">
-<h3>Attributes:<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
-<dl class="simple">
-<dt>data<span class="classifier">pandas.DataFrame</span></dt><dd><p>A DataFrame that stores optimization points and related metadata, with the following columns:
-- ‘point’ : array-like, the coordinates of the explored point.
-- ‘function_value’ : float, the value of the objective function at the given point.
-- ‘source’ : str, whether the point was generated from a local or global optimizer (‘local’ or ‘global’).
-- ‘bounds_respected’ : bool, whether the point respects the variable bounds.
-- ‘constraints_respected’ : bool, whether the point satisfies the constraint function.</p>
-</dd>
-</dl>
-</section>
-<section id="methods">
-<h3>Methods:<a class="headerlink" href="#methods" title="Link to this heading"></a></h3>
-<dl class="simple">
-<dt>add_point(x, f, source):</dt><dd><p>Adds a new optimization point with its function value, source, and checks for bounds and constraints compliance.</p>
-</dd>
-<dt>check_bounds(x):</dt><dd><p>Verifies if a point respects the variable bounds.</p>
-</dd>
-<dt>check_constraints(x):</dt><dd><p>Verifies if a point satisfies the constraint function.</p>
-</dd>
-<dt>apply_checks_to_all():</dt><dd><p>Reapplies bounds and constraints checks to all stored points, updating the DataFrame.</p>
-</dd>
-<dt>get_all_data():</dt><dd><p>Returns the complete DataFrame of stored optimization points.</p>
-</dd>
-<dt>get_points_by_source(source):</dt><dd><p>Filters and returns points generated by either the local or global optimizer.</p>
-</dd>
-<dt>clear_storage():</dt><dd><p>Clears the stored data while retaining the DataFrame structure.</p>
-</dd>
-</dl>
+<p>High-performance storage for optimization loops.
+Uses byte-hashing for O(1) lookups during execution, and exports to Pandas
+for post-processing and filtering.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="otaf.optimization.OptimizationStorage.__iter__">
-<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationStorage.__iter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationStorage.__iter__" title="Link to this definition"></a></dt>
-<dd><p>Iterate over all points in the storage by default.</p>
+<dt class="sig sig-object py" id="otaf.optimization.OptimizationTracker.filter_points">
+<span class="sig-name descname"><span class="pre">filter_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exp_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds_respected</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraints_respected</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationTracker.filter_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationTracker.filter_points" title="Link to this definition"></a></dt>
+<dd><p>Re-implementation of your old filter_points method.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="otaf.optimization.OptimizationStorage.add_point">
-<span class="sig-name descname"><span class="pre">add_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationStorage.add_point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationStorage.add_point" title="Link to this definition"></a></dt>
-<dd><p>Add a point, its function value, and its source (local or global) to the DataFrame.</p>
+<dt class="sig sig-object py" id="otaf.optimization.OptimizationTracker.get_data">
+<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exp_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationTracker.get_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationTracker.get_data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.optimization.OptimizationTracker.to_dataframe">
+<span class="sig-name descname"><span class="pre">to_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exp_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationTracker.to_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationTracker.to_dataframe" title="Link to this definition"></a></dt>
+<dd><p>Converts the internal dictionary to a Pandas DataFrame.
+Replaces the old ‘get_all_data’ and avoids loop bottleneck.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="otaf.optimization.OptimizationStorage.apply_checks_to_all">
-<span class="sig-name descname"><span class="pre">apply_checks_to_all</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationStorage.apply_checks_to_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationStorage.apply_checks_to_all" title="Link to this definition"></a></dt>
-<dd><p>Apply bounds and constraint checks to all entries in the DataFrame.</p>
-</dd></dl>
+<dt class="sig sig-object py" id="otaf.optimization.OptimizationTracker.update_constraint_data">
+<span class="sig-name descname"><span class="pre">update_constraint_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exp_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraints</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationTracker.update_constraint_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationTracker.update_constraint_data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="otaf.optimization.OptimizationStorage.check_bounds">
-<span class="sig-name descname"><span class="pre">check_bounds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationStorage.check_bounds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationStorage.check_bounds" title="Link to this definition"></a></dt>
-<dd><p>Check if the point respects the bounds.</p>
-</dd></dl>
+<dt class="sig sig-object py" id="otaf.optimization.OptimizationTracker.update_objective_data">
+<span class="sig-name descname"><span class="pre">update_objective_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exp_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp_gld</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp_slack</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gld_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">failure_slack</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'local'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationTracker.update_objective_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationTracker.update_objective_data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="otaf.optimization.OptimizationStorage.check_constraints">
-<span class="sig-name descname"><span class="pre">check_constraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationStorage.check_constraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationStorage.check_constraints" title="Link to this definition"></a></dt>
-<dd><p>Check if the point respects the constraints.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="otaf.optimization.OptimizationStorage.clear_storage">
-<span class="sig-name descname"><span class="pre">clear_storage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationStorage.clear_storage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationStorage.clear_storage" title="Link to this definition"></a></dt>
-<dd><p>Clear the DataFrame.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="otaf.optimization.OptimizationStorage.filter_points">
-<span class="sig-name descname"><span class="pre">filter_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds_respected</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraints_respected</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationStorage.filter_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationStorage.filter_points" title="Link to this definition"></a></dt>
-<dd><p>Filter the points based on source, bounds compliance, and constraint compliance.</p>
-<section id="id5">
-<h4>Parameters:<a class="headerlink" href="#id5" title="Link to this heading"></a></h4>
-<dl class="simple">
-<dt>source<span class="classifier">str, optional</span></dt><dd><p>Filter by the source of the point (‘local’ or ‘global’).</p>
-</dd>
-<dt>bounds_respected<span class="classifier">bool, optional</span></dt><dd><p>Filter by whether the bounds were respected.</p>
-</dd>
-<dt>constraints_respected<span class="classifier">bool, optional</span></dt><dd><p>Filter by whether the constraints were respected.</p>
-</dd>
-</dl>
-</section>
-<section id="id6">
-<h4>Returns:<a class="headerlink" href="#id6" title="Link to this heading"></a></h4>
-<p>:
-pd.DataFrame</p>
-<blockquote>
-<div><p>A DataFrame filtered according to the provided criteria.</p>
-</div></blockquote>
-</section>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="otaf.optimization.OptimizationStorage.get_all_data">
-<span class="sig-name descname"><span class="pre">get_all_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationStorage.get_all_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationStorage.get_all_data" title="Link to this definition"></a></dt>
-<dd><p>Return the entire DataFrame with all stored points.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="otaf.optimization.OptimizationStorage.get_points_by_source">
-<span class="sig-name descname"><span class="pre">get_points_by_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationStorage.get_points_by_source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationStorage.get_points_by_source" title="Link to this definition"></a></dt>
-<dd><p>Return points filtered by their source (local or global).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="otaf.optimization.OptimizationStorage.iter_points">
-<span class="sig-name descname"><span class="pre">iter_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds_respected</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraints_respected</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationStorage.iter_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationStorage.iter_points" title="Link to this definition"></a></dt>
-<dd><p>Generator for iterating over points based on specific filters.</p>
-<section id="id7">
-<h4>Parameters:<a class="headerlink" href="#id7" title="Link to this heading"></a></h4>
-<dl class="simple">
-<dt>source<span class="classifier">str, optional</span></dt><dd><p>Iterate over points filtered by their source (‘local’ or ‘global’).</p>
-</dd>
-<dt>bounds_respected<span class="classifier">bool, optional</span></dt><dd><p>Iterate over points filtered by whether bounds were respected.</p>
-</dd>
-<dt>constraints_respected<span class="classifier">bool, optional</span></dt><dd><p>Iterate over points filtered by whether constraints were respected.</p>
-</dd>
-</dl>
-</section>
-<section id="yields">
-<h4>Yields:<a class="headerlink" href="#yields" title="Link to this heading"></a></h4>
-<dl class="simple">
-<dt>index<span class="classifier">int</span></dt><dd><p>Index of the point in the DataFrame.</p>
-</dd>
-<dt>row<span class="classifier">pd.Series</span></dt><dd><p>Row from the DataFrame with point information.</p>
-</dd>
-</dl>
-</section>
-</dd></dl>
-
-</section>
 </dd></dl>
 
 <dl class="py class">
@@ -438,8 +312,8 @@ pd.DataFrame</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.optimization.</span></span><span class="sig-name descname"><span class="pre">StepTaking</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defect_description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_basinhopping_step_accept.html#StepTaking"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.StepTaking" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Custom class for generating bounded steps in the optimization space.</p>
-<section id="id8">
-<h3>Attributes:<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<section id="id3">
+<h3>Attributes:<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>linear_condition<span class="classifier">callable</span></dt><dd><p>A function to enforce linear constraints on subsets of variables.</p>
 </dd>
@@ -451,15 +325,15 @@ pd.DataFrame</p>
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_basinhopping_step_accept.html#StepTaking.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.StepTaking.__call__" title="Link to this definition"></a></dt>
 <dd><p>Generate a new candidate step based on the current position ‘x’.
 The step respects the provided bounds and enforces the linear condition.</p>
-<section id="id9">
-<h4>Parameters:<a class="headerlink" href="#id9" title="Link to this heading"></a></h4>
+<section id="id4">
+<h4>Parameters:<a class="headerlink" href="#id4" title="Link to this heading"></a></h4>
 <dl class="simple">
 <dt>x<span class="classifier">array-like</span></dt><dd><p>The current point in the search space.</p>
 </dd>
 </dl>
 </section>
-<section id="id10">
-<h4>Returns:<a class="headerlink" href="#id10" title="Link to this heading"></a></h4>
+<section id="id5">
+<h4>Returns:<a class="headerlink" href="#id5" title="Link to this heading"></a></h4>
 <p>:
 new_x : array-like</p>
 <blockquote>
