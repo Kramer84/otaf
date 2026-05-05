@@ -1318,7 +1318,7 @@
 
         <span class="k">return</span> <span class="n">lower_cdf</span><span class="p">,</span> <span class="n">upper_cdf</span>
 
-    <span class="n">lower_cdf</span><span class="p">,</span> <span class="n">upper_cdf</span> <span class="o">=</span> <span class="n">compute_fast_pbox_bounds</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">x_values</span><span class="p">)</span>
+    <span class="n">lower_cdf</span><span class="p">,</span> <span class="n">upper_cdf</span> <span class="o">=</span> <span class="n">compute_fast_pbox_bounds</span><span class="p">(</span><span class="n">param_list</span><span class="p">,</span> <span class="n">x_values</span><span class="p">)</span>
     <span class="c1">#cdfs = [gld_obj.CDF_num(x_values, params, xtol=xtol) for params in param_list]</span>
     <span class="c1">#cdf_arr = np.vstack(cdfs)</span>
     <span class="c1">#lower_cdf = cdf_arr.min(axis=0)</span>
