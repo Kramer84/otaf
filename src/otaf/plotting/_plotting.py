@@ -1161,7 +1161,7 @@ def plot_ensemble_gld_pbox_cdf(gld_obj, param_list, x_values, xtol=1e-5,
 
         return lower_cdf, upper_cdf
 
-    lower_cdf, upper_cdf = compute_fast_pbox_bounds(params, x_values)
+    lower_cdf, upper_cdf = compute_fast_pbox_bounds(param_list, x_values)
     #cdfs = [gld_obj.CDF_num(x_values, params, xtol=xtol) for params in param_list]
     #cdf_arr = np.vstack(cdfs)
     #lower_cdf = cdf_arr.min(axis=0)
