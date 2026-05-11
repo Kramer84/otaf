@@ -19,6 +19,14 @@ from beartype.typing import Dict, List, Tuple, Union, Callable, Optional, Sequen
 
 from otaf.sampling import scale_sample_with_params, generate_and_transform_sequence
 
+# Robust check for version compatibility
+if hasattr(ot, 'JointDistribution'):
+    # New versions (v1.24+)
+    JointDistribution = ot.JointDistribution
+else:
+    # Older versions
+    JointDistribution = ot.ComposedDistribution
+
 @beartype
 class FeatureLevelStatisticalConstraint:
     """
@@ -105,7 +113,7 @@ class FeatureLevelStatisticalConstraint:
         if self.isNormal :
             # Later we'll use some better generator
             # sample = np.random.normal(size=(self.n_sample, self.n_dof))
-            dist = ot.ComposedDistribution([ot.Normal()]*self.n_dof)
+            dist = JointDistribution([ot.Normal()]*self.n_dof)
             sample = generate_and_transform_sequence(self.n_dof, self.n_sample, dist)
             self.normalSample = sample
 

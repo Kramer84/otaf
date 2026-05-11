@@ -27,6 +27,13 @@ from beartype.typing import Dict, List, Tuple, Union, Callable, Optional, Sequen
 from functools import partial, lru_cache
 from collections.abc import Iterable
 
+# Robust check for version compatibility
+if hasattr(ot, 'JointDistribution'):
+    # New versions (v1.24+)
+    JointDistribution = ot.JointDistribution
+else:
+    # Older versions
+    JointDistribution = ot.ComposedDistribution
 
 @beartype
 def condition_lambda_sample(sample: ot.Sample, squared_sum: bool = False) -> ot.Sample:
@@ -462,7 +469,7 @@ def generate_and_transform_sequence(dim, samplesize, target_distribution, sequen
     uniform_sample = sequence.generate(samplesize)
 
     # 2. Create a composed uniform distribution in [0,1]^dim
-    composed_uniform = ot.ComposedDistribution([ot.Uniform(0.0, 1.0)] * dim)
+    composed_uniform = JointDistribution([ot.Uniform(0.0, 1.0)] * dim)
 
     # 3. Apply the iso-probabilistic transformation to map the uniform sample to the standard normal space
     standard_normal_sample = composed_uniform.getIsoProbabilisticTransformation()(uniform_sample)

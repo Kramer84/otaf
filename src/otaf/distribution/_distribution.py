@@ -20,6 +20,13 @@ import openturns as ot
 from beartype import beartype
 from beartype.typing import Dict, List, Tuple, Union, Callable, Optional, Sequence
 
+# Robust check for version compatibility
+if hasattr(ot, 'JointDistribution'):
+    # New versions (v1.24+)
+    JointDistribution = ot.JointDistribution
+else:
+    # Older versions
+    JointDistribution = ot.ComposedDistribution
 
 @beartype
 def get_composed_normal_defect_distribution(
@@ -28,7 +35,7 @@ def get_composed_normal_defect_distribution(
     sigma_list: Optional[List[Union[int, float]]] = None,
     mu_dict: Optional[Dict[str, Union[int, float]]] = None,
     sigma_dict: Optional[Dict[str, Union[int, float]]] = None,
-) -> ot.ComposedDistribution:
+) -> JointDistribution:
     """Create a composed distribution of defects based on their names and associated standard deviations.
 
     Args:
@@ -39,7 +46,7 @@ def get_composed_normal_defect_distribution(
         sigma_dict (dict, optional): Dictionary mapping defect names to their standard deviation values.
 
     Returns:
-        ot.ComposedDistribution: A composed distribution object.
+        JointDistribution: A composed distribution object.
 
     Notes:
         - The defect names are expected to have specific prefixes to identify their type:
@@ -62,7 +69,7 @@ def get_composed_normal_defect_distribution(
             dist = ot.Normal(0.0, 1.0)
             dist.setDescription([str(defect_name)])
             distributions.append(dist)
-        composed_distribution = ot.ComposedDistribution(distributions)
+        composed_distribution = JointDistribution(distributions)
         logging.debug(f"Composed unit distribution created: {composed_distribution}")
 
     elif mu_list or sigma_list:
@@ -79,7 +86,7 @@ def get_composed_normal_defect_distribution(
             dist = ot.Normal(mu_list[i], sigma_list[i])
             dist.setDescription([str(defect_name)])
             distributions.append(dist)
-        composed_distribution = ot.ComposedDistribution(distributions)
+        composed_distribution = JointDistribution(distributions)
         logging.debug(f"Composed distribution created: {composed_distribution}")
 
     elif mu_dict or sigma_dict:
@@ -107,23 +114,23 @@ def get_composed_normal_defect_distribution(
             dist = ot.Normal(mu, sigma)
             dist.setDescription([str(defect_name)])
             distributions.append(dist)
-        composed_distribution = ot.ComposedDistribution(distributions)
+        composed_distribution = JointDistribution(distributions)
         logging.debug(f"Composed distribution created: {composed_distribution}")
     return composed_distribution
 
 
 def multiply_composed_distribution_with_constant(composed_distribution, constant):
     """
-    Multiply all parameters in a ComposedDistribution by a constant.
+    Multiply all parameters in a JointDistribution by a constant.
 
     Args:
-        composed_distribution (ot.ComposedDistribution):
+        composed_distribution (JointDistribution):
             The original composed distribution.
         constant (float):
             The constant value by which to multiply all parameters.
 
     Returns:
-        ot.ComposedDistribution:
+        JointDistribution:
             A copy of the original composed distribution,
             with its parameters scaled by the given constant.
     """
@@ -142,13 +149,13 @@ def multiply_composed_distribution_standard_with_constants(composed_distribution
     where each distribution's parameters are in the form [mean, std, mean, std, ...].
 
     Args:
-        composed_distribution (ot.ComposedDistribution):
+        composed_distribution (JointDistribution):
             The original composed distribution.
         constants (list[float]):
             A list of constants to multiply each distribution’s standard deviation.
 
     Returns:
-        ot.ComposedDistribution:
+        JointDistribution:
             A copy of the original composed distribution,
             with updated standard deviations.
     """

@@ -47,6 +47,13 @@ from beartype.typing import Dict, List, Tuple, Union, Callable, Optional
 
 from otaf.common import get_tqdm_range
 
+# Robust check for version compatibility
+if hasattr(ot, 'JointDistribution'):
+    # New versions (v1.24+)
+    JointDistribution = ot.JointDistribution
+else:
+    # Older versions
+    JointDistribution = ot.ComposedDistribution
 
 #######################################################################################
 ########### SCORE FUNCTIONS / GRADIENTS
@@ -237,7 +244,7 @@ def compute_failure_probability_FORM(
 
 def compute_failure_probability_NAIS(
     func: ot.PythonFunction,
-    distribution: ot.ComposedDistribution,
+    distribution: JointDistribution,
     threshold: float = 0.0,
     quantile_level: float = 0.001,
     verbose: bool = False,
@@ -277,7 +284,7 @@ def compute_failure_probability_NAIS(
 
 def compute_failure_probability_SUBSET(
     func: ot.PythonFunction,
-    distribution: ot.ComposedDistribution,
+    distribution: JointDistribution,
     threshold: float = 0.0,
     verbose: bool = False,
     proposalRange=2,
