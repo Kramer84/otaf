@@ -109,6 +109,13 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span>
 
+<span class="c1"># Robust check for version compatibility</span>
+<span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ot</span><span class="p">,</span> <span class="s1">&#39;JointDistribution&#39;</span><span class="p">):</span>
+    <span class="c1"># New versions (v1.24+)</span>
+    <span class="n">JointDistribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">JointDistribution</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># Older versions</span>
+    <span class="n">JointDistribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span>
 
 <div class="viewcode-block" id="get_composed_normal_defect_distribution">
 <a class="viewcode-back" href="../../../source/otaf.distribution.html#otaf.distribution.get_composed_normal_defect_distribution">[docs]</a>
@@ -119,7 +126,7 @@
     <span class="n">sigma_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">mu_dict</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">sigma_dict</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JointDistribution</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a composed distribution of defects based on their names and associated standard deviations.</span>
 
 <span class="sd">    Args:</span>
@@ -130,7 +137,7 @@
 <span class="sd">        sigma_dict (dict, optional): Dictionary mapping defect names to their standard deviation values.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        ot.ComposedDistribution: A composed distribution object.</span>
+<span class="sd">        JointDistribution: A composed distribution object.</span>
 
 <span class="sd">    Notes:</span>
 <span class="sd">        - The defect names are expected to have specific prefixes to identify their type:</span>
@@ -153,7 +160,7 @@
             <span class="n">dist</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
             <span class="n">dist</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">defect_name</span><span class="p">)])</span>
             <span class="n">distributions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
-        <span class="n">composed_distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">(</span><span class="n">distributions</span><span class="p">)</span>
+        <span class="n">composed_distribution</span> <span class="o">=</span> <span class="n">JointDistribution</span><span class="p">(</span><span class="n">distributions</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Composed unit distribution created: </span><span class="si">{</span><span class="n">composed_distribution</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">mu_list</span> <span class="ow">or</span> <span class="n">sigma_list</span><span class="p">:</span>
@@ -170,7 +177,7 @@
             <span class="n">dist</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">mu_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">sigma_list</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
             <span class="n">dist</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">defect_name</span><span class="p">)])</span>
             <span class="n">distributions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
-        <span class="n">composed_distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">(</span><span class="n">distributions</span><span class="p">)</span>
+        <span class="n">composed_distribution</span> <span class="o">=</span> <span class="n">JointDistribution</span><span class="p">(</span><span class="n">distributions</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Composed distribution created: </span><span class="si">{</span><span class="n">composed_distribution</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">mu_dict</span> <span class="ow">or</span> <span class="n">sigma_dict</span><span class="p">:</span>
@@ -198,7 +205,7 @@
             <span class="n">dist</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
             <span class="n">dist</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">defect_name</span><span class="p">)])</span>
             <span class="n">distributions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
-        <span class="n">composed_distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">(</span><span class="n">distributions</span><span class="p">)</span>
+        <span class="n">composed_distribution</span> <span class="o">=</span> <span class="n">JointDistribution</span><span class="p">(</span><span class="n">distributions</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Composed distribution created: </span><span class="si">{</span><span class="n">composed_distribution</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">composed_distribution</span></div>
 
@@ -208,16 +215,16 @@
 <a class="viewcode-back" href="../../../source/otaf.distribution.html#otaf.distribution.multiply_composed_distribution_with_constant">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">multiply_composed_distribution_with_constant</span><span class="p">(</span><span class="n">composed_distribution</span><span class="p">,</span> <span class="n">constant</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Multiply all parameters in a ComposedDistribution by a constant.</span>
+<span class="sd">    Multiply all parameters in a JointDistribution by a constant.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        composed_distribution (ot.ComposedDistribution):</span>
+<span class="sd">        composed_distribution (JointDistribution):</span>
 <span class="sd">            The original composed distribution.</span>
 <span class="sd">        constant (float):</span>
 <span class="sd">            The constant value by which to multiply all parameters.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        ot.ComposedDistribution:</span>
+<span class="sd">        JointDistribution:</span>
 <span class="sd">            A copy of the original composed distribution,</span>
 <span class="sd">            with its parameters scaled by the given constant.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -239,13 +246,13 @@
 <span class="sd">    where each distribution&#39;s parameters are in the form [mean, std, mean, std, ...].</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        composed_distribution (ot.ComposedDistribution):</span>
+<span class="sd">        composed_distribution (JointDistribution):</span>
 <span class="sd">            The original composed distribution.</span>
 <span class="sd">        constants (list[float]):</span>
 <span class="sd">            A list of constants to multiply each distribution’s standard deviation.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        ot.ComposedDistribution:</span>
+<span class="sd">        JointDistribution:</span>
 <span class="sd">            A copy of the original composed distribution,</span>
 <span class="sd">            with updated standard deviations.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
