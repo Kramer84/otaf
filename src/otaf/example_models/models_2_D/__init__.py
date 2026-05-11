@@ -3,11 +3,4 @@ from __future__ import annotations
 
 __author__ = "Kramer84"
 
-from ._model_4dof import *
-
-# You must explicitly define __all__ here for the parent to access it
-__all__ = ["SDA_compatibility_loops_expanded",
-    "CLH_get_compatibility_expression_from_FO_matrices",
-    "getAssemblyDataProcessorObject",
-    "getCompatibilityLoopHandlingObject",
-    "getInterfaceLoopHandlingObject"]
+import ._model_4dof as model_4dof
