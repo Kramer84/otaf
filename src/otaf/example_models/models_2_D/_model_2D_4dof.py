@@ -169,7 +169,7 @@ def getSystemOfConstraintsAssemblyModel(X1=99.8, X2=100.0, X3=10.0):
 
 
 def getDistributionParams(tol=0.28, capa=1.0, X3=10.0):
-    deviation_symbols = sp.symbols('u_d_4 gamma_d_4 u_d_5 gamma_d_5')
+    deviation_symbols = list(sp.symbols('u_d_4 gamma_d_4 u_d_5 gamma_d_5'))
     sigma_translation = tol / (6*capa)
     rotation_max = tol / X3
     sigma_rotation = (2*rotation_max) / (6*capa)

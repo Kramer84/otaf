@@ -176,7 +176,7 @@ class HyperparameterTuning:
 if __name__ == "__main__":
     models = {"model1_4_dof" : otaf.example_models.model1,
               "model2_16_dof" : otaf.example_models.model2,
-              "model3_30_dof" : otaf.example_models.model3,
+              #"model3_30_dof" : otaf.example_models.model3,
               "model4_50_dof" : otaf.example_models.model4}
 
     for model in models:
