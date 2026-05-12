@@ -72,11 +72,13 @@ def get_composed_normal_defect_distribution(
         composed_distribution = JointDistribution(distributions)
         logging.debug(f"Composed unit distribution created: {composed_distribution}")
 
-    elif mu_list or sigma_list:
+    elif mu_list is not None or sigma_list is not None:
         logging.info("Using mu or sigma list of parameters.")
         if mu_list is None:
+            logging.warning("mu_list not provided, defaulting all means to 0.0")
             mu_list = [0.0] * ND
         if sigma_list is None:
+            logging.warning("sigma_list not provided, defaulting all standard deviations to 1.0")
             sigma_list = [1.0] * ND
         if not (len(mu_list) == len(sigma_list) == ND):
             raise ValueError(
@@ -89,33 +91,50 @@ def get_composed_normal_defect_distribution(
         composed_distribution = JointDistribution(distributions)
         logging.debug(f"Composed distribution created: {composed_distribution}")
 
-    elif mu_dict or sigma_dict:
+    elif mu_dict is not None or sigma_dict is not None:
         logging.info("Using mu or sigma dictionary of parameters.")
+        
+        # Handle cases where one dict is passed but not the other
+        if mu_dict is None:
+            logging.warning("No mu_dict passed, initializing all unspecified means to 0.0")
+            mu_dict = {}
+        if sigma_dict is None:
+            logging.warning("No sigma_dict passed, initializing all unspecified standard deviations to 1.0")
+            sigma_dict = {}
+
         mu_keys = list(mu_dict.keys())
         sigma_keys = list(sigma_dict.keys())
-        mu, sigma = 0, 1
+        
         for i, defect_name in enumerate(defect_names):
-            if any([key in str(defect_name) for key in mu_keys]):
-                mu = mu_dict[mu_keys[[key in str(defect_name) for key in mu_keys].index(True)]]
+            # Reset defaults for EACH iteration to prevent previous values carrying over
+            mu, sigma = 0.0, 1.0
+            defect_str = str(defect_name)
+
+            # Find matching key for mean
+            mu_match = next((key for key in mu_keys if key in defect_str), None)
+            if mu_match:
+                mu = mu_dict[mu_match]
             else:
                 logging.info(
-                    f"No mean value for defect {str(defect_name)} in mu_dict, setting mean to 0"
+                    f"No mean value for defect {defect_str} in mu_dict, setting mean to 0.0"
                 )
 
-            if any([key in str(defect_name) for key in sigma_keys]):
-                sigma = sigma_dict[
-                    sigma_keys[[key in str(defect_name) for key in sigma_keys].index(True)]
-                ]
+            # Find matching key for standard deviation
+            sigma_match = next((key for key in sigma_keys if key in defect_str), None)
+            if sigma_match:
+                sigma = sigma_dict[sigma_match]
             else:
                 logging.warning(
-                    f"No standard deviation value for defect {str(defect_name)} in sigma_dict, setting standard deviation to 1"
+                    f"No standard deviation value for defect {defect_str} in sigma_dict, setting standard deviation to 1.0"
                 )
 
             dist = ot.Normal(mu, sigma)
-            dist.setDescription([str(defect_name)])
+            dist.setDescription([defect_str])
             distributions.append(dist)
+            
         composed_distribution = JointDistribution(distributions)
         logging.debug(f"Composed distribution created: {composed_distribution}")
+        
     return composed_distribution
 
 
