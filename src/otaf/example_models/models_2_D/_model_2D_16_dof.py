@@ -245,3 +245,38 @@ def getSystemOfConstraintsAssemblyModel(hM = 10, hF = 10.2, L1 = 30, L2 = 70, L3
         compatibility_expressions, interface_constraints)
     SOCAM.embedOptimizationVariable()
     return SOCAM
+
+
+def getDistributionParams(tol=0.28, capa=1.0, hm=10, hf=10.2):
+    deviation_symbols = sp.symbols(
+        'u_d_2, gamma_d_2 u_d_3 gamma_d_3 u_d_4 gamma_d_4 u_d_5 gamma_d_5 u_d_6 gamma_d_6 u_d_7 gamma_d_7 u_d_8 gamma_d_8 u_d_9 gamma_d_9')
+
+    sigma_e_pos = tol / (6 * capa)
+    theta_max_m = tol / hM
+    theta_max_f = tol / hF
+
+    sigma_e_theta_m = (2 * theta_max_m) / (6 * capa)
+    sigma_e_theta_f = (2 * theta_max_f) / (6 * capa)
+
+    RandDeviationVect = otaf.distribution.get_composed_normal_defect_distribution(
+        defect_names=deviation_symbols,
+        sigma_dict = {"gamma_d_2":sigma_e_theta_f, 
+                    "gamma_d_3":sigma_e_theta_m,
+                    "gamma_d_4":sigma_e_theta_f,
+                    "gamma_d_5":sigma_e_theta_m,
+                    "gamma_d_6":sigma_e_theta_m,
+                    "gamma_d_7":sigma_e_theta_f,
+                    "gamma_d_8":sigma_e_theta_f,
+                    "gamma_d_9":sigma_e_theta_m,
+                    "u":sigma_e_pos})
+    max_std_vect = np.array([
+        sigma_e_pos, sigma_e_theta_f,
+        sigma_e_pos, sigma_e_theta_m,
+        sigma_e_pos, sigma_e_theta_f,
+        sigma_e_pos, sigma_e_theta_m,
+        sigma_e_pos, sigma_e_theta_m,
+        sigma_e_pos, sigma_e_theta_f,
+        sigma_e_pos, sigma_e_theta_f,
+        sigma_e_pos, sigma_e_theta_m
+    ])
+    return RandDeviationVect, max_std_vect, deviation_symbols

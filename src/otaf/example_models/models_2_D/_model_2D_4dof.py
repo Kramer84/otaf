@@ -166,3 +166,26 @@ def getSystemOfConstraintsAssemblyModel(X1=99.8, X2=100.0, X3=10.0):
         compatibility_expressions, interface_constraints)
     SOCAM.embedOptimizationVariable()
     return SOCAM
+
+
+def getDistributionParams(tol=0.28, capa=1.0, X3=10.0):
+    deviation_symbols = sp.symbols('u_d_4 gamma_d_4 u_d_5 gamma_d_5')
+    sigma_translation = tol / (6*capa)
+    rotation_max = tol / X3
+    sigma_rotation = (2*rotation_max) / (6*capa)
+    RandDeviationVect = otaf.distribution.get_composed_normal_defect_distribution(
+        defect_names=deviation_symbols,
+        sigma_dict = {"alpha":sigma_rotation, 
+                    "beta":sigma_rotation,
+                    "gamma":sigma_rotation, 
+                    "u":sigma_translation, 
+                    "v":sigma_translation, 
+                    "w":sigma_translation,},
+        mu_dict= {"alpha":0.0, 
+                "beta":0.0,
+                "gamma":0.0, 
+                "u":0.0, 
+                "v":0.0, 
+                "w":0.0})
+    max_std_vect = np.array([sigma_translation, sigma_rotation, sigma_translation, sigma_rotation])
+    return RandDeviationVect, max_std_vect, deviation_symbols

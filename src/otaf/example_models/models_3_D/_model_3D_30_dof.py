@@ -271,3 +271,47 @@ def getSystemOfConstraintsAssemblyModel(L = [100, 40, 30, 30, 20, 20, 120, 50, 4
     SOCAM.gap_symbols = g_labels
     SOCAM.embedOptimizationVariable()
     return SOCAM
+
+def getDistributionParams():
+
+    mu_d_ext = 20
+    sigma_d_ext = 0.06
+    mu_d_int = 19.8
+    sigma_d_int = 0.06
+    mu_trans = 0
+    sigma_trans = 0.01
+    mu_rot = 0 
+    sigma_rot = 0.001
+    st = sigma_trans
+    sr = sigma_rot
+
+    const = L[0]*L[10] - L[1]*L[9] 
+    sigma_beta_d_0 = np.sqrt(((L[0]/const)*st)**2 +(((L[9]-L[0])/const)*st)**2 +((L[9]/const)*st)**2)
+    sigma_gamma_d_0 = np.sqrt(((L[1]/const)*st)**2 +(((L[10]-L[1])/const)*st)**2 +((L[10]/const)*st)**2)
+    sigma_beta_d_1 = np.sqrt(((L[0]/const)*st)**2 +(((L[9]-L[0])/const)*st)**2 +((L[9]/const)*st)**2)
+    sigma_gamma_d_1 = sigma_gamma_d_0
+    sigma_beta_d_2 = np.sqrt(2*(st**2)/(L[2])**2)
+    sigma_gamma_d_2 = np.sqrt(2*(st**2)/(L[2])**2)
+    sigma_beta_d_3 = np.sqrt(2*(st**2)/(L[4])**2)
+    sigma_gamma_d_3 = np.sqrt(2*(st**2)/(L[4])**2)
+    sigma_beta_d_4 = np.sqrt(2*(st**2)/(L[3])**2)
+    sigma_gamma_d_4 = np.sqrt(2*(st**2)/(L[3])**2)
+    sigma_beta_d_5 = np.sqrt(2*(st**2)/(L[5])**2)
+    sigma_gamma_d_5 = np.sqrt(2*(st**2)/(L[5])**2)
+
+    mu_list = [.0]*22+[mu_d_ext,mu_d_int,mu_d_ext,mu_d_int]+[.0]*4
+    sigma_list = [st, sigma_beta_d_0, sigma_gamma_d_0, 
+                st, sigma_beta_d_1, sigma_gamma_d_1,
+                st, st, sigma_beta_d_2, sigma_gamma_d_2,
+                st, st, sigma_beta_d_3, sigma_gamma_d_3,
+                st, st, sigma_beta_d_4, sigma_gamma_d_4,
+                st, st, sigma_beta_d_5, sigma_gamma_d_5,
+                sigma_d_ext,sigma_d_int,sigma_d_ext,sigma_d_int,
+                st, st, sr, sr]#
+
+    RandDeviationVect = otaf.distribution.get_composed_normal_defect_distribution(
+        defect_names=x_full_labels,
+        mu_list = mu_list,
+        sigma_list = sigma_list)
+    max_std_vect = np.array([sigma_list])
+    return RandDeviationVect, max_std_vect, x_full_labels

@@ -527,3 +527,28 @@ def getSystemOfConstraintsAssemblyModel(
     SOCAM.gap_symbols = copy.deepcopy(mapped_clearances)
     SOCAM.embedOptimizationVariable()
     return SOCAM
+
+
+def getDistributionParams(
+        tol=0.25, capa=1.0, hPlate=30.0, 
+        EH=50.0, LB=25.0, Dext=20.0, Dint=19.8):
+    # Defining the uncertainties on the position and orientation of the holes
+    sigma_e_pos = tol / (6 * capa)
+    theta_max = tol / hPlate
+    sigma_e_theta = (2 * theta_max) / (6 * capa)
+    # Defining the uncertainties on the position and orientation of the plates
+    sigma_e_pos_plate = tol / (6 * capa)
+    sigma_e_theta_plate = (2 * (tol/(EH+LB))) / (6 * capa)
+    #Defining uncertaintis on the diameters.
+    sigma_diam = sigma_e_pos
+    otaf_mapping = create_dynamic_mapping(defect_vars, clearance_vars)
+    mapped_defects = [otaf_mapping[var] for var in defect_vars if var in otaf_mapping]
+    mu_vect = np.array([0.0]*38+[Dext]*8+[Dint]*4)
+    std_vect = np.array([sigma_e_theta_plate, sigma_e_theta_plate, sigma_e_pos_plate]*2
+                    +[sigma_e_theta, sigma_e_theta, sigma_e_pos, sigma_e_pos]*8
+                    +[sigma_diam]*12)
+
+    RandDeviationVect = otaf.distribution.get_composed_normal_defect_distribution(
+    mapped_defects, mu_list = mu_vect.tolist(), sigma_list = std_vect.tolist())
+
+    return RandDeviationVect, std_vect, mapped_defects
