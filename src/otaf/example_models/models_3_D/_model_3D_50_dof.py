@@ -551,4 +551,4 @@ def getDistributionParams(
     RandDeviationVect = otaf.distribution.get_composed_normal_defect_distribution(
     mapped_defects, mu_list = mu_vect.tolist(), sigma_list = std_vect.tolist())
 
-    return RandDeviationVect, std_vect, mapped_defects
+    return RandDeviationVect, mapped_defects, std_vect, mu_vect 

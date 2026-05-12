@@ -279,4 +279,4 @@ def getDistributionParams(tol=0.28, capa=1.0, hm=10, hf=10.2):
         sigma_e_pos, sigma_e_theta_f,
         sigma_e_pos, sigma_e_theta_m
     ])
-    return RandDeviationVect, max_std_vect, deviation_symbols
+    return RandDeviationVect, deviation_symbols,  max_std_vect, np.array([0.0]*16)

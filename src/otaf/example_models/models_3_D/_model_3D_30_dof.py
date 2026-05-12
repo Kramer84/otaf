@@ -299,7 +299,7 @@ def getSystemOfConstraintsAssemblyModel(L = [100, 40, 30, 30, 20, 20, 120, 50, 4
     SOCAM.embedOptimizationVariable()
     return SOCAM
 
-def getDistributionParams():
+def getDistributionParams(tol=None, capa=None):
 
     mu_d_ext = 20
     sigma_d_ext = 0.06
@@ -340,5 +340,4 @@ def getDistributionParams():
         defect_names=x_full_labels,
         mu_list = mu_list,
         sigma_list = sigma_list)
-    max_std_vect = np.array([sigma_list])
-    return RandDeviationVect, max_std_vect, x_full_labels
+    return RandDeviationVect,  x_full_labels, np.array(sigma_list), np.array(mu_list)

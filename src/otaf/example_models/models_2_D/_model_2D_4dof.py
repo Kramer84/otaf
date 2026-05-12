@@ -188,4 +188,4 @@ def getDistributionParams(tol=0.28, capa=1.0, X3=10.0):
                 "v":0.0, 
                 "w":0.0})
     max_std_vect = np.array([sigma_translation, sigma_rotation, sigma_translation, sigma_rotation])
-    return RandDeviationVect, max_std_vect, deviation_symbols
+    return RandDeviationVect, deviation_symbols, max_std_vect, np.array([0.0]*4)
