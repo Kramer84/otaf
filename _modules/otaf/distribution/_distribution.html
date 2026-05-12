@@ -163,11 +163,13 @@
         <span class="n">composed_distribution</span> <span class="o">=</span> <span class="n">JointDistribution</span><span class="p">(</span><span class="n">distributions</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Composed unit distribution created: </span><span class="si">{</span><span class="n">composed_distribution</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">elif</span> <span class="n">mu_list</span> <span class="ow">or</span> <span class="n">sigma_list</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">mu_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">sigma_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using mu or sigma list of parameters.&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">mu_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;mu_list not provided, defaulting all means to 0.0&quot;</span><span class="p">)</span>
             <span class="n">mu_list</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">ND</span>
         <span class="k">if</span> <span class="n">sigma_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;sigma_list not provided, defaulting all standard deviations to 1.0&quot;</span><span class="p">)</span>
             <span class="n">sigma_list</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">ND</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mu_list</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">sigma_list</span><span class="p">)</span> <span class="o">==</span> <span class="n">ND</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -180,33 +182,50 @@
         <span class="n">composed_distribution</span> <span class="o">=</span> <span class="n">JointDistribution</span><span class="p">(</span><span class="n">distributions</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Composed distribution created: </span><span class="si">{</span><span class="n">composed_distribution</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">elif</span> <span class="n">mu_dict</span> <span class="ow">or</span> <span class="n">sigma_dict</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">mu_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">sigma_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using mu or sigma dictionary of parameters.&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Handle cases where one dict is passed but not the other</span>
+        <span class="k">if</span> <span class="n">mu_dict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No mu_dict passed, initializing all unspecified means to 0.0&quot;</span><span class="p">)</span>
+            <span class="n">mu_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">sigma_dict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No sigma_dict passed, initializing all unspecified standard deviations to 1.0&quot;</span><span class="p">)</span>
+            <span class="n">sigma_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
         <span class="n">mu_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mu_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
         <span class="n">sigma_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sigma_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+        
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">defect_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">defect_names</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="n">key</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">defect_name</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">mu_keys</span><span class="p">]):</span>
-                <span class="n">mu</span> <span class="o">=</span> <span class="n">mu_dict</span><span class="p">[</span><span class="n">mu_keys</span><span class="p">[[</span><span class="n">key</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">defect_name</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">mu_keys</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="kc">True</span><span class="p">)]]</span>
+            <span class="c1"># Reset defaults for EACH iteration to prevent previous values carrying over</span>
+            <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span>
+            <span class="n">defect_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">defect_name</span><span class="p">)</span>
+
+            <span class="c1"># Find matching key for mean</span>
+            <span class="n">mu_match</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">mu_keys</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">defect_str</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">mu_match</span><span class="p">:</span>
+                <span class="n">mu</span> <span class="o">=</span> <span class="n">mu_dict</span><span class="p">[</span><span class="n">mu_match</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;No mean value for defect </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">defect_name</span><span class="p">)</span><span class="si">}</span><span class="s2"> in mu_dict, setting mean to 0&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;No mean value for defect </span><span class="si">{</span><span class="n">defect_str</span><span class="si">}</span><span class="s2"> in mu_dict, setting mean to 0.0&quot;</span>
                 <span class="p">)</span>
 
-            <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="n">key</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">defect_name</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">sigma_keys</span><span class="p">]):</span>
-                <span class="n">sigma</span> <span class="o">=</span> <span class="n">sigma_dict</span><span class="p">[</span>
-                    <span class="n">sigma_keys</span><span class="p">[[</span><span class="n">key</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">defect_name</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">sigma_keys</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="kc">True</span><span class="p">)]</span>
-                <span class="p">]</span>
+            <span class="c1"># Find matching key for standard deviation</span>
+            <span class="n">sigma_match</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">sigma_keys</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">defect_str</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">sigma_match</span><span class="p">:</span>
+                <span class="n">sigma</span> <span class="o">=</span> <span class="n">sigma_dict</span><span class="p">[</span><span class="n">sigma_match</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;No standard deviation value for defect </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">defect_name</span><span class="p">)</span><span class="si">}</span><span class="s2"> in sigma_dict, setting standard deviation to 1&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;No standard deviation value for defect </span><span class="si">{</span><span class="n">defect_str</span><span class="si">}</span><span class="s2"> in sigma_dict, setting standard deviation to 1.0&quot;</span>
                 <span class="p">)</span>
 
             <span class="n">dist</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
-            <span class="n">dist</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">defect_name</span><span class="p">)])</span>
+            <span class="n">dist</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="n">defect_str</span><span class="p">])</span>
             <span class="n">distributions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
+            
         <span class="n">composed_distribution</span> <span class="o">=</span> <span class="n">JointDistribution</span><span class="p">(</span><span class="n">distributions</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Composed distribution created: </span><span class="si">{</span><span class="n">composed_distribution</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
     <span class="k">return</span> <span class="n">composed_distribution</span></div>
 
 
