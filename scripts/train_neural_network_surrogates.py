@@ -5,6 +5,8 @@ import copy
 import numpy as np
 from enum import Enum
 from typing import Tuple, Sequence
+import argparse
+import sys
 
 import otaf
 import sympy as sp
@@ -15,7 +17,14 @@ import torch
 #Let's start with some generalistic functions.
 
 class HyperparameterTuning:
-    def __init__(self, system_of_constraints, distribution_function, dimension, sample_size=10000):
+    def __init__(self, 
+                 system_of_constraints, 
+                 distribution_function, 
+                 dimension, 
+                 sample_size=10000,
+                 error=None,
+                 tol=None,
+                 mult=None):
         """Class to find the right tolerance value
         and the right multiplicator so that:
         for the basic tolerance value we have 5% failure
@@ -30,8 +39,9 @@ class HyperparameterTuning:
         self.system_of_constraints = system_of_constraints
         self.distribution_function = distribution_function
         self.dim = dimension
-        self.tol = 0.1 #First we optimimze this here
-        self.mult = 1.0 #Then we optimize this here
+        self.error = error if error is not None else 0.0025
+        self.tol = tol if tol is not None else 0.1 #First we optimimze this here
+        self.mult = mult if mult is not None else 1.0 #Then we optimize this here
         self.sample_size = sample_size #Just to get the ratios
 
     def solve_system_of_constraints_ratio(self, sample, bounds=None, n_cpu=-2, progress_bar=True, batch_size=500, dtype="float32"):
@@ -131,7 +141,7 @@ class HyperparameterTuning:
 
         low, high = mult_range
         target = self.target_failure_mult  # 0.15
-        acceptable_error = 0.0025
+        acceptable_error = self.error
         max_iterations = 50
         
         best_mult = (low + high) / 2.0
@@ -174,24 +184,103 @@ class HyperparameterTuning:
     
 
 if __name__ == "__main__":
-    models = {"model1_4_dof" : otaf.example_models.model1,
-              "model2_16_dof" : otaf.example_models.model2,
-              #"model3_30_dof" : otaf.example_models.model3,
-              "model4_50_dof" : otaf.example_models.model4}
+    parser = argparse.ArgumentParser(description="Optimize hyperparameters for OTAF models.")
+    
+    parser.add_argument(
+        "--models", nargs="+", 
+        default=["model1_4_dof", "model2_16_dof", "model4_50_dof"],
+        help="Names of the models to optimize. E.g., model1_4_dof model2_16_dof"
+    )
+    parser.add_argument(
+        "--tols", nargs="+", type=float, 
+        help="Starting tolerance (tol) for each model. Pass one value to apply to all, or one per model."
+    )
+    parser.add_argument(
+        "--mults", nargs="+", type=float, 
+        help="Starting multiplicator (mult) for each model. Pass one value to apply to all, or one per model."
+    )
+    parser.add_argument(
+        "--errors", nargs="+", type=float, 
+        help="Target error margin for each model. Pass one value to apply to all, or one per model."
+    )
+    parser.add_argument(
+        "--sample-sizes", nargs="+", type=int, 
+        help="Sample size for each model. Pass one value to apply to all, or one per model."
+    )
+    parser.add_argument(
+        "--tol-ranges", nargs="+", type=str, 
+        help="Tolerance search range for each model formatted as 'low,high' (e.g., 0.1,0.4). Pass one to apply to all, or one per model."
+    )
+    parser.add_argument(
+        "--mult-ranges", nargs="+", type=str, 
+        help="Multiplicator search range for each model formatted as 'low,high' (e.g., 1.0,10.0). Pass one to apply to all, or one per model."
+    )
 
-    for model in models:
-        print(f"Optimizing hyperparameters for {model}...")
-        system_of_constraints = models[model].getSystemOfConstraintsAssemblyModel()
-        distribution_function = models[model].getDistributionParams
-        dimension = int(models[model].dim)
-        tuner = HyperparameterTuning(system_of_constraints, distribution_function, dimension)
+    args = parser.parse_args()
+
+    available_models = {  #previous optimization results:
+        "model1_4_dof": otaf.example_models.model1, #tol: 0.31094 mult: 1.35156 
+        "model2_16_dof": otaf.example_models.model2, #tol: 0.16094  mult: 1.21094
+        "model3_30_dof": otaf.example_models.model3, #tol:  mult: 
+        "model4_50_dof": otaf.example_models.model4 #tol: 0.20664  mult: 1.15381
+    }
+
+    # Helper function to map list arguments to the current model index
+    def get_param(param_list, index, default):
+        if not param_list:
+            return default
+        if len(param_list) == 1:
+            return param_list[0]
+        if index < len(param_list):
+            return param_list[index]
+        print(f"Warning: Not enough arguments provided for index {index}. Falling back to default: {default}")
+        return default
+
+    for i, model_name in enumerate(args.models):
+        if model_name not in available_models:
+            print(f"Error: Model '{model_name}' not found. Available models: {list(available_models.keys())}")
+            continue
+
+        print(f"Optimizing hyperparameters for {model_name}...")
         
-        print("Optimizing tolerance...")
-        optimal_tol = tuner.optimize_tolerance()
-        print(f"Optimal tolerance for {model}: {optimal_tol:.5f}")
+        # Fetch parameters for the current model index
+        tol = get_param(args.tols, i, None)
+        mult = get_param(args.mults, i, None)
+        error = get_param(args.errors, i, None)
+        sample_size = get_param(args.sample_sizes, i, 10000)
         
-        print("Optimizing multiplicator...")
-        optimal_mult = tuner.optimize_multiplicator()
-        print(f"Optimal multiplicator for {model}: {optimal_mult:.5f}")
+        tol_range_str = get_param(args.tol_ranges, i, "0.1,0.4")
+        mult_range_str = get_param(args.mult_ranges, i, "1.0,10.0")
+
+        try:
+            tol_range = tuple(map(float, tol_range_str.split(',')))
+            mult_range = tuple(map(float, mult_range_str.split(',')))
+        except ValueError:
+            print(f"Error parsing ranges for {model_name}. Please ensure format is 'low,high'. Exiting.")
+            sys.exit(1)
+
+        model_module = available_models[model_name]
+        system_of_constraints = model_module.getSystemOfConstraintsAssemblyModel()
+        distribution_function = model_module.getDistributionParams
+        dimension = int(model_module.dim)
         
-        print(f"Finished optimizing {model}.\n")
+        tuner = HyperparameterTuning(
+            system_of_constraints=system_of_constraints, 
+            distribution_function=distribution_function, 
+            dimension=dimension,
+            sample_size=sample_size,
+            error=error,
+            tol=tol,
+            mult=mult
+        )
+        
+        print(f"Optimizing tolerance (range: {tol_range})...")
+        optimal_tol = tuner.optimize_tolerance(tol_range=tol_range)
+        print(f"Optimal tolerance for {model_name}: {optimal_tol:.5f}")
+        
+        print(f"Optimizing multiplicator (range: {mult_range})...")
+        optimal_mult = tuner.optimize_multiplicator(mult_range=mult_range)
+        print(f"Optimal multiplicator for {model_name}: {optimal_mult:.5f}")
+        
+        print(f"Finished optimizing {model_name}.\n")
+        
