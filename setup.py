@@ -4,8 +4,8 @@ from Cython.Build import cythonize
 
 extensions = [
     Extension(
-        name="otaf.example_models.model_dumas_cython.plate_2_pins",
-        sources=["src/otaf/example_models/model_dumas_cython/plate_2_pins.pyx"],
+        name="otaf.example_models.models_3_D._model_3D_30_dof_cython",
+        sources=["src/otaf/example_models/models_3_D/_model_3D_30_dof_cython.pyx"],
         include_dirs=[numpy.get_include()] # Required if your .pyx file uses cimport numpy
     )
 ]

@@ -1,0 +1,247 @@
+from __future__ import annotations
+# -*- coding: utf-8 -*-
+
+__author__ = "Kramer84"
+
+import copy
+import logging
+import numpy as np
+import sympy as sp
+import openturns as ot
+from beartype import beartype
+from beartype.typing import Dict, List, Tuple, Union, Callable, Optional
+
+import otaf
+
+# From the notebook 2D_Model_16DOF_Auto_GLD
+
+def get_assembly_data(hM = 10, hF = 10.2, L1 = 30, L2 = 70, L3 = 30, lM = 10, lF = 10.2):
+    # Pièce 1 (male)
+    P1A0, P1A1, P1A2 = (
+        np.array((L1 - lM / 2, hM / 2, 0.0)),
+        np.array((L1 - lM / 2, 0, 0.0)),
+        np.array((L1 - lM / 2, hM, 0.0)),
+    )
+    P1B0, P1B1, P1B2 = (
+        np.array((L1 + lM / 2, hM / 2, 0.0)),
+        np.array((L1 + lM / 2, 0, 0.0)),
+        np.array((L1 + lM / 2, hM, 0.0)),
+    )
+    P1C0, P1C1, P1C2 = (
+        np.array((L1 + L2 - lM / 2, hM / 2, 0.0)),
+        np.array((L1 + L2 - lM / 2, 0, 0.0)),
+        np.array((L1 + L2 - lM / 2, hM, 0.0)),
+    )
+    P1D0, P1D1, P1D2 = (
+        np.array((L1 + L2 + lM / 2, hM / 2, 0.0)),
+        np.array((L1 + L2 + lM / 2, 0, 0.0)),
+        np.array((L1 + L2 + lM / 2, hM, 0.0)),
+    )
+    P1E0, P1E1 = np.array((0.0, 0.0, 0.0)), np.array((L1 + L2 + L3, 0.0, 0.0))
+
+    # Pièce 2 (femelle)  # On met les points à hM et pas hF pour qu'ils soient bien oposées! (Besoin??)
+    P2A0, P2A1, P2A2 = (
+        np.array((L1 - lF / 2, hF / 2, 0.0)),
+        np.array((L1 - lF / 2, 0, 0.0)),
+        np.array((L1 - lF / 2, hF, 0.0)),
+    )
+    P2B0, P2B1, P2B2 = (
+        np.array((L1 + lF / 2, hF / 2, 0.0)),
+        np.array((L1 + lF / 2, 0, 0.0)),
+        np.array((L1 + lF / 2, hF, 0.0)),
+    )
+    P2C0, P2C1, P2C2 = (
+        np.array((L1 + L2 - lF / 2, hF / 2, 0.0)),
+        np.array((L1 + L2 - lF / 2, 0, 0.0)),
+        np.array((L1 + L2 - lF / 2, hF, 0.0)),
+    )
+    P2D0, P2D1, P2D2 = (
+        np.array((L1 + L2 + lF / 2, hF / 2, 0.0)),
+        np.array((L1 + L2 + lF / 2, 0, 0.0)),
+        np.array((L1 + L2 + lF / 2, hF, 0.0)),
+    )
+    P2E0, P2E1 = np.array((0.0, 0.0, 0.0)), np.array((L1 + L2 + L3, 0.0, 0.0))
+
+    R0 = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+    x_, y_, z_ = R0[0], R0[1], R0[2]
+
+    # Pièce1
+    RP1b = RP1d = R0
+    RP1a = RP1c = np.array([-x_, -y_, z_]).T
+    RP1e = np.array([y_, -x_, z_]).T
+
+    # Pièce2
+    RP2a = RP2c = R0
+    RP2b = RP2d = np.array([-x_, -y_, z_]).T
+    RP2e = np.array([-y_, x_, z_]).T
+
+    TP1cC0, TP1cC1, TP1cC2 = (
+        otaf.geometry.tfrt(RP1c, P1C0),
+        otaf.geometry.tfrt(RP1c, P1C1),
+        otaf.geometry.tfrt(RP1c, P1C2),
+    )
+    TP1aA0, TP1aA1, TP1aA2 = (
+        otaf.geometry.tfrt(RP1a, P1A0),
+        otaf.geometry.tfrt(RP1a, P1A1),
+        otaf.geometry.tfrt(RP1a, P1A2),
+    )
+    TP1bB0, TP1bB1, TP1bB2 = (
+        otaf.geometry.tfrt(RP1b, P1B0),
+        otaf.geometry.tfrt(RP1b, P1B1),
+        otaf.geometry.tfrt(RP1b, P1B2),
+    )
+    TP1dD0, TP1dD1, TP1dD2 = (
+        otaf.geometry.tfrt(RP1d, P1D0),
+        otaf.geometry.tfrt(RP1d, P1D1),
+        otaf.geometry.tfrt(RP1d, P1D2),
+    )
+    TP1eE0, TP1eE1 = otaf.geometry.tfrt(RP1e, P1E0), otaf.geometry.tfrt(RP1e, P1E1)
+    TP2aA0, TP2aA1, TP2aA2 = (
+        otaf.geometry.tfrt(RP2a, P2A0),
+        otaf.geometry.tfrt(RP2a, P2A1),
+        otaf.geometry.tfrt(RP2a, P2A2),
+    )
+    TP2cC0, TP2cC1, TP2cC2 = (
+        otaf.geometry.tfrt(RP2c, P2C0),
+        otaf.geometry.tfrt(RP2c, P2C1),
+        otaf.geometry.tfrt(RP2c, P2C2),
+    )
+    TP2bB0, TP2bB1, TP2bB2 = (
+        otaf.geometry.tfrt(RP2b, P2B0),
+        otaf.geometry.tfrt(RP2b, P2B1),
+        otaf.geometry.tfrt(RP2b, P2B2),
+    )
+    TP2dD0, TP2dD1, TP2dD2 = (
+        otaf.geometry.tfrt(RP2d, P2D0),
+        otaf.geometry.tfrt(RP2d, P2D1),
+        otaf.geometry.tfrt(RP2d, P2D2),
+    )
+    TP2eE0, TP2eE1 = otaf.geometry.tfrt(RP2e, P2E0), otaf.geometry.tfrt(RP2e, P2E1)
+
+    system_data = {
+        "PARTS": {
+            "1": {
+                "a": {
+                    "FRAME": RP1a,
+                    "TYPE": "plane",
+                    "CONSTRAINTS_D": ["NONE"],
+                    "POINTS": {"A0": P1A0, "A1": P1A1, "A2": P1A2},
+                    "INTERACTIONS": ["P2a"],
+                    "CONSTRAINTS_G": ["FLOATING"],
+                },
+                "b": {
+                    "FRAME": RP1b,
+                    "TYPE": "plane",
+                    "CONSTRAINTS_D": ["NONE"],
+                    "POINTS": {"B0": P1B0, "B1": P1B1, "B2": P1B2},
+                    "INTERACTIONS": ["P2b"],
+                    "CONSTRAINTS_G": ["FLOATING"],
+                },
+                "c": {
+                    "FRAME": RP1c,
+                    "TYPE": "plane",
+                    "CONSTRAINTS_D": ["NONE"],
+                    "POINTS": {"C0": P1C0, "C1": P1C1, "C2": P1C2},
+                    "INTERACTIONS": ["P2c"],
+                    "CONSTRAINTS_G": ["FLOATING"],
+                },
+                "d": {
+                    "FRAME": RP1d,
+                    "TYPE": "plane",
+                    "CONSTRAINTS_D": ["NONE"],
+                    "POINTS": {"D0": P1D0, "D1": P1D1, "D2": P1D2},
+                    "INTERACTIONS": ["P2d"],
+                    "CONSTRAINTS_G": ["FLOATING"],
+                },
+                "e": {
+                    "FRAME": RP1e,
+                    "TYPE": "plane",
+                    "CONSTRAINTS_D": ["PERFECT"],
+                    "POINTS": {"E0": P1E0, "E1": P1E1},
+                    "INTERACTIONS": ["P2e"],
+                    "CONSTRAINTS_G": ["SLIDING"],
+                },
+            },
+            "2": {
+                "a": {
+                    "FRAME": RP2a,
+                    "TYPE": "plane",
+                    "CONSTRAINTS_D": ["NONE"],
+                    "POINTS": {"A0": P2A0, "A1": P2A1, "A2": P2A2},
+                    "INTERACTIONS": ["P1a"],
+                    "CONSTRAINTS_G": ["FLOATING"],
+                },
+                "b": {
+                    "FRAME": RP2b,
+                    "TYPE": "plane",
+                    "CONSTRAINTS_D": ["NONE"],
+                    "POINTS": {"B0": P2B0, "B1": P2B1, "B2": P2B2},
+                    "INTERACTIONS": ["P1b"],
+                    "CONSTRAINTS_G": ["FLOATING"],
+                },
+                "c": {
+                    "FRAME": RP2c,
+                    "TYPE": "plane",
+                    "CONSTRAINTS_D": ["NONE"],
+                    "POINTS": {"C0": P2C0, "C1": P2C1, "C2": P2C2},
+                    "INTERACTIONS": ["P1c"],
+                    "CONSTRAINTS_G": ["FLOATING"],
+                },
+                "d": {
+                    "FRAME": RP2d,
+                    "TYPE": "plane",
+                    "CONSTRAINTS_D": ["NONE"],
+                    "POINTS": {"D0": P2D0, "D1": P2D1, "D2": P2D2},
+                    "INTERACTIONS": ["P1d"],
+                    "CONSTRAINTS_G": ["FLOATING"],
+                },
+                "e": {
+                    "FRAME": RP2e,
+                    "TYPE": "plane",
+                    "CONSTRAINTS_D": ["PERFECT"],
+                    "POINTS": {"E0": P2E0, "E1": P2E1},
+                    "INTERACTIONS": ["P1e"],
+                    "CONSTRAINTS_G": ["SLIDING"],
+                },
+            },
+        },
+        "LOOPS": {
+            "COMPATIBILITY": {
+                "L0": "P1eE0 -> P2eE0 -> P2aA0 -> P1aA0",
+                "L1": "P1eE0 -> P2eE0 -> P2dD0 -> P1dD0",
+                "L2": "P1cC0 -> P2cC0 -> P2bB0 -> P1bB0",
+                "L3": "P1bB0 -> P2bB0 -> P2aA0 -> P1aA0",
+            },
+        },
+        "GLOBAL_CONSTRAINTS": "2D_NZ",
+    }
+    return system_data
+
+def getAssemblyDataProcessorObject(system_data=None):
+    SDA = otaf.AssemblyDataProcessor(system_data)
+    SDA.generate_expanded_loops()
+    return SDA
+
+def getCompatibilityLoopHandlingObject(SDA=None):
+    SDA = SDA if SDA is not None else getAssemblyDataProcessorObject(get_assembly_data())
+    CLH = otaf.CompatibilityLoopHandling(SDA)
+    #compatibility_expressions = CLH.get_compatibility_expression_from_FO_matrices()
+    return CLH
+
+def getInterfaceLoopHandlingObject(SDA=None,CLH=None):
+    if not SDA or not CLH:
+        SDA = getAssemblyDataProcessorObject(get_assembly_data())
+        CLH = getCompatibilityLoopHandlingObject(SDA)
+    ILH = otaf.InterfaceLoopHandling(SDA, CLH, circle_resolution=20)
+    return ILH
+
+def getSystemOfConstraintsAssemblyModel(hM = 10, hF = 10.2, L1 = 30, L2 = 70, L3 = 30, lM = 10, lF = 10.2):
+    SDA = getAssemblyDataProcessorObject(get_assembly_data(hM, hF, L1, L2, L3, lM, lF))
+    CLH = getCompatibilityLoopHandlingObject(SDA)
+    ILH = getInterfaceLoopHandlingObject(SDA, CLH)
+    compatibility_expressions = CLH.get_compatibility_expression_from_FO_matrices()
+    interface_constraints = ILH.get_interface_loop_expressions()
+    SOCAM = otaf.SystemOfConstraintsAssemblyModel(
+        compatibility_expressions, interface_constraints)
+    SOCAM.embedOptimizationVariable()
+    return SOCAM

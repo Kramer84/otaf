@@ -156,8 +156,8 @@ def getInterfaceLoopHandlingObject(SDA=None,CLH=None):
     ILH = otaf.InterfaceLoopHandling(SDA, CLH, circle_resolution=20)
     return ILH
 
-def get_systemOfConstraintAssemblyModel():
-    SDA = getAssemblyDataProcessorObject(get_assembly_data())
+def getSystemOfConstraintsAssemblyModel(X1=99.8, X2=100.0, X3=10.0):
+    SDA = getAssemblyDataProcessorObject(get_assembly_data(X1, X2, X3))
     CLH = getCompatibilityLoopHandlingObject(SDA)
     ILH = getInterfaceLoopHandlingObject(SDA, CLH)
     compatibility_expressions = CLH.get_compatibility_expression_from_FO_matrices()

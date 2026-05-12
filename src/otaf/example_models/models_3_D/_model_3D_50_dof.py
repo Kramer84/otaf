@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import re
+import copy
 import numpy as np
 from enum import Enum
 from typing import Tuple, Sequence
 
+import otaf
 import sympy as sp
 
 # Compiled once at module level — free at call time
@@ -467,3 +469,61 @@ def print_interface_constraints(expressions):
     print("\n=== Interface Constraints (Eq <= 0) ===")
     for idx, expr in enumerate(expressions):
         print(f"Constraint {idx+1}:\n{expr} <= 0")
+
+
+def getSystemOfConstraintsAssemblyModel(
+        L=[50, 50, 30, 30],
+        CIRCLE_RESOLUTION=64, 
+        strategy=LinearizationStrategy.CIRCUMSCRIBED):
+    assert len(L) == 4, "Length list L must contain exactly 4 elements corresponding to l0, l1, l2, l3."
+    l0, l1, l2, l3 = sp.symbols('l0 l1 l2 l3')
+    length_subs = {l0: L[0], l1: L[1], l2: L[2], l3: L[3]}
+    loop_exprs, d_vars, c_vars = get_kinematic_loop_expressions()
+    interf_exprs = get_interface_constraint_expressions(
+        num_points=CIRCLE_RESOLUTION, 
+        strategy=strategy, 
+        z_eval_points=[-L[2]/2, L[2]/2])
+
+    otaf_mapping = create_dynamic_mapping(defect_vars, clearance_vars)
+    mapped_loop_exprs = rename_variables(loop_exprs, otaf_mapping)
+    mapped_interf_exprs = rename_variables(interf_exprs, otaf_mapping)
+    mapped_clearances = [otaf_mapping[var] for var in clearance_vars if var in otaf_mapping]
+    mapped_defects = [otaf_mapping[var] for var in defect_vars if var in otaf_mapping]
+
+
+    comp_mats = extract_linear_matrices(mapped_loop_exprs, 
+                                        mapped_clearances, 
+                                        mapped_defects, 
+                                        [l0,l1,l2,l3], 
+                                        length_subs)
+    interf_mats = extract_linear_matrices(mapped_interf_exprs, 
+                                         mapped_clearances,
+                                        mapped_defects, 
+                                        [l0,l1,l2,l3], 
+                                        length_subs)
+    # 1. Extract matrices as numpy arrays (ensure float dtype)
+    # The coefficient matrices must remain 2D, but the constant vectors MUST be 1D
+    A_eq_gap = np.array(comp_mats[0], dtype=float)
+    A_eq_def = np.array(comp_mats[1], dtype=float)
+    K_eq     = np.array(comp_mats[2], dtype=float).flatten()  # <--- Flatten to 1D
+
+    A_ub_gap = np.array(interf_mats[0], dtype=float)
+    A_ub_def = np.array(interf_mats[1], dtype=float)
+    K_ub     = np.array(interf_mats[2], dtype=float).flatten()  # <--- Flatten to 1D
+
+    # 2. Repack them in the exact order SOCAM expects: (Defect, Gap, Constant)
+    # We multiply the inequality matrices by -1 to convert from (<= 0) to (>= 0)
+    matrices_for_socam = [
+        A_eq_def, 
+        A_eq_gap, 
+        K_eq,
+        -A_ub_def,  
+        -A_ub_gap,  
+        -K_ub       
+    ]
+
+    SOCAM =otaf.SystemOfConstraintsAssemblyModel(matrices=matrices_for_socam)
+    SOCAM.deviation_symbols = copy.deepcopy(mapped_defects)
+    SOCAM.gap_symbols = copy.deepcopy(mapped_clearances)
+    SOCAM.embedOptimizationVariable()
+    return SOCAM

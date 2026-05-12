@@ -7,7 +7,7 @@ __requires__ = ["numpy", "sympy", "openturns", "scipy", "matplotlib",
 
 import logging as _logging
 import importlib as _importlib
-from typing import TYPE_CHECKING as _TYPE_CHECKING
+from typing import TYPE_CHECKING #as _TYPE_CHECKING
 
 # --- Eager core (small, foundational) ----------------------------------------
 from . import constants, exceptions, common, geometry
@@ -63,7 +63,7 @@ def __dir__():
     return sorted(set(list(globals().keys()) + list(_lazy_submodules) + list(_reexports)))
 
 # For static type checkers only
-if _TYPE_CHECKING:
+if TYPE_CHECKING:
     from . import sampling, distribution, sensitivity, capabilities
     from . import uncertainty, surrogate, optimization, tolerances, example_models
     from ._assembly_modeling import (  # type: ignore[F401]

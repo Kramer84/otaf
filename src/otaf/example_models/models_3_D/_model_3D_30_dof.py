@@ -10,7 +10,7 @@ Convention (matching SystemOfConstraintsAssemblyModel.__call__):
 
 Variable layout
 ---------------
-x  (x_full, size 30) – deviations + diameters, see x_full_labels in the Cython file
+x  (x_full, size 30) – deviations + diameters, see x_full_labels below
 g  (gaps,   size 17) – clearance torsor components,  see g_labels
 
 Linearization reference
@@ -30,6 +30,9 @@ from __future__ import annotations
 import numpy as np
 from enum import Enum
 from typing import Tuple
+
+import sympy as sp
+import otaf
 
 
 # ---------------------------------------------------------------------------
@@ -256,3 +259,15 @@ g_labels_mapping = {
 "u_2g1g_1":"u_g_3",
 "u_2g1g_2":"u_g_4"
 }
+
+
+
+def getSystemOfConstraintsAssemblyModel(L = [100, 40, 30, 30, 20, 20, 120, 50, 40, 50, -30], Nd=32, strategy=LinearizationStrategy.CIRCUMSCRIBED):
+    mats = build_constraint_matrices(L, Nd, strategy)
+    SOCAM = otaf.SystemOfConstraintsAssemblyModel(matrices=list(mats))
+    d_labels = [sp.Symbol(x_full_labels_mapping[lab]) for lab in x_full_labels]
+    g_labels = [sp.Symbol(g_labels_mapping[lab]) for lab in g_labels]
+    SOCAM.deviation_symbols = d_labels
+    SOCAM.gap_symbols = g_labels
+    SOCAM.embedOptimizationVariable()
+    return SOCAM
