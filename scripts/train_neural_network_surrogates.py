@@ -174,4 +174,24 @@ class HyperparameterTuning:
     
 
 if __name__ == "__main__":
-    models = 
+    models = {"model1_4_dof" : otaf.example_models.model1,
+              "model2_16_dof" : otaf.example_models.model2,
+              "model3_30_dof" : otaf.example_models.model3,
+              "model4_50_dof" : otaf.example_models.model4}
+
+    for model in models:
+        print(f"Optimizing hyperparameters for {model}...")
+        system_of_constraints = models[model].getSystemOfConstraintsAssemblyModel()
+        distribution_function = models[model].getDistributionParams
+        dimension = int(models[model].dim)
+        tuner = HyperparameterTuning(system_of_constraints, distribution_function, dimension)
+        
+        print("Optimizing tolerance...")
+        optimal_tol = tuner.optimize_tolerance()
+        print(f"Optimal tolerance for {model}: {optimal_tol:.5f}")
+        
+        print("Optimizing multiplicator...")
+        optimal_mult = tuner.optimize_multiplicator()
+        print(f"Optimal multiplicator for {model}: {optimal_mult:.5f}")
+        
+        print(f"Finished optimizing {model}.\n")
