@@ -171,3 +171,7 @@ class HyperparameterTuning:
               f"Best found multiplier is {self.mult:.5f} with a failure ratio error of {best_error:.5f}.")
         
         return self.mult
+    
+
+if __name__ == "__main__":
+    models = 

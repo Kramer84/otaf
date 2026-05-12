@@ -341,3 +341,5 @@ def getDistributionParams(tol=None, capa=None):
         mu_list = mu_list,
         sigma_list = sigma_list)
     return RandDeviationVect,  x_full_labels, np.array(sigma_list), np.array(mu_list)
+
+dim=30

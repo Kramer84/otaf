@@ -552,3 +552,5 @@ def getDistributionParams(
     mapped_defects, mu_list = mu_vect.tolist(), sigma_list = std_vect.tolist())
 
     return RandDeviationVect, mapped_defects, std_vect, mu_vect 
+
+dim=50
