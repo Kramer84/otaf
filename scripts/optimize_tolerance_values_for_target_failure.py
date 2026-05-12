@@ -219,10 +219,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     available_models = {  #previous optimization results:
-        "model1_4_dof": otaf.example_models.model1, #tol: 0.31094 mult: 1.35156 
-        "model2_16_dof": otaf.example_models.model2, #tol: 0.16094  mult: 1.21094
+        "model1_4_dof": otaf.example_models.model1, #tol: 0.31 mult: 1.35 
+        "model2_16_dof": otaf.example_models.model2, #tol: 0.16  mult: 1.21
         "model3_30_dof": otaf.example_models.model3, #tol:  mult: 
-        "model4_50_dof": otaf.example_models.model4 #tol: 0.20664  mult: 1.15381
+        "model4_50_dof": otaf.example_models.model4 #tol: 0.21  mult: 1.15
     }
 
     # Helper function to map list arguments to the current model index

@@ -35,7 +35,7 @@ class SurrogateTrainer:
             sample_size=100000,
             architecture=None,
             lr=0.003,
-            max_epochs=500,
+            max_epochs=2500,
             batch_size=30000,
             save_path=None):
 
@@ -94,7 +94,7 @@ class SurrogateTrainer:
             clamping=True,
             finish_critertion_epoch=5,
             loss_finish=1e-6,
-            metric_finish=0.99999,
+            metric_finish=0.9998,
             max_epochs=self.max_epochs,
             batch_size=self.batch_size,
             compile_model=False,
@@ -195,6 +195,8 @@ if __name__ == "__main__":
         trainer.train_and_save()
 
 """
+python train_neural_networks.py --tols 0.31 0.16 0.21 --mults 1.35 1.21 1.15 --sample-sizes 200000 --architectures 'dim,16,8,4,1' 'dim,64,32,16,1' 'dim,256,128,64,32,1'
+
 REGARDING HOW TO CALL THE MODEL:
 
 Your method of calling it inside `model2` logic is conceptually fine, but contains redundant PyTorch overhead.
