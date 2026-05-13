@@ -193,7 +193,7 @@ if __name__ == "__main__":
     
     parser.add_argument(
         "--models", nargs="+", 
-        default=["model1_4_dof", "model2_16_dof", "model4_50_dof"],
+        default=["model1_4_dof", "model2_16_dof", "model3_30_dof", "model4_50_dof"],
         help="Names of the models to optimize. E.g., model1_4_dof model2_16_dof"
     )
     parser.add_argument(
