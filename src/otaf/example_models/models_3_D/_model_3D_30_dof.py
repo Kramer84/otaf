@@ -499,9 +499,9 @@ def getSystemOfConstraintsAssemblyModel(L = [100, 40, 30, 30, 20, 20, 120, 50, 4
     mats = build_constraint_matrices(L, Nd, strategy)
     SOCAM = otaf.SystemOfConstraintsAssemblyModel(matrices=list(mats))
     d_labels = [sp.Symbol(x_full_labels_mapping[lab]) for lab in x_full_labels]
-    g_labels = [sp.Symbol(g_labels_mapping[lab]) for lab in g_labels]
+    g_labels_loc = [sp.Symbol(g_labels_mapping[lab]) for lab in g_labels]
     SOCAM.deviation_symbols = d_labels
-    SOCAM.gap_symbols = g_labels
+    SOCAM.gap_symbols = g_labels_loc
     SOCAM.embedOptimizationVariable()
     return SOCAM
 
