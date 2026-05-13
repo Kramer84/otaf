@@ -226,7 +226,7 @@ if __name__ == "__main__":
     available_models = {  #previous optimization results:
         "model1_4_dof": otaf.example_models.model1, #tol: 0.31 mult: 1.35 
         "model2_16_dof": otaf.example_models.model2, #tol: 0.16  mult: 1.21
-        "model3_30_dof": otaf.example_models.model3, #tol:  mult: 
+        "model3_30_dof": otaf.example_models.model3, #tol:  mult:  1.26
         "model4_50_dof": otaf.example_models.model4 #tol: 0.21  mult: 1.15
     }
 

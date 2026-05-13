@@ -139,7 +139,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate data and train Neural Surrogates for OTAF models.")
 
 
-    parser.add_argument("--models", nargs="+", default=["model1_4_dof", "model2_16_dof", "model4_50_dof"], help="Models to train")
+    parser.add_argument("--models", nargs="+", default=["model1_4_dof", "model2_16_dof", "model3_30_dof", "model4_50_dof"], help="Models to train")
     parser.add_argument("--tols", nargs="+", type=float, help="Base tolerance for each model")
     parser.add_argument("--mults", nargs="+", type=float, help="Multiplicator for each model")
     parser.add_argument("--sample-sizes", nargs="+", type=int, help="Sample size for training data per model")

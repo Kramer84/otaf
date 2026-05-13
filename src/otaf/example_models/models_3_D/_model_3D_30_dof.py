@@ -495,7 +495,7 @@ def get_mp_to_xfull_transformation_matrix(L=[100, 40, 30, 30, 20, 20, 120, 50, 4
     return T
 
 
-def getSystemOfConstraintsAssemblyModel(L = [100, 40, 30, 30, 20, 20, 120, 50, 40, 50, -30], Nd=32, strategy=LinearizationStrategy.CIRCUMSCRIBED):
+def getSystemOfConstraintsAssemblyModel(L = [100, 40, 30, 30, 20, 20, 120, 50, 40, 50, -30], Nd=64, strategy=LinearizationStrategy.CIRCUMSCRIBED):
     mats = build_constraint_matrices(L, Nd, strategy)
     SOCAM = otaf.SystemOfConstraintsAssemblyModel(matrices=list(mats))
     d_labels = [sp.Symbol(x_full_labels_mapping[lab]) for lab in x_full_labels]
