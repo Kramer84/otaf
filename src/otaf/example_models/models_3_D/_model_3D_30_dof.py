@@ -405,15 +405,12 @@ g_labels_mapping = {
 "u_2g1g_2":"u_g_4"
 }
 
-import numpy as np
 
-def get_mp_to_xfull_transformation_matrix(L=None):
+def get_mp_to_xfull_transformation_matrix(L=[100, 40, 30, 30, 20, 20, 120, 50, 40, 50, -30]):
     """
     Returns a 30x30 matrix T such that: X_full = T @ X_mp
     L must be a list or array of lengths l1 through l11, mapped to indices 0 to 10.
     """
-    if L is None:
-        L = [100, 40, 30, 30, 20, 20, 120, 50, 40, 50, -30]
         
     T = np.zeros((30, 30))
     
@@ -554,3 +551,5 @@ def getDistributionParams(tol=None, capa=None, param_set=1):
     return RandDeviationVect, x_mp_labels, sigma_arr, mu_arr
 
 dim=30
+sample_multiplier = get_mp_to_xfull_transformation_matrix()
+no_tol = True

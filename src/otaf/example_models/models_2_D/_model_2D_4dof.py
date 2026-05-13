@@ -192,6 +192,8 @@ def getDistributionParams(tol=0.31, capa=1.0, X3=10.0):
     return RandDeviationVect, deviation_symbols, max_std_vect, np.array([0.0]*4)
 
 dim = 4
+sample_multiplier = np.eye(dim)
+no_tol = False
 
 # Let's define the credal sets of admissible standard deviations
 def evalCredalSetConstraints(x_std, tol=0.31, capa=1.0, X3=10.0):

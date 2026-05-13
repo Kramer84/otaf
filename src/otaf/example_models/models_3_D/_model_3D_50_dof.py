@@ -556,3 +556,82 @@ def getDistributionParams(
     return RandDeviationVect, mapped_defects, std_vect, mu_vect 
 
 dim=50
+sample_multiplier = np.eye(dim)
+no_tol = False
+
+# Let's define the credal sets of admissible standard deviations
+def evalCredalSetConstraints(x_std, tol=0.16, capa=1.0, hPlate=30.0):
+    """
+    x_std is the vector of standard deviations of the defects, in the order [u_d_4, gamma_d_4, u_d_5, gamma_d_5]
+    """
+    target = tol / (6 * capa)
+
+    # Evaluates the worst-case geometric deviation at the physical extremity of the assembly's footprint (x=120, y=50).
+    cons0 = lambda x: (sigma_delta_3D_plane(50,50, x[2], x[0], x[1]) - target)/target
+    cons1 = lambda x: (sigma_delta_3D_plane(50,50, x[5], x[3], x[4]) - target)/target
+
+    # We can do stuff like this cause there is no correlation here. 
+    cons2 = lambda x: (np.maximum( #Part 1 hole d
+        sigma_delta_cylindrical_feature(hPlate/2, 0,       x[38], x[8], x[6], x[9], x[7]), 
+        sigma_delta_cylindrical_feature(hPlate/2, np.pi/2, x[38], x[8], x[6], x[9], x[7])
+    ) - target)/target
+
+    cons3 = lambda x: (np.maximum( #Part 1 hole e
+        sigma_delta_cylindrical_feature(hPlate/2, 0,       x[39], x[16], x[14], x[17], x[15]), 
+        sigma_delta_cylindrical_feature(hPlate/2, np.pi/2, x[39], x[16], x[14], x[17], x[15])
+    ) - target)/target
+
+    cons4 = lambda x: (np.maximum( #Part 1 hole f
+        sigma_delta_cylindrical_feature(hPlate/2, 0,       x[40], x[24], x[22], x[25], x[23]), 
+        sigma_delta_cylindrical_feature(hPlate/2, np.pi/2, x[40], x[24], x[22], x[25], x[23])
+    ) - target)/target
+
+    cons5 = lambda x: (np.maximum( #Part 1 hole g
+        sigma_delta_cylindrical_feature(hPlate/2, 0,       x[41], x[32], x[30], x[33], x[31]), 
+        sigma_delta_cylindrical_feature(hPlate/2, np.pi/2, x[41], x[32], x[30], x[33], x[31])
+    ) - target)/target
+
+    cons6 = lambda x: (np.maximum( #Part 2 hole d
+        sigma_delta_cylindrical_feature(hPlate/2, 0,       x[42], x[12], x[10], x[13], x[11]), 
+        sigma_delta_cylindrical_feature(hPlate/2, np.pi/2, x[42], x[12], x[10], x[13], x[11])
+    ) - target)/target
+
+    cons7 = lambda x: (np.maximum( #Part 2 hole e
+        sigma_delta_cylindrical_feature(hPlate/2, 0,       x[43], x[20], x[18], x[21], x[19]), 
+        sigma_delta_cylindrical_feature(hPlate/2, np.pi/2, x[43], x[20], x[18], x[21], x[19])
+    ) - target)/target
+
+    cons8 = lambda x: (np.maximum( #Part 2 hole f
+        sigma_delta_cylindrical_feature(hPlate/2, 0,       x[44], x[28], x[26], x[29], x[27]), 
+        sigma_delta_cylindrical_feature(hPlate/2, np.pi/2, x[44], x[28], x[26], x[29], x[27])
+    ) - target)/target
+
+    cons9 = lambda x: (np.maximum( #Part 2 hole g
+        sigma_delta_cylindrical_feature(hPlate/2, 0,       x[45], x[36], x[34], x[37], x[35]), 
+        sigma_delta_cylindrical_feature(hPlate/2, np.pi/2, x[45], x[36], x[34], x[37], x[35])
+    ) - target)/target
+    # These constraints are removed below since these are simple constants
+    cons10 = lambda x: (x[46] - target)/target
+    cons11 = lambda x: (x[47] - target)/target
+    cons12 = lambda x: (x[48] - target)/target
+    cons13 = lambda x: (x[49] - target)/target
+
+    return [cons0(x_std), cons1(x_std), cons2(x_std), cons3(x_std), cons4(x_std), cons5(x_std), 
+            cons6(x_std), cons7(x_std), cons8(x_std), cons9(x_std),
+            cons10(x_std), cons11(x_std), cons12(x_std), cons13(x_std)]
+
+def evalScaledCredalSetConstraints(x_scaled, max_std_vect, tracker=None, experiment_key=None, tol=0.16, capa=1.0, hPlate=30.0):
+    # Unscale back to real physical dimensions
+    x_real = x_scaled * max_std_vect
+    # Evaluate the aggregated manual constraints with real values
+    constraint_array = evalCredalSetConstraints(x_real, tol=tol, capa=capa, hPlate=hPlate)
+    if tracker:
+        tracker.update_constraint_data(
+            exp_key=experiment_key,
+            x=x_scaled,
+            constraints=constraint_array
+        )
+    return constraint_array
+
+def getScaledCredalSetConstraintsFunction(max_std_vect, tracker=None, experiment_key=None, tol=0.16, capa=1.0, hPlate=30.0):
+    return lambda x_scaled : evalScaledCredalSetConstraints(x_scaled, max_std_vect, tracker, experiment_key, tol=tol, capa=capa, hPlate=hPlate)

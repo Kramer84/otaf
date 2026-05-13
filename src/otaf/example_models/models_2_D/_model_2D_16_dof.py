@@ -284,6 +284,8 @@ def getDistributionParams(tol=0.16, capa=1.0, hM=10, hF=10.2):
     return RandDeviationVect, deviation_symbols,  max_std_vect, np.array([0.0]*16)
 
 dim=16
+sample_multiplier = np.eye(dim)
+no_tol = False
 
 # Let's define the credal sets of admissible standard deviations
 def evalCredalSetConstraints(x_std, tol=0.16, capa=1.0, hM=10, hF=10.2):
@@ -292,15 +294,21 @@ def evalCredalSetConstraints(x_std, tol=0.16, capa=1.0, hM=10, hF=10.2):
     """
     target = tol / (6*capa)
 
-    constraint1 = (sigma_delta_3D_plane(X3/2, 0, x_std[0], 0,  x_std[1]) - target)/target
-    constraint2 = (sigma_delta_3D_plane(X3/2, 0, x_std[2], 0,  x_std[3]) - target)/target
-    return [constraint1, constraint2]
+    constraint1 = (sigma_delta_3D_plane(hF/2, 0, x_std[0], 0,  x_std[1]) - target)/target
+    constraint2 = (sigma_delta_3D_plane(hM/2, 0, x_std[2], 0,  x_std[3]) - target)/target
+    constraint3 = (sigma_delta_3D_plane(hF/2, 0, x_std[4], 0,  x_std[5]) - target)/target
+    constraint4 = (sigma_delta_3D_plane(hM/2, 0, x_std[6], 0,  x_std[7]) - target)/target
+    constraint5 = (sigma_delta_3D_plane(hM/2, 0, x_std[8], 0,  x_std[9]) - target)/target
+    constraint6 = (sigma_delta_3D_plane(hF/2, 0, x_std[10], 0,  x_std[11]) - target)/target
+    constraint7 = (sigma_delta_3D_plane(hF/2, 0, x_std[12], 0,  x_std[13]) - target)/target
+    constraint8 = (sigma_delta_3D_plane(hM/2, 0, x_std[14], 0,  x_std[15]) - target)/target
+    return [constraint1, constraint2, constraint3, constraint4, constraint5, constraint6, constraint7, constraint8]
 
 def evalScaledCredalSetConstraints(x_scaled, max_std_vect, tracker=None, experiment_key=None, tol=0.16, capa=1.0, hM=10, hF=10.2):
     # Unscale back to real physical dimensions
     x_real = x_scaled * max_std_vect
     # Evaluate the aggregated manual constraints with real values
-    constraint_array = evalCredalSetConstraints(x_real, tol=tol, capa=capa, X3=X3)
+    constraint_array = evalCredalSetConstraints(x_real, tol=tol, capa=capa, hM=hM, hF=hF)
     if tracker:
         tracker.update_constraint_data(
             exp_key=experiment_key,
@@ -310,4 +318,4 @@ def evalScaledCredalSetConstraints(x_scaled, max_std_vect, tracker=None, experim
     return constraint_array
 
 def getScaledCredalSetConstraintsFunction(max_std_vect, tracker=None, experiment_key=None, tol=0.16, capa=1.0, hM=10, hF=10.2):
-    return lambda x_scaled : evalScaledCredalSetConstraints(x_scaled, max_std_vect, tracker, experiment_key, tol=tol, capa=capa, X3=X3)
+    return lambda x_scaled : evalScaledCredalSetConstraints(x_scaled, max_std_vect, tracker, experiment_key, tol=tol, capa=capa, hM=hM, hF=hF)

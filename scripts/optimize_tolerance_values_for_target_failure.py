@@ -45,6 +45,7 @@ class HyperparameterTuning:
         self.tol = tol if tol is not None else 0.1 #First we optimimze this here
         self.mult = mult if mult is not None else 1.0 #Then we optimize this here
         self.sample_size = sample_size #Just to get the ratios
+        self.sample_multiplier = sample_multiplier if sample_multiplier is not None else np.eye(self.dim)
 
     def solve_system_of_constraints_ratio(self, sample, bounds=None, n_cpu=-2, progress_bar=True, batch_size=500, dtype="float32"):
         """This function will solve the system of constraints for the given sample and return the ratio of failures."""
@@ -64,6 +65,7 @@ class HyperparameterTuning:
         joint_distribution, _, _, _ = self.distribution_function(tol=tolerance, capa=1.0)
         np.random.seed(seed)
         sample = np.array(joint_distribution.getSample(self.sample_size),dtype="float32")
+        sample = sample @ self.sample_multiplier.T #Apply the variable change if needed
         return sample
 
     def optimize_tolerance(self, tol_range=(0.1, 0.4)):
@@ -131,6 +133,7 @@ class HyperparameterTuning:
         # 3. Draw the sample
         np.random.seed(seed)
         sample = np.array(dist.getSample(self.sample_size), dtype="float32")
+        sample = sample @ self.sample_multiplier.T #Apply the variable change if needed
         return sample
 
     def optimize_multiplicator(self, mult_range=(1.0, 10.0)):
@@ -273,12 +276,15 @@ if __name__ == "__main__":
             sample_size=sample_size,
             error=error,
             tol=tol,
-            mult=mult
+            mult=mult,
+            sample_multiplier=model_module.sample_multiplier if hasattr(model_module, 'sample_multiplier') else None
         )
-        
-        print(f"Optimizing tolerance (range: {tol_range})...")
-        optimal_tol = tuner.optimize_tolerance(tol_range=tol_range)
-        print(f"Optimal tolerance for {model_name}: {optimal_tol:.5f}")
+        if model_module.no_tol:
+            print(f"Model {model_name} is marked as no_tol. Skipping tolerance optimization.")
+        else:
+            print(f"Optimizing tolerance (range: {tol_range})...")
+            optimal_tol = tuner.optimize_tolerance(tol_range=tol_range)
+            print(f"Optimal tolerance for {model_name}: {optimal_tol:.5f}")
         
         print(f"Optimizing multiplicator (range: {mult_range})...")
         optimal_mult = tuner.optimize_multiplicator(mult_range=mult_range)

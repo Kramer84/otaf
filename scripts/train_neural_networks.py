@@ -37,7 +37,8 @@ class SurrogateTrainer:
             lr=0.003,
             max_epochs=2500,
             batch_size=30000,
-            save_path=None):
+            save_path=None,
+            sample_multiplier=None):
 
         self.model_name = model_name
         self.system_of_constraints = system_of_constraints
@@ -51,6 +52,8 @@ class SurrogateTrainer:
         self.max_epochs = max_epochs
         self.batch_size = batch_size
         self.save_path = save_path if save_path else f"{model_name}_surrogate.pth"
+        self.sample_multiplier = sample_multiplier if sample_multiplier is not None else np.eye(self.dim)
+
 
     def generate_data(self, seed=420):
         print(f"[{self.model_name}] Generating training data...")
@@ -65,6 +68,7 @@ class SurrogateTrainer:
         
         # 3. Generate the input sample
         sample = np.array(dist.getSample(self.sample_size), dtype="float32")
+        sample = sample @ self.sample_multiplier.T #Apply the variable change if needed
 
         # 4. Compute the results
         results = otaf.uncertainty.compute_gap_optimizations_on_sample_batch(
@@ -188,7 +192,8 @@ if __name__ == "__main__":
             mult=mult,
             sample_size=sample_size,
             architecture=architecture,
-            save_path=save_path
+            save_path=save_path,
+            sample_multiplier=model_module.sample_multiplier if hasattr(model_module, 'sample_multiplier') else None
         )
 
         trainer.generate_data()
