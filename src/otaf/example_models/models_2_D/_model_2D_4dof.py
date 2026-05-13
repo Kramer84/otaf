@@ -12,6 +12,7 @@ from beartype import beartype
 from beartype.typing import Dict, List, Tuple, Union, Callable, Optional
 
 import otaf
+from otaf.tolerances import sigma_delta_3D_plane
 
 # From the notebook 2D_Model_4DOF_Auto_GLD
 
@@ -168,7 +169,7 @@ def getSystemOfConstraintsAssemblyModel(X1=99.8, X2=100.0, X3=10.0):
     return SOCAM
 
 
-def getDistributionParams(tol=0.28, capa=1.0, X3=10.0):
+def getDistributionParams(tol=0.31, capa=1.0, X3=10.0):
     deviation_symbols = list(sp.symbols('u_d_4 gamma_d_4 u_d_5 gamma_d_5'))
     sigma_translation = tol / (6*capa)
     rotation_max = tol / X3
@@ -191,3 +192,30 @@ def getDistributionParams(tol=0.28, capa=1.0, X3=10.0):
     return RandDeviationVect, deviation_symbols, max_std_vect, np.array([0.0]*4)
 
 dim = 4
+
+# Let's define the credal sets of admissible standard deviations
+def evalCredalSetConstraints(x_std, tol=0.31, capa=1.0, X3=10.0):
+    """
+    x_std is the vector of standard deviations of the defects, in the order [u_d_4, gamma_d_4, u_d_5, gamma_d_5]
+    """
+    target = tol / (6*capa)
+
+    constraint1 = (sigma_delta_3D_plane(X3/2, 0, x_std[0], 0,  x_std[1]) - target)/target
+    constraint2 = (sigma_delta_3D_plane(X3/2, 0, x_std[2], 0,  x_std[3]) - target)/target
+    return [constraint1, constraint2]
+
+def evalScaledCredalSetConstraints(x_scaled, max_std_vect, tracker=None, experiment_key=None, tol=0.31, capa=1.0, X3=10.0):
+    # Unscale back to real physical dimensions
+    x_real = x_scaled * max_std_vect
+    # Evaluate the aggregated manual constraints with real values
+    constraint_array = evalCredalSetConstraints(x_real, tol=tol, capa=capa, X3=X3)
+    if tracker:
+        tracker.update_constraint_data(
+            exp_key=experiment_key,
+            x=x_scaled,
+            constraints=constraint_array
+        )
+    return constraint_array
+
+def getScaledCredalSetConstraintsFunction(max_std_vect, tracker=None, experiment_key=None, tol=0.31, capa=1.0, X3=10.0):
+    return lambda x_scaled : evalScaledCredalSetConstraints(x_scaled, max_std_vect, tracker, experiment_key, tol=tol, capa=capa, X3=X3)

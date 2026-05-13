@@ -193,9 +193,8 @@ if __name__ == "__main__":
 
         trainer.generate_data()
         trainer.train_and_save()
-
-"""
-python train_neural_networks.py --tols 0.31 0.16 0.21 --mults 1.35 1.21 1.15 --sample-sizes 200000 --architectures 'dim,16,8,4,1' 'dim,64,32,16,1' 'dim,256,128,64,32,1'
+""" 
+python train_neural_networks.py --tols 0.31 0.16 0.21 --mults 1.35 1.21 1.15 --sample-sizes 200000 --architectures 'dim,16,8,4,1' 'dim,32,16,8,1' 'dim,128,64,32,16,1'
 
 REGARDING HOW TO CALL THE MODEL:
 

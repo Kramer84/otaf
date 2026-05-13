@@ -8,6 +8,8 @@ from typing import Tuple, Sequence
 
 import otaf
 import sympy as sp
+from otaf.tolerances import sigma_delta_circular_feature, sigma_delta_3D_plane, sigma_delta_cylindrical_feature
+
 
 # Compiled once at module level — free at call time
 _VAR_RE = re.compile(r'^([A-Za-z]+)_([A-Za-z0-9]+)$')

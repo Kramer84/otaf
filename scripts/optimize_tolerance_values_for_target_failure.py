@@ -24,7 +24,8 @@ class HyperparameterTuning:
                  sample_size=10000,
                  error=None,
                  tol=None,
-                 mult=None):
+                 mult=None, 
+                 sample_multiplier=None):
         """Class to find the right tolerance value
         and the right multiplicator so that:
         for the basic tolerance value we have 5% failure
@@ -33,13 +34,14 @@ class HyperparameterTuning:
         system_of_constraints is on of the 4 models in otaf.example_models. The functions qre
         usuqlly called getSystemOfConstraintsAssemblyModel()
         distribution_function is the function that returns the vector of random variables,
-        the variable names and vector of standard deviations and means.)"""
+        the variable names and vector of standard deviations and means.)
+        The sample multiplier is a matrix performing a variable change"""
         self.target_failure_base = 0.05
         self.target_failure_mult = 0.15
         self.system_of_constraints = system_of_constraints
         self.distribution_function = distribution_function
         self.dim = dimension
-        self.error = error if error is not None else 0.0025
+        self.error = error if error is not None else 0.0001
         self.tol = tol if tol is not None else 0.1 #First we optimimze this here
         self.mult = mult if mult is not None else 1.0 #Then we optimize this here
         self.sample_size = sample_size #Just to get the ratios

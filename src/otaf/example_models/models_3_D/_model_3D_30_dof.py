@@ -33,6 +33,7 @@ from typing import Tuple
 
 import sympy as sp
 import otaf
+from otaf.tolerances import sigma_delta_circular_feature, sigma_delta_3D_plane, sigma_delta_cylindrical_feature
 
 
 # ---------------------------------------------------------------------------
@@ -237,6 +238,123 @@ def build_constraint_matrices(
 
     return A_eq_Def, A_eq_Gap, K_eq, A_ub_Def, A_ub_Gap, K_ub
 
+x_mp_labels = [
+    # Plane 1a points (z-displacements)
+    "w_1a1", "w_1a1_C", "w_1a1_H",
+    # Plane 2a points (z-displacements)
+    "w_2a2", "w_2a2_C", "w_2a2_H",
+
+    # Cylinder 1b points (base and top radial displacements)
+    "u_1b1", "v_1b1", "u_1b1_B", "v_1b1_B",
+    # Cylinder 2b points (base and bottom radial displacements)
+    "u_2b2", "v_2b2", "u_2b2_E", "v_2b2_E",
+
+    # Cylinder 1c points (base and top radial displacements)
+    "u_1c1", "v_1c1", "u_1c1_D", "v_1c1_D",
+    # Cylinder 2c points (base and bottom radial displacements)
+    "u_2c2", "v_2c2", "u_2c2_F", "v_2c2_F",
+
+    # Diameters (Intrinsic)
+    "d_1b", "d_3b", "d_1c", "d_4c",
+
+    # Functional surfaces (translations)
+    "u_1g1", "v_1g1", "u_2g2", "v_2g2"
+]
+
+import numpy as np
+
+def get_mp_to_xfull_transformation_matrix(L=None):
+    """
+    Returns a 30x30 matrix T such that: X_full = T @ X_mp
+    L must be a list or array of lengths l1 through l11, mapped to indices 0 to 10.
+    """
+    if L is None:
+        L = [100, 40, 30, 30, 20, 20, 120, 50, 40, 50, -30]
+        
+    T = np.zeros((30, 30))
+    
+    # Precompute common denominator for planes
+    D = L[0] * L[10] - L[1] * L[9]  # l1*l11 - l2*l10
+    
+    # ---------------------------------------------------------
+    # Planes 1a and 2a
+    # ---------------------------------------------------------
+    # w_1a1
+    T[0, 0] = 1.0
+    # alpha_1a1
+    T[1, 0] = (L[9] - L[0]) / D   # w_1a1
+    T[1, 1] = -L[9] / D           # w_1a1_C
+    T[1, 2] = L[0] / D            # w_1a1_H
+    # beta_1a1
+    T[2, 0] = (L[10] - L[1]) / D  # w_1a1
+    T[2, 1] = -L[10] / D          # w_1a1_C
+    T[2, 2] = L[1] / D            # w_1a1_H
+
+    # w_2a2
+    T[3, 3] = 1.0
+    # alpha_2a2
+    T[4, 3] = (L[9] - L[0]) / D   # w_2a2
+    T[4, 4] = -L[9] / D           # w_2a2_C
+    T[4, 5] = L[0] / D            # w_2a2_H
+    # beta_2a2
+    T[5, 3] = (L[10] - L[1]) / D  # w_2a2
+    T[5, 4] = -L[10] / D          # w_2a2_C
+    T[5, 5] = L[1] / D            # w_2a2_H
+
+    # ---------------------------------------------------------
+    # Cylinders 1b and 2b
+    # ---------------------------------------------------------
+    # u_1b1, v_1b1
+    T[6, 6] = 1.0
+    T[7, 7] = 1.0
+    # alpha_1b1 = (v_1b1 - v_1b1_B) / l3
+    T[8, 7] = 1.0 / L[2]
+    T[8, 9] = -1.0 / L[2]
+    # beta_1b1 = (u_1b1_B - u_1b1) / l3
+    T[9, 8] = 1.0 / L[2]
+    T[9, 6] = -1.0 / L[2]
+
+    # u_2b2, v_2b2
+    T[10, 10] = 1.0
+    T[11, 11] = 1.0
+    # alpha_2b2 = (-v_2b2 + v_2b2_E) / l5
+    T[12, 11] = -1.0 / L[4]
+    T[12, 13] = 1.0 / L[4]
+    # beta_2b2 = (-u_2b2_E + u_2b2) / l5
+    T[13, 10] = 1.0 / L[4]
+    T[13, 12] = -1.0 / L[4]
+
+    # ---------------------------------------------------------
+    # Cylinders 1c and 2c
+    # ---------------------------------------------------------
+    # u_1c1, v_1c1
+    T[14, 14] = 1.0
+    T[15, 15] = 1.0
+    # alpha_1c1 = (v_1c1 - v_1c1_D) / l4
+    T[16, 15] = 1.0 / L[3]
+    T[16, 17] = -1.0 / L[3]
+    # beta_1c1 = (u_1c1_D - u_1c1) / l4
+    T[17, 16] = 1.0 / L[3]
+    T[17, 14] = -1.0 / L[3]
+
+    # u_2c2, v_2c2
+    T[18, 18] = 1.0
+    T[19, 19] = 1.0
+    # alpha_2c2 = (-v_2c2 + v_2c2_F) / l6
+    T[20, 19] = -1.0 / L[5]
+    T[20, 21] = 1.0 / L[5]
+    # beta_2c2 = (-u_2c2_F + u_2c2) / l6
+    T[21, 18] = 1.0 / L[5]
+    T[21, 20] = -1.0 / L[5]
+
+    # ---------------------------------------------------------
+    # Diameters and Functional Surfaces (Direct Passthrough)
+    # ---------------------------------------------------------
+    for i in range(22, 30):
+        T[i, i] = 1.0
+
+    return T
+
 x_full_labels = [
     # Planar Features
     "w_1a1", "alpha_1a1", "beta_1a1",      # Plane 1a
@@ -287,6 +405,99 @@ g_labels_mapping = {
 "u_2g1g_2":"u_g_4"
 }
 
+import numpy as np
+
+def get_mp_to_xfull_transformation_matrix(L=None):
+    """
+    Returns a 30x30 matrix T such that: X_full = T @ X_mp
+    L must be a list or array of lengths l1 through l11, mapped to indices 0 to 10.
+    """
+    if L is None:
+        L = [100, 40, 30, 30, 20, 20, 120, 50, 40, 50, -30]
+        
+    T = np.zeros((30, 30))
+    
+    # Precompute common denominator for planes
+    D = L[0] * L[10] - L[1] * L[9]  # l1*l11 - l2*l10
+    
+    # ---------------------------------------------------------
+    # Planes 1a and 2a
+    # ---------------------------------------------------------
+    # w_1a1
+    T[0, 0] = 1.0
+    # alpha_1a1
+    T[1, 0] = (L[9] - L[0]) / D   # w_1a1
+    T[1, 1] = -L[9] / D           # w_1a1_C
+    T[1, 2] = L[0] / D            # w_1a1_H
+    # beta_1a1
+    T[2, 0] = (L[10] - L[1]) / D  # w_1a1
+    T[2, 1] = -L[10] / D          # w_1a1_C
+    T[2, 2] = L[1] / D            # w_1a1_H
+
+    # w_2a2
+    T[3, 3] = 1.0
+    # alpha_2a2
+    T[4, 3] = (L[9] - L[0]) / D   # w_2a2
+    T[4, 4] = -L[9] / D           # w_2a2_C
+    T[4, 5] = L[0] / D            # w_2a2_H
+    # beta_2a2
+    T[5, 3] = (L[10] - L[1]) / D  # w_2a2
+    T[5, 4] = -L[10] / D          # w_2a2_C
+    T[5, 5] = L[1] / D            # w_2a2_H
+
+    # ---------------------------------------------------------
+    # Cylinders 1b and 2b
+    # ---------------------------------------------------------
+    # u_1b1, v_1b1
+    T[6, 6] = 1.0
+    T[7, 7] = 1.0
+    # alpha_1b1 = (v_1b1 - v_1b1_B) / l3
+    T[8, 7] = 1.0 / L[2]
+    T[8, 9] = -1.0 / L[2]
+    # beta_1b1 = (u_1b1_B - u_1b1) / l3
+    T[9, 8] = 1.0 / L[2]
+    T[9, 6] = -1.0 / L[2]
+
+    # u_2b2, v_2b2
+    T[10, 10] = 1.0
+    T[11, 11] = 1.0
+    # alpha_2b2 = (-v_2b2 + v_2b2_E) / l5
+    T[12, 11] = -1.0 / L[4]
+    T[12, 13] = 1.0 / L[4]
+    # beta_2b2 = (-u_2b2_E + u_2b2) / l5
+    T[13, 10] = 1.0 / L[4]
+    T[13, 12] = -1.0 / L[4]
+
+    # ---------------------------------------------------------
+    # Cylinders 1c and 2c
+    # ---------------------------------------------------------
+    # u_1c1, v_1c1
+    T[14, 14] = 1.0
+    T[15, 15] = 1.0
+    # alpha_1c1 = (v_1c1 - v_1c1_D) / l4
+    T[16, 15] = 1.0 / L[3]
+    T[16, 17] = -1.0 / L[3]
+    # beta_1c1 = (u_1c1_D - u_1c1) / l4
+    T[17, 16] = 1.0 / L[3]
+    T[17, 14] = -1.0 / L[3]
+
+    # u_2c2, v_2c2
+    T[18, 18] = 1.0
+    T[19, 19] = 1.0
+    # alpha_2c2 = (-v_2c2 + v_2c2_F) / l6
+    T[20, 19] = -1.0 / L[5]
+    T[20, 21] = 1.0 / L[5]
+    # beta_2c2 = (-u_2c2_F + u_2c2) / l6
+    T[21, 18] = 1.0 / L[5]
+    T[21, 20] = -1.0 / L[5]
+
+    # ---------------------------------------------------------
+    # Diameters and Functional Surfaces (Direct Passthrough)
+    # ---------------------------------------------------------
+    for i in range(22, 30):
+        T[i, i] = 1.0
+
+    return T
 
 
 def getSystemOfConstraintsAssemblyModel(L = [100, 40, 30, 30, 20, 20, 120, 50, 40, 50, -30], Nd=32, strategy=LinearizationStrategy.CIRCUMSCRIBED):
@@ -299,47 +510,47 @@ def getSystemOfConstraintsAssemblyModel(L = [100, 40, 30, 30, 20, 20, 120, 50, 4
     SOCAM.embedOptimizationVariable()
     return SOCAM
 
-def getDistributionParams(tol=None, capa=None):
+def getDistributionParams(tol=None, capa=None, param_set=1):
+    """
+    Returns the normal distributions directly for the measured points.
+    param_set matches the values in Table C.2.
+    """
+    # Table C.2 Values
+    if param_set == 1:
+        mu_d_ext, sigma_d_ext = 20.0, 0.06
+        mu_d_int, sigma_d_int = 19.8, 0.06
+        mu_trans, sigma_trans = 0.0, 0.01
+    elif param_set == 2:
+        mu_d_ext, sigma_d_ext = 20.0, 0.03
+        mu_d_int, sigma_d_int = 19.8, 0.03
+        mu_trans, sigma_trans = 0.0, 0.01
+    else: # param_set == 3
+        mu_d_ext, sigma_d_ext = 20.0, 0.02
+        mu_d_int, sigma_d_int = 19.8, 0.02
+        mu_trans, sigma_trans = 0.0, 0.01
 
-    mu_d_ext = 20
-    sigma_d_ext = 0.06
-    mu_d_int = 19.8
-    sigma_d_int = 0.06
-    mu_trans = 0
-    sigma_trans = 0.01
-    mu_rot = 0 
-    sigma_rot = 0.001
-    st = sigma_trans
-    sr = sigma_rot
+    # Indices 0 to 21 are all translational measured points
+    mu_list = [mu_trans] * 22
+    sigma_list = [sigma_trans] * 22
 
-    const = L[0]*L[10] - L[1]*L[9] 
-    sigma_beta_d_0 = np.sqrt(((L[0]/const)*st)**2 +(((L[9]-L[0])/const)*st)**2 +((L[9]/const)*st)**2)
-    sigma_gamma_d_0 = np.sqrt(((L[1]/const)*st)**2 +(((L[10]-L[1])/const)*st)**2 +((L[10]/const)*st)**2)
-    sigma_beta_d_1 = np.sqrt(((L[0]/const)*st)**2 +(((L[9]-L[0])/const)*st)**2 +((L[9]/const)*st)**2)
-    sigma_gamma_d_1 = sigma_gamma_d_0
-    sigma_beta_d_2 = np.sqrt(2*(st**2)/(L[2])**2)
-    sigma_gamma_d_2 = np.sqrt(2*(st**2)/(L[2])**2)
-    sigma_beta_d_3 = np.sqrt(2*(st**2)/(L[4])**2)
-    sigma_gamma_d_3 = np.sqrt(2*(st**2)/(L[4])**2)
-    sigma_beta_d_4 = np.sqrt(2*(st**2)/(L[3])**2)
-    sigma_gamma_d_4 = np.sqrt(2*(st**2)/(L[3])**2)
-    sigma_beta_d_5 = np.sqrt(2*(st**2)/(L[5])**2)
-    sigma_gamma_d_5 = np.sqrt(2*(st**2)/(L[5])**2)
+    # Indices 22 to 25 are the intrinsic diameters (1b, 3b, 1c, 4c)
+    mu_list.extend([mu_d_ext, mu_d_int, mu_d_ext, mu_d_int])
+    sigma_list.extend([sigma_d_ext, sigma_d_int, sigma_d_ext, sigma_d_int])
 
-    mu_list = [.0]*22+[mu_d_ext,mu_d_int,mu_d_ext,mu_d_int]+[.0]*4
-    sigma_list = [st, sigma_beta_d_0, sigma_gamma_d_0, 
-                st, sigma_beta_d_1, sigma_gamma_d_1,
-                st, st, sigma_beta_d_2, sigma_gamma_d_2,
-                st, st, sigma_beta_d_3, sigma_gamma_d_3,
-                st, st, sigma_beta_d_4, sigma_gamma_d_4,
-                st, st, sigma_beta_d_5, sigma_gamma_d_5,
-                sigma_d_ext,sigma_d_int,sigma_d_ext,sigma_d_int,
-                st, st, sr, sr]#
+    # Indices 26 to 29 are the functional translations
+    mu_list.extend([mu_trans] * 4)
+    sigma_list.extend([sigma_trans] * 4)
+
+    # Convert to arrays
+    mu_arr = np.array(mu_list)
+    sigma_arr = np.array(sigma_list)
 
     RandDeviationVect = otaf.distribution.get_composed_normal_defect_distribution(
-        defect_names=x_full_labels,
-        mu_list = mu_list,
-        sigma_list = sigma_list)
-    return RandDeviationVect,  x_full_labels, np.array(sigma_list), np.array(mu_list)
+        defect_names=x_mp_labels,
+        mu_list=mu_list,
+        sigma_list=sigma_list
+    )
+    
+    return RandDeviationVect, x_mp_labels, sigma_arr, mu_arr
 
 dim=30
