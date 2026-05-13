@@ -261,8 +261,6 @@ x_mp_labels = [
     "u_1g1", "v_1g1", "u_2g2", "v_2g2"
 ]
 
-import numpy as np
-
 def get_mp_to_xfull_transformation_matrix(L=None):
     """
     Returns a 30x30 matrix T such that: X_full = T @ X_mp
@@ -553,3 +551,4 @@ def getDistributionParams(tol=None, capa=None, param_set=1):
 dim=30
 sample_multiplier = get_mp_to_xfull_transformation_matrix()
 no_tol = True
+
