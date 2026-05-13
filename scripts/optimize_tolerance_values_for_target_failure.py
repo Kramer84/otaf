@@ -109,7 +109,7 @@ class HyperparameterTuning:
                 
             # If the search interval becomes smaller than our minimum step/precision, break early
             # We can utilize your tol_step here as the minimum resolution limit, or a smaller epsilon
-            if (high - low) < 1e-5:
+            if (high - low) < 1e-7:
                 break
 
         # Fallback if the loop finishes without hitting the exact threshold
