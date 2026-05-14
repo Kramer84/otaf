@@ -616,9 +616,9 @@ def evalCredalSetConstraints(x_std, tol=0.16, capa=1.0, hPlate=30.0):
     cons12 = lambda x: (x[48] - target)/target
     cons13 = lambda x: (x[49] - target)/target
 
-    return [cons0(x_std), cons1(x_std), cons2(x_std), cons3(x_std), cons4(x_std), cons5(x_std), 
+    return np.array([cons0(x_std), cons1(x_std), cons2(x_std), cons3(x_std), cons4(x_std), cons5(x_std), 
             cons6(x_std), cons7(x_std), cons8(x_std), cons9(x_std),
-            cons10(x_std), cons11(x_std), cons12(x_std), cons13(x_std)]
+            cons10(x_std), cons11(x_std), cons12(x_std), cons13(x_std)])
 
 def evalScaledCredalSetConstraints(x_scaled, max_std_vect, tracker=None, experiment_key=None, tol=0.16, capa=1.0, hPlate=30.0):
     # Unscale back to real physical dimensions

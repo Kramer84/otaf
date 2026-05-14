@@ -515,7 +515,7 @@ def evalCredalSetConstraints(x_std, tol=None, capa=None, param_set=1):
     constraint5 = eval_circ(24, 14, 15, 16, 17)   # Part 1 hole c (1c1)
     constraint6 = eval_circ(25, 18, 19, 20, 21)   # Part 2 pin c (2c2)
 
-    return [
+    return np.array([
         constraint1, 
         constraint2, 
         constraint3, 
@@ -524,7 +524,7 @@ def evalCredalSetConstraints(x_std, tol=None, capa=None, param_set=1):
         constraint6, 
         constraint7,
         constraint8
-    ]
+    ])
 
 def evalScaledCredalSetConstraints(x_scaled, max_std_vect, tracker=None, experiment_key=None, tol=None, capa=None, param_set=1):
     # Unscale back to real physical dimensions

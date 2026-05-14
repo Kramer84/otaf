@@ -204,7 +204,7 @@ def evalCredalSetConstraints(x_std, tol=0.31, capa=1.0, X3=10.0):
 
     constraint1 = (sigma_delta_3D_plane(X3/2, 0, x_std[0], 0,  x_std[1]) - target)/target
     constraint2 = (sigma_delta_3D_plane(X3/2, 0, x_std[2], 0,  x_std[3]) - target)/target
-    return [constraint1, constraint2]
+    return np.array([constraint1, constraint2])
 
 def evalScaledCredalSetConstraints(x_scaled, max_std_vect, tracker=None, experiment_key=None, tol=0.31, capa=1.0, X3=10.0):
     # Unscale back to real physical dimensions
