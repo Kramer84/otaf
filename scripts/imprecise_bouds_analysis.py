@@ -22,43 +22,6 @@ from gldpy import GLD
 # mainly here we will save verything in csv files
 # and then  load it later somewhere else to do the plotting and the rest of the analysis
 
-def load_surrogate_model(model_path: str) -> otaf.surrogate.NeuralRegressorNetwork:
-    """
-    Loads a model checkpoint and reconstructs the architecture automatically.
-    """
-    # Load the bundle
-    checkpoint = torch.load(model_path, map_location='cpu', weights_only=False)
-    
-    # Extract metadata
-    dim = checkpoint['input_dim']
-    arch_config = checkpoint['architecture']
-    
-    # 1. Instantiate the wrapper
-    # Use dummy data to initialize the class structure
-    neural_model = otaf.surrogate.NeuralRegressorNetwork(
-        input_dim=dim,
-        output_dim=1,
-        X=np.zeros((1, dim)),
-        y=np.zeros((1, 1))
-    )
-
-    # 2. Rebuild the Sequential architecture using the saved config
-    parsed_arch = [dim if str(a).lower() == 'dim' else int(a) for a in arch_config]
-    neural_model.model = torch.nn.Sequential(
-        *otaf.surrogate.get_custom_mlp_layers(parsed_arch, activation_class=torch.nn.GELU)
-    )
-
-    # 3. Load the weights
-    neural_model.model.load_state_dict(checkpoint['model_state_dict'])
-    
-    # 4. Restore normalization buffers if they exist
-    norm = checkpoint.get('normalization_metadata', {})
-    if norm.get('x_mean') is not None:
-        neural_model.x_mean = norm['x_mean']
-        neural_model.x_std = norm['x_std']
-
-    neural_model.eval()
-    return neural_model
 
 def optimize_scaling_vector(
     constraint_fn, 
@@ -264,8 +227,9 @@ if __name__ == "__main__":
     }
 
     #LEt's just show how it is done for the model1:
-    model = available_models["model1_4_dof"]
-    model_sur = load_surrogate_model("model1_4_dof_surrogate.pth")
+    m_name = "model1_4_dof"
+    model = available_models[m_name]
+    model_sur = otaf.surrogate.NeuralRegressorNetwork.from_checkpoint(f"{m_name}_surrogate.pth")
     model_dim = model.dim
     tracker_1= otaf.optimization.OptimizationTracker(bounds=normalized_bounds, constraint_tolerance=1e-5, precision_decimals=8)
     jointDistribution1, symbols1, max_std_vect, mu_vect = model.getDistributionParams()
