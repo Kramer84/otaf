@@ -159,23 +159,29 @@ def pf_min_max_optimizer(
         credal_constraints=None,
         x0=None,
         dim=None):
-    # Initial guess
-    normalized_bounds = Bounds(1e-9, 1.0, keep_feasible=True) #Bounds on the allocation
-    print(f"\nStarting optimization sequence with failure slack :{failure_slack} \n")
-    # Perform the local optimization using COBYQA directly
+    
+    # 1. Instantiate GLD here so it can be passed to the objective function
+    gld = GLD('VSL')
+    
+    normalized_bounds = Bounds(1e-9, 1.0, keep_feasible=True)
+    print(f"\nStarting optimization sequence with failure slack: {failure_slack} \n")
+    
+    # 2. Fix the args tuple to strictly match optimization_function's signature
+    # (failure_slack, gld, model, experiment_key, tracker, logprob, minimize)
+    
     res_maxi = minimize(
         optimization_function, x0,
-        args=(failure_slack, model_eval_fn, experiment_key, tracker,logprob, False),
+        args=(failure_slack, gld, model_eval_fn, experiment_key, tracker, logprob, False),
         method="COBYQA", 
         jac=None, 
         bounds=normalized_bounds,
-        constraints = credal_constraints(tracker, experiment_key),
+        constraints=credal_constraints(tracker, experiment_key),
         options={
             "f_target": -np.inf if logprob else -1.01, 
             "maxiter": 10000,
             "maxfev": 10000,
             "feasibility_tol": 1e-5,
-            "initial_tr_radius": np.sqrt(dim)/np.sqrt(2),  # Scaled up slightly for the [0, 1] space
+            "initial_tr_radius": np.sqrt(dim)/np.sqrt(2),
             "final_tr_radius": 0.001,
             "disp": False,
             "scale": False
@@ -183,20 +189,19 @@ def pf_min_max_optimizer(
     )
     print('\nMaximization result:\n', res_maxi, '\n')
     
-    # Perform the local optimization using COBYQA directly
     res_mini = minimize(
         optimization_function, x0, 
-        args=(failure_slack, model_eval_fn, experiment_key, tracker,logprob, True),
+        args=(failure_slack, gld, model_eval_fn, experiment_key, tracker, logprob, True),
         method="COBYQA", 
         jac=None, 
         bounds=normalized_bounds,
-        constraints = credal_constraints(tracker, experiment_key),
+        constraints=credal_constraints(tracker, experiment_key),
         options={
             "f_target": -np.inf if logprob else -0.01,
             "maxiter": 10000,
             "maxfev": 10000,
             "feasibility_tol": 1e-5,
-            "initial_tr_radius": np.sqrt(dim)/np.sqrt(2),  # Scaled up slightly for the [0, 1] space
+            "initial_tr_radius": np.sqrt(dim)/np.sqrt(2),
             "final_tr_radius": 0.001,
             "disp": False,
             "scale": False
@@ -207,11 +212,8 @@ def pf_min_max_optimizer(
 
     # Retrieve using the tracker
     data_min = tracker.get_data(experiment_key, res_mini.x)
-    data_max = tracker.get_data(experiment_key, res_maxi.x)
-    df = tracker.to_dataframe()
-    df.to_csv("OptimizationResults4Pins2Plates.csv")
+    data_max = tracker.get_data(experiment_key, res_maxi.x)    
     return (res_mini.x, res_maxi.x), (data_min['GLD_PARAMS'], data_max['GLD_PARAMS']), (data_min['FP_GLD'], data_max['FP_GLD'])
-
 
 
 
@@ -263,3 +265,5 @@ if __name__ == "__main__":
             x0=x0,
             dim=model_dim
         )
+    df = tracker_1.to_dataframe()
+    df.to_csv(f"{m_name}_results.csv")
