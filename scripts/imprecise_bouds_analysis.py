@@ -259,7 +259,7 @@ if __name__ == "__main__":
             experiment_key=f"exp_slack_{slack}", 
             logprob=True, 
             model_eval_fn=model_fun,  # Ensure this matches the parameter name in your def
-            credal_constraints_factory=nonLinearConstraint, # Ensure this matches too
+            credal_constraints=nonLinearConstraint, # Ensure this matches too
             x0=x0,
-            dim_opt=model_dim
+            dim=model_dim
         )
