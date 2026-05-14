@@ -134,16 +134,18 @@ class SurrogateTrainer:
             'architecture': self.architecture,
             'input_dim': self.dim,
             'model_name': self.model_name,
-            # If your wrapper stores normalization buffers, include them:
+            'input_normalization': self.neural_model.input_normalization.item(),
+            'output_normalization': self.neural_model.output_normalization.item(),
             'normalization_metadata': {
-                'x_mean': self.neural_model.x_mean if hasattr(self.neural_model, 'x_mean') else None,
-                'x_std': self.neural_model.x_std if hasattr(self.neural_model, 'x_std') else None,
+                'X_mean': self.neural_model.X_mean.cpu(),
+                'y_mean': self.neural_model.y_mean.cpu(),
+                'X_std': self.neural_model.X_std.cpu(),
+                'y_std': self.neural_model.y_std.cpu(),
             }
         }
         
         torch.save(checkpoint, self.save_path)
         print(f"[{self.model_name}] Finished.\n")
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate data and train Neural Surrogates for OTAF models.")
