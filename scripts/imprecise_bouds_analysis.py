@@ -155,7 +155,7 @@ def pf_min_max_optimizer(
         tracker=None, 
         experiment_key=None, 
         logprob=True, 
-        model=None, 
+        model_eval_fn=None, 
         credal_constraints=None,
         x0=None,
         dim=None):
@@ -165,7 +165,7 @@ def pf_min_max_optimizer(
     # Perform the local optimization using COBYQA directly
     res_maxi = minimize(
         optimization_function, x0,
-        args=(failure_slack, model, experiment_key, tracker,logprob, False),
+        args=(failure_slack, model_eval_fn, experiment_key, tracker,logprob, False),
         method="COBYQA", 
         jac=None, 
         bounds=normalized_bounds,
@@ -186,7 +186,7 @@ def pf_min_max_optimizer(
     # Perform the local optimization using COBYQA directly
     res_mini = minimize(
         optimization_function, x0, 
-        args=(failure_slack, model, experiment_key, tracker,logprob, True),
+        args=(failure_slack, model_eval_fn, experiment_key, tracker,logprob, True),
         method="COBYQA", 
         jac=None, 
         bounds=normalized_bounds,
