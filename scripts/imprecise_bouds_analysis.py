@@ -43,7 +43,7 @@ def optimize_scaling_vector(
     # Verify warm start
     c_warm = np.array(constraint_fn(x_warm))
     if verbose:
-        status = 'feasible ✓' if np.max(c_warm) <= 0 else 'infeasible, solver will correct'
+        status = 'feasible ✓' if np.max(c_warm) <= 1e-8 else 'infeasible, solver will correct'
         print(f"[{n_vars}-dim] Warm start — max constraint: {np.max(c_warm):.6f} ({status})")
 
     # Optimisation
@@ -72,9 +72,9 @@ def optimize_scaling_vector(
         # Handle labels mapping if provided
         iter_labels = labels if (labels and len(labels) == len(c_opt)) else [f"Cons_{i}" for i in range(len(c_opt))]
         for label, val in zip(iter_labels, c_opt):
-            print(f"  {label:8s}: {val:+.2e}  {'✓' if val <= 0 else '✗'}")
+            print(f"  {label:8s}: {val:+.2e}  {'✓' if val <= 1e-8 else '✗'}")
 
-        print(f"\nFeasible : {(c_opt <= 0).all()}")
+        print(f"\nFeasible : {(c_opt <= 1e-8).all()}")
         if not result.success:
             print(f"Solver note: {result.message}")
 

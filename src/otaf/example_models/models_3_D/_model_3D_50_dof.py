@@ -532,7 +532,7 @@ def getSystemOfConstraintsAssemblyModel(
 
 
 def getDistributionParams(
-        tol=0.25, capa=1.0, hPlate=30.0, 
+        tol=0.21, capa=1.0, hPlate=30.0, 
         EH=50.0, LB=25.0, Dext=20.0, Dint=19.8):
     # Defining the uncertainties on the position and orientation of the holes
     sigma_e_pos = tol / (6 * capa)
@@ -560,7 +560,7 @@ sample_multiplier = np.eye(dim)
 no_tol = False
 
 # Let's define the credal sets of admissible standard deviations
-def evalCredalSetConstraints(x_std, tol=0.16, capa=1.0, hPlate=30.0):
+def evalCredalSetConstraints(x_std, tol=0.21, capa=1.0, hPlate=30.0):
     """
     x_std is the vector of standard deviations of the defects, in the order [u_d_4, gamma_d_4, u_d_5, gamma_d_5]
     """
@@ -620,7 +620,7 @@ def evalCredalSetConstraints(x_std, tol=0.16, capa=1.0, hPlate=30.0):
             cons6(x_std), cons7(x_std), cons8(x_std), cons9(x_std),
             cons10(x_std), cons11(x_std), cons12(x_std), cons13(x_std)])
 
-def evalScaledCredalSetConstraints(x_scaled, max_std_vect, tracker=None, experiment_key=None, tol=0.16, capa=1.0, hPlate=30.0):
+def evalScaledCredalSetConstraints(x_scaled, max_std_vect, tracker=None, experiment_key=None, tol=0.21, capa=1.0, hPlate=30.0):
     # Unscale back to real physical dimensions
     x_real = x_scaled * max_std_vect
     # Evaluate the aggregated manual constraints with real values
@@ -633,5 +633,5 @@ def evalScaledCredalSetConstraints(x_scaled, max_std_vect, tracker=None, experim
         )
     return constraint_array
 
-def getScaledCredalSetConstraintsFunction(max_std_vect, tracker=None, experiment_key=None, tol=0.16, capa=1.0, hPlate=30.0):
+def getScaledCredalSetConstraintsFunction(max_std_vect, tracker=None, experiment_key=None, tol=0.21, capa=1.0, hPlate=30.0):
     return lambda x_scaled : evalScaledCredalSetConstraints(x_scaled, max_std_vect, tracker, experiment_key, tol=tol, capa=capa, hPlate=hPlate)

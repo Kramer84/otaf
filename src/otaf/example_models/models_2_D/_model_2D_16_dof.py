@@ -251,7 +251,7 @@ def getSystemOfConstraintsAssemblyModel(hM = 10, hF = 10.2, L1 = 30, L2 = 70, L3
 
 def getDistributionParams(tol=0.16, capa=1.0, hM=10, hF=10.2):
     deviation_symbols = list(sp.symbols(
-        'u_d_2, gamma_d_2 u_d_3 gamma_d_3 u_d_4 gamma_d_4 u_d_5 gamma_d_5 u_d_6 gamma_d_6 u_d_7 gamma_d_7 u_d_8 gamma_d_8 u_d_9 gamma_d_9'))
+        'u_d_2 gamma_d_2 u_d_3 gamma_d_3 u_d_4 gamma_d_4 u_d_5 gamma_d_5 u_d_6 gamma_d_6 u_d_7 gamma_d_7 u_d_8 gamma_d_8 u_d_9 gamma_d_9'))
 
     sigma_e_pos = tol / (6 * capa)
     theta_max_m = tol / hM
