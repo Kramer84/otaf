@@ -253,4 +253,4 @@ if __name__ == "__main__":
     # Now we need  series of slack values on which to optimize on... 
     slacks = [0.0, 0.02, 0.05, 0.1, 0.2, 0.3]
     for slack in slacks:
-        res_x, res_gld, res_fp = pf_min_max_optimizer(slack, tracker_1, "exp_slack_"+str(slack), True, model_fun, nonLinearConstraint)
+        res_x, res_gld, res_fp = pf_min_max_optimizer(slack, tracker_1, "exp_slack_"+str(slack), True, model_fun, nonLinearConstraint, x0)
