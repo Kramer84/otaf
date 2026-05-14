@@ -121,8 +121,7 @@ def optimization_function(
     mode_label = "mini" if minimize else "maxi"
     multiplier = 1 if minimize else -1
 
-    x_eval = np.concatenate([np.zeros(6), x, np.zeros(12)])
-    slack = model(x_eval)
+    slack = model(x)
     gld_params = gld.fit_LMM(slack, disp_fit=False, disp_optimizer=False)
     
     fp_slack = np.where(slack < failure_slack, 1, 0).mean()
