@@ -248,7 +248,7 @@ if __name__ == "__main__":
     )
 
     #let's obtain a good starting point:
-    x0 = optimize_scaling_vector(model.getScaledCredalSetConstraintsFunction(max_std_vect, model_dim))
+    x0 = optimize_scaling_vector(model.getScaledCredalSetConstraintsFunction(max_std_vect), model_dim)
 
     # Now we need  series of slack values on which to optimize on... 
     slacks = [0.0, 0.02, 0.05, 0.1, 0.2, 0.3]
