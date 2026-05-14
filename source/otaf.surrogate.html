@@ -142,6 +142,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.evaluate_model_non_standard_space"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.evaluate_model_non_standard_space()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.forward"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.forward()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.from_checkpoint"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.from_checkpoint()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.get_model_as_openturns_function"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.get_model_as_openturns_function()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.get_train_test_data"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.get_train_test_data()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.gradient"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.gradient()</span></code></a></li>
@@ -722,6 +723,13 @@ this function, one should call the <code class="xref py py-class docutils litera
 instead of this since the former takes care of running the
 registered hooks while the latter silently ignores them.</p>
 </div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork.from_checkpoint">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork.from_checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork.from_checkpoint" title="Link to this definition"></a></dt>
+<dd><p>Instantiates the network directly from a saved checkpoint,
+bypassing the need for training data.</p>
 </dd></dl>
 
 <dl class="py method">
