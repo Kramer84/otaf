@@ -238,120 +238,6 @@ def build_constraint_matrices(
 
     return A_eq_Def, A_eq_Gap, K_eq, A_ub_Def, A_ub_Gap, K_ub
 
-x_mp_labels = [
-    # Plane 1a points (z-displacements)
-    "w_1a1", "w_1a1_C", "w_1a1_H",
-    # Plane 2a points (z-displacements)
-    "w_2a2", "w_2a2_C", "w_2a2_H",
-
-    # Cylinder 1b points (base and top radial displacements)
-    "u_1b1", "v_1b1", "u_1b1_B", "v_1b1_B",
-    # Cylinder 2b points (base and bottom radial displacements)
-    "u_2b2", "v_2b2", "u_2b2_E", "v_2b2_E",
-
-    # Cylinder 1c points (base and top radial displacements)
-    "u_1c1", "v_1c1", "u_1c1_D", "v_1c1_D",
-    # Cylinder 2c points (base and bottom radial displacements)
-    "u_2c2", "v_2c2", "u_2c2_F", "v_2c2_F",
-
-    # Diameters (Intrinsic)
-    "d_1b", "d_3b", "d_1c", "d_4c",
-
-    # Functional surfaces (translations)
-    "u_1g1", "v_1g1", "u_2g2", "v_2g2"
-]
-
-def get_mp_to_xfull_transformation_matrix(L=None):
-    """
-    Returns a 30x30 matrix T such that: X_full = T @ X_mp
-    L must be a list or array of lengths l1 through l11, mapped to indices 0 to 10.
-    """
-    if L is None:
-        L = [100, 40, 30, 30, 20, 20, 120, 50, 40, 50, -30]
-        
-    T = np.zeros((30, 30))
-    
-    # Precompute common denominator for planes
-    D = L[0] * L[10] - L[1] * L[9]  # l1*l11 - l2*l10
-    
-    # ---------------------------------------------------------
-    # Planes 1a and 2a
-    # ---------------------------------------------------------
-    # w_1a1
-    T[0, 0] = 1.0
-    # alpha_1a1
-    T[1, 0] = (L[9] - L[0]) / D   # w_1a1
-    T[1, 1] = -L[9] / D           # w_1a1_C
-    T[1, 2] = L[0] / D            # w_1a1_H
-    # beta_1a1
-    T[2, 0] = (L[10] - L[1]) / D  # w_1a1
-    T[2, 1] = -L[10] / D          # w_1a1_C
-    T[2, 2] = L[1] / D            # w_1a1_H
-
-    # w_2a2
-    T[3, 3] = 1.0
-    # alpha_2a2
-    T[4, 3] = (L[9] - L[0]) / D   # w_2a2
-    T[4, 4] = -L[9] / D           # w_2a2_C
-    T[4, 5] = L[0] / D            # w_2a2_H
-    # beta_2a2
-    T[5, 3] = (L[10] - L[1]) / D  # w_2a2
-    T[5, 4] = -L[10] / D          # w_2a2_C
-    T[5, 5] = L[1] / D            # w_2a2_H
-
-    # ---------------------------------------------------------
-    # Cylinders 1b and 2b
-    # ---------------------------------------------------------
-    # u_1b1, v_1b1
-    T[6, 6] = 1.0
-    T[7, 7] = 1.0
-    # alpha_1b1 = (v_1b1 - v_1b1_B) / l3
-    T[8, 7] = 1.0 / L[2]
-    T[8, 9] = -1.0 / L[2]
-    # beta_1b1 = (u_1b1_B - u_1b1) / l3
-    T[9, 8] = 1.0 / L[2]
-    T[9, 6] = -1.0 / L[2]
-
-    # u_2b2, v_2b2
-    T[10, 10] = 1.0
-    T[11, 11] = 1.0
-    # alpha_2b2 = (-v_2b2 + v_2b2_E) / l5
-    T[12, 11] = -1.0 / L[4]
-    T[12, 13] = 1.0 / L[4]
-    # beta_2b2 = (-u_2b2_E + u_2b2) / l5
-    T[13, 10] = 1.0 / L[4]
-    T[13, 12] = -1.0 / L[4]
-
-    # ---------------------------------------------------------
-    # Cylinders 1c and 2c
-    # ---------------------------------------------------------
-    # u_1c1, v_1c1
-    T[14, 14] = 1.0
-    T[15, 15] = 1.0
-    # alpha_1c1 = (v_1c1 - v_1c1_D) / l4
-    T[16, 15] = 1.0 / L[3]
-    T[16, 17] = -1.0 / L[3]
-    # beta_1c1 = (u_1c1_D - u_1c1) / l4
-    T[17, 16] = 1.0 / L[3]
-    T[17, 14] = -1.0 / L[3]
-
-    # u_2c2, v_2c2
-    T[18, 18] = 1.0
-    T[19, 19] = 1.0
-    # alpha_2c2 = (-v_2c2 + v_2c2_F) / l6
-    T[20, 19] = -1.0 / L[5]
-    T[20, 21] = 1.0 / L[5]
-    # beta_2c2 = (-u_2c2_F + u_2c2) / l6
-    T[21, 18] = 1.0 / L[5]
-    T[21, 20] = -1.0 / L[5]
-
-    # ---------------------------------------------------------
-    # Diameters and Functional Surfaces (Direct Passthrough)
-    # ---------------------------------------------------------
-    for i in range(22, 30):
-        T[i, i] = 1.0
-
-    return T
 
 x_full_labels = [
     # Planar Features
@@ -403,6 +289,28 @@ g_labels_mapping = {
 "u_2g1g_2":"u_g_4"
 }
 
+x_mp_labels = [
+    # Plane 1a points (z-displacements)
+    "w_1a1", "w_1a1_C", "w_1a1_H",
+    # Plane 2a points (z-displacements)
+    "w_2a2", "w_2a2_C", "w_2a2_H",
+
+    # Cylinder 1b points (base and top radial displacements)
+    "u_1b1", "v_1b1", "u_1b1_B", "v_1b1_B",
+    # Cylinder 2b points (base and bottom radial displacements)
+    "u_2b2", "v_2b2", "u_2b2_E", "v_2b2_E",
+
+    # Cylinder 1c points (base and top radial displacements)
+    "u_1c1", "v_1c1", "u_1c1_D", "v_1c1_D",
+    # Cylinder 2c points (base and bottom radial displacements)
+    "u_2c2", "v_2c2", "u_2c2_F", "v_2c2_F",
+
+    # Diameters (Intrinsic)
+    "d_1b", "d_3b", "d_1c", "d_4c",
+
+    # Functional surfaces (translations)
+    "u_1g1", "v_1g1", "u_2g2", "v_2g2"
+]
 
 def get_mp_to_xfull_transformation_matrix(L=[100, 40, 30, 30, 20, 20, 120, 50, 40, 50, -30]):
     """
@@ -552,3 +460,84 @@ dim=30
 sample_multiplier = get_mp_to_xfull_transformation_matrix()
 no_tol = True
 
+# Let's define the credal sets of admissible standard deviations
+def evalCredalSetConstraints(x_std, tol=None, capa=None, param_set=1):
+    """
+    x_std is the vector of standard deviations of the defects, in the order:
+    [0, 1, 2]        w_1a1 w_1a1_C w_1a1_H
+    [3, 4, 5]        w_2a2 w_2a2_C w_2a2_H
+    [6, 7, 8, 9]     u_1b1 v_1b1   u_1b1_B v_1b1_B
+    [10, 11, 12, 13] u_2b2 v_2b2   u_2b2_E v_2b2_E
+    [14, 15, 16, 17] u_1c1 v_1c1   u_1c1_D v_1c1_D
+    [18, 19, 20, 21] u_2c2 v_2c2   u_2c2_F v_2c2_F
+    [22, 23, 24, 25] d_1b  d_3b    d_1c    d_4c
+    [26, 27, 28, 29] u_1g1 v_1g1   u_2g2   v_2g2
+    """
+    # Table C.2 Values
+    if param_set == 1:
+        mu_d_ext, sigma_d_ext = 20.0, 0.06
+        mu_d_int, sigma_d_int = 19.8, 0.06
+        mu_trans, sigma_trans = 0.0, 0.01
+    elif param_set == 2:
+        mu_d_ext, sigma_d_ext = 20.0, 0.03
+        mu_d_int, sigma_d_int = 19.8, 0.03
+        mu_trans, sigma_trans = 0.0, 0.01
+    else: # param_set == 3
+        mu_d_ext, sigma_d_ext = 20.0, 0.02
+        mu_d_int, sigma_d_int = 19.8, 0.02
+        mu_trans, sigma_trans = 0.0, 0.01
+        
+    target0 = sigma_trans
+    target1 = sigma_delta_circular_feature(0, sigma_d_ext, sigma_trans, sigma_trans)
+
+    # --- Helper function to streamline circular feature evaluation ---
+    def eval_circ(d_idx, u_base, v_base, u_top, v_top):
+        devs = [
+            sigma_delta_circular_feature(0,       x_std[d_idx], x_std[u_base], x_std[v_base]),
+            sigma_delta_circular_feature(np.pi/2, x_std[d_idx], x_std[u_base], x_std[v_base]),
+            sigma_delta_circular_feature(0,       x_std[d_idx], x_std[u_top],  x_std[v_top]),
+            sigma_delta_circular_feature(np.pi/2, x_std[d_idx], x_std[u_top],  x_std[v_top])
+        ]
+        return (np.max(devs) - target1) / target1
+
+    # --- Constraints Evaluation ---
+    
+    # Planar and general translation features (using np.max for array slices)
+    constraint1 = (np.max(x_std[0:3]) - target0) / target0    # Part 1 planar a1
+    constraint2 = (np.max(x_std[3:6]) - target0) / target0    # Part 2 planar a2
+    constraint7 = (np.max(x_std[26:28]) - target0) / target0  # Translation features g1
+    constraint8 = (np.max(x_std[28:30]) - target0) / target0  # Translation features g2
+
+
+    # Circular Features: eval_circ(diam, u_base, v_base, u_top, v_top)
+    constraint3 = eval_circ(22, 6, 7, 8, 9)       # Part 1 hole b (1b1)
+    constraint4 = eval_circ(23, 10, 11, 12, 13)   # Part 2 pin b (2b2)
+    constraint5 = eval_circ(24, 14, 15, 16, 17)   # Part 1 hole c (1c1)
+    constraint6 = eval_circ(25, 18, 19, 20, 21)   # Part 2 pin c (2c2)
+
+    return [
+        constraint1, 
+        constraint2, 
+        constraint3, 
+        constraint4, 
+        constraint5, 
+        constraint6, 
+        constraint7,
+        constraint8
+    ]
+
+def evalScaledCredalSetConstraints(x_scaled, max_std_vect, tracker=None, experiment_key=None, tol=None, capa=None, param_set=1):
+    # Unscale back to real physical dimensions
+    x_real = x_scaled * max_std_vect
+    # Evaluate the aggregated manual constraints with real values
+    constraint_array = evalCredalSetConstraints(x_real, tol=tol, capa=capa, param_set=param_set)
+    if tracker:
+        tracker.update_constraint_data(
+            exp_key=experiment_key,
+            x=x_scaled,
+            constraints=constraint_array
+        )
+    return constraint_array
+
+def getScaledCredalSetConstraintsFunction(max_std_vect, tracker=None, experiment_key=None, tol=None, capa=None, param_set=1):
+    return lambda x_scaled : evalScaledCredalSetConstraints(x_scaled, max_std_vect, tracker, experiment_key, tol=tol, capa=capa,  param_set=param_set)
