@@ -126,13 +126,23 @@ class SurrogateTrainer:
         print(f"[{self.model_name}] Training started...")
         self.neural_model.train_model()
 
-        print(f"[{self.model_name}] Saving model to {self.save_path}...")
-        self.neural_model.save_model()
-
-        # Uncomment if plotting is desired immediately after training
-        # self.neural_model.plot_results()
+        print(f"[{self.model_name}] Saving model and metadata to {self.save_path}...")
+        
+        # Build the checkpoint dictionary
+        checkpoint = {
+            'model_state_dict': self.neural_model.model.state_dict(),
+            'architecture': self.architecture,
+            'input_dim': self.dim,
+            'model_name': self.model_name,
+            # If your wrapper stores normalization buffers, include them:
+            'normalization_metadata': {
+                'x_mean': self.neural_model.x_mean if hasattr(self.neural_model, 'x_mean') else None,
+                'x_std': self.neural_model.x_std if hasattr(self.neural_model, 'x_std') else None,
+            }
+        }
+        
+        torch.save(checkpoint, self.save_path)
         print(f"[{self.model_name}] Finished.\n")
-
 
 
 if __name__ == "__main__":
