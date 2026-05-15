@@ -295,4 +295,10 @@ python imprecise_bounds_analysis.py \
     --slacks "0.0,0.025,0.05,0.075" "0.0,0.025,0.05,0.075" "0.0,0.025,0.05,0.075" "0.0,0.025,0.05,0.075" \
     --maxiter 5000 \
     --mc-size 100000
+
+python imprecise_bounds_analysis.py \
+    --models model3_30_dof model4_50_dof \
+    --slacks "0.0,0.025,0.05,0.075" "0.0,0.025,0.05,0.075" \
+    --maxiter 5000 \
+    --mc-size 100000
 """

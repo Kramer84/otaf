@@ -68,12 +68,12 @@ class SurrogateTrainer:
         
         # 3. Generate the input sample
         sample = np.array(dist.getSample(self.sample_size), dtype="float32")
-        sample = sample @ np.array(self.sample_multiplier.T, dtype="float32") #Apply the variable change if needed
+        sampleT = sample @ np.array(self.sample_multiplier.T, dtype="float32") #Apply the variable change if needed
 
         # 4. Compute the results
         results = otaf.uncertainty.compute_gap_optimizations_on_sample_batch(
             self.system_of_constraints,
-            sample,
+            sampleT,
             bounds=None,
             n_cpu=-2,
             progress_bar=True,
