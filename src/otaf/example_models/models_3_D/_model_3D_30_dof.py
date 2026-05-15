@@ -495,7 +495,7 @@ def evalCredalSetConstraints(x_std, tol=None, capa=None, param_set=1):
     def eval_circ(d_idx, u_base, v_base, u_top, v_top):
         devs = [
             sigma_delta_circular_feature(0,       x_std[d_idx]/2, x_std[u_base], x_std[v_base]),
-            sigma_delta_circular_feature(np.pi/2, x_std[d_idx/2], x_std[u_base], x_std[v_base]),
+            sigma_delta_circular_feature(np.pi/2, x_std[d_idx]/2, x_std[u_base], x_std[v_base]),
             sigma_delta_circular_feature(0,       x_std[d_idx]/2, x_std[u_top],  x_std[v_top]),
             sigma_delta_circular_feature(np.pi/2, x_std[d_idx]/2, x_std[u_top],  x_std[v_top])
         ]
