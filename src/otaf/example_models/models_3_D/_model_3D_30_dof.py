@@ -488,15 +488,16 @@ def evalCredalSetConstraints(x_std, tol=None, capa=None, param_set=1):
         mu_trans, sigma_trans = 0.0, 0.01
         
     target0 = sigma_trans
-    target1 = sigma_delta_circular_feature(0, sigma_d_ext, sigma_trans, sigma_trans)
+    target1 = sigma_delta_circular_feature(0, sigma_d_ext/2, sigma_trans, sigma_trans)
 
+    # Dividing by 2 cause std of radius is expected.
     # --- Helper function to streamline circular feature evaluation ---
     def eval_circ(d_idx, u_base, v_base, u_top, v_top):
         devs = [
-            sigma_delta_circular_feature(0,       x_std[d_idx], x_std[u_base], x_std[v_base]),
-            sigma_delta_circular_feature(np.pi/2, x_std[d_idx], x_std[u_base], x_std[v_base]),
-            sigma_delta_circular_feature(0,       x_std[d_idx], x_std[u_top],  x_std[v_top]),
-            sigma_delta_circular_feature(np.pi/2, x_std[d_idx], x_std[u_top],  x_std[v_top])
+            sigma_delta_circular_feature(0,       x_std[d_idx]/2, x_std[u_base], x_std[v_base]),
+            sigma_delta_circular_feature(np.pi/2, x_std[d_idx/2], x_std[u_base], x_std[v_base]),
+            sigma_delta_circular_feature(0,       x_std[d_idx]/2, x_std[u_top],  x_std[v_top]),
+            sigma_delta_circular_feature(np.pi/2, x_std[d_idx]/2, x_std[u_top],  x_std[v_top])
         ]
         return (np.max(devs) - target1) / target1
 

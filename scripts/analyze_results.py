@@ -7,96 +7,165 @@ import matplotlib.pyplot as plt
 from gldpy import GLD
 
 # --- Global Plot Style Configuration ---
+# --- Global plot style configuration ----------------------------------------
 
 DEFAULT_FIG_STYLE = {
-    "figsize_cm": (16, 9),          
+    "figsize_cm": (16, 9),          # width, height in cm
     "font_size": 10,
     "font_family": "serif",
-    "usetex": False,                
+    "usetex": False,                # set True if you want LaTeX-rendered text
 
+    # Generic color slots you can reuse everywhere
     "colors": {
-        "c1": "#1f77b4", "c2": "#d62728", "c3": "#2ca02c", "c4": "#9467bd",
-        "c5": "#8c564b", "c6": "#e377c2", "c7": "#7f7f7f", "c8": "#bcbd22",
+        "c1": "#1f77b4",
+        "c2": "#d62728",
+        "c3": "#2ca02c",
+        "c4": "#9467bd",
+        "c5": "#8c564b",
+        "c6": "#e377c2",
+        "c7": "#7f7f7f",
+        "c8": "#bcbd22",
     },
 
     "grid": True,
     "legend": True,
     "tight_layout": True,
     "title": True,
-    "labels": True,
+    "labels":True,
     
+    # Saving options
     "save": False,
     "save_path": None,
     "dpi": 300,
     "transparent": True,
+
+    # Display options
     "show": True,
+
+    # Optional overrides for limits
     "xlim": None,
     "ylim": None,
 }
 
 def _cm_to_inch(cm):
-    return tuple(c / 2.54 for c in cm) if cm else None
+    """Convert a (width, height) tuple from centimeters to inches."""
+    if cm is None:
+        return None
+    return tuple(c / 2.54 for c in cm)
 
 def _merge_style(style=None, **overrides):
+    """
+    Merge DEFAULT_FIG_STYLE, a user style dict, and per-call overrides.
+
+    Parameters
+    ----------
+    style : dict or None
+        Base style dict shared across figures.
+    **overrides
+        Per-call overrides like figsize_cm=..., dpi=..., legend=False, etc.
+    """
     cfg = DEFAULT_FIG_STYLE.copy()
     cfg["colors"] = DEFAULT_FIG_STYLE["colors"].copy()
-    
-    for dct in [style, overrides]:
-        if dct:
-            for k, v in dct.items():
-                if k == "colors":
-                    cfg["colors"].update(v)
-                elif v is not None:
-                    cfg[k] = v
+
+    if style is not None:
+        for k, v in style.items():
+            if k == "colors":
+                cfg["colors"].update(v)
+            else:
+                cfg[k] = v
+
+    for k, v in overrides.items():
+        if v is not None:
+            if k == "colors":
+                cfg["colors"].update(v)
+            else:
+                cfg[k] = v
+
     return cfg
 
+
 def _setup_mpl_from_style(cfg):
+    """
+    Apply global Matplotlib settings for fonts / LaTeX, using
+    pdfLaTeX + Libertinus (libertinus-type1 + libertinust1math).
+    """
     rc = {
         "font.size": cfg.get("font_size", 9),
         "font.family": cfg.get("font_family", "serif"),
-        "text.usetex": cfg.get("usetex", False)
     }
-    if rc["text.usetex"]:
+
+    if cfg.get("usetex", False):
+        rc["text.usetex"] = True
         rc["text.latex.preamble"] = r"""
 \usepackage[T1]{fontenc}
 \usepackage{amsmath}
-\usepackage{libertinus}        
-\usepackage{libertinust1math}  
+\usepackage{libertinus}        % wrapper, picks libertinus-type1 under pdfLaTeX
+\usepackage{libertinust1math}  % Libertinus Math for pdfLaTeX
 """
+        # DO *NOT* load fontspec/unicode-math here
+        # DO *NOT* try to switch engine to lualatex; usetex uses pdfTeX.
+    else:
+        rc["text.usetex"] = False
+
     plt.rcParams.update(rc)
 
+
+
 def _new_fig_ax(cfg):
+    """Create a new (fig, ax) using the style config."""
     _setup_mpl_from_style(cfg)
-    figsize = _cm_to_inch(cfg.get("figsize_cm"))
-    return plt.subplots(figsize=figsize)
+    figsize = _cm_to_inch(cfg.get("figsize_cm")) if cfg.get("figsize_cm") else None
+    fig, ax = plt.subplots(figsize=figsize)
+    return fig, ax
 
 def _finalize_figure(fig, ax, cfg):
-    if cfg.get("grid", True): ax.grid(True)
-    if cfg.get("xlim") is not None: ax.set_xlim(*cfg["xlim"])
-    if cfg.get("ylim") is not None: ax.set_ylim(*cfg["ylim"])
-    if cfg.get("tight_layout", True): fig.tight_layout()
-    
-    if cfg.get("save", False) and cfg.get("save_path"):
-        fig.savefig(cfg["save_path"], dpi=cfg.get("dpi", 300), 
-                    transparent=cfg.get("transparent", True), bbox_inches="tight")
-    
-    if cfg.get("show", True): plt.show()
+    """Apply grid, x/y limits, saving and showing."""
+    if cfg.get("grid", True):
+        ax.grid(True)
+
+    if cfg.get("xlim") is not None:
+        ax.set_xlim(*cfg["xlim"])
+    if cfg.get("ylim") is not None:
+        ax.set_ylim(*cfg["ylim"])
+
+    if cfg.get("tight_layout", True):
+        fig.tight_layout()
+
+    if cfg.get("save", False) and cfg.get("save_path") is not None:
+        fig.savefig(
+            cfg["save_path"],
+            dpi=cfg.get("dpi", 300),
+            transparent=cfg.get("transparent", True),
+            bbox_inches="tight",
+        )
+
+    if cfg.get("show", True):
+        plt.show()
+
     return fig, ax
+
+def format_prob_tex(p: float) -> str:
+    """Return a LaTeX-friendly scientific notation string for a probability."""
+    if p == 0:
+        return "0"
+    exp = int(np.floor(np.log10(p)))
+    mant = p / 10**exp
+    return rf"{mant:.2f} \times 10^{{{exp}}}"
 
 # --- Data Loading and Parsing ---
 
 def parse_numpy_string(x):
     """Safely converts string representations of numpy arrays back to arrays."""
     if isinstance(x, str) and "[" in x:
-        clean_str = re.sub(r'[\[\]\n]', '', x).strip()
+        clean_str = re.sub(r'[\[\]\n]', '', x)
         return np.fromstring(clean_str, sep=' ')
     return x
+
 
 def load_and_clean_data(csv_path):
     """Loads the CSV and filters out rows with violated constraints or bounds."""
     if not os.path.exists(csv_path):
         raise FileNotFoundError(f"File not found: {csv_path}")
-        
     df = pd.read_csv(csv_path, index_col=0)
     for col in df.columns:
         df[col] = df[col].apply(parse_numpy_string)
@@ -111,7 +180,6 @@ def get_valid_gld_params(df):
     safe_mask = (np.abs(params[:, 3]) > 1e-8) & (params[:, 1] > 0)
     return params[safe_mask]
 
-# --- Analysis Functions ---
 # --- Analysis Functions ---
 
 def get_all_valid_allocations(df):
