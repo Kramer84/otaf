@@ -112,85 +112,86 @@ def get_valid_gld_params(df):
     return params[safe_mask]
 
 # --- Analysis Functions ---
+# --- Analysis Functions ---
 
-def extract_extreme_allocation(df, optimized_at_slack, mode='min'):
+def get_all_valid_allocations(df):
     """
-    Finds the row corresponding to the minimum or maximum FP_GLD 
-    that was optimized at a specific slack threshold.
+    Extracts all valid parameter allocations from the DataFrame, keeping 
+    their origin metadata (which slack threshold they were optimized at).
     """
-    subset = df[df["FAILURE_SLACK"] == optimized_at_slack]
-    if subset.empty:
-        raise ValueError(f"No data found for slack threshold: {optimized_at_slack}")
+    allocations = []
+    for idx, row in df.iterrows():
+        params = parse_numpy_string(row['GLD_PARAMS'])
         
-    if mode == 'min':
-        target_row = subset[subset["FP_GLD"] == subset["FP_GLD"].min()].iloc[0]
-    else:
-        target_row = subset[subset["FP_GLD"] == subset["FP_GLD"].max()].iloc[0]
-        
-    return {
-        "point": target_row["point"],
-        "gld_params": target_row["GLD_PARAMS"],
-        "fp_gld_at_opt": target_row["FP_GLD"],
-        "slack": optimized_at_slack
-    }
-
-def evaluate_allocation_at_target(gld_obj, gld_params, target_eval_slack=0.0):
-    """Evaluates a specific set of GLD parameters at a new slack threshold."""
-    return gld_obj.CDF_num(target_eval_slack, list(gld_params), xtol=1e-6)[0]
+        # Verify GLD parameters are mathematically valid for CDF evaluation
+        if isinstance(params, np.ndarray) and len(params) == 4:
+            if np.abs(params[3]) > 1e-8 and params[1] > 0:
+                allocations.append({
+                    'point': parse_numpy_string(row['point']),
+                    'gld_params': params,
+                    'optimized_at_slack': row['FAILURE_SLACK'],
+                })
+    return allocations
 
 def get_dominant_variables(allocation_point, lower_tol=0.05, upper_tol=0.95):
-    """Filters allocations to show which variables are pegged to their limits."""
+    """Filters allocations to show which variables are pegged to their geometric limits."""
     fmi = np.where(allocation_point < lower_tol, 0.0, allocation_point)
     fma = np.where(fmi > upper_tol, 1.0, fmi)
     return np.round(fma, 4)
 
 def generate_summary_report(df, model_name, target_eval_slack=0.0):
-    """Prints a comprehensive report of the bounds."""
+    """
+    Evaluates ALL discovered allocations at the target_eval_slack to find 
+    the true global minimum and maximum probability of failure (the P-Box bounds).
+    """
     gld = GLD('VSL')
-    print(f"\n" + "="*50)
+    print(f"\n" + "="*60)
     print(f" SUMMARY REPORT: {model_name.upper()}")
     print(f" Target Evaluation Slack: {target_eval_slack}")
-    print("="*50)
+    print("="*60)
     
-    slacks_evaluated = df["FAILURE_SLACK"].unique()
+    allocations = get_all_valid_allocations(df)
+    
+    if not allocations:
+        print("No valid GLD parameters found for this model. Skipping.")
+        return
+
     global_min_pf = np.inf
     global_max_pf = -np.inf
-    best_min_allocation = None
-    best_max_allocation = None
+    best_min_alloc = None
+    best_max_alloc = None
     
-    for slack in slacks_evaluated:
-        # Get extremes for this specific optimization threshold
-        min_dict = extract_extreme_allocation(df, slack, mode='min')
-        max_dict = extract_extreme_allocation(df, slack, mode='max')
-        
-        # Evaluate them at the unified target_eval_slack
-        pf_min_eval = evaluate_allocation_at_target(gld, min_dict["gld_params"], target_eval_slack)
-        pf_max_eval = evaluate_allocation_at_target(gld, max_dict["gld_params"], target_eval_slack)
-        
-        if pf_min_eval < global_min_pf:
-            global_min_pf = pf_min_eval
-            best_min_allocation = min_dict
+    # Sweep every allocation found across all runs
+    for alloc in allocations:
+        try:
+            pf = gld.CDF_num(target_eval_slack, list(alloc['gld_params']), xtol=1e-6)[0]
             
-        if pf_max_eval > global_max_pf:
-            global_max_pf = pf_max_eval
-            best_max_allocation = max_dict
+            if pf < global_min_pf:
+                global_min_pf = pf
+                best_min_alloc = alloc
+                
+            if pf > global_max_pf:
+                global_max_pf = pf
+                best_max_alloc = alloc
+        except Exception:
+            pass # Skip if GLD numerical evaluation fails for a specific point
 
     # Calculate magnitude difference
-    if global_min_pf > 0:
+    if global_min_pf > 0 and global_max_pf > 0:
         mag_diff = np.log10(global_max_pf) - np.log10(global_min_pf)
     else:
         mag_diff = np.nan
         
-    print(f"-> Global Minimum Pf : {global_min_pf:.3e} (Optimized at slack {best_min_allocation['slack']})")
-    print(f"-> Global Maximum Pf : {global_max_pf:.3e} (Optimized at slack {best_max_allocation['slack']})")
+    print(f"-> Global Minimum Pf : {global_min_pf:.3e} (Found during opt at slack {best_min_alloc['optimized_at_slack']})")
+    print(f"-> Global Maximum Pf : {global_max_pf:.3e} (Found during opt at slack {best_max_alloc['optimized_at_slack']})")
     print(f"-> Magnitude Diff    : {mag_diff:.2f} orders of magnitude")
     
-    print("\n[Dominant Variables - Min Pf Allocation]")
-    print(get_dominant_variables(best_min_allocation["point"]))
+    print("\n[Dominant Variables - True Min Pf Allocation]")
+    print(get_dominant_variables(best_min_alloc["point"]))
     
-    print("\n[Dominant Variables - Max Pf Allocation]")
-    print(get_dominant_variables(best_max_allocation["point"]))
-    print("="*50 + "\n")
+    print("\n[Dominant Variables - True Max Pf Allocation]")
+    print(get_dominant_variables(best_max_alloc["point"]))
+    print("="*60 + "\n")
 
 # --- Plotting ---
 
@@ -300,3 +301,7 @@ if __name__ == "__main__":
                 usetex=False 
             )
             print(f"Plot saved to {save_path}")
+
+"""
+python analyze_results.py --models model1_4_dof model2_16_dof model3_30_dof model4_50_dof 
+"""
