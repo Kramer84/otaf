@@ -1,20 +1,8 @@
-import copy
-import ast
-import math
-import sympy as sp
+import argparse
 import numpy as np
-import matplotlib.pyplot as plt
-from typing import List, Tuple
-from functools import partial
-from scipy.optimize import NonlinearConstraint, Bounds, minimize, approx_fprime
-import pandas as pd
-
-from IPython import display
-
-import torch
+from scipy.optimize import NonlinearConstraint, Bounds, minimize
 import otaf
 from gldpy import GLD
-
 
 # Here will be the set of codes to load the neural network based surrogates, 
 # define the constraints of the credal sets
@@ -155,15 +143,16 @@ def pf_min_max_optimizer(
         experiment_key=None, 
         logprob=True, 
         model_eval_fn=None, 
-        credal_constraints=None,
+        constraint_factory=None,
         x0=None,
-        dim=None):
+        dim=None,
+        maxiter=10000):
     
     # 1. Instantiate GLD here so it can be passed to the objective function
     gld = GLD('VSL')
     
     normalized_bounds = Bounds(1e-9, 1.0, keep_feasible=True)
-    print(f"\nStarting optimization sequence with failure slack: {failure_slack} \n")
+    print(f"\n--- Starting optimization sequence for Slack: {failure_slack} ---\n")
     
     # 2. Fix the args tuple to strictly match optimization_function's signature
     # (failure_slack, gld, model, experiment_key, tracker, logprob, minimize)
@@ -174,11 +163,11 @@ def pf_min_max_optimizer(
         method="COBYQA", 
         jac=None, 
         bounds=normalized_bounds,
-        constraints=credal_constraints(tracker, experiment_key),
+        constraints=constraint_factory(tracker, experiment_key, is_minimization=False),
         options={
             "f_target": -np.inf if logprob else -1.01, 
-            "maxiter": 10000,
-            "maxfev": 10000,
+            "maxiter": maxiter,
+            "maxfev": maxiter,
             "feasibility_tol": 1e-5,
             "initial_tr_radius": np.sqrt(dim)/np.sqrt(2),
             "final_tr_radius": 0.001,
@@ -186,7 +175,7 @@ def pf_min_max_optimizer(
             "scale": False
         }
     )
-    print('\nMaximization result:\n', res_maxi, '\n')
+    print('\nMaximization result:\n', res_maxi.message, 'Fun:', res_maxi.fun,"\n")
     
     res_mini = minimize(
         optimization_function, x0, 
@@ -194,11 +183,11 @@ def pf_min_max_optimizer(
         method="COBYQA", 
         jac=None, 
         bounds=normalized_bounds,
-        constraints=credal_constraints(tracker, experiment_key),
+        constraints=constraint_factory(tracker, experiment_key, is_minimization=True),
         options={
             "f_target": -np.inf if logprob else -0.01,
-            "maxiter": 10000,
-            "maxfev": 10000,
+            "maxiter": maxiter,
+            "maxfev": maxiter,
             "feasibility_tol": 1e-5,
             "initial_tr_radius": np.sqrt(dim)/np.sqrt(2),
             "final_tr_radius": 0.001,
@@ -207,7 +196,7 @@ def pf_min_max_optimizer(
         }
     )
 
-    print("\nMinimization result:\n", res_mini, '\n')
+    print('\nMinimization result:\n', res_mini.message, 'Fun:', res_mini.fun,"\n")
 
     # Retrieve using the tracker
     data_min = tracker.get_data(experiment_key, res_mini.x)
@@ -216,9 +205,18 @@ def pf_min_max_optimizer(
 
 
 
+
 if __name__ == "__main__":
-    gld = GLD('VSL')
-    normalized_bounds = Bounds(1e-7, 1.0, keep_feasible=True) #bounds on the std devition allocation
+    parser = argparse.ArgumentParser(description="Imprecise Bounds Analysis for OTAF Models.")
+    
+    parser.add_argument("--models", nargs="+", required=True, help="Models to run (e.g., model1_4_dof)")
+    parser.add_argument("--slacks", nargs="+", required=True, help="Comma-separated slacks per model (e.g., '0.0,0.05,0.1')")
+    parser.add_argument("--surrogate-dir", type=str, default=".", help="Directory containing .pth files")
+    parser.add_argument("--output-dir", type=str, default=".", help="Directory to save CSV results")
+    parser.add_argument("--maxiter", type=int, default=5000, help="Max iterations for COBYQA")
+    parser.add_argument("--mc-size", type=int, default=100000, help="Monte Carlo sample size for GLD")
+    
+    args = parser.parse_args()
 
     available_models = {
         "model1_4_dof": otaf.example_models.model1,
@@ -227,42 +225,74 @@ if __name__ == "__main__":
         "model4_50_dof": otaf.example_models.model4
     }
 
-    #LEt's just show how it is done for the model1:
-    m_name = "model1_4_dof"
-    model = available_models[m_name]
-    model_sur = otaf.surrogate.NeuralRegressorNetwork.from_checkpoint(f"{m_name}_surrogate.pth")
-    model_dim = model.dim
-    tracker_1= otaf.optimization.OptimizationTracker(bounds=normalized_bounds, constraint_tolerance=1e-5, precision_decimals=8)
-    jointDistribution1, symbols1, max_std_vect, mu_vect = model.getDistributionParams()
-    
-    SIZE_MC_PF = 100000 #int(1e6) #1e4
-    sample_gld = np.array(jointDistribution1.getSample(SIZE_MC_PF))
-    
-    model_fun = get_model_evaluator(sample_gld, mu_vect, model_sur)
+    for i, m_name in enumerate(args.models):
+        print("\n=========================================")
+        print(f"PROCESSING {m_name}")
+        print("=========================================")
+        
+        if m_name not in available_models:
+            print(f"Skipping unknown model: {m_name}")
+            continue
+            
+        model = available_models[m_name]
+        
+        # Load surrogate
+        model_path = f"{args.surrogate_dir}/{m_name}_surrogate.pth"
+        model_sur = otaf.surrogate.NeuralRegressorNetwork.from_checkpoint(model_path)
+        
+        model_dim = model.dim
+        tracker = otaf.optimization.OptimizationTracker(bounds=Bounds(1e-7, 1.0), constraint_tolerance=1e-5, precision_decimals=8)
+        
+        jointDist, symbols, max_std_vect, mu_vect = model.getDistributionParams()
+        sample_gld = np.array(jointDist.getSample(args.mc_size))
+        
+        model_fun = get_model_evaluator(sample_gld, mu_vect, model_sur)
 
+        # Dynamic Constraint Factory using the split bounds logic
+        def create_directional_constraint(tr, expKey, is_minimization):
+            lb = 0.0 if is_minimization else -np.inf
+            ub = np.inf if is_minimization else 0.0
+            return NonlinearConstraint(
+                fun=model.getScaledCredalSetConstraintsFunction(max_std_vect, tr, expKey),
+                lb=lb,
+                ub=ub,
+                keep_feasible=True
+            )
 
-    nonLinearConstraint = lambda tracker, expKey: NonlinearConstraint(
-        fun = model.getScaledCredalSetConstraintsFunction(max_std_vect, tracker, expKey),
-        lb  = -1e-5,  # Lower bound slack
-        ub  =  1e-5,  # Upper bound slack
-        keep_feasible = True,
-    )
-
-    #let's obtain a good starting point:
-    x0 = optimize_scaling_vector(model.getScaledCredalSetConstraintsFunction(max_std_vect), model_dim)
-
-    # Now we need  series of slack values on which to optimize on... 
-    slacks = [0.0, 0.02, 0.05, 0.1, 0.2, 0.3]
-    for slack in slacks:
-        res_x, res_gld, res_fp = pf_min_max_optimizer(
-            failure_slack=slack, 
-            tracker=tracker_1, 
-            experiment_key=f"exp_slack_{slack}", 
-            logprob=True, 
-            model_eval_fn=model_fun,  # Ensure this matches the parameter name in your def
-            credal_constraints=nonLinearConstraint, # Ensure this matches too
-            x0=x0,
-            dim=model_dim
+        # Warm start
+        print("\nFinding feasible start (x0)...")
+        x0 = optimize_scaling_vector(
+            model.getScaledCredalSetConstraintsFunction(max_std_vect), 
+            n_vars=model_dim
         )
-    df = tracker_1.to_dataframe()
-    df.to_csv(f"{m_name}_results.csv")
+
+        # Parse slacks for this model
+        slack_str = args.slacks[i] if i < len(args.slacks) else args.slacks[-1]
+        slacks = [float(s) for s in slack_str.split(',')]
+
+        for slack in slacks:
+            pf_min_max_optimizer(
+                failure_slack=slack, 
+                tracker=tracker, 
+                experiment_key=f"{m_name}_slack_{slack}", 
+                logprob=True, 
+                model_eval_fn=model_fun, 
+                constraint_factory=create_directional_constraint, 
+                x0=x0,
+                dim=model_dim,
+                maxiter=args.maxiter
+            )
+            
+        # Save results per model
+        df = tracker.to_dataframe()
+        out_path = f"{args.output_dir}/OptimizationResults_{m_name}.csv"
+        df.to_csv(out_path)
+        print(f"\nSaved results for {m_name} to {out_path}")
+
+"""
+python imprecise_bounds_analysis.py \
+    --models model1_4_dof model2_16_dof model3_30_dof model4_50_dof \
+    --slacks "0.0,0.05,0.1,0.2" "0.0,0.05,0.1,0.2" "0.0,0.05,0.1,0.2" "0.0,0.05,0.1,0.2" \
+    --maxiter 5000 \
+    --mc-size 100000
+"""
