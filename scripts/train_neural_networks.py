@@ -215,6 +215,9 @@ python train_neural_networks.py --tols 0.31 0.16 0.1 0.21 --mults 1.35 1.21 1.26
 
 python train_neural_networks.py --models model1_4_dof model2_16_dof  --tols 0.31 0.16 --mults 1.35 1.21 --sample-sizes 200000 --architectures 'dim,16,8,4,1' 'dim,32,16,8,1'
 
+python train_neural_networks.py  --models model3_30_dof --tols 0.1 --mults  1.26 --sample-sizes 200000 --architectures  'dim,64,32,16,8,1'
+
+
 REGARDING HOW TO CALL THE MODEL:
 
 Your method of calling it inside `model2` logic is conceptually fine, but contains redundant PyTorch overhead.
