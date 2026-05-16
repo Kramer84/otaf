@@ -287,19 +287,18 @@ def main():
     print("Generating contour plot...")
     plot_filename = f"Pf_Grid_slack_{args.slack}.png"
 
-    fig,ax = plot_pf_allocation_grid(
+    fig, ax = plot_pf_allocation_grid(
         U4_grid, 
         U5_grid, 
         PF_grid, 
-        slack=0.0, 
-        use_lognorm=True,
+        slack=args.slack,  # Corrected to use the parsed argument
         save=True, 
         save_path=plot_filename, 
         dpi=600,
         show=False,
         usetex=True,
-        transparent=True)
-
+        transparent=True
+    )
 
 if __name__ == "__main__":
     main()
