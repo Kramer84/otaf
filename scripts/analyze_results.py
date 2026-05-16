@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 from gldpy import GLD
 import otaf
 
-# --- Global Plot Style Configuration ---
 # --- Global plot style configuration ----------------------------------------
 
 DEFAULT_FIG_STYLE = {
