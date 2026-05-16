@@ -33,7 +33,7 @@ from typing import Tuple
 
 import sympy as sp
 import otaf
-from otaf.tolerances import sigma_delta_circular_feature, sigma_delta_3D_plane, sigma_delta_cylindrical_feature
+from otaf.tolerances import sigma_delta_circular_feature
 
 
 # ---------------------------------------------------------------------------

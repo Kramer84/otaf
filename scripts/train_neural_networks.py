@@ -1,25 +1,13 @@
 from __future__ import annotations
 
-import re
-import copy
 import numpy as np
-from enum import Enum
-from typing import Tuple, Sequence
 import argparse
-import sys
 
 import otaf
-import sympy as sp
 import torch
 
 #These sripts will load the models then train the neural network, then save it.
 #Let's start with some generalistic functions.
-
-import argparse
-import sys
-import numpy as np
-import torch
-import otaf
 
 class SurrogateTrainer:
     """ 
