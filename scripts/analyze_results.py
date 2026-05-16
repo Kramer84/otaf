@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from gldpy import GLD
+import otaf
 
 # --- Global Plot Style Configuration ---
 # --- Global plot style configuration ----------------------------------------
@@ -357,7 +358,7 @@ def plot_ensemble_gld_pbox_cdf(gld_obj, param_list, x_values,
                                style=None, 
                                labels=('Lower bound', 'Upper bound'),
                                fill_color='gray', alpha=0.3,
-                               xlabel="Slack Threshold", ylabel="Probability of Failure (Pf)",
+                               xlabel="Slack", ylabel="Probability of Failure ($P_f$)",
                                title="Probability-Box of the CDF",
                                add_zoom=False, zoom_x_range=(-0.05, 0.05), zoom_y_range=(1e-6, 0.1),
                                inset_log_y=False,
@@ -397,7 +398,15 @@ def plot_ensemble_gld_pbox_cdf(gld_obj, param_list, x_values,
 
     # 4. Zoom Inset Logic
     if add_zoom:
-        axins = ax.inset_axes([0.1, 0.2, 0.3, 0.3])
+        axins = ax.inset_axes([0.075, 0.25, 0.3, 0.3])
+
+        axins.patch.set_facecolor('white')
+        axins.patch.set_alpha(1.0)
+        axins.set_zorder(100)
+        
+        # 2. Turn OFF the grid inside the inset so it doesn't look like the main grid bleeding through
+        axins.grid(False)
+
         axins.plot(x_values, lower_cdf, color=c1, linewidth=1.5)
         axins.plot(x_values, upper_cdf, color=c2, linewidth=1.5)
         axins.fill_between(x_values, lower_cdf, upper_cdf, color=fill_color, alpha=alpha)
@@ -438,6 +447,13 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
     
+    available_models = {
+        "model1_4_dof": otaf.example_models.model1,
+        "model2_16_dof": otaf.example_models.model2,
+        "model3_30_dof": otaf.example_models.model3,
+        "model4_50_dof": otaf.example_models.model4
+    }
+
     # Helper to safely extract positional arguments
     def get_arg(arg_list, idx, type_func=float):
         if not arg_list: 
@@ -448,6 +464,7 @@ if __name__ == "__main__":
     gld = GLD('VSL')
     
     for i, m_name in enumerate(args.models):
+        model = available_models[m_name]
         csv_path = os.path.join(args.input_dir, f"OptimizationResults_{m_name}.csv")
         
         try:
@@ -458,7 +475,7 @@ if __name__ == "__main__":
             
         # 1. Generate and print the report
         report_str = generate_summary_report(df, m_name, target_eval_slack=args.eval_slack)
-        print(report_str)
+        #print(report_str)
         
         # 2. Save the report to a Markdown file
         md_save_path = os.path.join(args.output_dir, f"Summary_{m_name}.md")
@@ -486,12 +503,13 @@ if __name__ == "__main__":
                 add_zoom=True,
                 zoom_x_range=(zx_min, zx_max), 
                 zoom_y_range=(zy_min, zy_max),
-                title=f"Probability-Box of the CDF ({m_name})",
+                title=f"P-Box (model {model.dim} dim)",
                 save=True, 
                 save_path=save_path, 
                 dpi=600,
                 show=False,
-                usetex=False 
+                usetex=False,
+                transparent=False
             )
             print(f"Plot saved to {save_path}")
 
