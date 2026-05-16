@@ -204,18 +204,95 @@ def pf_min_max_optimizer(
     return (res_mini.x, res_maxi.x), (data_min['GLD_PARAMS'], data_max['GLD_PARAMS']), (data_min['FP_GLD'], data_max['FP_GLD'])
 
 
+def run_reduced_analysis(m_name, model_class, args, base_model_fun, max_std_vect, slacks):
+    """
+    Standalone runner for reduced-dimension models.
+    Uses closures to zero-pad inputs for the MLP and constraints, 
+    ensuring the tracker strictly logs the reduced dimensional space.
+    """
+    full_dim = model_class.dim
+    if m_name == "model3_30_dof":
+        active_indices = list(range(26))
+    elif m_name == "model4_50_dof":
+        active_indices = list(range(6, 38))
+    else:
+        raise ValueError(f"No reduced mapping defined for {m_name}")
+        
+    opt_dim = len(active_indices)
+    
+    tracker = otaf.optimization.OptimizationTracker(
+        bounds=Bounds(1e-7, 1.0), constraint_tolerance=1e-5, precision_decimals=8
+    )
+
+    # 1. Wrap the MLP Evaluator
+    def reduced_model_eval(x_reduced):
+        x_full = np.zeros(full_dim)
+        x_full[active_indices] = x_reduced
+        return base_model_fun(x_full)
+
+    # 2. Wrap the Constraints & Handle Tracker Manually
+    def get_reduced_constraint_fun(tr, expKey):
+        # Instantiate base constraint WITHOUT the tracker so it doesn't log the full_dim vector
+        base_cons = model_class.getScaledCredalSetConstraintsFunction(
+            max_std_vect, tracker=None, experiment_key=None
+        )
+        
+        def wrapped_cons(x_reduced):
+            x_full = np.zeros(full_dim)
+            x_full[active_indices] = x_reduced
+            c_vals = base_cons(x_full)
+            
+            # Manually track the reduced vector so dimensions align with objective logs
+            if tr is not None:
+                tr.update_constraint_data(exp_key=expKey, x=x_reduced, constraints=c_vals)
+            return c_vals
+            
+        return wrapped_cons
+
+    def create_directional_constraint(tr, expKey, is_minimization):
+        lb = 0.0 if is_minimization else -np.inf
+        ub = np.inf if is_minimization else 0.0
+        return NonlinearConstraint(
+            fun=get_reduced_constraint_fun(tr, expKey),
+            lb=lb,
+            ub=ub,
+            keep_feasible=True
+        )
+
+    print(f"\nFinding feasible start (x0) for reduced {m_name} ({opt_dim} dimensions)...")
+    dummy_cons = get_reduced_constraint_fun(None, None)
+    x0_reduced = optimize_scaling_vector(dummy_cons, n_vars=opt_dim)
+
+    for slack in slacks:
+        pf_min_max_optimizer(
+            failure_slack=slack, 
+            tracker=tracker, 
+            experiment_key=f"{m_name}_slack_{slack}", 
+            logprob=True, 
+            model_eval_fn=reduced_model_eval,       # Passes the wrapped closure
+            constraint_factory=create_directional_constraint, 
+            x0=x0_reduced,
+            dim=opt_dim,                            # Optimizer operates in reduced space
+            maxiter=args.maxiter
+        )
+        
+    df = tracker.to_dataframe()
+    out_path = f"{args.output_dir}/OptimizationResults_{m_name}_reduced.csv"
+    df.to_csv(out_path)
+    print(f"\nSaved REDUCED results for {m_name} to {out_path}")
+
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Imprecise Bounds Analysis for OTAF Models.")
-    
     parser.add_argument("--models", nargs="+", required=True, help="Models to run (e.g., model1_4_dof)")
-    parser.add_argument("--slacks", nargs="+", required=True, help="Comma-separated slacks per model (e.g., '0.0,0.05,0.1')")
+    parser.add_argument("--slacks", nargs="+", required=True, help="Comma-separated slacks per model")
     parser.add_argument("--surrogate-dir", type=str, default=".", help="Directory containing .pth files")
     parser.add_argument("--output-dir", type=str, default=".", help="Directory to save CSV results")
     parser.add_argument("--maxiter", type=int, default=5000, help="Max iterations for COBYQA")
     parser.add_argument("--mc-size", type=int, default=100000, help="Monte Carlo sample size for GLD")
-    
+    parser.add_argument("--reduced-mode", action="store_true", help="Run reduced variable subsets for model3 and model4")
+
     args = parser.parse_args()
 
     available_models = {
@@ -228,6 +305,8 @@ if __name__ == "__main__":
     for i, m_name in enumerate(args.models):
         print("\n=========================================")
         print(f"PROCESSING {m_name}")
+        if args.reduced_mode:
+            print("MODE: REDUCED VARIABLE SUBSET")
         print("=========================================")
         
         if m_name not in available_models:
@@ -236,58 +315,62 @@ if __name__ == "__main__":
             
         model = available_models[m_name]
         
-        # Load surrogate
+        # 1. Shared Setup (Neural Network & Space definition)
         model_path = f"{args.surrogate_dir}/{m_name}_surrogate.pth"
         model_sur = otaf.surrogate.NeuralRegressorNetwork.from_checkpoint(model_path)
-        
-        model_dim = model.dim
-        tracker = otaf.optimization.OptimizationTracker(bounds=Bounds(1e-7, 1.0), constraint_tolerance=1e-5, precision_decimals=8)
         
         jointDist, symbols, max_std_vect, mu_vect = model.getDistributionParams()
         sample_gld = np.array(jointDist.getSample(args.mc_size))
         
-        model_fun = get_model_evaluator(sample_gld, mu_vect, model_sur)
+        # Base full-dimensional model evaluator
+        base_model_fun = get_model_evaluator(sample_gld, mu_vect, model_sur)
 
-        # Dynamic Constraint Factory using the split bounds logic
-        def create_directional_constraint(tr, expKey, is_minimization):
-            lb = 0.0 if is_minimization else -np.inf
-            ub = np.inf if is_minimization else 0.0
-            return NonlinearConstraint(
-                fun=model.getScaledCredalSetConstraintsFunction(max_std_vect, tr, expKey),
-                lb=lb,
-                ub=ub,
-                keep_feasible=True
-            )
-
-        # Warm start
-        print("\nFinding feasible start (x0)...")
-        x0 = optimize_scaling_vector(
-            model.getScaledCredalSetConstraintsFunction(max_std_vect), 
-            n_vars=model_dim
-        )
-
-        # Parse slacks for this model
         slack_str = args.slacks[i] if i < len(args.slacks) else args.slacks[-1]
         slacks = [float(s) for s in slack_str.split(',')]
 
-        for slack in slacks:
-            pf_min_max_optimizer(
-                failure_slack=slack, 
-                tracker=tracker, 
-                experiment_key=f"{m_name}_slack_{slack}", 
-                logprob=True, 
-                model_eval_fn=model_fun, 
-                constraint_factory=create_directional_constraint, 
-                x0=x0,
-                dim=model_dim,
-                maxiter=args.maxiter
-            )
+        # 2. Branch Logic
+        if args.reduced_mode and m_name in ["model3_30_dof", "model4_50_dof"]:
+            run_reduced_analysis(m_name, model, args, base_model_fun, max_std_vect, slacks)
+        else:
+            # Standard Flow
+            if args.reduced_mode:
+                print(f"No reduced mapping for {m_name}, falling back to full dimension.")
+                
+            tracker = otaf.optimization.OptimizationTracker(bounds=Bounds(1e-7, 1.0), constraint_tolerance=1e-5, precision_decimals=8)
             
-        # Save results per model
-        df = tracker.to_dataframe()
-        out_path = f"{args.output_dir}/OptimizationResults_{m_name}.csv"
-        df.to_csv(out_path)
-        print(f"\nSaved results for {m_name} to {out_path}")
+            def create_directional_constraint(tr, expKey, is_minimization):
+                lb = 0.0 if is_minimization else -np.inf
+                ub = np.inf if is_minimization else 0.0
+                return NonlinearConstraint(
+                    fun=model.getScaledCredalSetConstraintsFunction(max_std_vect, tr, expKey),
+                    lb=lb,
+                    ub=ub,
+                    keep_feasible=True
+                )
+
+            print("\nFinding feasible start (x0)...")
+            x0 = optimize_scaling_vector(
+                model.getScaledCredalSetConstraintsFunction(max_std_vect), 
+                n_vars=model.dim
+            )
+
+            for slack in slacks:
+                pf_min_max_optimizer(
+                    failure_slack=slack, 
+                    tracker=tracker, 
+                    experiment_key=f"{m_name}_slack_{slack}", 
+                    logprob=True, 
+                    model_eval_fn=base_model_fun, 
+                    constraint_factory=create_directional_constraint, 
+                    x0=x0,
+                    dim=model.dim,
+                    maxiter=args.maxiter
+                )
+                
+            df = tracker.to_dataframe()
+            out_path = f"{args.output_dir}/OptimizationResults_{m_name}.csv"
+            df.to_csv(out_path)
+            print(f"\nSaved results for {m_name} to {out_path}")
 
 """
 python imprecise_bounds_analysis.py \
@@ -300,5 +383,6 @@ python imprecise_bounds_analysis.py \
     --models model3_30_dof model4_50_dof \
     --slacks "0.0,0.025,0.05,0.075" "0.0,0.025,0.05,0.075" \
     --maxiter 5000 \
-    --mc-size 100000
+    --mc-size 100000 \
+    --reduced-mode
 """
