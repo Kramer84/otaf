@@ -293,6 +293,7 @@ def main():
         PF_grid, 
         slack=args.slack,  # Corrected to use the parsed argument
         save=True, 
+        use_lognorm=False,
         save_path=plot_filename, 
         dpi=600,
         show=False,

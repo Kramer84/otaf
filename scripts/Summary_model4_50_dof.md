@@ -62,4 +62,3 @@
     \end{bmatrix}^T
 \label{eq:\max_standards}
 \end{equation}
-```
