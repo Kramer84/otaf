@@ -179,8 +179,16 @@ def load_and_clean_data(csv_path, strict_tol=5e-4):
     def is_strictly_on_boundary(c_vals):
         if not isinstance(c_vals, np.ndarray) or len(c_vals) == 0:
             return False
-        # Ensures ALL features are operating EXACTLY at the capability target
-        return np.all(np.abs(c_vals) <= strict_tol)
+            
+        # A constraint is valid if it is exactly at the capability target (active)
+        on_boundary = np.abs(c_vals) <= strict_tol
+        
+        # OR if it is completely inactive/fixed to zero, which yields exactly -1.0
+        # (Using a small tolerance for floating point inaccuracies around -1.0)
+        inactive = np.abs(c_vals + 1.0) <= 1e-4 
+        
+        # Ensures ALL features are either exactly at target OR explicitly deactivated
+        return np.all(on_boundary | inactive)
         
     if "constraint_values" in df.columns:
         df["strict_constraints"] = df["constraint_values"].apply(is_strictly_on_boundary)
@@ -427,7 +435,14 @@ def plot_ensemble_gld_pbox_cdf(gld_obj, param_list, x_values,
     return _finalize_figure(fig, ax, cfg)
 
 # --- CLI Execution ---
+# --- CLI Execution ---
 if __name__ == "__main__":
+    import os
+    import argparse
+    import numpy as np
+    from gldpy import GLD
+    import otaf
+
     parser = argparse.ArgumentParser(description="Analyze OTAF Optimization Results.")
     parser.add_argument("--models", nargs="+", required=True, help="Models to analyze (e.g., model1_4_dof)")
     parser.add_argument("--input-dir", type=str, default=".", help="Directory containing the CSV files")
@@ -435,6 +450,7 @@ if __name__ == "__main__":
     parser.add_argument("--eval-slack", type=float, default=0.0, help="Target slack threshold for Pf evaluation")
     parser.add_argument("--strict-tol", type=float, default=5e-4, help="Tolerance for strict constraint equality checking")
     parser.add_argument("--no-plot", action="store_true", help="Skip generating the plots")
+    parser.add_argument("--reduced-mode", action="store_true", help="Analyze the reduced variable subsets for model3 and model4")
     
     # Dynamic Plot Arguments
     parser.add_argument("--plot-mins", nargs="+", default=["-0.10"], help="Min x-axis bound per model")
@@ -463,21 +479,38 @@ if __name__ == "__main__":
     gld = GLD('VSL')
     
     for i, m_name in enumerate(args.models):
+        if m_name not in available_models:
+            print(f"Skipping unknown model: {m_name}")
+            continue
+            
         model = available_models[m_name]
-        csv_path = os.path.join(args.input_dir, f"OptimizationResults_{m_name}.csv")
+        
+        # Determine if we are analyzing a reduced subset
+        is_reduced = args.reduced_mode and m_name in ["model3_30_dof", "model4_50_dof"]
+        file_suffix = "_reduced" if is_reduced else ""
+        
+        # Determine actual dimension for the plot title
+        if is_reduced:
+            if m_name == "model3_30_dof":
+                actual_dim = 26
+            elif m_name == "model4_50_dof":
+                actual_dim = 32 # Active indices 6 to 37 (37 - 6 + 1 = 32)
+        else:
+            actual_dim = model.dim
+
+        csv_path = os.path.join(args.input_dir, f"OptimizationResults_{m_name}{file_suffix}.csv")
         
         try:
             df = load_and_clean_data(csv_path, strict_tol=args.strict_tol)
         except Exception as e:
-            print(f"Error loading {m_name}: {e}")
+            print(f"Error loading {m_name} (File: {csv_path}): {e}")
             continue
             
         # 1. Generate and print the report
         report_str = generate_summary_report(df, m_name, target_eval_slack=args.eval_slack)
-        #print(report_str)
         
         # 2. Save the report to a Markdown file
-        md_save_path = os.path.join(args.output_dir, f"Summary_{m_name}.md")
+        md_save_path = os.path.join(args.output_dir, f"Summary_{m_name}{file_suffix}.md")
         with open(md_save_path, "w", encoding="utf-8") as md_file:
             md_file.write(report_str)
         print(f"Summary report saved to {md_save_path}")
@@ -493,7 +526,7 @@ if __name__ == "__main__":
             zy_max = get_arg(args.zoom_y_maxs, i)
             
             x_range = np.linspace(p_min, p_max, 2000)
-            save_path = os.path.join(args.output_dir, f"pbox_{m_name}.png")
+            save_path = os.path.join(args.output_dir, f"pbox_{m_name}{file_suffix}.png")
             
             plot_ensemble_gld_pbox_cdf(
                 gld,
@@ -502,7 +535,7 @@ if __name__ == "__main__":
                 add_zoom=True,
                 zoom_x_range=(zx_min, zx_max), 
                 zoom_y_range=(zy_min, zy_max),
-                title=f"P-Box (model {model.dim} dim)",
+                title=f"P-Box (model {actual_dim} dim)",
                 save=True, 
                 save_path=save_path, 
                 dpi=600,
@@ -514,4 +547,5 @@ if __name__ == "__main__":
 
 """
 python analyze_results.py --models model1_4_dof model2_16_dof model3_30_dof model4_50_dof --strict-tol 5e-4 --plot-mins -0.05 -0.05 -0.1 -0.05  --plot-maxs 0.2 0.15 0.2 0.15 --zoom-x-mins -0.025 -0.015 -0.06 -0.025 --zoom-x-maxs 0.02 0.015 0.015 0.015 --zoom-y-mins -1e-6 --zoom-y-maxs 0.02 0.015 0.07 0.03
+python analyze_results.py --models model3_30_dof model4_50_dof --reduced-mode --strict-tol 5e-4 --plot-mins -0.1 -0.05  --plot-maxs 0.2 0.15 --zoom-x-mins -0.06 -0.01 --zoom-x-maxs 0.015 0.01 --zoom-y-mins -1e-6 --zoom-y-maxs 0.07 0.001
 """
