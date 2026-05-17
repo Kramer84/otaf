@@ -385,4 +385,11 @@ python imprecise_bounds_analysis.py \
     --maxiter 5000 \
     --mc-size 100000 \
     --reduced-mode
+
+python imprecise_bounds_analysis.py \
+    --models model4_50_dof \
+    --slacks "0.0,0.025,0.05,0.075" \
+    --maxiter 10000 \
+    --mc-size 150000 \
+    --reduced-mode
 """

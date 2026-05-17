@@ -514,7 +514,7 @@ if __name__ == "__main__":
         with open(md_save_path, "w", encoding="utf-8") as md_file:
             md_file.write(report_str)
         print(f"Summary report saved to {md_save_path}")
-        
+        print(report_str)
         if not args.no_plot and not df.empty:
             gld_params = get_valid_gld_params(df)
             
@@ -546,6 +546,13 @@ if __name__ == "__main__":
             print(f"Plot saved to {save_path}")
 
 """
-python analyze_results.py --models model1_4_dof model2_16_dof model3_30_dof model4_50_dof --strict-tol 5e-4 --plot-mins -0.05 -0.05 -0.1 -0.05  --plot-maxs 0.2 0.15 0.2 0.15 --zoom-x-mins -0.025 -0.015 -0.06 -0.025 --zoom-x-maxs 0.02 0.015 0.015 0.015 --zoom-y-mins -1e-6 --zoom-y-maxs 0.02 0.015 0.07 0.03
-python analyze_results.py --models model3_30_dof model4_50_dof --reduced-mode --strict-tol 5e-4 --plot-mins -0.1 -0.05  --plot-maxs 0.2 0.15 --zoom-x-mins -0.06 -0.01 --zoom-x-maxs 0.015 0.01 --zoom-y-mins -1e-6 --zoom-y-maxs 0.07 0.001
+python analyze_results.py --models model1_4_dof model2_16_dof model3_30_dof model4_50_dof --strict-tol 1e-3 --plot-mins -0.05 -0.05 -0.1 -0.05  --plot-maxs 0.2 0.15 0.2 0.15 --zoom-x-mins -0.025 -0.015 -0.06 -0.025 --zoom-x-maxs 0.02 0.015 0.015 0.015 --zoom-y-mins -1e-6 --zoom-y-maxs 0.02 0.015 0.07 0.03
+python analyze_results.py --models model3_30_dof model4_50_dof --reduced-mode --strict-tol 1e-3 --plot-mins -0.1 -0.05  --plot-maxs 0.2 0.15 --zoom-x-mins -0.06 -0.01 --zoom-x-maxs 0.015 0.01 --zoom-y-mins -1e-6 --zoom-y-maxs 0.07 0.001
+
+python analyze_results.py --models model4_50_dof --reduced-mode --no-plot --strict-tol 5e-4 --plot-mins -0.1 -0.05  --plot-maxs 0.15 --zoom-x-mins -0.01 --zoom-x-maxs 0.01 --zoom-y-mins -1e-6 --zoom-y-maxs 0.001
+python analyze_results.py --models model4_50_dof --reduced-mode --no-plot --strict-tol 1e-5 --plot-mins -0.1 -0.05  --plot-maxs 0.15 --zoom-x-mins -0.01 --zoom-x-maxs 0.01 --zoom-y-mins -1e-6 --zoom-y-maxs 0.001
+python analyze_results.py --models model4_50_dof --reduced-mode --no-plot --strict-tol 5e-5 --plot-mins -0.1 -0.05  --plot-maxs 0.15 --zoom-x-mins -0.01 --zoom-x-maxs 0.01 --zoom-y-mins -1e-6 --zoom-y-maxs 0.001
+python analyze_results.py --models model4_50_dof --reduced-mode --no-plot --strict-tol 2e-5 --plot-mins -0.1 -0.05  --plot-maxs 0.15 --zoom-x-mins -0.01 --zoom-x-maxs 0.01 --zoom-y-mins -1e-6 --zoom-y-maxs 0.001
+
+
 """

@@ -205,6 +205,8 @@ python train_neural_networks.py --models model1_4_dof model2_16_dof  --tols 0.31
 
 python train_neural_networks.py  --models model3_30_dof --tols 0.1 --mults  1.26 --sample-sizes 200000 --architectures  'dim,64,32,16,8,1'
 
+python train_neural_networks.py  --models model4_50_dof --tols 0.21 --mults  1.16 --sample-sizes 300000 --architectures  'dim,128,64,32,16,1'
+
 
 REGARDING HOW TO CALL THE MODEL:
 

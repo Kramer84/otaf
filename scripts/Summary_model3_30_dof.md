@@ -2,7 +2,7 @@
 ======================================================================
  SUMMARY REPORT: MODEL3_30_DOF
  Target Evaluation Slack: 0.0
- Valid Boundary Points Analyzed: 391
+ Valid Boundary Points Analyzed: 398
 ======================================================================
 -> Global Minimum Pf : 3.150e-02 (Found during opt at slack 0.0)
 -> Global Maximum Pf : 5.763e-02 (Found during opt at slack 0.0)
