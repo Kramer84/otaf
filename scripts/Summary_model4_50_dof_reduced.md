@@ -2,51 +2,51 @@
 ======================================================================
  SUMMARY REPORT: MODEL4_50_DOF
  Target Evaluation Slack: 0.0
- Valid Boundary Points Analyzed: 457
+ Valid Boundary Points Analyzed: 3073
 ======================================================================
 -> Global Minimum Pf : 0.000e+00 (Found during opt at slack 0.075)
--> Global Maximum Pf : 3.683e-05 (Found during opt at slack 0.05)
+-> Global Maximum Pf : 2.013e-05 (Found during opt at slack 0.05)
 -> Magnitude Diff    : nan orders of magnitude
 
 [Dominant Variables - True Min Pf Allocation]
-[0.8423 0.9143 0.4049 0.5392 0.8829 0.7173 0.697  0.4698 0.5242 0.8025
- 0.5962 0.5528 0.9174 0.8729 0.4863 0.3981 0.8142 0.8293 0.5561 0.5808
- 0.8239 0.8517 0.5238 0.5667 0.841  0.7514 0.6595 0.5414 0.776  0.8703
- 0.4921 0.6305]
+[0.7992 0.805  0.6062 0.5257 0.8081 0.7792 0.5281 0.5803 0.6887 0.8512
+ 0.5263 0.6163 0.8015 0.7815 0.5871 0.5868 0.7759 0.8021 0.6102 0.5787
+ 0.8051 0.8355 0.5435 0.5736 0.5026 0.8584 0.5111 0.6208 0.8542 0.7328
+ 0.4309 0.5207]
 
 [Dominant Variables - True Max Pf Allocation]
-[1.     1.     0.1232 0.134  1.     1.     0.2656 0.229  0.7353 1.
- 0.2006 0.6779 0.917  0.8996 0.437  0.3995 1.     1.     0.2312 0.1782
- 1.     1.     0.2327 0.294  1.     0.8696 0.4932 0.1888 1.     1.
- 0.2839 0.2699]
+[1.     1.     0.2562 0.181  1.     1.     0.1661 0.254  1.     0.
+ 0.5048 0.2289 0.869  1.     0.2657 0.4953 0.7933 0.8806 0.4733 0.6088
+ 0.9471 1.     0.2732 0.3205 1.     1.     0.3102 0.     1.     0.9179
+ 0.397  0.2696]
 ======================================================================
 
 ### LaTeX Matrices
 ```latex
 \begin{equation}
     \mathbf{x}_{\min} = \begin{bmatrix}
-    \textcolor{red}{0.8423} & \textcolor{red}{0.9143} & \textcolor{black}{0.4049} & \textcolor{black}{0.5392} \\
-    \textcolor{red}{0.8829} & \textcolor{orange}{0.7173} & \textcolor{orange}{0.697 } & \textcolor{black}{0.4698} \\
-    \textcolor{black}{0.5242} & \textcolor{red}{0.8025} & \textcolor{black}{0.5962} & \textcolor{black}{0.5528} \\
-    \textcolor{red}{0.9174} & \textcolor{red}{0.8729} & \textcolor{black}{0.4863} & \textcolor{black}{0.3981} \\
-    \textcolor{red}{0.8142} & \textcolor{red}{0.8293} & \textcolor{black}{0.5561} & \textcolor{black}{0.5808} \\
-    \textcolor{red}{0.8239} & \textcolor{red}{0.8517} & \textcolor{black}{0.5238} & \textcolor{black}{0.5667} \\
-    \textcolor{red}{0.841 } & \textcolor{orange}{0.7514} & \textcolor{orange}{0.6595} & \textcolor{black}{0.5414} \\
-    \textcolor{orange}{0.776 } & \textcolor{red}{0.8703} & \textcolor{black}{0.4921} & \textcolor{orange}{0.6305}
+    \textcolor{orange}{0.7992} & \textcolor{red}{0.805 } & \textcolor{orange}{0.6062} & \textcolor{black}{0.5257} \\
+    \textcolor{red}{0.8081} & \textcolor{orange}{0.7792} & \textcolor{black}{0.5281} & \textcolor{black}{0.5803} \\
+    \textcolor{orange}{0.6887} & \textcolor{red}{0.8512} & \textcolor{black}{0.5263} & \textcolor{orange}{0.6163} \\
+    \textcolor{red}{0.8015} & \textcolor{orange}{0.7815} & \textcolor{black}{0.5871} & \textcolor{black}{0.5868} \\
+    \textcolor{orange}{0.7759} & \textcolor{red}{0.8021} & \textcolor{orange}{0.6102} & \textcolor{black}{0.5787} \\
+    \textcolor{red}{0.8051} & \textcolor{red}{0.8355} & \textcolor{black}{0.5435} & \textcolor{black}{0.5736} \\
+    \textcolor{black}{0.5026} & \textcolor{red}{0.8584} & \textcolor{black}{0.5111} & \textcolor{orange}{0.6208} \\
+    \textcolor{red}{0.8542} & \textcolor{orange}{0.7328} & \textcolor{black}{0.4309} & \textcolor{black}{0.5207}
     \end{bmatrix}^T
 \label{eq:\min_standards}
 \end{equation}
 
 \begin{equation}
     \mathbf{x}_{\max} = \begin{bmatrix}
-    \textcolor{red}{0.9914} & \textcolor{red}{0.9922} & \textcolor{green}{0.1232} & \textcolor{green}{0.134 } \\
-    \textcolor{red}{0.9735} & \textcolor{red}{0.9643} & \textcolor{black}{0.2656} & \textcolor{black}{0.229 } \\
-    \textcolor{orange}{0.7353} & \textcolor{red}{0.9798} & \textcolor{black}{0.2006} & \textcolor{orange}{0.6779} \\
-    \textcolor{red}{0.917 } & \textcolor{red}{0.8996} & \textcolor{black}{0.437 } & \textcolor{black}{0.3995} \\
-    \textcolor{red}{0.984 } & \textcolor{red}{0.9727} & \textcolor{black}{0.2312} & \textcolor{green}{0.1782} \\
-    \textcolor{red}{0.9558} & \textcolor{red}{0.9726} & \textcolor{black}{0.2327} & \textcolor{black}{0.294 } \\
-    \textcolor{red}{0.982 } & \textcolor{red}{0.8696} & \textcolor{black}{0.4932} & \textcolor{green}{0.1888} \\
-    \textcolor{red}{0.9633} & \textcolor{red}{0.9589} & \textcolor{black}{0.2839} & \textcolor{black}{0.2699}
+    \textcolor{red}{0.9836} & \textcolor{red}{0.9663} & \textcolor{black}{0.2562} & \textcolor{green}{0.181 } \\
+    \textcolor{red}{0.9669} & \textcolor{red}{0.9864} & \textcolor{green}{0.1661} & \textcolor{black}{0.254 } \\
+    \textcolor{red}{0.9734} & \textcolor{green}{0.0178} & \textcolor{black}{0.5048} & \textcolor{black}{0.2289} \\
+    \textcolor{red}{0.869 } & \textcolor{red}{0.9636} & \textcolor{black}{0.2657} & \textcolor{black}{0.4953} \\
+    \textcolor{orange}{0.7933} & \textcolor{red}{0.8806} & \textcolor{black}{0.4733} & \textcolor{orange}{0.6088} \\
+    \textcolor{red}{0.9471} & \textcolor{red}{0.9622} & \textcolor{black}{0.2732} & \textcolor{black}{0.3205} \\
+    \textcolor{red}{0.9998} & \textcolor{red}{0.9508} & \textcolor{black}{0.3102} & \textcolor{green}{0.0373} \\
+    \textcolor{red}{0.9631} & \textcolor{red}{0.9179} & \textcolor{black}{0.397 } & \textcolor{black}{0.2696}
     \end{bmatrix}^T
 \label{eq:\max_standards}
 \end{equation}
