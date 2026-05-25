@@ -391,5 +391,4 @@ python imprecise_bounds_analysis.py \
     --slacks "0.0,0.025,0.05,0.075" \
     --maxiter 10000 \
     --mc-size 150000 \
-    --reduced-mode
 """

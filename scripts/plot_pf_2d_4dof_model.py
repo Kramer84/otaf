@@ -56,13 +56,6 @@ def _cm_to_inch(cm):
 def _merge_style(style=None, **overrides):
     """
     Merge DEFAULT_FIG_STYLE, a user style dict, and per-call overrides.
-
-    Parameters
-    ----------
-    style : dict or None
-        Base style dict shared across figures.
-    **overrides
-        Per-call overrides like figsize_cm=..., dpi=..., legend=False, etc.
     """
     cfg = DEFAULT_FIG_STYLE.copy()
     cfg["colors"] = DEFAULT_FIG_STYLE["colors"].copy()
@@ -86,8 +79,7 @@ def _merge_style(style=None, **overrides):
 
 def _setup_mpl_from_style(cfg):
     """
-    Apply global Matplotlib settings for fonts / LaTeX, using
-    pdfLaTeX + Libertinus (libertinus-type1 + libertinust1math).
+    Apply global Matplotlib settings for fonts / LaTeX.
     """
     rc = {
         "font.size": cfg.get("font_size", 9),
@@ -102,13 +94,10 @@ def _setup_mpl_from_style(cfg):
 \usepackage{libertinus}        % wrapper, picks libertinus-type1 under pdfLaTeX
 \usepackage{libertinust1math}  % Libertinus Math for pdfLaTeX
 """
-        # DO *NOT* load fontspec/unicode-math here
-        # DO *NOT* try to switch engine to lualatex; usetex uses pdfTeX.
     else:
         rc["text.usetex"] = False
 
     plt.rcParams.update(rc)
-
 
 
 def _new_fig_ax(cfg):
@@ -153,14 +142,9 @@ def format_prob_tex(p: float) -> str:
     return rf"{mant:.2f} \times 10^{{{exp}}}"
 
 
-
-def plot_pf_allocation_grid(U4_grid, U5_grid, PF_grid, slack=0.0, style=None, use_lognorm=True, **kwargs):
+def plot_single_pf_grid(U4_grid, U5_grid, PF_grid, alpha, style=None, use_lognorm=True, **kwargs):
     """
-    Plots the Probability of Failure grid using the custom styling system.
-    Expects U4_grid, U5_grid, and PF_grid as 2D numpy arrays.
-    
-    Example Usage:
-        plot_pf_allocation_grid(U4, U5, PF, slack=0.05, save=True, save_path="pf_plot.pdf", usetex=True)
+    Plots a single Probability of Failure grid for a given alpha limit.
     """
     # 1. Merge configurations
     cfg = _merge_style(style, **kwargs)
@@ -169,12 +153,7 @@ def plot_pf_allocation_grid(U4_grid, U5_grid, PF_grid, slack=0.0, style=None, us
     fig, ax = _new_fig_ax(cfg)
     
     # 3. Plot Data
-    # Probability often spans several orders of magnitude. A LogNorm color map is used.
-    # We clip the lower bound to 1e-16 to prevent LogNorm from failing on absolute zero.
     pf_safe = np.clip(PF_grid, 1e-16, 1.0)
-    
-    # Optional: If your Pf values are extremely uniform (e.g., all 1.0 or all 1e-16), 
-    # LogNorm might complain. The try-except falls back to standard linear mapping.
     
     if use_lognorm:
         try:
@@ -186,6 +165,7 @@ def plot_pf_allocation_grid(U4_grid, U5_grid, PF_grid, slack=0.0, style=None, us
             )
         except ValueError:
             use_lognorm = False
+            
     if not use_lognorm:
         contour = ax.contourf(
             U4_grid, U5_grid, PF_grid, 
@@ -201,19 +181,19 @@ def plot_pf_allocation_grid(U4_grid, U5_grid, PF_grid, slack=0.0, style=None, us
     
     if cfg.get("labels", True):
         if usetex:
-            cbar.set_label(rf"Probability of Failure ($P_f$) [Slack = {slack}]")
+            cbar.set_label(rf"Probability of Failure ($P_f$) [$\alpha = {alpha}$]")
             ax.set_xlabel(r"$u_{d,4}$ Allocation Scale")
             ax.set_ylabel(r"$u_{d,5}$ Allocation Scale")
         else:
-            cbar.set_label(f"Probability of Failure (Pf) [Slack = {slack}]")
+            cbar.set_label(f"Probability of Failure (Pf) [alpha = {alpha}]")
             ax.set_xlabel("u_d_4 Allocation Scale (0=Max Rot, 1=Max Trans)")
             ax.set_ylabel("u_d_5 Allocation Scale (0=Max Rot, 1=Max Trans)")
 
     if cfg.get("title", True):
         if usetex:
-            ax.set_title(r"Failure Probability across Translation/Rotation Allocations")
+            ax.set_title(rf"Failure Probability ($\alpha = {alpha}$)")
         else:
-            ax.set_title("Failure Probability across Translation/Rotation Allocations")
+            ax.set_title(f"Failure Probability (alpha = {alpha})")
             
     # 6. Finalize (Grid, Limits, Save, Show)
     fig, ax = _finalize_figure(fig, ax, cfg)
@@ -232,7 +212,7 @@ def get_model_evaluator(sample, mu_vect, neural_model):
 def main():
     parser = argparse.ArgumentParser(description="Grid Evaluation for 4-DOF OTAF Model")
     parser.add_argument("--surrogate-path", type=str, default="./model1_4_dof_surrogate.pth", help="Path to the .pth surrogate file")
-    parser.add_argument("--slack", type=float, default=0.0, help="Failure slack threshold")
+    parser.add_argument("--alphas", type=float, nargs="+", default=[0.0, 0.5, 1.0], help="List of failure limits/alphas")
     parser.add_argument("--grid-res", type=int, default=20, help="Resolution of the 2D grid")
     parser.add_argument("--mc-size", type=int, default=100000, help="Monte Carlo sample size")
     args = parser.parse_args()
@@ -248,12 +228,12 @@ def main():
     gld = GLD('VSL')
 
     # 2. Construct the Grid
-    print(f"Building {args.grid_res}x{args.grid_res} evaluation grid...")
+    print(f"Building {args.grid_res}x{args.grid_res} evaluation grid for alphas: {args.alphas}...")
     u4_scales = np.linspace(0, 1, args.grid_res)
     u5_scales = np.linspace(0, 1, args.grid_res)
     
     U4_grid, U5_grid = np.meshgrid(u4_scales, u5_scales)
-    PF_grid = np.zeros_like(U4_grid)
+    PF_grids = {alpha: np.zeros_like(U4_grid) for alpha in args.alphas}
 
     # 3. Evaluate Each Point on the Grid
     for i in range(args.grid_res):
@@ -267,39 +247,47 @@ def main():
             
             x_scaled = np.array([u4, gamma4, u5, gamma5])
             
-            # Evaluate slack via surrogate
-            slack = model_eval_fn(x_scaled)
+            # Evaluate model via surrogate ONCE per spatial coordinate
+            eval_vals = model_eval_fn(x_scaled)
             
-            # Compute Pf using GLD
-            gld_params = gld.fit_LMM(slack, disp_fit=False, disp_optimizer=False)
+            # Compute GLD parameters ONCE per spatial coordinate
+            gld_params = gld.fit_LMM(eval_vals, disp_fit=False, disp_optimizer=False)
             
-            if np.any(np.isnan(gld_params)):
-                # Fallback to empirical probability if GLD fails
-                pf = np.where(slack < args.slack, 1, 0).mean()
-            else:
-                pf = gld.CDF_num(args.slack, gld_params, xtol=1e-6)
+            # Apply the evaluated distribution against all alpha thresholds
+            for alpha in args.alphas:
+                if np.any(np.isnan(gld_params)):
+                    # Fallback to empirical probability if GLD fails
+                    pf = np.where(eval_vals < alpha, 1, 0).mean()
+                else:
+                    pf = gld.CDF_num(alpha, gld_params, xtol=1e-6)
+                    
+                PF_grids[alpha][i, j] = pf
                 
-            PF_grid[i, j] = pf
-            
         print(f"Row {i+1}/{args.grid_res} completed.")
 
     # 4. Plot the Results
-    print("Generating contour plot...")
-    plot_filename = f"Pf_Grid_slack_{args.slack}.png"
-
-    fig, ax = plot_pf_allocation_grid(
-        U4_grid, 
-        U5_grid, 
-        PF_grid, 
-        slack=args.slack,  # Corrected to use the parsed argument
-        save=True, 
-        use_lognorm=False,
-        save_path=plot_filename, 
-        dpi=600,
-        show=False,
-        usetex=True,
-        transparent=True
-    )
+    print("Generating individual contour plots...")
+    
+    for alpha in args.alphas:
+        plot_filename = f"Pf_Grid_alpha_{alpha}.png"
+        print(f"Saving {plot_filename}...")
+        
+        fig, ax = plot_single_pf_grid(
+            U4_grid, 
+            U5_grid, 
+            PF_grids[alpha], 
+            alpha=alpha,
+            save=True, 
+            use_lognorm=False,
+            save_path=plot_filename, 
+            dpi=600,
+            show=False,
+            usetex=True,
+            transparent=True
+        )
+        
+        # Free up memory explicitly after saving each plot
+        plt.close(fig)
 
 if __name__ == "__main__":
     main()
