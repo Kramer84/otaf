@@ -119,10 +119,6 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">trange</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.notebook</span><span class="w"> </span><span class="kn">import</span> <span class="n">trange</span> <span class="k">as</span> <span class="n">trange_notebook</span>
-
-
 <span class="kn">from</span><span class="w"> </span><span class="nn">otaf.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">T_MATRIX_PATTERN</span><span class="p">,</span> <span class="n">G_MATRIX_MSTRING_PATTERN</span><span class="p">,</span> <span class="n">BASIS_DICT</span><span class="p">,</span> <span class="n">D_MATRIX_PATTERN1</span><span class="p">,</span> <span class="n">D_MATRIX_PATTERN2</span><span class="p">,</span> <span class="n">D_MATRIX_PATTERN3</span><span class="p">,</span> <span class="n">G_MATRIX_PATTERN1</span><span class="p">,</span> <span class="n">G_MATRIX_PATTERN2</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">otaf.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">MissingKeyError</span>
 
@@ -409,10 +405,10 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">sort_order</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;u_&quot;</span><span class="p">,</span> <span class="s2">&quot;v_&quot;</span><span class="p">,</span> <span class="s2">&quot;w_&quot;</span><span class="p">,</span> <span class="s2">&quot;alpha_&quot;</span><span class="p">,</span> <span class="s2">&quot;beta_&quot;</span><span class="p">,</span> <span class="s2">&quot;gamma_&quot;</span><span class="p">]</span>
-    <span class="n">sort_key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span>
-        <span class="nb">int</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\d+)$&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span>
-        <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="n">sort_order</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="kc">True</span><span class="p">),</span>
-    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sort_key</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">id_var</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\d+)$&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">idx_s</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="n">sort_order</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">id_var</span><span class="p">,</span> <span class="n">idx_s</span><span class="p">)</span>
 
     <span class="n">free_symbols</span> <span class="o">=</span> <span class="p">{</span><span class="n">symb</span> <span class="k">for</span> <span class="n">expr</span> <span class="ow">in</span> <span class="n">expr_list</span> <span class="k">for</span> <span class="n">symb</span> <span class="ow">in</span> <span class="n">expr</span><span class="o">.</span><span class="n">free_symbols</span><span class="p">}</span>
     <span class="k">try</span> <span class="p">:</span>
@@ -424,8 +420,8 @@
             <span class="p">(</span><span class="n">symb</span> <span class="k">for</span> <span class="n">symb</span> <span class="ow">in</span> <span class="n">free_symbols</span> <span class="k">if</span> <span class="s2">&quot;_g_&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">symb</span><span class="p">)),</span>
             <span class="n">key</span><span class="o">=</span><span class="n">sort_key</span><span class="p">,</span>
         <span class="p">)</span>
-    <span class="k">except</span> <span class="ne">ValueError</span> <span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Symbols must follow naming guidelines&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Symbols must follow naming guidelines&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
 
     <span class="k">return</span> <span class="n">deviation_symbols</span><span class="p">,</span> <span class="n">gap_symbols</span></div>
 
@@ -523,8 +519,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">(</span><span class="n">BASIS_DICT</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="s2">&quot;MATRIX&quot;</span><span class="p">])</span>
-    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Index &#39;</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">&#39; not found in BASIS_DICT.&quot;</span><span class="p">)</span></div>
+    <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Index &#39;</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">&#39; not found in BASIS_DICT.&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span></div>
 
 
 
@@ -653,6 +649,8 @@
 <span class="sd">    - This function checks the execution environment using `is_running_in_notebook`.</span>
 <span class="sd">    - `trange_notebook` is used for better rendering in notebook environments.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">trange</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.notebook</span><span class="w"> </span><span class="kn">import</span> <span class="n">trange</span> <span class="k">as</span> <span class="n">trange_notebook</span>
     <span class="k">return</span> <span class="n">trange_notebook</span> <span class="k">if</span> <span class="n">is_running_in_notebook</span><span class="p">()</span> <span class="k">else</span> <span class="n">trange</span></div>
 
 
@@ -737,7 +735,7 @@
 
     <span class="k">if</span> <span class="n">arr</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input must be one-dimensional or squeezable to one-dimensional.&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">percentile</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">percentile</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Percentile must be between 0 and 100.&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">arr</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input array is empty.&quot;</span><span class="p">)</span>
