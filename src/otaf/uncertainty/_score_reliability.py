@@ -15,33 +15,14 @@ __all__ = [
     "sample_non_compliancy_at_threshold",
 ]
 
-import os
-import logging
-import re
-
-from time import time
-
+from functools import partial
 import numpy as np
-import sympy as sp
-import matplotlib.pyplot as plt
-
-from scipy.optimize import linprog, milp, OptimizeResult, LinearConstraint, Bounds
-
-import openturns as ot
-import trimesh as tr
-from functools import partial, lru_cache
-
-from joblib import Parallel, delayed, cpu_count
-
+from scipy.optimize import OptimizeResult
 from beartype import beartype
-from beartype.typing import Dict, List, Tuple, Union, Callable, Optional
-
-import otaf
-
+from beartype.typing import List, Union, Optional
 
 #######################################################################################
 ########### SCORE FUNCTIONS / GRADIENTS
-
 
 @beartype
 def normal_score_mu(

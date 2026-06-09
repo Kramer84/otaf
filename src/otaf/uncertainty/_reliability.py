@@ -677,6 +677,7 @@ def compute_adaptive_failure_probability(
             return failure_probs[-1]
         if k == b_ub.shape[1] - 1:
             return failure_probs[-1]
+    return failure_probs[-1]
 
 
 @beartype

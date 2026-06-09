@@ -37,7 +37,6 @@ from time import time
 import logging
 from itertools import product
 
-import networkx as nx
 import numpy as np
 
 import sympy as sp
@@ -46,17 +45,16 @@ from scipy.optimize import fminbound
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 from matplotlib.patches import Polygon, Rectangle
-import trimesh as tr
-from trimesh import viewer
-from pytransform3d.plot_utils import make_3d_axis
-import pytransform3d.transformations as pytr
-import pytransform3d.rotations as pyrot
+
 from beartype import beartype
-from beartype.typing import Dict, List, Tuple, Union, Callable, Optional
+from beartype.typing import Dict, List, Tuple, Union, Callable, Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import trimesh
 
 from otaf.geometry import point_to_segment_distance, are_points_on_2d_plane, rotation_matrix_from_vectors
 from ._color_palettes import color_palette_1, color_palette_2, color_palette_3
-
+import otaf.exceptions as otaf_exceptions
 
 @beartype
 def plot_points_3D(
@@ -89,6 +87,10 @@ def plot_points_3D(
 
 
 def trimesh_scene_as_notebook_scene(scene, background_hex_color="e6e6e6"):
+    try :
+        from trimesh import viewer
+    except ImportError :
+        raise otaf_exceptions._raise_missing_dependency("trimesh", "trimesh_scene_as_notebook_scene")
     notebook_scene = viewer.notebook.scene_to_notebook(scene)
     notebook_scene.data = notebook_scene.data.replace(
         "scene.background=new THREE.Color(0xffffff)",
@@ -97,7 +99,6 @@ def trimesh_scene_as_notebook_scene(scene, background_hex_color="e6e6e6"):
     return notebook_scene
 
 
-@beartype
 def spheres_from_point_cloud(
     pc: np.ndarray,
     radius: float = 1.0,
@@ -108,7 +109,7 @@ def spheres_from_point_cloud(
         255,
     ],
     global_translation: Union[List[Union[float, int]], np.ndarray] = np.array([0, 0, 0]),
-) -> List[tr.Trimesh]:
+):
     """Create a list of spheres from a point cloud.
 
     Args:
@@ -118,11 +119,16 @@ def spheres_from_point_cloud(
         global_translation (np.ndarray, optional): A translation vector to apply to all spheres. Defaults to [0, 0, 0].
 
     Returns:
-        List[tr.Trimesh]: A list of tr.Trimesh objects representing the spheres.
+        List[trimesh.Trimesh]: A list of trimesh.Trimesh objects representing the spheres.
     """
+    try :
+        import trimesh
+    except ImportError :
+        raise otaf_exceptions._raise_missing_dependency("trimesh", "spheres_from_point_cloud")
+    
     spheres = []
     for i in range(pc.shape[0]):
-        sph = tr.creation.icosphere(radius=radius)
+        sph = trimesh.creation.icosphere(radius=radius)
         sph.visual.vertex_colors = color
         sph.apply_translation(pc[i] + global_translation)
         spheres.append(sph)
@@ -133,8 +139,12 @@ def create_open_cylinder_mesh(radius: float, height: float, transform: np.ndarra
     """
     Creates a trimesh cylinder open on both ends and applies a transformation.
     """
-
-    temp_cyl = tr.creation.cylinder(radius=radius, height=height, sections=sections)
+    try :
+        import trimesh
+    except ImportError :
+        raise otaf_exceptions._raise_missing_dependency("trimesh", "create_open_cylinder_mesh")
+    
+    temp_cyl = trimesh.creation.cylinder(radius=radius, height=height, sections=sections)
 
     # Identify cap center vertices (local Z is +/- height/2)
     z_limit = height / 2.0
@@ -148,7 +158,7 @@ def create_open_cylinder_mesh(radius: float, height: float, transform: np.ndarra
     face_mask = ~np.any(np.isin(temp_cyl.faces, center_v_indices), axis=1)
 
     # Process=False prevents trimesh from trying to "fix" the open ends
-    cyl = tr.Trimesh(vertices=temp_cyl.vertices, faces=temp_cyl.faces[face_mask], process=False)
+    cyl = trimesh.Trimesh(vertices=temp_cyl.vertices, faces=temp_cyl.faces[face_mask], process=False)
     cyl.remove_unreferenced_vertices()
 
     # Apply global transform
@@ -157,7 +167,16 @@ def create_open_cylinder_mesh(radius: float, height: float, transform: np.ndarra
     return cyl
 
 def create_surface_from_planar_contour(vertices, segments=None):
-    import triangle
+    try :
+        import triangle
+    except ImportError :
+        raise otaf_exceptions._raise_missing_dependency("triangle", "create_surface_from_planar_contour")
+    
+    try :
+        import trimesh
+    except ImportError :
+        raise otaf_exceptions._raise_missing_dependency("trimesh", "create_surface_from_planar_contour")
+    
     vertices = np.array(vertices)
 
     if segments is not None:
@@ -193,7 +212,7 @@ def create_surface_from_planar_contour(vertices, segments=None):
     vertices_tri_3D = (R.T @ vertices_tri_3D_proj.T).T
     triangles = np.array(triangulation["triangles"])
 
-    planar_mesh = tr.Trimesh(vertices=vertices_tri_3D, faces=triangles)
+    planar_mesh = trimesh.Trimesh(vertices=vertices_tri_3D, faces=triangles)
     return planar_mesh
 
 
@@ -226,66 +245,6 @@ def hex_to_rgba(
         b /= 255.0
 
     return (r, g, b, alpha)
-
-
-def plot_single_transform(transform, figsize=(8, 8), start_color="red", end_color="blue", azim=0):
-    """
-    Plots a single transformation matrix in a 3D space.
-
-    Args:
-    - transform (np.ndarray or similar): A 4x4 transformation matrix.
-    - figsize (tuple): Size of the figure.
-    - origin_color (str): Color of the origin point.
-    """
-    transform = np.asarray(transform)  # Ensure the transform is a NumPy array
-    ax = make_3d_axis(figsize[0], 111)
-
-    ax.scatter(0.0, 0.0, 0.0, color=start_color, s=25)
-    ax.text(0, 0, 0, "(0, 0, 0)")
-
-    pytr.plot_transform(ax)
-
-    # Plotting the origin with a distinct color
-    end = transform[:3, 3]
-    ax.scatter(*end, color=end_color, s=25)  # Adjust size with 's' parameter
-    ax.text(*end, "({}, {}, {})".format(*map(lambda x: round(x, 2), list(end))))
-
-    pytr.plot_transform(ax, A2B=transform)
-
-    # ax.view_init(vertical_axis="y", azim=azim)
-    ax.set_aspect("equal")
-    ax.grid(True, which="both")
-    plt.tight_layout()
-    plt.show()
-
-
-def plot_transform_sequence(
-    transforms, figsize=(8, 8), origin_color="blue", start_color="red", end_color="blue", azim=0
-):
-    """
-    Plots a sequence of transformation matrices, showing the transformation
-    of a point across multiple frames.
-
-    Args:
-    - transforms (list of np.ndarray or similar): A list of 4x4 transformation matrices.
-    - figsize (tuple): Size of the figure.
-    - origin_color (str): Color of the origin point in each frame.
-    """
-    ax = make_3d_axis(figsize[0], 111)
-    point = np.array([0, 0, 0, 1])  # Starting point
-
-    ax.scatter(0.0, 0.0, 0.0, color=start_color, s=25)
-    ax.text(0, 0, 0, "(0, 0, 0)")
-
-    pytr.plot_transform(ax)
-
-    for transform in transforms:
-        transform = np.asarray(transform)  # Convert to NumPy array
-        pytr.plot_transform(ax, A2B=transform)
-        point = pytr.transform(transform, point)
-        ax.scatter(*point[:3], color=origin_color, s=100)  # Adjust size with 's' parameter
-
-    plt.show()
 
 
 def plot_best_worst_results(
@@ -1225,6 +1184,12 @@ def calculate_graph_layout(data, R_part=15, r_feat=2, d_feat=1.5, margin=1.5, pa
     Creates the graph-based representation and computes all spatial coordinates.
     Includes an iterative untangling step to prevent crossing interaction edges.
     """
+    # Optional lazy import
+    try:
+        import networkx as nx
+    except ImportError:
+        raise ImportError("The 'networkx' library is required to calculate graph layouts.")
+
     parts = data.get('PARTS', {})
 
     # --- 1. MACRO LAYOUT: Position the Parts ---
@@ -1342,6 +1307,12 @@ def generate_topological_tikz(data, part_positions, feature_positions, color_pal
     and loops are uniquely colored using the provided palette.
     Interaction labels are drawn only once per pair to prevent clutter.
     """
+    # Optional lazy import
+    try:
+        import networkx as nx
+    except ImportError:
+        raise ImportError("The 'networkx' library is required to calculate graph layouts.")
+    
     parts = data.get('PARTS', {})
     loops = data.get('LOOPS', {}).get('COMPATIBILITY', {})
 

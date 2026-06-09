@@ -28,11 +28,18 @@ __all__ = [
     "CylindricalInterferenceGeometricException",
     "NoAxialOverlapException",
     "InvalidAffineTransformException",
+    "_raise_missing_dependency"
 ]
 
 import numpy as np
 
 from otaf.constants import SURFACE_DIRECTIONS, BASE_SURFACE_TYPES
+
+def _raise_missing_dependency(library_name, method_name):
+    raise ImportError(
+        f"The '{library_name}' library is required for '{method_name}'. "
+        f"Please install it with `pip install {library_name}`."
+    )
 
 class MissingSurfaceTypeKeyError(KeyError):
     def __init__(self, part_id, surf_id):

@@ -46,7 +46,7 @@ from scipy.spatial import ConvexHull
 from scipy.spatial.transform import Rotation
 
 from beartype import beartype
-from beartype.typing import Dict, List, Tuple, Union, Any, Set, Iterable
+from beartype.typing import Dict, List, Tuple, Union, Iterable
 
 
 from otaf.exceptions import InvalidAffineTransformException
@@ -294,7 +294,7 @@ def euclidean_distance(point1: np.ndarray, point2: np.ndarray) -> float:
     -----
     - The Euclidean distance is calculated as the L2 norm of the difference between the points.
     """
-    return np.linalg.norm(point1 - point2)
+    return float(np.linalg.norm(point1 - point2))
 
 @beartype
 def angle_between_vectors(
@@ -821,8 +821,8 @@ def centroid(arr: np.ndarray) -> np.ndarray:
     """
     sum_vals = np.sum(arr, axis=0)
     length = arr.shape[0]
-    centroid = sum_vals / length
-    return centroid
+    centroid_var = sum_vals / length
+    return centroid_var
 
 
 @beartype
@@ -937,6 +937,7 @@ def generate_circle_points(
     """
     start_angle_rad = np.deg2rad(start_angle)
     angles = np.linspace(start_angle_rad, start_angle_rad + 2 * np.pi, num_points, endpoint=False)
+    center = np.array(center)
     x = center[0] + radius * np.cos(angles)
     y = center[1] + radius * np.sin(angles)
     return np.array(np.column_stack((x, y)), dtype="float64").round(rnd)
@@ -983,7 +984,8 @@ def generate_circle_points_3d(
     )
 
     # Calculate the rotation from the XY-plane to the plane defined by the normal vector
-    rotation_vector = np.cross([0, 0, 1], normal)
+    normal = np.array(normal)
+    rotation_vector = np.cross(np.array([0, 0, 1]), normal)
     rotation_angle = np.arccos(np.dot([0, 0, 1], normal) / np.linalg.norm(normal))
     rotation = Rotation.from_rotvec(
         rotation_angle * rotation_vector / np.linalg.norm(rotation_vector)
@@ -1110,7 +1112,7 @@ def is_bounding_box_within(bbox1: np.ndarray, bbox2: np.ndarray) -> bool:
       minimum values of `bbox2` and that the maximum values of `bbox1` are less than or equal to
       the maximum values of `bbox2`.
     """
-    return np.all(bbox1[:, 0] >= bbox2[:, 0]) and np.all(bbox1[:, 1] <= bbox2[:, 1])
+    return bool(np.all(bbox1[:, 0] >= bbox2[:, 0]) and np.all(bbox1[:, 1] <= bbox2[:, 1]))
 
 
 @beartype
@@ -1239,7 +1241,11 @@ def rotation_matrix_from_vectors(vec1, vec2):
     >>> np.allclose(R @ vec1, vec2)
     True
     """
-    normalize = lambda v : v / np.linalg.norm(v)
+    def normalize(v):
+        norm = np.linalg.norm(v)
+        if norm < 1e-10:
+            raise ValueError("Input vector is too close to zero for normalization.")
+        return v / norm
     a = normalize(vec1)
     b = normalize(vec2)
     v = np.cross(a, b)

@@ -30,10 +30,6 @@ import numpy as np
 from beartype import beartype
 from beartype.typing import List, Union, Dict, Tuple, Optional
 
-from tqdm import trange
-from tqdm.notebook import trange as trange_notebook
-
-
 from otaf.constants import T_MATRIX_PATTERN, G_MATRIX_MSTRING_PATTERN, BASIS_DICT, D_MATRIX_PATTERN1, D_MATRIX_PATTERN2, D_MATRIX_PATTERN3, G_MATRIX_PATTERN1, G_MATRIX_PATTERN2
 from otaf.exceptions import MissingKeyError
 
@@ -309,10 +305,10 @@ def get_symbols_in_expressions(expr_list: List[sp.Expr]) -> Tuple[List[sp.Symbol
     """
 
     sort_order = ["u_", "v_", "w_", "alpha_", "beta_", "gamma_"]
-    sort_key = lambda x: (
-        int(re.search(r"(\d+)$", x.name).group(1)),
-        [x.name.startswith(prefix) for prefix in sort_order].index(True),
-    )
+    def sort_key(x):
+        id_var = int(re.search(r"(\d+)$", x.name).group(1))
+        idx_s = [x.name.startswith(prefix) for prefix in sort_order].index(True)
+        return (id_var, idx_s)
 
     free_symbols = {symb for expr in expr_list for symb in expr.free_symbols}
     try :
@@ -324,8 +320,8 @@ def get_symbols_in_expressions(expr_list: List[sp.Expr]) -> Tuple[List[sp.Symbol
             (symb for symb in free_symbols if "_g_" in str(symb)),
             key=sort_key,
         )
-    except ValueError :
-        raise ValueError("Symbols must follow naming guidelines")
+    except ValueError as exc:
+        raise ValueError("Symbols must follow naming guidelines") from exc
 
     return deviation_symbols, gap_symbols
 
@@ -414,8 +410,8 @@ def get_SE3_base(index: str) -> sp.MatrixBase:
     """
     try:
         return sp.Matrix(BASIS_DICT[index]["MATRIX"])
-    except KeyError:
-        raise KeyError(f"Index '{index}' not found in BASIS_DICT.")
+    except KeyError as exc:
+        raise KeyError(f"Index '{index}' not found in BASIS_DICT.") from exc
 
 
 def get_SE3_matrices_from_indices(
@@ -532,6 +528,8 @@ def get_tqdm_range():
     - This function checks the execution environment using `is_running_in_notebook`.
     - `trange_notebook` is used for better rendering in notebook environments.
     """
+    from tqdm import trange
+    from tqdm.notebook import trange as trange_notebook
     return trange_notebook if is_running_in_notebook() else trange
 
 
@@ -610,7 +608,7 @@ def threshold_for_percentile_positive_values_below(
 
     if arr.ndim != 1:
         raise ValueError("Input must be one-dimensional or squeezable to one-dimensional.")
-    if not (0 <= percentile <= 100):
+    if not 0 <= percentile <= 100:
         raise ValueError("Percentile must be between 0 and 100.")
     if arr.size == 0:
         raise ValueError("Input array is empty.")

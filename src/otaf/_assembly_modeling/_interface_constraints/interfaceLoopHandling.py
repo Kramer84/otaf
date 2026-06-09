@@ -5,23 +5,16 @@ __author__ = "Kramer84"
 
 
 import re
-import logging
-
-from copy import copy
-
-import numpy as np
-import sympy as sp
 
 from beartype import beartype
-from beartype.typing import Dict, List, Tuple, Union, Any, Set
+from beartype.typing import Dict, Set
+
+from otaf.common import tree, inverse_mstring, parse_matrix_string
 
 from ..compatibilityLoopHandling import CompatibilityLoopHandling
 from ..assemblyDataProcessor import AssemblyDataProcessor
 from ._interfaceLoopBuilder import InterfaceLoopBuilder
 from ._surfaceInteractionManager import SurfaceInteractionManager
-
-from otaf.common import tree, inverse_mstring, parse_matrix_string
-
 
 @beartype
 class InterfaceLoopHandling:

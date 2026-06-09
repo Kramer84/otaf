@@ -7,7 +7,7 @@ name = "otaf"
 version = "0.2"
 description = "OTAF : Open (mechanical) tolerance analysis framework - A comprehensive framework for modeling 3 dimensional overconstrained mechanical assemblies and doing statistical tolerance analysis."
 readme = "README.md"
-license = {text = "GPL-3.0-only"}
+license = {text = "MIT"}
 authors = [
     {name = "Kristof Attila S.", email = "ksimady@sigma-clermont.fr"}
 ]
@@ -18,7 +18,7 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Topic :: Scientific/Engineering",
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "License :: OSI Approved :: MIT License",
     "Natural Language :: English",
 ]
 
@@ -32,20 +32,24 @@ dependencies = [
     "openturns",
     "matplotlib",
     "tqdm",
-    "networkx",
     "joblib",
-    "torch",
-    "torcheval",
-    "trimesh",
     "beartype",
-    "pytransform3d",
     "gldpy",
-    "jupyter",
-    "ipywidgets",
-    "pyglet<2"
 ]
 
 [project.optional-dependencies]
+surrogate = [
+    "torch",
+    "torcheval",
+    "scikit-learn"
+]
+viz = [
+    "networkx",
+    "trimesh",
+    "triangle",
+    "pytransform3d",
+    "pyglet<2"
+]
 docs = [
     "sphinx",
     "sphinx-autodoc-typehints",
@@ -54,6 +58,14 @@ docs = [
     "nbsphinx",
     "notebook",
     "pandoc"
+]
+# Let users install everything with: pip install otaf[all]
+all = [
+    "torch", "torcheval", "scikit-learn",
+    "networkx", "trimesh", "triangle", "pytransform3d", 
+    "pyglet<2", "sphinx", "sphinx-autodoc-typehints", 
+    "sphinx_rtd_theme", "myst-parser", "nbsphinx", 
+    "notebook", "pandoc"
 ]
 
 [tool.setuptools.packages.find]

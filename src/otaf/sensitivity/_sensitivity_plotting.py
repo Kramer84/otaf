@@ -3,7 +3,6 @@ __author__ = "Kramer84"
 __all__ = ["plotSobolIndicesWithErr"]
 
 import numpy
-from mpl_toolkits.axes_grid1 import ImageGrid
 import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
@@ -144,6 +143,8 @@ def plotSobolIndicesWithErr(
 
         if case == 3:
             if Stot is not None:
+                from mpl_toolkits.axes_grid1 import ImageGrid
+
                 fig = plt.figure(figsize=figsize)
                 grid = ImageGrid(
                     fig,

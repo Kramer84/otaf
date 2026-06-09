@@ -5,7 +5,6 @@ __author__ = "Kramer84"
 __all__ = ["CompatibilityLoopHandling"]
 
 
-import re
 import logging
 
 import numpy as np
@@ -14,13 +13,13 @@ import sympy as sp
 from beartype import beartype
 from beartype.typing import Dict, List, Union
 
-from .assemblyDataProcessor import AssemblyDataProcessor
-from .assemblyModelingBaseObjects import DeviationMatrix, GapMatrix, TransformationMatrix, I4, J4
-from .firstOrderMatrixExpansion import FirstOrderMatrixExpansion
-
 from otaf.constants import SURF_TYPE_TO_DEVIATION_DOF, GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF, GAP_TYPE_TO_NULLIFIED_NOMINAL_COMPONENTS, CONTACT_TYPE_TO_GAP_DOF, GLOBAL_CONSTRAINTS_TO_GAP_DOF
 from otaf.common import extract_expressions_with_variables, inverse_mstring, parse_matrix_string
 from otaf.geometry import tfrt
+
+from .assemblyDataProcessor import AssemblyDataProcessor
+from .assemblyModelingBaseObjects import DeviationMatrix, GapMatrix, TransformationMatrix, I4, J4
+from .firstOrderMatrixExpansion import FirstOrderMatrixExpansion
 
 
 @beartype

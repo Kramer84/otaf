@@ -18,7 +18,7 @@ import numpy as np
 import sympy as sp
 import openturns as ot
 from beartype import beartype
-from beartype.typing import Dict, List, Tuple, Union, Callable, Optional, Sequence
+from beartype.typing import Dict, List, Union, Optional
 
 # Robust check for version compatibility
 if hasattr(ot, 'JointDistribution'):
@@ -171,7 +171,7 @@ def multiply_composed_distribution_standard_with_constants(composed_distribution
         composed_distribution (JointDistribution):
             The original composed distribution.
         constants (list[float]):
-            A list of constants to multiply each distribution’s standard deviation.
+            A list of constants to multiply each distribution's standard deviation.
 
     Returns:
         JointDistribution:
@@ -180,8 +180,8 @@ def multiply_composed_distribution_standard_with_constants(composed_distribution
     """
     composed_distribution = copy.copy(composed_distribution)
     parameters = composed_distribution.getParameter()
-    for i in range(len(constants)):
-        parameters[2 * i + 1] *= constants[i]
+    for i, constant in enumerate(constants):
+        parameters[2 * i + 1] *= constant
     composed_distribution.setParameter(parameters)
     return composed_distribution
 

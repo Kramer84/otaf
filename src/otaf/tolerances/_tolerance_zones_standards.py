@@ -9,8 +9,6 @@ __all__ = [
 ]
 
 import numpy as np
-from beartype import beartype
-from beartype.typing import Dict, List, Tuple, Union, Callable, Optional
 
 def sigma_delta_circular_feature(theta, sr, su, sv):
     """This function is used to obtain the standard deviation of the defect for a point in the circular features 

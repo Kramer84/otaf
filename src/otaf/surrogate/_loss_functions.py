@@ -16,9 +16,6 @@ import matplotlib.pyplot as plt
 import tqdm
 import openturns as ot
 
-from sklearn.model_selection import train_test_split
-from IPython.display import clear_output
-
 import torch
 import torch.nn as nn
 import torch.optim as optim

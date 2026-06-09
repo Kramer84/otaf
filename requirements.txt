@@ -6,16 +6,22 @@ openturns
 matplotlib
 tqdm
 joblib
+beartype
+gldpy
+
+# Optional dependencies for surrogate modeling
 torch
 torcheval
 scikit-learn
+
+# Optional dependencies for visualization and 3D geometry processing
+networkx
 trimesh
-beartype
 triangle
 pytransform3d
 pyglet<2
 
-# Documentation dependencies (optional)
+# Optional documentation dependencies
 sphinx
 sphinx-autodoc-typehints
 sphinx_rtd_theme

@@ -5,7 +5,6 @@ __author__ = "Kramer84"
 __all__ = ["DeviationMatrix", "GapMatrix", "TransformationMatrix", "I4", "J4"]
 
 
-import re
 import logging
 import numpy as np
 import sympy as sp

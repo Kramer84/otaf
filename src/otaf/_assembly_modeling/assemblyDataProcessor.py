@@ -11,10 +11,9 @@ import logging
 from copy import copy, deepcopy
 
 import numpy as np
-import sympy as sp
 
 from beartype import beartype
-from beartype.typing import Dict, List, Tuple, Union, Any, Set, Optional
+from beartype.typing import Dict, List, Tuple, Union, Any, Optional
 
 import otaf.exceptions as otaf_exceptions
 import otaf.constants as  otaf_constants
@@ -759,7 +758,6 @@ class AssemblyDataProcessor:
         - The generated spheres are translated globally based on the `global_translation` parameter.
         """
         sphere_clouds = []
-        mesh_planes = []
 
         for part_id, surfaces in self.system_data["PARTS"].items():
             for surf_id, surface_data in surfaces.items():
@@ -785,12 +783,11 @@ class AssemblyDataProcessor:
         Generate cylinders representing 2D lines for planar features in a 2D system.
         """
         try :
-            import trimesh as tr
+            import trimesh
         except ImportError :
-            raise ImportError('You need Trimesh installed for plotting')
+            raise otaf_exceptions._raise_missing_dependency("trimesh", "generate_functional_lines")
 
         trimesh_lines = []
-
         for part_id, surfaces in self.system_data["PARTS"].items():
             for surf_id, surface_data in surfaces.items():
                 if "POINTS" in surface_data and surface_data['TYPE'] == 'plane':
@@ -803,7 +800,7 @@ class AssemblyDataProcessor:
                         # Create a cylinder for each segment in the point set
                         for i in range(len(points) - 1):
                             segment = np.vstack([points[i], points[i+1]])
-                            cylinder = tr.creation.cylinder(radius=radius, segment=segment)
+                            cylinder = trimesh.creation.cylinder(radius=radius, segment=segment)
                             cylinder.visual.vertex_colors[:,:] = color_rgba
                             trimesh_lines.append(cylinder)
         return trimesh_lines
@@ -812,9 +809,12 @@ class AssemblyDataProcessor:
         """
         Generate open cylinders for 3D cylindrical features.
         """
-        import trimesh as tr
+        try :
+            import trimesh
+        except ImportError :
+            raise otaf_exceptions._raise_missing_dependency("trimesh", "generate_functional_cylinders")
+        
         trimesh_cylinders = []
-
         for part_id, surfaces in self.system_data["PARTS"].items():
             for surf_id, surface_data in surfaces.items():
                 if surface_data.get('TYPE') == 'cylinder':
@@ -832,7 +832,7 @@ class AssemblyDataProcessor:
                     matrix[:3, 3] = origin
 
                     # Align Trimesh Z-axis (default) to local X-axis
-                    local_transform = tr.transformations.rotation_matrix(np.pi/2, [0, 1, 0])
+                    local_transform = trimesh.transformations.rotation_matrix(np.pi/2, [0, 1, 0])
                     local_transform[:3, 3] = [offset, 0, 0]
                     final_matrix = matrix @ local_transform
 
@@ -927,10 +927,11 @@ class AssemblyDataProcessor:
             A scene object rendered in a format suitable for Jupyter Notebook.
         """
         try :
-            import trimesh as tr
+            import trimesh
         except ImportError :
-            raise ImportError('You need Trimesh installed for plotting')
+            raise otaf_exceptions._raise_missing_dependency("trimesh", "get_notebook_scene_sphere_clouds")
+        
         sphere_list = self.generate_sphere_clouds(radius=radius)
         plane_list = self.generate_functional_planes()
-        scene = tr.Scene([*sphere_list, *plane_list])
+        scene = trimesh.Scene([*sphere_list, *plane_list])
         return trimesh_scene_as_notebook_scene(scene, background_hex_color)

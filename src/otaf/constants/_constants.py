@@ -1,25 +1,6 @@
 from __future__ import annotations
 # -*- coding: utf-8 -*-
 
-"""
-_constants.py
-
-Defines constants, regex patterns, and utility dictionaries for surface and gap modeling.
-
-This file includes the following:
-- Definitions of base surface types, directions, and contact types.
-- Regular expressions for validating naming patterns of surfaces, parts, and transformations.
-- Mappings for constraints, degrees of freedom (DOFs), and nullified components.
-- Dictionaries for validating surface properties and basis transformations.
-
-Example:
-    >>> from otaf.constants import BASE_SURFACE_TYPES
-    >>> BASE_SURFACE_TYPES
-    ['plane', 'cylinder', 'cone', 'sphere']
-
-Author: Kramer84
-"""
-
 __author__ = "Kramer84"
 __all__ = [
     "BASE_SURFACE_TYPES",
@@ -48,11 +29,24 @@ __all__ = [
 ]
 
 import re
-import sympy as sp
 import numpy as np
-from beartype import beartype
-from beartype.typing import List, Union
 
+"""
+_constants.py
+
+Defines constants, regex patterns, and utility dictionaries for surface and gap modeling.
+
+This file includes the following:
+- Definitions of base surface types, directions, and contact types.
+- Regular expressions for validating naming patterns of surfaces, parts, and transformations.
+- Mappings for constraints, degrees of freedom (DOFs), and nullified components.
+- Dictionaries for validating surface properties and basis transformations.
+
+Example:
+    >>> from otaf.constants import BASE_SURFACE_TYPES
+    >>> BASE_SURFACE_TYPES
+    ['plane', 'cylinder', 'cone', 'sphere']
+"""
 
 # -----------------------------------------------------------------------------
 # Constant Types and Descriptions

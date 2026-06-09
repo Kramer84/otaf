@@ -4,22 +4,18 @@ from __future__ import annotations
 __author__ = "Kramer84"
 
 
-import re
-import logging
-
-from copy import copy
-
 import numpy as np
 import sympy as sp
 
 from beartype import beartype
-from beartype.typing import Dict, List, Tuple, Union, Any, Set
+from beartype.typing import Dict, List, Any
 
-from ..assemblyDataProcessor import AssemblyDataProcessor
-from ..firstOrderMatrixExpansion import FirstOrderMatrixExpansion
 from otaf.common import extract_expressions_with_variables, parse_matrix_string
 from otaf.constants import BASE_PART_SURF_PATTERN, G_MATRIX_MSTRING_PATTERN
 from otaf.geometry import generate_circle_points
+
+from ..assemblyDataProcessor import AssemblyDataProcessor
+from ..firstOrderMatrixExpansion import FirstOrderMatrixExpansion
 
 
 @beartype

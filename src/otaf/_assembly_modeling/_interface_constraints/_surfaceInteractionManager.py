@@ -7,22 +7,18 @@ __author__ = "Kramer84"
 import re
 import logging
 
-from copy import copy
-
 import numpy as np
 import sympy as sp
 
 from beartype import beartype
-from beartype.typing import Dict, List, Tuple, Union, Any, Set
-
-from ..assemblyDataProcessor import AssemblyDataProcessor
+from beartype.typing import Union
 
 from otaf.common import tree, merge_with_checks
 from otaf.constants import BASE_PART_SURF_PATTERN
-
-from otaf.geometry import point_dict_to_arrays, are_points_on_2d_plane, are_planes_facing, are_planes_parallel, line_plane_intersection, euclidean_distance, are_normals_aligned_and_facing, are_lines_collinear
+from otaf.geometry import point_dict_to_arrays, are_points_on_2d_plane, are_planes_facing, are_planes_parallel, line_plane_intersection, euclidean_distance, are_lines_collinear
 from otaf.exceptions import PointsNotOnPlaneError, NonConcentricCylindersException, ConflictingSurfaceDirectionsException, CylindricalInterferenceGeometricException, NoAxialOverlapException
 
+from ..assemblyDataProcessor import AssemblyDataProcessor
 
 
 @beartype
