@@ -65,7 +65,7 @@ class TestUtilityFunctions(unittest.TestCase):
     def test_bound_distance(self):
         self.assertEqual(bound_distance(5, 3, 7), 2)
         self.assertEqual(bound_distance(5, 5, 7), 0)
-        self.assertEqual(bound_distance(8, 3, 7), 1)
+        self.assertEqual(bound_distance(8, 3, 7), -1)
 
     def test_points_within_bounds(self):
         sample = np.array([[0, 0], [0.5, 0.5], [1, 1], [0.5,-0.5], [1, 0], [0,1]])

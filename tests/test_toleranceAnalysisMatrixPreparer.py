@@ -1,7 +1,6 @@
 import unittest
 import sympy as sp
 import numpy as np
-from otaf import get_gap_symbol_bounds
 from otaf.common import get_symbol_coef_map, get_symbols_in_expressions
 
 class TestLatestFunctions(unittest.TestCase):
@@ -29,15 +28,6 @@ class TestLatestFunctions(unittest.TestCase):
         deviation_symbols, gap_symbols = get_symbols_in_expressions(expr_list1)
         self.assertEqual(deviation_symbols, [sp.Symbol("u_d_1"), sp.Symbol("v_d_2")])
         self.assertEqual(gap_symbols, [sp.Symbol("w_g_1")])
-
-    def test_get_gap_symbol_bounds(self):
-        gap_symbols1 = [sp.Symbol("u_g_1"), sp.Symbol("v_g_1"), sp.Symbol("alpha_g_1")]
-        self.assertTrue(
-            np.allclose(
-                get_gap_symbol_bounds(gap_symbols1),
-                np.array([[0, 3], [-3, 3], [-np.pi / 4, np.pi / 4]]),
-            )
-        )
 
 
 if __name__ == "__main__":

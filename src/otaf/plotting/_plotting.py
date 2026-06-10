@@ -9,8 +9,6 @@ __all__ = [
     "create_open_cylinder_mesh",
     "create_surface_from_planar_contour",
     "hex_to_rgba",
-    "plot_single_transform",
-    "plot_transform_sequence",
     "plot_best_worst_results",
     "plot_best_worst_input_data",
     "print_sample_in_deviation_domain",
