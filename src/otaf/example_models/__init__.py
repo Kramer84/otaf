@@ -13,4 +13,4 @@ from . import models_3_D as models3D
 # This allows: otaf.example_models.model1
 #         and: otaf.example_models.model3
 from .models_2_D import model1, model2
-from .models_3_D import model3, model3c, model4
+from .models_3_D import model3, model4
