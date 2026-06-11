@@ -120,24 +120,27 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">product</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">fminbound</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.ticker</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ticker</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Polygon</span><span class="p">,</span> <span class="n">Rectangle</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="k">pass</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">trimesh</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">otaf.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">are_points_on_2d_plane</span><span class="p">,</span> <span class="n">rotation_matrix_from_vectors</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">._color_palettes</span><span class="w"> </span><span class="kn">import</span> <span class="n">color_palette_2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">otaf.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">point_to_segment_distance</span><span class="p">,</span> <span class="n">are_points_on_2d_plane</span><span class="p">,</span> <span class="n">rotation_matrix_from_vectors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._color_palettes</span><span class="w"> </span><span class="kn">import</span> <span class="n">color_palette_1</span><span class="p">,</span> <span class="n">color_palette_2</span><span class="p">,</span> <span class="n">color_palette_3</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">otaf.exceptions</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">otaf_exceptions</span>
 
 <div class="viewcode-block" id="plot_points_3D">
