@@ -9,8 +9,6 @@ __all__ = [
 ]
 
 import numpy as np
-from beartype import beartype
-from beartype.typing import Dict, List, Tuple, Union, Callable, Optional
 
 
 

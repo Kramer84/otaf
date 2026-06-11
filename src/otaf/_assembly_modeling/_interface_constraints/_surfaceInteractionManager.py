@@ -8,7 +8,6 @@ import re
 import logging
 
 import numpy as np
-import sympy as sp
 
 from beartype import beartype
 from beartype.typing import Union

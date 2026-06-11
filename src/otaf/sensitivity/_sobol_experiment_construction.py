@@ -48,7 +48,6 @@ class SobolIndicesExperimentWithComposedDistribution(ot.SobolIndicesExperiment):
 
     def generateWithWeights(self, **kwargs):
         """Not implemented, for coherence with openturns library"""
-        pass
 
     def getClassName(self):
         """Returns the name of the class."""

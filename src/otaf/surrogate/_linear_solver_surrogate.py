@@ -2,30 +2,22 @@
 __author__ = "Kramer84"
 __all__ = ["LPNeuralSurrogateTolereancing", "initialize_model_weights"]
 
-import os
-import logging
-import re
 import copy
 
-from time import time
 
 import numpy as np
-import sympy as sp
 import matplotlib.pyplot as plt
 import tqdm
-import openturns as ot
 
 from sklearn.model_selection import train_test_split
 
 import torch
 import torch.nn as nn
-import torch.optim as optim
 from torcheval.metrics import R2Score
 
 import tqdm
 
 import otaf
-from ._base_models import get_custom_mlp_layers, add_gaussian_noise
 
 DEVICE = (
     "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"

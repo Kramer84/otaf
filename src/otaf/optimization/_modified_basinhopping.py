@@ -11,7 +11,6 @@ from scipy.optimize import (
     basinhopping,
     LinearConstraint,
     NonlinearConstraint,
-    OptimizeResult,
     minimize,
 )
 

@@ -3,7 +3,6 @@ __author__ = "Kramer84"
 __all__ = ["SocAssemblyAnalysisOptimized"]
 
 import numpy as np
-from typing import List, Optional, Union
 import logging
 
 import otaf

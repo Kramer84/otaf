@@ -9,26 +9,19 @@ __all__ = [
 ]
 
 import os
-import logging
-import re
 import copy
 
-from time import time
 
 import numpy as np
-import sympy as sp
 import matplotlib.pyplot as plt
 import tqdm
-import openturns as ot
 
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, confusion_matrix, ConfusionMatrixDisplay
-from scipy.optimize import minimize, basinhopping, shgo
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from scipy.optimize import basinhopping
 
 import torch
 import torch.nn as nn
-import torch.optim as optim
-from torcheval.metrics import R2Score
 
 import otaf
 

@@ -31,27 +31,24 @@ __all__ = [
 import os
 import re
 import math
-from time import time
-import logging
 from itertools import product
 
 import numpy as np
 
 import sympy as sp
-from scipy.optimize import fminbound
 
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 from matplotlib.patches import Polygon, Rectangle
 
 from beartype import beartype
-from beartype.typing import Dict, List, Tuple, Union, Callable, Optional, TYPE_CHECKING
+from beartype.typing import Dict, List, Tuple, Union, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    import trimesh
+    pass
 
-from otaf.geometry import point_to_segment_distance, are_points_on_2d_plane, rotation_matrix_from_vectors
-from ._color_palettes import color_palette_1, color_palette_2, color_palette_3
+from otaf.geometry import are_points_on_2d_plane, rotation_matrix_from_vectors
+from ._color_palettes import color_palette_2
 import otaf.exceptions as otaf_exceptions
 
 @beartype

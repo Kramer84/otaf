@@ -26,10 +26,7 @@ __all__ = [
     "compute_gap_optimizations_on_sample_batch",
 ]
 
-import os
-import logging
 import numbers
-import re
 
 from time import time
 
@@ -38,12 +35,12 @@ import numpy as np
 from scipy.optimize import linprog, milp, OptimizeResult, LinearConstraint, Bounds
 
 import openturns as ot
-from functools import partial, lru_cache
+from functools import partial
 
 from joblib import Parallel, delayed, cpu_count
 
 from beartype import beartype
-from beartype.typing import Dict, List, Tuple, Union, Callable, Optional
+from beartype.typing import List, Union, Callable, Optional
 
 from otaf.common import get_tqdm_range
 

@@ -9,17 +9,10 @@ __all__ = [
     "create_constraint_checker",
 ]
 
-import itertools
-import logging
-import copy
 import re
 import numpy as np
-import sympy as sp
 from scipy.optimize import Bounds, LinearConstraint, NonlinearConstraint
-import openturns as ot
-from functools import partial, lru_cache
-from beartype import beartype
-from beartype.typing import Dict, List, Tuple, Union, Callable, Optional
+from functools import partial
 
 
 def _fun(x, feature_idx, feature_indices):

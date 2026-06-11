@@ -3,13 +3,8 @@ from __future__ import annotations
 
 __author__ = "Kramer84"
 
-import copy
-import logging
 import numpy as np
 import sympy as sp
-import openturns as ot
-from beartype import beartype
-from beartype.typing import Dict, List, Tuple, Union, Callable, Optional
 
 import otaf
 from otaf.tolerances import sigma_delta_3D_plane

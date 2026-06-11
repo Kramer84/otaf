@@ -13,7 +13,6 @@ import signal
 class TimeoutError(Exception):
     """Custom exception to be raised when a timeout occurs."""
 
-    pass
 
 
 def timeout(seconds=10, error_message="Function call timed out"):

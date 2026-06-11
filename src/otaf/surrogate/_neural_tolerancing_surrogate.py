@@ -2,22 +2,15 @@
 __author__ = "Kramer84"
 __all__ = ["DualNetworkPredictor"]
 
-import os
-import logging
-import re
 import copy
 
-from time import time
 
 import numpy as np
-import sympy as sp
 import matplotlib.pyplot as plt
 import tqdm
-import openturns as ot
 
 import torch
 import torch.nn as nn
-import torch.optim as optim
 from torcheval.metrics import R2Score
 from torch.utils.data import TensorDataset, random_split
 

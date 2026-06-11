@@ -9,13 +9,11 @@ __all__ = [
 ]
 
 import numpy as np
-import sympy as sp
 
 import openturns as ot
 
-from scipy.optimize import Bounds, LinearConstraint, NonlinearConstraint
 from beartype import beartype
-from beartype.typing import Dict, List, Tuple, Union, Callable, Optional, Sequence, Any
+from beartype.typing import List, Tuple, Union, Callable, Optional, Sequence
 
 from otaf.sampling import scale_sample_with_params, generate_and_transform_sequence
 
