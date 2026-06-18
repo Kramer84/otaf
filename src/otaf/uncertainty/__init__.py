@@ -4,6 +4,5 @@ from __future__ import annotations
 __author__ = "Kramer84"
 
 from ._reliability import *
-from ._optimized_tolerance_analysis_ai import *
 
-__all__ = _reliability.__all__ + _optimized_tolerance_analysis_ai.__all__
+__all__ = _reliability.__all__

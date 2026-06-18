@@ -1,0 +1,60 @@
+# autotest.toml - Modular Pytest Gen Configuration
+# Modify this file to customize how tests are discovered, structured, and generated.
+
+# The root directory containing your source code (relative to where you run the tool).
+source_root = "src"
+
+# Optional prefix appended to imports in generated tests. Leave empty if not needed.
+import_prefix = "otaf"
+
+# File paths to parse for global AST constants and exceptions.
+global_context = []
+
+# Global text instructions passed to the LLM for every test generation.
+# Example: "Use patch instead of Mock where possible. Follow AAA testing pattern."
+custom_instructions = ""
+
+[layout]
+# Where to place generated tests ("external" or "adjacent").
+strategy = "external"
+
+# How to structure the test folder tree ("nested" or "flat").
+structure = "nested"
+
+# The name of your root test directory.
+test_root = "tests"
+
+[discovery]
+respect_dunder_all = true
+
+# Patterns used to skip files and folders.
+# Providing a directory name (e.g., "build") will exclude that entire folder tree.
+exclude_patterns = [
+    "*__init__.py",
+    "_assembly_modeling",
+    "example_models",
+    "optimization",
+    "plotting",
+    "_hyperPlaneSampler.py",
+    "_hyperSurfaceSampler.py",
+    "sensitivity",
+    "surrogate",
+    "tests",
+    "*test_*.py"
+]
+
+# Explicit names of functions or methods you want to skip.
+exclude_functions = []
+
+[llm]
+# The LLM provider API style to use: "ollama", "mistral".
+provider = "ollama"
+
+# The specific model identifier to target.
+model = "qwen2.5-coder:7b-instruct-q8_0"
+
+# The base URL endpoint where your LLM service is running.
+host = "http://localhost:11434"
+
+# Set to true if your provider/model supports native structured JSON output.
+structured = false
