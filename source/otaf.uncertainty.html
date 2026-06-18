@@ -86,14 +86,6 @@
 <li class="toctree-l1"><a class="reference internal" href="otaf.surrogate.html">otaf.surrogate package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">otaf.uncertainty package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-otaf.uncertainty">Module contents</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#otaf.uncertainty.SocAssemblyAnalysisOptimized"><code class="docutils literal notranslate"><span class="pre">SocAssemblyAnalysisOptimized</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#otaf.uncertainty.SocAssemblyAnalysisOptimized.__repr__"><code class="docutils literal notranslate"><span class="pre">SocAssemblyAnalysisOptimized.__repr__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#otaf.uncertainty.SocAssemblyAnalysisOptimized.binary_input_array_classification"><code class="docutils literal notranslate"><span class="pre">SocAssemblyAnalysisOptimized.binary_input_array_classification()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#otaf.uncertainty.SocAssemblyAnalysisOptimized.evaluate_binary_classifier"><code class="docutils literal notranslate"><span class="pre">SocAssemblyAnalysisOptimized.evaluate_binary_classifier()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#otaf.uncertainty.SocAssemblyAnalysisOptimized.optimize_thresholds"><code class="docutils literal notranslate"><span class="pre">SocAssemblyAnalysisOptimized.optimize_thresholds()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#otaf.uncertainty.SocAssemblyAnalysisOptimized.soc_optimization_sample"><code class="docutils literal notranslate"><span class="pre">SocAssemblyAnalysisOptimized.soc_optimization_sample()</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.uncertainty.compute_adaptive_failure_probability"><code class="docutils literal notranslate"><span class="pre">compute_adaptive_failure_probability()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.uncertainty.compute_failure_probability_FORM"><code class="docutils literal notranslate"><span class="pre">compute_failure_probability_FORM()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.uncertainty.compute_failure_probability_NAIS"><code class="docutils literal notranslate"><span class="pre">compute_failure_probability_NAIS()</span></code></a></li>
@@ -151,66 +143,6 @@
 <h1>otaf.uncertainty package<a class="headerlink" href="#otaf-uncertainty-package" title="Link to this heading"></a></h1>
 <section id="module-otaf.uncertainty">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-otaf.uncertainty" title="Link to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="otaf.uncertainty.SocAssemblyAnalysisOptimized">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.uncertainty.</span></span><span class="sig-name descname"><span class="pre">SocAssemblyAnalysisOptimized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">binary_classifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraint_matrix_generator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_optimization</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_optimization</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calculate_true_positives</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/uncertainty/_optimized_tolerance_analysis_ai.html#SocAssemblyAnalysisOptimized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.uncertainty.SocAssemblyAnalysisOptimized" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Class to do do system of constraint based tolerance analysis for assembly, using a binary
-classifier to pre-treat the inputs for the optimizer, to evaluate less points.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="otaf.uncertainty.SocAssemblyAnalysisOptimized.__repr__">
-<span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/uncertainty/_optimized_tolerance_analysis_ai.html#SocAssemblyAnalysisOptimized.__repr__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.uncertainty.SocAssemblyAnalysisOptimized.__repr__" title="Link to this definition"></a></dt>
-<dd><p>Representation of the class providing information on threshold optimization and other details.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>String representation of the class.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="otaf.uncertainty.SocAssemblyAnalysisOptimized.binary_input_array_classification">
-<span class="sig-name descname"><span class="pre">binary_input_array_classification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/uncertainty/_optimized_tolerance_analysis_ai.html#SocAssemblyAnalysisOptimized.binary_input_array_classification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.uncertainty.SocAssemblyAnalysisOptimized.binary_input_array_classification" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="otaf.uncertainty.SocAssemblyAnalysisOptimized.evaluate_binary_classifier">
-<span class="sig-name descname"><span class="pre">evaluate_binary_classifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_on_gpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/uncertainty/_optimized_tolerance_analysis_ai.html#SocAssemblyAnalysisOptimized.evaluate_binary_classifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.uncertainty.SocAssemblyAnalysisOptimized.evaluate_binary_classifier" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="otaf.uncertainty.SocAssemblyAnalysisOptimized.optimize_thresholds">
-<span class="sig-name descname"><span class="pre">optimize_thresholds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[-5.0,</span> <span class="pre">5.0]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/uncertainty/_optimized_tolerance_analysis_ai.html#SocAssemblyAnalysisOptimized.optimize_thresholds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.uncertainty.SocAssemblyAnalysisOptimized.optimize_thresholds" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="otaf.uncertainty.SocAssemblyAnalysisOptimized.soc_optimization_sample">
-<span class="sig-name descname"><span class="pre">soc_optimization_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_cpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_bar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'float32'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size_ai</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/uncertainty/_optimized_tolerance_analysis_ai.html#SocAssemblyAnalysisOptimized.soc_optimization_sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.uncertainty.SocAssemblyAnalysisOptimized.soc_optimization_sample" title="Link to this definition"></a></dt>
-<dd><p>Perform optimization on samples excluding the ones classified as true negatives or true positives.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<em>np.ndarray</em>) – Input array of shape NxD.</p></li>
-<li><p><strong>bounds</strong> (<em>Union</em><em>[</em><em>list</em><em>[</em><em>list</em><em>[</em><em>float</em><em>]</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – Bounds for the variables.</p></li>
-<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Batch size for parallel processing.</p></li>
-<li><p><strong>n_cpu</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of CPUs to use for parallel processing.</p></li>
-<li><p><strong>progress_bar</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to show a progress bar.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Combined results of predictions and optimizations.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.uncertainty.compute_adaptive_failure_probability">
 <span class="sig-prename descclassname"><span class="pre">otaf.uncertainty.</span></span><span class="sig-name descname"><span class="pre">compute_adaptive_failure_probability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">constraint_matrix_generator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deviation_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon_pf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon_std</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.005</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/uncertainty/_reliability.html#compute_adaptive_failure_probability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.uncertainty.compute_adaptive_failure_probability" title="Link to this definition"></a></dt>
