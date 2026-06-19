@@ -935,7 +935,7 @@
             <span class="kn">import</span><span class="w"> </span><span class="nn">trimesh</span>
         <span class="k">except</span> <span class="ne">ImportError</span> <span class="p">:</span>
             <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">_raise_missing_dependency</span><span class="p">(</span><span class="s2">&quot;trimesh&quot;</span><span class="p">,</span> <span class="s2">&quot;generate_functional_cylinders&quot;</span><span class="p">)</span>
-        
+
         <span class="n">trimesh_cylinders</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">surfaces</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_data</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">surf_id</span><span class="p">,</span> <span class="n">surface_data</span> <span class="ow">in</span> <span class="n">surfaces</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -1058,7 +1058,7 @@
             <span class="kn">import</span><span class="w"> </span><span class="nn">trimesh</span>
         <span class="k">except</span> <span class="ne">ImportError</span> <span class="p">:</span>
             <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">_raise_missing_dependency</span><span class="p">(</span><span class="s2">&quot;trimesh&quot;</span><span class="p">,</span> <span class="s2">&quot;get_notebook_scene_sphere_clouds&quot;</span><span class="p">)</span>
-        
+
         <span class="n">sphere_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_sphere_clouds</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">)</span>
         <span class="n">plane_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_functional_planes</span><span class="p">()</span>
         <span class="n">scene</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">Scene</span><span class="p">([</span><span class="o">*</span><span class="n">sphere_list</span><span class="p">,</span> <span class="o">*</span><span class="n">plane_list</span><span class="p">])</span>
