@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import tqdm
 import openturns as ot
 
-from .model_selection import train_test_split
+from sklearn.model_selection import train_test_split
 
 import torch
 import torch.nn as nn
