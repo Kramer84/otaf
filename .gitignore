@@ -178,4 +178,5 @@ cython_debug/
 keywords.txt
 search_strings.py
 dry_run_prompts/
-_test.tmp/
+_tests.tmp/
+_tests/
