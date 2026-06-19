@@ -97,7 +97,7 @@
 
 <div class="viewcode-block" id="process_capability">
 <a class="viewcode-back" href="../../../source/otaf.capabilities.html#otaf.capabilities.process_capability">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">process_capability</span><span class="p">(</span><span class="n">USL</span><span class="p">,</span> <span class="n">LSL</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std_dev</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_capability</span><span class="p">(</span><span class="n">USL</span><span class="p">:</span><span class="nb">float</span><span class="p">,</span> <span class="n">LSL</span><span class="p">:</span><span class="nb">float</span><span class="p">,</span> <span class="n">mean</span><span class="p">:</span><span class="nb">float</span><span class="p">,</span> <span class="n">std_dev</span><span class="p">:</span><span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the process capability indices Cp, CPU, CPL, Cpk, and k.</span>
 
