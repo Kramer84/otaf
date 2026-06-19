@@ -134,41 +134,41 @@ class NeuralRegressorNetwork(nn.Module):
     @classmethod
     def from_checkpoint(cls, filepath):
         """
-        Instantiates the network directly from a saved checkpoint, 
+        Instantiates the network directly from a saved checkpoint,
         bypassing the need for training data.
         """
         checkpoint = torch.load(filepath, map_location=DEVICE, weights_only=False)
-        
+
         # Create an empty instance bypassing __init__
         instance = cls.__new__(cls)
         super(NeuralRegressorNetwork, instance).__init__()
-        
+
         input_dim = checkpoint['input_dim']
         output_dim = 1 # Assuming 1 for this specific implementation
-        
+
         instance.register_buffer("input_dim", torch.tensor(input_dim, dtype=torch.int, requires_grad=False))
         instance.register_buffer("output_dim", torch.tensor(output_dim, dtype=torch.int, requires_grad=False))
-        
+
         # Restore normalization buffers explicitly
         norm = checkpoint.get('normalization_metadata', {})
         instance.register_buffer("X_mean", norm.get('X_mean', torch.zeros(input_dim)))
         instance.register_buffer("y_mean", norm.get('y_mean', torch.zeros(output_dim)))
         instance.register_buffer("X_std", norm.get('X_std', torch.ones(input_dim)))
         instance.register_buffer("y_std", norm.get('y_std', torch.ones(output_dim)))
-        
+
         instance.register_buffer("input_normalization", torch.tensor(checkpoint.get('input_normalization', True), dtype=torch.bool))
         instance.register_buffer("output_normalization", torch.tensor(checkpoint.get('output_normalization', True), dtype=torch.bool))
-        
+
         # Rebuild architecture
         parsed_arch = [input_dim if str(a).lower() == 'dim' else int(a) for a in checkpoint['architecture']]
         instance.model = torch.nn.Sequential(
             *otaf.surrogate.get_custom_mlp_layers(parsed_arch, activation_class=torch.nn.GELU)
         )
-        
+
         # Load weights
         instance.model.load_state_dict(checkpoint['model_state_dict'])
         instance.eval()
-        
+
         return instance
 
     def evaluate_model_non_standard_space(self, x, batch_size=50000, return_on_gpu=False):

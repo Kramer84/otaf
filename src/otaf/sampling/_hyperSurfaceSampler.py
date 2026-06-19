@@ -146,4 +146,3 @@ class UniformSurfaceSampler:
                 sampled_points.append(surface_point)
 
         return np.array(sampled_points)
-

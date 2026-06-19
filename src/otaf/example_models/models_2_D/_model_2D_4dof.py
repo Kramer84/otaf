@@ -171,17 +171,17 @@ def getDistributionParams(tol=0.31, capa=1.0, X3=10.0):
     sigma_rotation = (2*rotation_max) / (6*capa)
     RandDeviationVect = otaf.distribution.get_composed_normal_defect_distribution(
         defect_names=deviation_symbols,
-        sigma_dict = {"alpha":sigma_rotation, 
+        sigma_dict = {"alpha":sigma_rotation,
                     "beta":sigma_rotation,
-                    "gamma":sigma_rotation, 
-                    "u":sigma_translation, 
-                    "v":sigma_translation, 
+                    "gamma":sigma_rotation,
+                    "u":sigma_translation,
+                    "v":sigma_translation,
                     "w":sigma_translation,},
-        mu_dict= {"alpha":0.0, 
+        mu_dict= {"alpha":0.0,
                 "beta":0.0,
-                "gamma":0.0, 
-                "u":0.0, 
-                "v":0.0, 
+                "gamma":0.0,
+                "u":0.0,
+                "v":0.0,
                 "w":0.0})
     max_std_vect = np.array([sigma_translation, sigma_rotation, sigma_translation, sigma_rotation])
     return RandDeviationVect, deviation_symbols, max_std_vect, np.array([0.0]*4)

@@ -257,7 +257,7 @@ def getDistributionParams(tol=0.16, capa=1.0, hM=10, hF=10.2):
 
     RandDeviationVect = otaf.distribution.get_composed_normal_defect_distribution(
         defect_names=deviation_symbols,
-        sigma_dict = {"gamma_d_2":sigma_e_theta_f, 
+        sigma_dict = {"gamma_d_2":sigma_e_theta_f,
                     "gamma_d_3":sigma_e_theta_m,
                     "gamma_d_4":sigma_e_theta_f,
                     "gamma_d_5":sigma_e_theta_m,

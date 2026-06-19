@@ -317,12 +317,12 @@ def get_mp_to_xfull_transformation_matrix(L=[100, 40, 30, 30, 20, 20, 120, 50, 4
     Returns a 30x30 matrix T such that: X_full = T @ X_mp
     L must be a list or array of lengths l1 through l11, mapped to indices 0 to 10.
     """
-        
+
     T = np.zeros((30, 30))
-    
+
     # Precompute common denominator for planes
     D = L[0] * L[10] - L[1] * L[9]  # l1*l11 - l2*l10
-    
+
     # ---------------------------------------------------------
     # Planes 1a and 2a
     # ---------------------------------------------------------
@@ -453,7 +453,7 @@ def getDistributionParams(tol=None, capa=None, param_set=1):
         mu_list=mu_list,
         sigma_list=sigma_list
     )
-    
+
     return RandDeviationVect, x_mp_labels, sigma_arr, mu_arr
 
 dim=30
@@ -486,7 +486,7 @@ def evalCredalSetConstraints(x_std, tol=None, capa=None, param_set=1):
         mu_d_ext, sigma_d_ext = 20.0, 0.02
         mu_d_int, sigma_d_int = 19.8, 0.02
         mu_trans, sigma_trans = 0.0, 0.01
-        
+
     target0 = sigma_trans
     target1 = sigma_delta_circular_feature(0, sigma_d_ext/2, sigma_trans, sigma_trans)
 
@@ -502,7 +502,7 @@ def evalCredalSetConstraints(x_std, tol=None, capa=None, param_set=1):
         return (np.max(devs) - target1) / target1
 
     # --- Constraints Evaluation ---
-    
+
     # Planar and general translation features (using np.max for array slices)
     constraint1 = (np.max(x_std[0:3]) - target0) / target0    # Part 1 planar a1
     constraint2 = (np.max(x_std[3:6]) - target0) / target0    # Part 2 planar a2
@@ -517,12 +517,12 @@ def evalCredalSetConstraints(x_std, tol=None, capa=None, param_set=1):
     constraint6 = eval_circ(25, 18, 19, 20, 21)   # Part 2 pin c (2c2)
 
     return np.array([
-        constraint1, 
-        constraint2, 
-        constraint3, 
-        constraint4, 
-        constraint5, 
-        constraint6, 
+        constraint1,
+        constraint2,
+        constraint3,
+        constraint4,
+        constraint5,
+        constraint6,
         constraint7,
         constraint8
     ])

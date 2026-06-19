@@ -120,7 +120,7 @@ def spheres_from_point_cloud(
         import trimesh
     except ImportError :
         raise otaf_exceptions._raise_missing_dependency("trimesh", "spheres_from_point_cloud")
-    
+
     spheres = []
     for i in range(pc.shape[0]):
         sph = trimesh.creation.icosphere(radius=radius)
@@ -138,7 +138,7 @@ def create_open_cylinder_mesh(radius: float, height: float, transform: np.ndarra
         import trimesh
     except ImportError :
         raise otaf_exceptions._raise_missing_dependency("trimesh", "create_open_cylinder_mesh")
-    
+
     temp_cyl = trimesh.creation.cylinder(radius=radius, height=height, sections=sections)
 
     # Identify cap center vertices (local Z is +/- height/2)
@@ -166,12 +166,12 @@ def create_surface_from_planar_contour(vertices, segments=None):
         import triangle
     except ImportError :
         raise otaf_exceptions._raise_missing_dependency("triangle", "create_surface_from_planar_contour")
-    
+
     try :
         import trimesh
     except ImportError :
         raise otaf_exceptions._raise_missing_dependency("trimesh", "create_surface_from_planar_contour")
-    
+
     vertices = np.array(vertices)
 
     if segments is not None:
@@ -1307,7 +1307,7 @@ def generate_topological_tikz(data, part_positions, feature_positions, color_pal
         import networkx as nx
     except ImportError:
         raise ImportError("The 'networkx' library is required to calculate graph layouts.")
-    
+
     parts = data.get('PARTS', {})
     loops = data.get('LOOPS', {}).get('COMPATIBILITY', {})
 

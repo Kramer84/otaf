@@ -11,13 +11,13 @@ __all__ = [
 import numpy as np
 
 def sigma_delta_circular_feature(theta, sr, su, sv):
-    """This function is used to obtain the standard deviation of the defect for a point in the circular features 
+    """This function is used to obtain the standard deviation of the defect for a point in the circular features
     This can also be used as a basis for a constraint function (to always have the same max standard deviation over the circular feature)
     """
     return np.sqrt(sr**2 + np.cos(theta)**2 * su**2 + np.sin(theta)**2 * sv**2)
 
 def sigma_delta_3D_plane(x,y, sw, sa, sb):
-    """This function is used to obtain the standard deviation of the defect for a point on the plane feature 
+    """This function is used to obtain the standard deviation of the defect for a point on the plane feature
     This can also be used as a basis for a constraint function
     """
     return np.sqrt(sw**2 + y**2 * sa**2 + x**2 * sb**2)

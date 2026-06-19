@@ -93,7 +93,7 @@ def get_composed_normal_defect_distribution(
 
     elif mu_dict is not None or sigma_dict is not None:
         logging.info("Using mu or sigma dictionary of parameters.")
-        
+
         # Handle cases where one dict is passed but not the other
         if mu_dict is None:
             logging.warning("No mu_dict passed, initializing all unspecified means to 0.0")
@@ -104,7 +104,7 @@ def get_composed_normal_defect_distribution(
 
         mu_keys = list(mu_dict.keys())
         sigma_keys = list(sigma_dict.keys())
-        
+
         for i, defect_name in enumerate(defect_names):
             # Reset defaults for EACH iteration to prevent previous values carrying over
             mu, sigma = 0.0, 1.0
@@ -131,10 +131,10 @@ def get_composed_normal_defect_distribution(
             dist = ot.Normal(mu, sigma)
             dist.setDescription([defect_str])
             distributions.append(dist)
-            
+
         composed_distribution = JointDistribution(distributions)
         logging.debug(f"Composed distribution created: {composed_distribution}")
-        
+
     return composed_distribution
 
 

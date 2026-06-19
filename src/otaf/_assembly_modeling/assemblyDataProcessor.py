@@ -813,7 +813,7 @@ class AssemblyDataProcessor:
             import trimesh
         except ImportError :
             raise otaf_exceptions._raise_missing_dependency("trimesh", "generate_functional_cylinders")
-        
+
         trimesh_cylinders = []
         for part_id, surfaces in self.system_data["PARTS"].items():
             for surf_id, surface_data in surfaces.items():
@@ -930,7 +930,7 @@ class AssemblyDataProcessor:
             import trimesh
         except ImportError :
             raise otaf_exceptions._raise_missing_dependency("trimesh", "get_notebook_scene_sphere_clouds")
-        
+
         sphere_list = self.generate_sphere_clouds(radius=radius)
         plane_list = self.generate_functional_planes()
         scene = trimesh.Scene([*sphere_list, *plane_list])

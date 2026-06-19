@@ -475,15 +475,15 @@ def print_interface_constraints(expressions):
 
 def getSystemOfConstraintsAssemblyModel(
         L=[50, 50, 30, 30],
-        CIRCLE_RESOLUTION=64, 
+        CIRCLE_RESOLUTION=64,
         strategy=LinearizationStrategy.CIRCUMSCRIBED):
     assert len(L) == 4, "Length list L must contain exactly 4 elements corresponding to l0, l1, l2, l3."
     l0, l1, l2, l3 = sp.symbols('l0 l1 l2 l3')
     length_subs = {l0: L[0], l1: L[1], l2: L[2], l3: L[3]}
     loop_exprs, d_vars, c_vars = get_kinematic_loop_expressions()
     interf_exprs = get_interface_constraint_expressions(
-        num_points=CIRCLE_RESOLUTION, 
-        strategy=strategy, 
+        num_points=CIRCLE_RESOLUTION,
+        strategy=strategy,
         z_eval_points=[-L[2]/2, L[2]/2])
 
     otaf_mapping = create_dynamic_mapping(defect_vars, clearance_vars)
@@ -493,15 +493,15 @@ def getSystemOfConstraintsAssemblyModel(
     mapped_defects = [otaf_mapping[var] for var in defect_vars if var in otaf_mapping]
 
 
-    comp_mats = extract_linear_matrices(mapped_loop_exprs, 
-                                        mapped_clearances, 
-                                        mapped_defects, 
-                                        [l0,l1,l2,l3], 
+    comp_mats = extract_linear_matrices(mapped_loop_exprs,
+                                        mapped_clearances,
+                                        mapped_defects,
+                                        [l0,l1,l2,l3],
                                         length_subs)
-    interf_mats = extract_linear_matrices(mapped_interf_exprs, 
+    interf_mats = extract_linear_matrices(mapped_interf_exprs,
                                          mapped_clearances,
-                                        mapped_defects, 
-                                        [l0,l1,l2,l3], 
+                                        mapped_defects,
+                                        [l0,l1,l2,l3],
                                         length_subs)
     # 1. Extract matrices as numpy arrays (ensure float dtype)
     # The coefficient matrices must remain 2D, but the constant vectors MUST be 1D
@@ -516,12 +516,12 @@ def getSystemOfConstraintsAssemblyModel(
     # 2. Repack them in the exact order SOCAM expects: (Defect, Gap, Constant)
     # We multiply the inequality matrices by -1 to convert from (<= 0) to (>= 0)
     matrices_for_socam = [
-        A_eq_def, 
-        A_eq_gap, 
+        A_eq_def,
+        A_eq_gap,
         K_eq,
-        -A_ub_def,  
-        -A_ub_gap,  
-        -K_ub       
+        -A_ub_def,
+        -A_ub_gap,
+        -K_ub
     ]
 
     SOCAM =otaf.SystemOfConstraintsAssemblyModel(matrices=matrices_for_socam)
@@ -532,7 +532,7 @@ def getSystemOfConstraintsAssemblyModel(
 
 
 def getDistributionParams(
-        tol=0.21, capa=1.0, hPlate=30.0, 
+        tol=0.21, capa=1.0, hPlate=30.0,
         EH=50.0, LB=25.0, Dext=20.0, Dint=19.8):
     # Defining the uncertainties on the position and orientation of the holes
     sigma_e_pos = tol / (6 * capa)
@@ -553,7 +553,7 @@ def getDistributionParams(
     RandDeviationVect = otaf.distribution.get_composed_normal_defect_distribution(
     mapped_defects, mu_list = mu_vect.tolist(), sigma_list = std_vect.tolist())
 
-    return RandDeviationVect, mapped_defects, std_vect, mu_vect 
+    return RandDeviationVect, mapped_defects, std_vect, mu_vect
 
 dim=50
 sample_multiplier = np.eye(dim)
@@ -570,44 +570,44 @@ def evalCredalSetConstraints(x_std, tol=0.21, capa=1.0, hPlate=30.0):
     cons0 = lambda x: (sigma_delta_3D_plane(50,50, x[2], x[0], x[1]) - target)/target
     cons1 = lambda x: (sigma_delta_3D_plane(50,50, x[5], x[3], x[4]) - target)/target
 
-    # We can do stuff like this cause there is no correlation here. 
+    # We can do stuff like this cause there is no correlation here.
     cons2 = lambda x: (np.maximum( #Part 1 hole d
-        sigma_delta_cylindrical_feature(hPlate/2, 0,       x[38], x[8], x[6], x[9], x[7]), 
+        sigma_delta_cylindrical_feature(hPlate/2, 0,       x[38], x[8], x[6], x[9], x[7]),
         sigma_delta_cylindrical_feature(hPlate/2, np.pi/2, x[38], x[8], x[6], x[9], x[7])
     ) - target)/target
 
     cons3 = lambda x: (np.maximum( #Part 1 hole e
-        sigma_delta_cylindrical_feature(hPlate/2, 0,       x[39], x[16], x[14], x[17], x[15]), 
+        sigma_delta_cylindrical_feature(hPlate/2, 0,       x[39], x[16], x[14], x[17], x[15]),
         sigma_delta_cylindrical_feature(hPlate/2, np.pi/2, x[39], x[16], x[14], x[17], x[15])
     ) - target)/target
 
     cons4 = lambda x: (np.maximum( #Part 1 hole f
-        sigma_delta_cylindrical_feature(hPlate/2, 0,       x[40], x[24], x[22], x[25], x[23]), 
+        sigma_delta_cylindrical_feature(hPlate/2, 0,       x[40], x[24], x[22], x[25], x[23]),
         sigma_delta_cylindrical_feature(hPlate/2, np.pi/2, x[40], x[24], x[22], x[25], x[23])
     ) - target)/target
 
     cons5 = lambda x: (np.maximum( #Part 1 hole g
-        sigma_delta_cylindrical_feature(hPlate/2, 0,       x[41], x[32], x[30], x[33], x[31]), 
+        sigma_delta_cylindrical_feature(hPlate/2, 0,       x[41], x[32], x[30], x[33], x[31]),
         sigma_delta_cylindrical_feature(hPlate/2, np.pi/2, x[41], x[32], x[30], x[33], x[31])
     ) - target)/target
 
     cons6 = lambda x: (np.maximum( #Part 2 hole d
-        sigma_delta_cylindrical_feature(hPlate/2, 0,       x[42], x[12], x[10], x[13], x[11]), 
+        sigma_delta_cylindrical_feature(hPlate/2, 0,       x[42], x[12], x[10], x[13], x[11]),
         sigma_delta_cylindrical_feature(hPlate/2, np.pi/2, x[42], x[12], x[10], x[13], x[11])
     ) - target)/target
 
     cons7 = lambda x: (np.maximum( #Part 2 hole e
-        sigma_delta_cylindrical_feature(hPlate/2, 0,       x[43], x[20], x[18], x[21], x[19]), 
+        sigma_delta_cylindrical_feature(hPlate/2, 0,       x[43], x[20], x[18], x[21], x[19]),
         sigma_delta_cylindrical_feature(hPlate/2, np.pi/2, x[43], x[20], x[18], x[21], x[19])
     ) - target)/target
 
     cons8 = lambda x: (np.maximum( #Part 2 hole f
-        sigma_delta_cylindrical_feature(hPlate/2, 0,       x[44], x[28], x[26], x[29], x[27]), 
+        sigma_delta_cylindrical_feature(hPlate/2, 0,       x[44], x[28], x[26], x[29], x[27]),
         sigma_delta_cylindrical_feature(hPlate/2, np.pi/2, x[44], x[28], x[26], x[29], x[27])
     ) - target)/target
 
     cons9 = lambda x: (np.maximum( #Part 2 hole g
-        sigma_delta_cylindrical_feature(hPlate/2, 0,       x[45], x[36], x[34], x[37], x[35]), 
+        sigma_delta_cylindrical_feature(hPlate/2, 0,       x[45], x[36], x[34], x[37], x[35]),
         sigma_delta_cylindrical_feature(hPlate/2, np.pi/2, x[45], x[36], x[34], x[37], x[35])
     ) - target)/target
     # These constraints are removed below since these are simple constants
@@ -616,7 +616,7 @@ def evalCredalSetConstraints(x_std, tol=0.21, capa=1.0, hPlate=30.0):
     cons12 = lambda x: (x[48] - target)/target
     cons13 = lambda x: (x[49] - target)/target
 
-    return np.array([cons0(x_std), cons1(x_std), cons2(x_std), cons3(x_std), cons4(x_std), cons5(x_std), 
+    return np.array([cons0(x_std), cons1(x_std), cons2(x_std), cons3(x_std), cons4(x_std), cons5(x_std),
             cons6(x_std), cons7(x_std), cons8(x_std), cons9(x_std),
             cons10(x_std), cons11(x_std), cons12(x_std), cons13(x_std)])
 
