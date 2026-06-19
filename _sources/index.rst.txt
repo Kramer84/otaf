@@ -4,15 +4,8 @@ Welcome to OTAF's Documentation!
 .. include:: source/README.rst
 
 .. toctree::
-   :maxdepth: 1
-   :caption: Jupyter Notebooks
-
-   Analytical 2D Reference Assembly <notebooks/Analytical_2D_Reference_Assembly.ipynb>
-
-
-.. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: API Reference:
 
    source/modules
    source/otaf.capabilities
@@ -27,5 +20,5 @@ Welcome to OTAF's Documentation!
    source/otaf.sampling
    source/otaf.sensitivity
    source/otaf.surrogate
-   source/otaf.uncertainty
    source/otaf.tolerances
+   source/otaf.uncertainty

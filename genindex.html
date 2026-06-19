@@ -40,11 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Jupyter Notebooks</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/Analytical_2D_Reference_Assembly.html">Analytical 2D Reference Assembly</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="source/modules.html">otaf</a></li>
 <li class="toctree-l1"><a class="reference internal" href="source/otaf.capabilities.html">otaf.capabilities package</a></li>
@@ -178,6 +174,8 @@
 </li>
       <li><a href="source/otaf.optimization.html#otaf.optimization.AcceptTest">AcceptTest (class in otaf.optimization)</a>
 </li>
+      <li><a href="source/otaf.surrogate.html#otaf.surrogate.add_gaussian_noise">add_gaussian_noise() (in module otaf.surrogate)</a>
+</li>
       <li><a href="source/otaf.html#otaf.AssemblyDataProcessor.add_surface_points">add_surface_points() (otaf.AssemblyDataProcessor method)</a>
 </li>
       <li><a href="source/otaf.html#otaf.CompatibilityLoopHandling.ADP">ADP (otaf.CompatibilityLoopHandling attribute)</a>
@@ -186,10 +184,10 @@
 </li>
       <li><a href="source/otaf.geometry.html#otaf.geometry.angle_between_planes">angle_between_planes() (in module otaf.geometry)</a>
 </li>
-      <li><a href="source/otaf.geometry.html#otaf.geometry.angle_between_vectors">angle_between_vectors() (in module otaf.geometry)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="source/otaf.geometry.html#otaf.geometry.angle_between_vectors">angle_between_vectors() (in module otaf.geometry)</a>
+</li>
       <li><a href="source/otaf.html#id1">apply_FO_matrix_expansion_to_matrix_loop_list() (otaf.CompatibilityLoopHandling method)</a>, <a href="source/otaf.html#otaf.CompatibilityLoopHandling.apply_FO_matrix_expansion_to_matrix_loop_list">[1]</a>
 </li>
       <li><a href="source/otaf.geometry.html#otaf.geometry.are_lines_collinear">are_lines_collinear() (in module otaf.geometry)</a>
@@ -338,6 +336,8 @@
 </li>
       <li><a href="source/otaf.geometry.html#otaf.geometry.euclidean_distance">euclidean_distance() (in module otaf.geometry)</a>
 </li>
+      <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.evaluate_model_non_standard_space">evaluate_model_non_standard_space() (otaf.surrogate.NeuralRegressorNetwork method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/otaf.common.html#otaf.common.extract_expressions_with_variables">extract_expressions_with_variables() (in module otaf.common)</a>
@@ -356,13 +356,17 @@
 </li>
       <li><a href="source/otaf.html#otaf.InterfaceLoopHandling.filter_gap_matrices">filter_gap_matrices() (otaf.InterfaceLoopHandling method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/otaf.optimization.html#otaf.optimization.OptimizationTracker.filter_points">filter_points() (otaf.optimization.OptimizationTracker method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/otaf.sampling.html#otaf.sampling.find_best_worst_quantile">find_best_worst_quantile() (in module otaf.sampling)</a>
 </li>
       <li><a href="source/otaf.html#otaf.FirstOrderMatrixExpansion">FirstOrderMatrixExpansion (class in otaf)</a>
+</li>
+      <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.forward">forward() (otaf.surrogate.NeuralRegressorNetwork method)</a>
+</li>
+      <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.from_checkpoint">from_checkpoint() (otaf.surrogate.NeuralRegressorNetwork class method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -428,11 +432,17 @@
 </li>
       <li><a href="source/otaf.exceptions.html#otaf.exceptions.GeometricConditionError">GeometricConditionError</a>
 </li>
+      <li><a href="source/otaf.surrogate.html#otaf.surrogate.get_base_relu_mlp_model">get_base_relu_mlp_model() (in module otaf.surrogate)</a>
+</li>
+      <li><a href="source/otaf.surrogate.html#otaf.surrogate.get_base_tanh_mlp_model">get_base_tanh_mlp_model() (in module otaf.surrogate)</a>
+</li>
       <li><a href="source/otaf.html#otaf.TransformationMatrix.get_change_of_basis_matrix">get_change_of_basis_matrix() (otaf.TransformationMatrix method)</a>
 </li>
       <li><a href="source/otaf.html#id9">get_compatibility_expression_from_FO_matrices() (otaf.CompatibilityLoopHandling method)</a>, <a href="source/otaf.html#otaf.CompatibilityLoopHandling.get_compatibility_expression_from_FO_matrices">[1]</a>
 </li>
       <li><a href="source/otaf.distribution.html#otaf.distribution.get_composed_normal_defect_distribution">get_composed_normal_defect_distribution() (in module otaf.distribution)</a>
+</li>
+      <li><a href="source/otaf.surrogate.html#otaf.surrogate.get_custom_mlp_layers">get_custom_mlp_layers() (in module otaf.surrogate)</a>
 </li>
       <li><a href="source/otaf.optimization.html#otaf.optimization.Callback.get_data">get_data() (otaf.optimization.Callback method)</a>
 
@@ -488,6 +498,8 @@
       </ul></li>
       <li><a href="source/otaf.distribution.html#otaf.distribution.get_means_standards_composed_distribution">get_means_standards_composed_distribution() (in module otaf.distribution)</a>
 </li>
+      <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.get_model_as_openturns_function">get_model_as_openturns_function() (otaf.surrogate.NeuralRegressorNetwork method)</a>
+</li>
       <li><a href="source/otaf.html#otaf.AssemblyDataProcessor.get_notebook_scene_sphere_clouds">get_notebook_scene_sphere_clouds() (otaf.AssemblyDataProcessor method)</a>
 </li>
       <li><a href="source/otaf.distribution.html#otaf.distribution.get_prob_below_threshold">get_prob_below_threshold() (in module otaf.distribution)</a>
@@ -503,6 +515,10 @@
       <li><a href="source/otaf.common.html#otaf.common.get_symbols_in_expressions">get_symbols_in_expressions() (in module otaf.common)</a>
 </li>
       <li><a href="source/otaf.common.html#otaf.common.get_tqdm_range">get_tqdm_range() (in module otaf.common)</a>
+</li>
+      <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.get_train_test_data">get_train_test_data() (otaf.surrogate.NeuralRegressorNetwork method)</a>
+</li>
+      <li><a href="source/otaf.surrogate.html#otaf.surrogate.get_variable_size_sequential_linear_model">get_variable_size_sequential_linear_model() (in module otaf.surrogate)</a>
 </li>
       <li><a href="source/otaf.html#otaf.DeviationMatrix.get_variables">get_variables() (otaf.DeviationMatrix method)</a>
 
@@ -522,6 +538,8 @@
 </li>
       <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getVisibility">getVisibility() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
 </li>
+      <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.gradient">gradient() (otaf.surrogate.NeuralRegressorNetwork method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -536,6 +554,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.hasVisibleName">hasVisibleName() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
 </li>
+      <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.hessian">hessian() (otaf.surrogate.NeuralRegressorNetwork method)</a>
+</li>
       <li><a href="source/otaf.plotting.html#otaf.plotting.hex_to_rgba">hex_to_rgba() (in module otaf.plotting)</a>
 </li>
   </ul></td>
@@ -545,6 +565,8 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/otaf.html#otaf.I4">I4 (class in otaf)</a>
+</li>
+      <li><a href="source/otaf.surrogate.html#otaf.surrogate.initialize_model_weights">initialize_model_weights() (in module otaf.surrogate)</a>
 </li>
       <li><a href="source/otaf.html#otaf.InterfaceLoopHandling">InterfaceLoopHandling (class in otaf)</a>
 </li>
@@ -556,10 +578,10 @@
 </li>
       <li><a href="source/otaf.exceptions.html#otaf.exceptions.InvalidGlobalConstraintError">InvalidGlobalConstraintError</a>
 </li>
-      <li><a href="source/otaf.exceptions.html#otaf.exceptions.InvalidInteractionFormatError">InvalidInteractionFormatError</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="source/otaf.exceptions.html#otaf.exceptions.InvalidInteractionFormatError">InvalidInteractionFormatError</a>
+</li>
       <li><a href="source/otaf.exceptions.html#otaf.exceptions.InvalidPartLabelError">InvalidPartLabelError</a>
 </li>
       <li><a href="source/otaf.exceptions.html#otaf.exceptions.InvalidSurfaceDirectionError">InvalidSurfaceDirectionError</a>
@@ -614,6 +636,8 @@
 </li>
       <li><a href="source/otaf.geometry.html#otaf.geometry.line_plane_intersection">line_plane_intersection() (in module otaf.geometry)</a>
 </li>
+      <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.load_model">load_model() (otaf.surrogate.NeuralRegressorNetwork method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -662,6 +686,8 @@
 </li>
         <li><a href="source/otaf.sensitivity.html#module-otaf.sensitivity">otaf.sensitivity</a>
 </li>
+        <li><a href="source/otaf.surrogate.html#module-otaf.surrogate">otaf.surrogate</a>
+</li>
         <li><a href="source/otaf.uncertainty.html#module-otaf.uncertainty">otaf.uncertainty</a>
 </li>
       </ul></li>
@@ -689,14 +715,16 @@
 </li>
       <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.nD">nD (otaf.SystemOfConstraintsAssemblyModel attribute)</a>
 </li>
+      <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork">NeuralRegressorNetwork (class in otaf.surrogate)</a>
+</li>
       <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.nG">nG (otaf.SystemOfConstraintsAssemblyModel attribute)</a>
 </li>
       <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.nI">nI (otaf.SystemOfConstraintsAssemblyModel attribute)</a>
 </li>
-      <li><a href="source/otaf.exceptions.html#otaf.exceptions.NoAxialOverlapException">NoAxialOverlapException</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="source/otaf.exceptions.html#otaf.exceptions.NoAxialOverlapException">NoAxialOverlapException</a>
+</li>
       <li><a href="source/otaf.exceptions.html#otaf.exceptions.NonConcentricCylindersException">NonConcentricCylindersException</a>
 </li>
       <li><a href="source/otaf.exceptions.html#otaf.exceptions.NonUniqueCoordinatesError">NonUniqueCoordinatesError</a>
@@ -756,8 +784,6 @@
         <li><a href="source/otaf.example_models.html#module-otaf.example_models">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     otaf.exceptions
 
@@ -765,6 +791,8 @@
         <li><a href="source/otaf.exceptions.html#module-otaf.exceptions">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     otaf.geometry
 
@@ -801,6 +829,13 @@
 </li>
       </ul></li>
       <li>
+    otaf.surrogate
+
+      <ul>
+        <li><a href="source/otaf.surrogate.html#module-otaf.surrogate">module</a>
+</li>
+      </ul></li>
+      <li>
     otaf.uncertainty
 
       <ul>
@@ -818,6 +853,8 @@
       <li><a href="source/otaf.common.html#otaf.common.parse_matrix_string">parse_matrix_string() (in module otaf.common)</a>
 </li>
       <li><a href="source/otaf.exceptions.html#otaf.exceptions.PartNotFoundError">PartNotFoundError</a>
+</li>
+      <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.pf_monte_carlo_bruteforce">pf_monte_carlo_bruteforce() (otaf.surrogate.NeuralRegressorNetwork method)</a>
 </li>
       <li><a href="source/otaf.geometry.html#otaf.geometry.plane_parameters">plane_parameters() (in module otaf.geometry)</a>
 </li>
@@ -841,6 +878,8 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.plot_results">plot_results() (otaf.surrogate.NeuralRegressorNetwork method)</a>
+</li>
       <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.plotSobolIndicesWithErr">plotSobolIndicesWithErr() (in module otaf.sensitivity)</a>
 </li>
       <li><a href="source/otaf.geometry.html#otaf.geometry.point_dict_to_arrays">point_dict_to_arrays() (in module otaf.geometry)</a>
@@ -891,6 +930,8 @@
 </li>
       <li><a href="source/otaf.sampling.html#otaf.sampling.UniformSurfaceSampler.sample_surface">sample_surface() (otaf.sampling.UniformSurfaceSampler method)</a>
 </li>
+      <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.save_model">save_model() (otaf.surrogate.NeuralRegressorNetwork method)</a>
+</li>
       <li><a href="source/otaf.plotting.html#otaf.plotting.save_plot">save_plot() (in module otaf.plotting)</a>
 </li>
       <li><a href="source/otaf.sampling.html#otaf.sampling.scale_sample_with_params">scale_sample_with_params() (in module otaf.sampling)</a>
@@ -903,10 +944,10 @@
 </li>
       <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setName">setName() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
 </li>
-      <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setShadowedId">setShadowedId() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setShadowedId">setShadowedId() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
       <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setSize">setSize() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
 </li>
       <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution">SobolIndicesExperimentWithComposedDistribution (class in otaf.sensitivity)</a>
@@ -945,11 +986,15 @@
 </li>
       <li><a href="source/otaf.exceptions.html#otaf.exceptions.timeout">timeout() (in module otaf.exceptions)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/otaf.exceptions.html#otaf.exceptions.TimeoutError">TimeoutError</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/otaf.optimization.html#otaf.optimization.OptimizationTracker.to_dataframe">to_dataframe() (otaf.optimization.OptimizationTracker method)</a>
+</li>
+      <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.train_model">train_model() (otaf.surrogate.NeuralRegressorNetwork method)</a>
+</li>
+      <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.training_stopping_criterion">training_stopping_criterion() (otaf.surrogate.NeuralRegressorNetwork method)</a>
 </li>
       <li><a href="source/otaf.geometry.html#otaf.geometry.transform_point">transform_point() (in module otaf.geometry)</a>
 </li>
