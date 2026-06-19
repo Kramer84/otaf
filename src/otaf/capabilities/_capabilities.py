@@ -6,7 +6,7 @@ __all__ = [
     "process_capability",
 ]
 
-def process_capability(USL, LSL, mean, std_dev):
+def process_capability(USL:float, LSL:float, mean:float, std_dev:float) -> dict[str, float]:
     """
     Calculates the process capability indices Cp, CPU, CPL, Cpk, and k.
 

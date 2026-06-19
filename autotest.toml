@@ -22,7 +22,7 @@ strategy = "external"
 structure = "nested"
 
 # The name of your root test directory.
-test_root = "tests"
+test_root = "_tests"
 
 [discovery]
 respect_dunder_all = true
@@ -44,17 +44,20 @@ exclude_patterns = [
 ]
 
 # Explicit names of functions or methods you want to skip.
-exclude_functions = []
+exclude_functions = [
+    "is_running_in_notebook",
+    "inverse_mstring",
+    ]
 
 [llm]
 # The LLM provider API style to use: "ollama", "mistral".
-provider = "ollama"
+provider = "mistral" #"ollama"
 
 # The specific model identifier to target.
-model = "qwen2.5-coder:7b-instruct-q8_0"
+model = "codestral-latest" #"qwen2.5-coder:7b-instruct"
 
 # The base URL endpoint where your LLM service is running.
-host = "http://localhost:11434"
+host = "https://api.mistral.ai" #"http://localhost:11434"
 
 # Set to true if your provider/model supports native structured JSON output.
-structured = false
+structured = true
