@@ -467,8 +467,19 @@ class AssemblyDataProcessor:
             # The contour of the surface has been defined in the global frame
             NP = surf_data["CONTOUR_GLOBAL"].shape[0]
             points = surf_data["CONTOUR_GLOBAL"]
-            if not are_points_on_2d_plane(points):
-                raise otaf_exceptions.GeometricConditionError("are_points_on_2d_plane")
+            points_to_check = np.vstack([surf_data["ORIGIN"], points])
+            glob_const = self.system_data.get("GLOBAL_CONSTRAINTS", "3D")
+            
+            if "2D" not in glob_const:
+                if len(points_to_check) < 3:
+                    raise otaf_exceptions.GeometricConditionError("A 3D plane requires at least 3 points (Origin + 2 Contour points).")
+                if not are_points_on_2d_plane(points_to_check):
+                    raise otaf_exceptions.GeometricConditionError("are_points_on_2d_plane")
+            else:
+                # Optional strictness: Even in 2D, you might want to ensure points are actually on the constrained plane (e.g., Z=0)
+                # but are_points_on_2d_plane doesn't check specific Z constraints, just relative coplanarity.
+                pass
+            
             contour_point_dict = {
                 key_prefix + str(key): value for key, value in zip(list(range(1, NP + 1)), points)
             }
