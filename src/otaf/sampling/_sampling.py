@@ -22,7 +22,7 @@ import re
 import numpy as np
 import openturns as ot
 from beartype import beartype
-from beartype.typing import Union, Sequence, Optional, Generator
+from beartype.typing import Union, Sequence, Optional, Generator, Literal
 
 
 if hasattr(ot, 'JointDistribution'):

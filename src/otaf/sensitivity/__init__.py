@@ -1,3 +1,4 @@
+"""Tools for constructing Sobol sensitivity analysis experiments and plotting results."""
 from __future__ import annotations
 # -*- coding: utf-8 -*-
 

@@ -1,4 +1,4 @@
-"""Reliability analysis, failure probability estimation, and LP problem optimization"""
+"""Reliability analysis, failure probability estimation, and LP problem optimization."""
 from __future__ import annotations
 # -*- coding: utf-8 -*-
 

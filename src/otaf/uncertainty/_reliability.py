@@ -8,9 +8,6 @@ __all__ = [
     "compute_failure_probability_NAIS",
     "compute_failure_probability_SUBSET",
     "compute_gap_optimizations_on_sample",
-    "compute_failure_probability_basic",
-    "compute_adaptive_failure_probability",
-    "compute_gap_optimizations_on_sample_w_steps",
     "milp_batch_sequential",
     "compute_gap_optimizations_on_sample_batch",
 ]
@@ -21,14 +18,14 @@ from time import time
 
 import numpy as np
 
-from scipy.optimize import linprog, milp, OptimizeResult, LinearConstraint, Bounds
+from scipy.optimize import milp, OptimizeResult, LinearConstraint, Bounds
 
 import openturns as ot
 
 from joblib import Parallel, delayed, cpu_count
 
 from beartype import beartype
-from beartype.typing import List, Union, Callable, Optional
+from beartype.typing import List, Union, Callable, Optional, Any
 
 from otaf.common import get_tqdm_range
 
@@ -40,9 +37,42 @@ else:
     # Older versions
     JointDistribution = ot.ComposedDistribution
 
+@beartype
 def compute_failure_probability_FORM(
-    otFunc, composed_distribution, threshold=0.0, start_point=None, verbose=False, solver=None
-):
+    otFunc: ot.Function,
+    composed_distribution: JointDistribution,
+    threshold: float = 0.0,
+    start_point: Optional[ot.Point] = None,
+    verbose: bool = False,
+    solver: Optional[ot.OptimizationAlgorithm] = None
+) -> tuple[float, ot.FORMResult]:
+    """Compute the probability of failure using the First-Order Reliability Method (FORM).
+
+    Calculate the failure probability for an event defined by a threshold violation
+    by finding the design point in the standard normal space and applying a
+    first-order approximation.
+
+    Parameters
+    ----------
+    otFunc : ot.Function
+        The performance function of the system.
+    composed_distribution : JointDistribution
+        The joint probability distribution of the input random variables.
+    threshold : float, optional
+        The limit state threshold, by default 0.0.
+    start_point : ot.Point, optional
+        Initial starting point for the optimization algorithm in physical space.
+    verbose : bool, optional
+        If True, print reliability diagnostics, by default False.
+    solver : ot.OptimizationAlgorithm, optional
+        The optimization algorithm to find the design point. Uses COBYLA 
+        with strict convergence tolerances if None.
+
+    Returns
+    -------
+    tuple[float, ot.FORMResult]
+        The calculated failure probability and the full FORM result object.
+    """
     comp_rand_vect = ot.CompositeRandomVector(otFunc, ot.RandomVector(composed_distribution))
     event = ot.ThresholdEvent(comp_rand_vect, ot.Less(), threshold)
     if not solver:
@@ -57,10 +87,10 @@ def compute_failure_probability_FORM(
     result = algoFORM.getResult()
     pf = result.getEventProbability()
     if verbose:
-        print("Design point in physical space : ", result.getPhysicalSpaceDesignPoint())
-        print("Design point in standard space : ", result.getStandardSpaceDesignPoint())
-        print("Hasofer index : ", result.getHasoferReliabilityIndex())
-        print("Probability of failure (FORM) Pf = {:.16f}".format(result.getEventProbability()))
+        print(f"Design point in physical space : {result.getPhysicalSpaceDesignPoint()}")
+        print(f"Design point in standard space : {result.getStandardSpaceDesignPoint()}")
+        print(f"Hasofer index : {result.getHasoferReliabilityIndex()}")
+        print(f"Probability of failure (FORM) Pf = {pf:.16f}")
     return pf, result
 
 
@@ -159,7 +189,8 @@ def compute_failure_probability_subset_sampling(
 ) -> ot.simulation.ProbabilitySimulationResult:
     """Calculate failure probability for a sample of defects.
 
-    Args:
+    Parameters
+    ----------
         constraint_matrix_generator (Callable): Class for fixing deviations and defining constraints.
         deviation_array (np.ndarray): Array of random deviations for each variable.
         C (np.ndarray, optional): Coefficient matrix for the linear objective function. Defaults to None.
@@ -202,20 +233,32 @@ def compute_gap_optimizations_on_sample(
     n_cpu: int = 1,
     progress_bar: Optional[bool] = False,
 ) -> List[OptimizeResult]:
-    """Compute gap optimizations on a sample using a constraint matrix generator.
+    """Compute gap optimizations for a set of samples using MILP.
 
-    Args:
-        constraint_matrix_generator (otaf.SystemOfConstraintsAssemblyModel): Generator for constraint matrices.
-        deviation_array (np.ndarray): Deviation array.
-        C (np.ndarray, optional): Coefficient matrix for the linear objective function.
-        bounds (Union[list[list[float]], np.ndarray], optional): Bounds for the variables.
-        n_cpu (int, optional): Number of CPUs to use for parallel processing.
-        progress_bar (bool, optional): Whether to show a progress bar.
-        verbose (int, optional): Level of verbosity for debugging.
+    Solve a sequence of Mixed-Integer Linear Programming (MILP) problems derived 
+    from a system of constraints to determine the optimal gap for each sample.
+
+    Parameters
+    ----------
+    constraint_matrix_generator : SystemOfConstraintsAssemblyModel
+        Generator object that produces the constraint matrices and bounds.
+    deviation_array : np.ndarray
+        Array representing deviations to be processed.
+    C : np.ndarray, optional
+        Coefficient matrix for the linear objective function.
+    bounds : Union[List[List[float]], np.ndarray], optional
+        Bounds for the optimization variables.
+    n_cpu : int, optional
+        Number of CPUs to use for parallel processing, by default 1.
+    progress_bar : bool, optional
+        Whether to display a progress bar, by default False.
+    verbose : int, optional
+        Verbosity level for debugging, by default 0.
 
     Returns
     -------
-        list: List of optimization results.
+    List[OptimizeResult]
+        A list of optimization result objects for each sample in the input array.
     """
     c, a_ub, b_ub, a_eq, b_eq, bounds = constraint_matrix_generator(
         deviation_array, bounds=bounds, C=C
@@ -241,7 +284,6 @@ def compute_gap_optimizations_on_sample(
             )
             for k in _range(b_ub.shape[1])
         ]
-
     elif n_cpu < 0 or n_cpu > 1:
         optimizations = Parallel(n_jobs=n_cpu)(
             delayed(milp)(
@@ -255,40 +297,48 @@ def compute_gap_optimizations_on_sample(
             )
             for k in _range(b_ub.shape[1])
         )
-
     return optimizations
 
 
-def milp_batch_sequential(c, bounds, a_ub, b_ub, a_eq, b_eq):
-    """
-    Optimize a batch of linear optimization problems iteratively.
+def milp_batch_sequential(
+    c: np.ndarray,
+    bounds: np.ndarray,
+    a_ub: np.ndarray,
+    b_ub: np.ndarray,
+    a_eq: np.ndarray,
+    b_eq: np.ndarray
+) -> np.ndarray:
+    """Optimize a batch of linear problems iteratively using MILP.
+
+    Solve a sequence of Mixed-Integer Linear Programming (MILP) problems 
+    sharing common objective coefficients and constraint matrices, but 
+    varying constraint bounds.
 
     Parameters
     ----------
-    c : array_like
+    c : np.ndarray
         Coefficients of the linear objective function to be minimized.
-    bounds : array_like
+    bounds : np.ndarray
         An (n, 2) array defining the lower and upper bounds of variables.
-    a_ub : array_like
-        2-D array for the upper-bound inequality constraints.
-    b_ub : array_like
-        2-D array of upper-bound values for each inequality constraint per problem.
-    a_eq : array_like
-        2-D array for the equality constraints.
-    b_eq : array_like
-        2-D array of equality constraint values per problem.
+    a_ub : np.ndarray
+        2D array for the upper-bound inequality constraints.
+    b_ub : np.ndarray
+        2D array of upper-bound values for each inequality constraint per problem.
+    a_eq : np.ndarray
+        2D array for the equality constraints.
+    b_eq : np.ndarray
+        2D array of equality constraint values per problem.
 
     Returns
     -------
     np.ndarray
-        2-D array of optimized decision variables for each problem in the batch.
+        2D array of optimized decision variables for each problem in the batch.
 
     Notes
     -----
-    Solves a batch of mixed-integer linear programming (MILP) problems iteratively
-    using the `milp` solver from `scipy.optimize`. Each problem shares `c`, `a_ub`,
-    and `a_eq`, but has unique `b_ub` and `b_eq` vectors. Solver options disable
-    display (`disp: False`) and enable presolve (`presolve: True`).
+    - This function solves MILP problems using `scipy.optimize.milp`.
+    - Solver options are set to `disp=False` and `presolve=True` for efficiency.
+    - Problems share `c`, `a_ub`, and `a_eq`, while `b_ub` and `b_eq` vary per batch element.
     """
     bounds = Bounds(bounds[:, 0], bounds[:, 1], keep_feasible=False)
     optimizations = [
@@ -312,25 +362,43 @@ def compute_gap_optimizations_on_sample_batch(
     C: Optional[np.ndarray] = None,
     bounds: Optional[Union[List[List[float]], np.ndarray]] = None,
     n_cpu: int = 1,
-    batch_size=1000,
-    progress_bar: Optional[bool] = False,
-    verbose=0,
-    dtype="float32",
-) -> List[OptimizeResult]:
-    """Compute gap optimizations on a sample using a constraint matrix generator with batching.
+    batch_size: int = 1000,
+    progress_bar: bool = False,
+    verbose: int = 0,
+    dtype: str = "float32"
+) -> np.ndarray:
+    """Compute gap optimizations on a sample using batch processing and MILP.
 
-    Args:
-        constraint_matrix_generator (otaf.SystemOfConstraintsAssemblyModel): Generator for constraint matrices.
-        deviation_array (np.ndarray): Deviation array.
-        C (np.ndarray, optional): Coefficient matrix for the linear objective function.
-        bounds (Union[list[list[float]], np.ndarray], optional): Bounds for the variables.
-        n_cpu (int, optional): Number of CPUs to use for parallel processing.
-        progress_bar (bool, optional): Whether to show a progress bar.
-        verbose (int, optional): Level of verbosity for debugging.
+    Perform parallel batch optimization for a system of constraints, grouping 
+    samples into batches to improve computational throughput and reduce parallelization 
+    overhead.
+
+    Parameters
+    ----------
+    constraint_matrix_generator : SystemOfConstraintsAssemblyModel
+        Generator object that produces constraint matrices.
+    deviation_array : np.ndarray
+        Array of deviations to process.
+    C : np.ndarray, optional
+        Coefficient matrix for the linear objective function.
+    bounds : Union[List[List[float]], np.ndarray], optional
+        Bounds for the optimization variables.
+    n_cpu : int, optional
+        Number of CPUs for parallel processing. Negative values are relative 
+        to total available CPUs, by default 1.
+    batch_size : int, optional
+        Number of points per parallel batch, by default 1000.
+    progress_bar : bool, optional
+        Whether to display a progress bar, by default False.
+    verbose : int, optional
+        Verbosity level for debugging, by default 0.
+    dtype : str, optional
+        Data type for the resulting optimized decision variable array, by default "float32".
 
     Returns
     -------
-        list: List of optimization results.
+    np.ndarray
+        Optimized decision variables for all samples stacked into a single array.
     """
     c, a_ub, b_ub, a_eq, b_eq, bounds = constraint_matrix_generator(
         deviation_array, bounds=bounds, C=C
@@ -363,251 +431,3 @@ def compute_gap_optimizations_on_sample_batch(
     else:
         optimizations = milp_batch_sequential(c, bounds, a_ub, b_ub, a_eq, b_eq)
         return np.array(optimizations, dtype=dtype)
-
-
-@beartype
-def compute_failure_probability_basic(
-    constraint_matrix_generator: Callable,
-    deviation_array: np.ndarray,
-    C: Optional[np.ndarray] = None,
-    bounds: Optional[Union[List[List[float]], np.ndarray]] = None,
-    n_cpu: int = 1,
-) -> float:
-    """Calculate failure probability for a sample of defects.
-
-    Args:
-        constraint_matrix_generator (Callable): Class for fixing deviations and defining constraints.
-        deviation_array (np.ndarray): Array of random deviations for each variable.
-        C (np.ndarray, optional): Coefficient matrix for the linear objective function. Defaults to None.
-        bounds (List, optional): Bounds for gap variables. Defaults to None.
-        method (str, optional): Algorithm for the optimization problem. Defaults to 'highs'.
-        n_cpu (int, optional): Number of CPUs to use for parallel execution. Defaults to 1.
-
-    Returns
-    -------
-        float: Failure probability for the fixed deviations.
-
-    Raises
-    ------
-        TypeError: If constraint_matrix_generator is not callable.
-    """
-    c, a_ub, b_ub, a_eq, b_eq, bounds = constraint_matrix_generator(
-        deviation_array, bounds=bounds, C=C
-    )
-    n = b_ub.shape[1]
-    if n_cpu <= 1:
-        optimizations = np.array(
-            [
-                linprog(
-                    c=c,
-                    A_ub=a_ub,
-                    b_ub=b_ub[:, k],
-                    A_eq=a_eq,
-                    b_eq=b_eq[:, k],
-                    bounds=bounds,
-                    method=method,
-                )
-                for k in range(n)
-            ],
-            dtype=int,
-        )
-    elif n_cpu < 0 or n_cpu > 1:
-        optimizations = Parallel(n_jobs=n_cpu)(
-            delayed(linprog)(
-                c,
-                A_ub=a_ub,
-                b_ub=b_ub[:, k],
-                A_eq=a_eq,
-                b_eq=b_eq[:, k],
-                bounds=bounds,
-                method=method,
-            )
-            for k in range(n)
-        )
-        successes = np.array([int(opti.success) for opti in optimizations], int)
-    print(f"Experiment size: {n} | N_success: {sum(successes)}")
-    return 1 - sum(successes) / n
-
-
-@beartype
-def compute_adaptive_failure_probability(
-    constraint_matrix_generator: Callable,
-    deviation_array: np.ndarray,
-    C: Optional[np.ndarray] = None,
-    bounds: Optional[Union[List[List[float]], np.ndarray]] = None,
-    epsilon_pf: float = 0.001,
-    epsilon_std: float = 0.005,
-    verbose: int = 0,
-    **kwargs,
-) -> float:
-    """Calculate the failure probability for a sample of defects.
-
-    Args:
-        deviation_array (np.ndarray): Array representing the range of random deviations for each variable.
-        constraint_matrix_generator (Callable): Class responsible for fixing deviations and defining constraints.
-        bounds (List, optional): Bounds for the gap variables. Defaults to None.
-        C (np.ndarray, optional): Coefficient matrix for the linear objective function. Defaults to None.
-        method (str, optional): The algorithm to use in the optimization problem. Defaults to 'highs'.
-        epsilon_pf (float, optional): Convergence threshold for the ratio of change in failure probability. Defaults to 0.001.
-        epsilon_std (float, optional): Convergence threshold for the standard deviation of failure probabilities. Defaults to 0.005.
-        verbose (int, optional): Verbosity level for printing progress. Defaults to 0.
-
-    Returns
-    -------
-        float: Failure probability for the fixed deviations.
-
-    Raises
-    ------
-        TypeError: If constraint_matrix_generator is not callable.
-    """
-    start_time = time()
-    c, a_ub, b_ub, a_eq, b_eq, bounds = constraint_matrix_generator(
-        deviation_array, bounds=bounds, C=C
-    )
-    successes_count = 0  # Initialize sum of successes
-    successes = []
-    failure_probs = []
-
-    for k in range(b_ub.shape[1]):
-        success = int(
-            milp(
-                c=c,
-                bounds=Bounds(bounds[:, 0], bounds[:, 1], keep_feasible=False),
-                constraints=(
-                    LinearConstraint(a_ub, -np.inf, b_ub[:, k]),
-                    LinearConstraint(a_eq, b_eq[:, k], b_eq[:, k]),
-                ),
-                options={"disp": False, "presolve": True},
-            ).success
-        )
-
-        successes.append(success)
-        successes_count += success
-        failure_probs.append(float(1 - successes_count / len(successes)))
-        if (
-            k >= 100
-            and (
-                abs(failure_probs[-1] - (1 - (sum(successes) - 1) / (len(successes) + 1)))
-                <= epsilon_pf
-            )
-            and (np.std(failure_probs[k:]) <= epsilon_std)
-            and (sum(successes) <= k + 1)
-            and (sum(successes) > 1)
-        ):
-            if verbose > 0:
-                print(
-                    " | ".join(
-                        f"Experiment size : {k + 1}",
-                        f"N_success : {sum(successes)}",
-                        f"Pf : {round(failure_probs[-1], 5)}",
-                        f"eps std : {np.std(failure_probs).round(5)}",
-                        f"eps Pf : {round(abs(failure_probs[-1] - (1 - (sum(successes)-1)/(len(successes)+1))),5)}",
-                        f"Elapsed time: {time() - start_time:.6f} s.",
-                    )
-                )
-            return failure_probs[-1]
-        if k > 200 and failure_probs[-1] > 0.999:
-            return failure_probs[-1]
-        if k == b_ub.shape[1] - 1:
-            return failure_probs[-1]
-    return failure_probs[-1]
-
-
-@beartype
-def linprog_w_steps(
-    c,
-    A_ub=None,
-    b_ub=None,
-    A_eq=None,
-    b_eq=None,
-    bounds=None,
-    method="revised simplex",
-    callback=None,
-    options=None,
-    x0=None,
-):
-    # List to store intermediate solutions
-    intermediate_solutions = []
-
-    # Define a callback function to collect intermediate solutions
-    def internal_callback(res):
-        intermediate_solutions.append(res.x.copy())
-        if callback:
-            callback(res)
-
-    # Perform the linear programming optimization
-    res = linprog(
-        c,
-        A_ub=A_ub,
-        b_ub=b_ub,
-        A_eq=A_eq,
-        b_eq=b_eq,
-        bounds=bounds,
-        method=method,
-        callback=internal_callback,
-        options=options,
-        x0=x0,
-    )
-
-    # Return the array of all solutions for each step
-    return intermediate_solutions, res
-
-
-@beartype
-def compute_gap_optimizations_on_sample_w_steps(
-    constraint_matrix_generator: Callable,
-    deviation_array: np.ndarray,
-    C: Optional[np.ndarray] = None,
-    bounds: Optional[Union[List[List[float]], np.ndarray]] = None,
-    n_cpu: int = 1,
-    verbose: int = 0,
-    progress_bar: bool = False,
-) -> List:
-    """Calculate failure probability for a sample of defects.
-
-    Args:
-        constraint_matrix_generator (Callable): Class for fixing deviations and defining constraints.
-        deviation_array (np.ndarray): Array of random deviations for each variable.
-        C (np.ndarray, optional): Coefficient matrix for the linear objective function. Defaults to None.
-        bounds (List, optional): Bounds for gap variables. Defaults to None.
-        n_cpu (int, optional): Number of CPUs to use for parallel execution. Defaults to 1.
-        verbose (int, optional): Verbosity level. Defaults to 0.
-        progress_bar (bool, optional): Show progress bar. Defaults to False.
-
-    Returns
-    -------
-        List: List of optimization results including intermediate steps.
-
-    Raises
-    ------
-        TypeError: If constraint_matrix_generator is not callable.
-    """
-    c, a_ub, b_ub, a_eq, b_eq, bounds = constraint_matrix_generator(
-        deviation_array, bounds=bounds, C=C
-    )
-
-    if verbose > 0:
-        print("Bounds:", bounds)
-
-    if progress_bar:
-        _range = get_tqdm_range()(b_ub.shape[1])
-    else:
-        _range = range(b_ub.shape[1])
-
-    def optimize_single(k):
-        return linprog_w_steps(
-            c=c,
-            A_ub=a_ub,
-            b_ub=b_ub[:, k],
-            A_eq=a_eq,
-            b_eq=b_eq[:, k],
-            bounds=bounds,
-            method="revised simplex",
-        )
-
-    if n_cpu <= 1:
-        optimizations = [optimize_single(k) for k in _range]
-    else:
-        optimizations = Parallel(n_jobs=n_cpu)(delayed(optimize_single)(k) for k in _range)
-
-    return optimizations

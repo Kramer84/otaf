@@ -6,5 +6,5 @@ Module contents
 
 .. automodule:: otaf.exceptions
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

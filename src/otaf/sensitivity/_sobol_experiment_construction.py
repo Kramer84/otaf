@@ -6,8 +6,23 @@ __all__ = ["SobolIndicesExperimentWithComposedDistribution"]
 
 import openturns as ot
 
-
 class SobolIndicesExperimentWithComposedDistribution(ot.SobolIndicesExperiment):
+    """Sobol indices experiment wrapper using an OpenTURNS ComposedDistribution.
+
+    Generates the specialized experimental design matrix (mixture matrix) required 
+    for estimating first, second, and total-order Sobol sensitivity indices.
+
+    Parameters
+    ----------
+    composedDistribution : openturns.ComposedDistribution, optional
+        The joint distribution of the input variables. Default is None.
+    size : int, optional
+        The size $N$ of the base samples $A$ and $B$. Default is None.
+    second_order : bool, optional
+        If True, structures the experimental design to allow estimation of 
+        second-order Sobol indices. Default is False.
+    """
+
     def __init__(self, composedDistribution=None, size=None, second_order=False):
         self.composedDistribution = composedDistribution
         self.size = None
@@ -27,15 +42,27 @@ class SobolIndicesExperimentWithComposedDistribution(ot.SobolIndicesExperiment):
         self._experimentSample = None
 
     def generate(self, **kwargs):
-        """Generates and returns the final mixture matrix.
+        """Generate and return the final design matrix (mixture matrix).
 
-        Keyword Arguments
-        -----------------
-        method : str
-            Can be : 'MonteCarlo', 'LHS', 'QMC'
-        sequence : str
-            Only if using QMC
-            Can be : 'Faure', 'Halton', 'ReverseHalton', 'Haselgrove', 'Sobol'
+        Parameters
+        ----------
+        method : str, optional
+            The sampling method used to generate base designs.
+            Options are: 'MonteCarlo', 'LHS', 'QMC'. Default is 'MonteCarlo'.
+        sequence : str, optional
+            The low-discrepancy sequence type. Only evaluated if `method='QMC'`.
+            Options are: 'Faure', 'Halton', 'ReverseHalton', 'Haselgrove', 'Sobol'.
+            Default is 'Sobol'.
+
+        Returns
+        -------
+        openturns.Sample
+            The combined mixture matrix containing experimental design configurations.
+
+        Raises
+        ------
+        AssertionError
+            If either `size` or `composedDistribution` have not been initialized.
         """
         assert (self.composedDistribution is not None) and (
             self.size is not None
@@ -47,67 +74,154 @@ class SobolIndicesExperimentWithComposedDistribution(ot.SobolIndicesExperiment):
         return self._experimentSample
 
     def generateWithWeights(self, **kwargs):
-        """Not implemented, for coherence with openturns library"""
+        """Not implemented. Kept for OpenTURNS API compatibility."""
+        pass
 
     def getClassName(self):
-        """Returns the name of the class."""
+        """Return the name of the class.
+
+        Returns
+        -------
+        str
+            The class name string.
+        """
         return self.__class__.__name__
 
     def getId(self):
-        """Returns the ID of the object."""
+        """Return the unique object identifier.
+
+        Returns
+        -------
+        int
+            The unique ID (memory address) of the instance.
+        """
         return id(self)
 
     def getName(self):
-        """Returns the name of the object."""
+        """Return the name of the object.
+
+        Returns
+        -------
+        str
+            The internal name assigned to the instance.
+        """
         return self.__name__
 
     def getShadowedId(self):
-        """Returns the shadowed ID of the object."""
+        """Return the shadowed ID of the object.
+
+        Returns
+        -------
+        int or None
+            The shadowed identifier.
+        """
         return self.__shadowedId__
 
     def getSize(self):
-        """Returns the size of the generated mixture matrix."""
+        """Return the total number of rows in the generated mixture matrix.
+
+        Returns
+        -------
+        int
+            The row count of the generated design matrix, or 0 if it has 
+            not yet been generated.
+        """
         if self._experimentSample is None:
             return 0
         else:
             return len(self._experimentSample)
 
     def getVisibility(self):
-        """Returns the visibility"""
+        """Return the internal visibility flag status.
+
+        Returns
+        -------
+        bool
+            The visibility status tracking parameter.
+        """
         return self.__visibility__
 
     def hasName(self):
-        """Returns if the object has a name"""
+        """Check if the object has a valid, non-empty name.
+
+        Returns
+        -------
+        bool
+            False if `__name__` is None or empty; True otherwise.
+        """
         if len(self.__name__) == 0 or self.__name__ is None:
             return False
         else:
             return True
 
     def hasUniformWeights(self):
-        """Not implemented, for coherence with openturns library"""
+        """Not implemented. Kept for OpenTURNS API compatibility.
+
+        Returns
+        -------
+        None
+            Always returns None.
+        """
         return None
 
     def hasVisibleName(self):
-        """Returns if yes or not the name is visible"""
+        """Check if the object name is distinct from its default value.
+
+        Returns
+        -------
+        bool
+            False if the name is "Unnamed" or empty; True otherwise.
+        """
         if self.__name__ == "Unnamed" or len(self.__name__) == 0:
             return False
         else:
             return True
 
     def setComposedDistribution(self, composedDistribution):
-        """Sets the composed distribution."""
+        """Set the joint input distribution.
+
+        Parameters
+        ----------
+        composedDistribution : openturns.ComposedDistribution
+            The new joint distribution model to be assigned.
+        """
         self.composedDistribution = composedDistribution
 
     def setName(self, name):
-        """Sets the name of the object"""
+        """Set the internal object name.
+
+        Parameters
+        ----------
+        name : str or object
+            The new name string (internally cast to str).
+        """
         self.__name__ = str(name)
 
     def setShadowedId(self, ids):
-        """Sets the shadowed ID of the object."""
+        """Set the shadowed ID parameter.
+
+        Parameters
+        ----------
+        ids : int
+            The shadowed identifier integer.
+        """
         self.__shadowedId__ = ids
 
     def setSize(self, N):
-        """Sets the size of the samples A and B."""
+        """Set the sample size for the base matrices A and B.
+
+        Resets all existing generated matrices if the size is updated.
+
+        Parameters
+        ----------
+        N : int
+            The number of rows per base sample. Must be a positive integer.
+
+        Raises
+        ------
+        AssertionError
+            If N is not a positive integer.
+        """
         assert isinstance(N, int) and N > 0, "Sample size can only be positive integer"
         if self.size is None:
             self.size = N
@@ -116,7 +230,11 @@ class SobolIndicesExperimentWithComposedDistribution(ot.SobolIndicesExperiment):
             self._sample_A = self._sample_B = self._experimentSample = None
 
     def _mixSamples(self):
-        """Mixes the samples together for Sobol analysis."""
+        """Construct the design matrix from base matrices A and B.
+
+        Interleaves matrix slices based on the problem dimension and whether 
+        second-order indices are required.
+        """
         n_vars = self.composedDistribution.getDimension()
         N = self.size
         if not self.__computeSecondOrder__ or n_vars <= 2:
@@ -153,7 +271,21 @@ class SobolIndicesExperimentWithComposedDistribution(ot.SobolIndicesExperiment):
                 ] = self._sample_A[:, i]
 
     def _generateSample(self, **kwargs):
-        """Generation of two samples A and B using diverse methods"""
+        """Generate base samples A and B.
+
+        Executes the requested generation strategy (MonteCarlo, LHS, or QMC)
+        and populates the internal `_sample_A` and `_sample_B` structures.
+
+        Parameters
+        ----------
+        **kwargs : dict
+            Forwarded processing specifications (e.g., 'method', 'sequence').
+
+        Raises
+        ------
+        ValueError
+            If an invalid method type or QMC sequence string is requested.
+        """
         distribution = self.composedDistribution
         if "method" in kwargs:
             method = kwargs["method"]

@@ -11,16 +11,38 @@ import matplotlib.patches as mpatches
 def plotSobolIndicesWithErr(
     S, errS, varNames, n_dims, Stot=None, errStot=None, dimNames=None, figsize=(20, 10)
 ):
-    """Function to plot the Sobol' indices with an errorbar to visualize the
-    uncertaintity in the estimator. (only first and total order yet)
+    """Plot Sobol' indices with error bars to visualize estimator uncertainty.
 
-    Note
-    ----
-    Function is written to adapt the plotting according to the dimensions of
-    the input, for higher level inputs, mayavi seems the most reasonable choice
-    for plotting
+    Supports plotting for scalar outputs (1D array of indices) using discrete 
+    errorbar markers, and vector outputs (2D array of indices) using either subplots 
+    or comprehensive heatmaps via an `ImageGrid`.
+
+    Parameters
+    ----------
+    S : numpy.ndarray
+        First-order Sobol' indices. Can be shape `(n_dims,)` for scalar outputs 
+        or `(n_dims, dimOut)` for vector outputs.
+    errS : numpy.ndarray
+        Confidence intervals or errors corresponding to `S`. Must match the shape of `S`.
+    varNames : list of str
+        Names of the input variables (length must match `n_dims`).
+    n_dims : int
+        The total number of input variables/dimensions analyzed.
+    Stot : numpy.ndarray, optional
+        Total-order Sobol' indices. Must match the shape of `S`. Default is None.
+    errStot : numpy.ndarray, optional
+        Confidence intervals or errors corresponding to `Stot`. Must match the shape of `Stot`.
+    dimNames : list of str, optional
+        Names of the output vector dimensions. Only evaluated for vector outputs in 
+        heatmap configurations. Default is None.
+    figsize : tuple of int, optional
+        Width and height of the target matplotlib figure in inches. Default is (20, 10).
+
+    Notes
+    -----
+    The function adapts dynamically based on the dimensionality of `S`. For high-dimensional 
+    vector outputs, it uses heatmaps to manage visual density.
     """
-
     plt.style.use("classic")
     S, errS = numpy.squeeze(S), numpy.squeeze(errS)
     if Stot is not None and errStot is not None:
@@ -194,28 +216,34 @@ def plotSobolIndicesWithErr(
 
 # From : https://matplotlib.org/stable/gallery/images_contours_and_fields/image_annotated_heatmap.html
 def heatmap(data, row_labels, col_labels, ax=None, cbar_kw={}, cbarlabel="", **kwargs):
-    """
-    Create a heatmap from a numpy array and two lists of labels.
+    """Create a heatmap from a 2D numpy array and two lists of axis labels.
 
     Parameters
     ----------
-    data
-        A 2D numpy array of shape (N, M).
-    row_labels
-        A list or array of length N with the labels for the rows.
-    col_labels
-        A list or array of length M with the labels for the columns.
-    ax
-        A `matplotlib.axes.Axes` instance to which the heatmap is plotted.  If
-        not provided, use current axes or create a new one.  Optional.
-    cbar_kw
-        A dictionary with arguments to `matplotlib.Figure.colorbar`.  Optional.
-    cbarlabel
-        The label for the colorbar.  Optional.
-    **kwargs
-        All other arguments are forwarded to `imshow`.
-    """
+    data : numpy.ndarray
+        A 2D numpy array of shape (N, M) containing the matrix values to plot.
+    row_labels : list or array-like of str
+        A list or array of length N containing labels for the rows.
+    col_labels : list or array-like of str
+        A list or array of length M containing labels for the columns.
+    ax : matplotlib.axes.Axes, optional
+        An existing axes instance to draw the heatmap onto. If None, the current 
+        active axes (`plt.gca()`) will be used or generated. Default is None.
+    cbar_kw : dict, optional
+        A dictionary containing keyword arguments forwarded directly to 
+        `matplotlib.figure.Figure.colorbar`. Default is None.
+    cbarlabel : str, optional
+        The text label assigned to the colorbar's y-axis. Default is "".
+    **kwargs : dict
+        All other keyword arguments are forwarded directly to `ax.imshow`.
 
+    Returns
+    -------
+    im : matplotlib.image.AxesImage
+        The generated image plot mapping data values to the colormap.
+    cbar : matplotlib.colorbar.Colorbar
+        The colorbar instance tied to the image plotting axes.
+    """
     if not ax:
         ax = plt.gca()
 
@@ -253,31 +281,40 @@ def heatmap(data, row_labels, col_labels, ax=None, cbar_kw={}, cbarlabel="", **k
 def annotate_heatmap(
     im, data=None, valfmt="{x:.3f}", textcolors=("black", "white"), threshold=None, **textkw
 ):
-    """
-    A function to annotate a heatmap.
+    """Annotate a text layer over a pre-existing matplotlib heatmap image.
+
+    Loops through the individual cells of a heatmap grid and renders an explicit text 
+    string displaying the cell's underlying value, adjusting text contrast color dynamically 
+    based on a defined threshold map.
 
     Parameters
     ----------
-    im
-        The AxesImage to be labeled.
-    data
-        Data used to annotate.  If None, the image's data is used.  Optional.
-    valfmt
-        The format of the annotations inside the heatmap.  This should either
-        use the string format method, e.g. "$ {x:.2f}", or be a
-        `matplotlib.ticker.Formatter`.  Optional.
-    textcolors
-        A pair of colors.  The first is used for values below a threshold,
-        the second for those above.  Optional.
-    threshold
-        Value in data units according to which the colors from textcolors are
-        applied.  If None (the default) uses the middle of the colormap as
-        separation.  Optional.
-    **kwargs
-        All other arguments are forwarded to each call to `text` used to create
-        the text labels.
-    """
+    im : matplotlib.image.AxesImage
+        The active heatmap image axes instance to be annotated.
+    data : list or numpy.ndarray, optional
+        The numerical data used to populate the text labels. If None, the function 
+        extracts data directly from `im.get_array()`. Default is None.
+    valfmt : str or matplotlib.ticker.Formatter, optional
+        The formatting blueprint used for the text overlays. Accepts a standard 
+        string format scheme (e.g., "${x:.2f}") or an instance of a Matplotlib Formatter. 
+        Default is "{x:.3f}".
+    textcolors : tuple of str, optional
+        A structural pair of color definitions. The first index string specifies 
+        the color used for values sitting below the threshold; the second index 
+        handles values sitting above. Default is ("black", "white").
+    threshold : float, optional
+        The value limit in raw data units determining when text contrast colors switch. 
+        If None, the separation boundary defaults precisely to the center of the 
+        colormap's range. Default is None.
+    **textkw : dict
+        All other keyword arguments are forwarded directly into each individual 
+        `ax.text` rendering invocation.
 
+    Returns
+    -------
+    list of matplotlib.text.Text
+        A list containing all text label instances rendered into the heatmap grid.
+    """
     if not isinstance(data, (list, numpy.ndarray)):
         data = im.get_array()
 
