@@ -1,4 +1,4 @@
-"""Uncertainty quantification and reliability analysis tools for OTAF."""
+"""Reliability analysis, failure probability estimation, and LP problem optimization"""
 from __future__ import annotations
 # -*- coding: utf-8 -*-
 

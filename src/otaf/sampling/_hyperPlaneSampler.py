@@ -7,41 +7,48 @@ __all__ = [
 ]
 
 import numpy as np
+from beartype import beartype
+from typing import Optional, Union
 
+@beartype
+def project_samples_to_hyperplane(
+    a: Union[list[float], np.ndarray],
+    b: float,
+    samples: np.ndarray,
+    bounds: Optional[list[tuple[float, float]]] = None
+) -> np.ndarray:
+    """Project (N-1)-dimensional samples onto an N-dimensional hyperplane.
 
-def project_samples_to_hyperplane(a, b, samples, bounds=None):
-    """
-    Project (N-1)-dimensional samples onto the N-dimensional hyperplane defined by the equation:
+    Solve the hyperplane equation $a_0 x_0 + a_1 x_1 + ... + a_{N-1} x_{N-1} = b$
+    to find the coordinate $x_0$, then reconstruct the full N-dimensional point.
 
-    a_0 * x_0 + a_1 * x_1 + ... + a_{N-1} * x_{N-1} = b
+    Parameters
+    ----------
+    a : Union[list[float], np.ndarray]
+        Coefficients of the hyperplane equation.
+    b : float
+        Constant term in the hyperplane equation.
+    samples : np.ndarray
+        Samples in (N-1)-dimensional space with shape (M, N-1).
+    bounds : list[tuple[float, float]], optional
+        Bounds for each dimension in the format [(min, max), ...].
+        Only samples whose projections fall within these bounds are returned.
 
-    Parameters:
-    a (list or np.ndarray): Coefficients of the hyperplane equation.
-    b (float): Constant term in the hyperplane equation.
-    samples (np.ndarray): Samples in (N-1)-dimensional space.
-    bounds (list of tuples): Bounds for each dimension in the format [(min, max), ..., (min, max)].
-
-    Returns:
-    np.ndarray: Projected samples in N-dimensional space that satisfy the hyperplane equation.
+    Returns
+    -------
+    np.ndarray
+        Projected samples in N-dimensional space that satisfy the hyperplane equation.
     """
     a = np.array(a)
     N = len(a)
     projected_samples = []
-
     for sample in samples:
-        # Solve for x0 in the equation a_0 x_0 + a_1 x_1 + ... + a_N-1 x_N-1 = b
         x_rest_sum = np.dot(a[1:], sample)
         x0 = (b - x_rest_sum) / a[0]
-        projected_sample = [x0] + list(sample)
-
-        # Check if the projected point satisfies the bounds, if bounds are provided
-        if bounds:
+        projected_sample = np.array([x0, *sample])
+        if bounds is not None:
             if all(bounds[i][0] <= projected_sample[i] <= bounds[i][1] for i in range(N)):
                 projected_samples.append(projected_sample)
         else:
             projected_samples.append(projected_sample)
-
     return np.array(projected_samples)
-
-
-# Example usage in 2D (to be used in the next steps with matplotlib)

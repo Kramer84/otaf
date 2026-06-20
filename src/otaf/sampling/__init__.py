@@ -1,3 +1,4 @@
+"""Tools for generating experimental designs, low-discrepancy sequences, and surface sampling."""
 from __future__ import annotations
 # -*- coding: utf-8 -*-
 

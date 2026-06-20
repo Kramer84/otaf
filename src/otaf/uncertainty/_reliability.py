@@ -3,8 +3,6 @@ from __future__ import annotations
 
 __author__ = "Kramer84"
 __all__ = [
-    "sample_non_compliancy_at_threshold",
-    "sample_non_compliancy_rate",
     "compute_failure_probability_subset_sampling",
     "compute_failure_probability_FORM",
     "compute_failure_probability_NAIS",
@@ -41,61 +39,6 @@ if hasattr(ot, 'JointDistribution'):
 else:
     # Older versions
     JointDistribution = ot.ComposedDistribution
-
-#######################################################################################
-########### MODEL POST-PROCESSING
-
-
-def sample_non_compliancy_at_threshold(
-    model_results: Optional[np.ndarray] = None,
-    compliancy_threshold: float = 0.0,
-    optimizations: Optional[List[OptimizeResult]] = None,
-    optimization_variable: bool = False,
-) -> np.ndarray:
-    """Calculate non-compliancy at a specified threshold level.
-
-    Args:
-        model_results (np.ndarray, optional): Array of gap values for each sample. If provided, non-compliancy
-            is determined based on these values.
-        compliancy_threshold (float, optional): Threshold value for determining compliancy. Defaults to 0.0.
-        optimizations (List[OptimizeResult], optional): List of optimization results. Used if `model_results` is
-            not provided. Defaults to None.
-        optimization_variable (bool, optional): Flag indicating whether the optimizations represent a variable to
-            be checked for compliancy. Defaults to False.
-
-    Returns
-    -------
-        np.ndarray: Array indicating non-compliancy at each sample or optimization result. Each element is 1 if the
-            sample/optimization is non-compliant (below threshold), otherwise 0.
-    """
-    if model_results is not None:
-        return np.where(model_results <= compliancy_threshold, 1, 0)
-
-    elif optimization_variable is True:
-        opt_var_values = np.array(
-            [opt.fun for opt in optimizations]
-        )  # if s variable all the others are 0 so c@y=s
-        return np.where(opt_var_values <= compliancy_threshold, 1, 0)
-
-    elif optimizations:
-        successes = np.array([int(opt.success) for opt in optimizations], dtype=int)
-        return 1 - successes  # Inevrting to get non compliancy rate
-
-    else:
-        raise ValueError("Arguments missing")
-
-
-@beartype
-def sample_non_compliancy_rate(non_compliancy_indicator_sample: np.ndarray):
-    """Return the mean of an indicator sample. The sample is supposed to be representative of the
-    distribution and only is valid in monte carlo simulations.
-    """
-    return non_compliancy_indicator_sample.mean()
-
-
-#######################################################################################
-########### MODEL EVALUATIONS / FAILURE PROBABILITIES
-
 
 def compute_failure_probability_FORM(
     otFunc, composed_distribution, threshold=0.0, start_point=None, verbose=False, solver=None

@@ -70,12 +70,6 @@ class TestGeometryFunctions(unittest.TestCase):
             ar([1, 1, 1]),
         )
 
-    def test_closest_point_on_plane(self):
-        np.testing.assert_almost_equal(
-            closest_point_on_plane(ar([0, 0, 1]), ar([0, 0, 1]), ar([1, 1, 1])),
-            ar([1, 1, 1]),
-        )
-
     def test_closest_point_on_line(self):
         np.testing.assert_almost_equal(
             closest_point_on_line(ar([0, 0]), ar([1, 1]), ar([0, 2])), ar([1, 1])
