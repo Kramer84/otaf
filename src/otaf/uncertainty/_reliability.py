@@ -25,7 +25,7 @@ import openturns as ot
 from joblib import Parallel, delayed, cpu_count
 
 from beartype import beartype
-from beartype.typing import List, Union, Callable, Optional, Any
+from beartype.typing import List, Union, Callable, Optional, Any, TYPE_CHECKING
 
 from otaf.common import get_tqdm_range
 
@@ -37,9 +37,12 @@ else:
     # Older versions
     JointDistribution = ot.ComposedDistribution
 
+if TYPE_CHECKING:
+    from otaf import SystemOfConstraintsAssemblyModel
+
 @beartype
 def compute_failure_probability_FORM(
-    otFunc: ot.Function,
+    ot_function: ot.Function,
     composed_distribution: JointDistribution,
     threshold: float = 0.0,
     start_point: Optional[ot.Point] = None,
@@ -54,7 +57,7 @@ def compute_failure_probability_FORM(
 
     Parameters
     ----------
-    otFunc : ot.Function
+    ot_function : ot.Function
         The performance function of the system.
     composed_distribution : JointDistribution
         The joint probability distribution of the input random variables.
@@ -73,7 +76,7 @@ def compute_failure_probability_FORM(
     tuple[float, ot.FORMResult]
         The calculated failure probability and the full FORM result object.
     """
-    comp_rand_vect = ot.CompositeRandomVector(otFunc, ot.RandomVector(composed_distribution))
+    comp_rand_vect = ot.CompositeRandomVector(ot_function, ot.RandomVector(composed_distribution))
     event = ot.ThresholdEvent(comp_rand_vect, ot.Less(), threshold)
     if not solver:
         solver = ot.Cobyla()
@@ -95,7 +98,7 @@ def compute_failure_probability_FORM(
 
 
 def compute_failure_probability_NAIS(
-    func: ot.PythonFunction,
+    ot_python_function: ot.PythonFunction,
     distribution: JointDistribution,
     threshold: float = 0.0,
     quantile_level: float = 0.001,
@@ -105,7 +108,7 @@ def compute_failure_probability_NAIS(
 
     Parameters
     ----------
-    - func: The function g(X)
+    - ot_python_function: The function g(X)
     - distribution: The input random vector distribution
     - threshold: The threshold value (default=0.0)
     - verbose: Print additional information (default=False)
@@ -116,7 +119,7 @@ def compute_failure_probability_NAIS(
     - result: Additional NAIS algorithm results (see docstring)
     """
     # Create the output random vector Y = g(X)
-    output_random_vector = ot.CompositeRandomVector(func, ot.RandomVector(distribution))
+    output_random_vector = ot.CompositeRandomVector(ot_python_function, ot.RandomVector(distribution))
     # Create the event { Y = g(X) <= threshold }
     failure_event = ot.ThresholdEvent(output_random_vector, ot.LessOrEqual(), threshold)
 
@@ -136,19 +139,19 @@ def compute_failure_probability_NAIS(
 
 
 def compute_failure_probability_SUBSET(
-    func: ot.PythonFunction,
+    ot_python_function: ot.PythonFunction,
     distribution: JointDistribution,
     threshold: float = 0.0,
     verbose: bool = False,
-    proposalRange=2,
-    targetProbability=0.1,
+    proposal_range=2,
+    target_probability=0.1,
 ) -> tuple[float, ot.SimulationResult, Any]:
     """
     Compute the failure probability using the NAIS algorithm.
 
     Parameters
     ----------
-    - func: The function g(X)
+    - ot_python_function: The function g(X)
     - distribution: The input random vector distribution
     - threshold: The threshold value (default=0.0)
     - verbose: Print additional information (default=False)
@@ -159,12 +162,12 @@ def compute_failure_probability_SUBSET(
     - result: Additional NAIS algorithm results (see docstring)
     """
     # Create the output random vector Y = g(X)
-    output_random_vector = ot.CompositeRandomVector(func, ot.RandomVector(distribution))
+    output_random_vector = ot.CompositeRandomVector(ot_python_function, ot.RandomVector(distribution))
     # Create the event { Y = g(X) <= threshold }
     failure_event = ot.ThresholdEvent(output_random_vector, ot.LessOrEqual(), threshold)
 
     # Set up the NAIS algorithm & run
-    algo = ot.SubsetSampling(failure_event, proposalRange, targetProbability)
+    algo = ot.SubsetSampling(failure_event, proposal_range, target_probability)
     algo.setKeepSample(True)
     algo.run()
     # Retrieve results
@@ -226,7 +229,7 @@ def compute_failure_probability_subset_sampling(
 
 
 def compute_gap_optimizations_on_sample(
-    constraint_matrix_generator: "SystemOfConstraintsAssemblyModel",
+    constraint_matrix_generator: SystemOfConstraintsAssemblyModel,
     deviation_array: np.ndarray,
     C: Optional[np.ndarray] = None,
     bounds: Optional[Union[List[List[float]], np.ndarray]] = None,
@@ -270,7 +273,7 @@ def compute_gap_optimizations_on_sample(
         _range = get_tqdm_range()
     else:
         _range = range
-
+    optimizations=[]
     if 0 <= n_cpu <= 1:
         optimizations = [
             milp(
@@ -357,7 +360,7 @@ def milp_batch_sequential(
 
 
 def compute_gap_optimizations_on_sample_batch(
-    constraint_matrix_generator: "SystemOfConstraintsAssemblyModel",
+    constraint_matrix_generator: SystemOfConstraintsAssemblyModel,
     deviation_array: np.ndarray,
     C: Optional[np.ndarray] = None,
     bounds: Optional[Union[List[List[float]], np.ndarray]] = None,
