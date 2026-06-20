@@ -92,8 +92,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#otaf.uncertainty.compute_gap_optimizations_on_sample_batch"><code class="docutils literal notranslate"><span class="pre">compute_gap_optimizations_on_sample_batch()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.uncertainty.compute_gap_optimizations_on_sample_w_steps"><code class="docutils literal notranslate"><span class="pre">compute_gap_optimizations_on_sample_w_steps()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.uncertainty.milp_batch_sequential"><code class="docutils literal notranslate"><span class="pre">milp_batch_sequential()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#otaf.uncertainty.sample_non_compliancy_at_threshold"><code class="docutils literal notranslate"><span class="pre">sample_non_compliancy_at_threshold()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#otaf.uncertainty.sample_non_compliancy_rate"><code class="docutils literal notranslate"><span class="pre">sample_non_compliancy_rate()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -130,6 +128,7 @@
 <h1>otaf.uncertainty package<a class="headerlink" href="#otaf-uncertainty-package" title="Link to this heading"></a></h1>
 <section id="module-otaf.uncertainty">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-otaf.uncertainty" title="Link to this heading"></a></h2>
+<p>Reliability analysis, failure probability estimation, and LP problem optimization</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.uncertainty.compute_adaptive_failure_probability">
 <span class="sig-prename descclassname"><span class="pre">otaf.uncertainty.</span></span><span class="sig-name descname"><span class="pre">compute_adaptive_failure_probability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">constraint_matrix_generator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deviation_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon_pf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon_std</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.005</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/uncertainty/_reliability.html#compute_adaptive_failure_probability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.uncertainty.compute_adaptive_failure_probability" title="Link to this definition"></a></dt>
@@ -377,47 +376,6 @@
 using the <cite>milp</cite> solver from <cite>scipy.optimize</cite>. Each problem shares <cite>c</cite>, <cite>a_ub</cite>,
 and <cite>a_eq</cite>, but has unique <cite>b_ub</cite> and <cite>b_eq</cite> vectors. Solver options disable
 display (<cite>disp: False</cite>) and enable presolve (<cite>presolve: True</cite>).</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="otaf.uncertainty.sample_non_compliancy_at_threshold">
-<span class="sig-prename descclassname"><span class="pre">otaf.uncertainty.</span></span><span class="sig-name descname"><span class="pre">sample_non_compliancy_at_threshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_results</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compliancy_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimization_variable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/uncertainty/_reliability.html#sample_non_compliancy_at_threshold"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.uncertainty.sample_non_compliancy_at_threshold" title="Link to this definition"></a></dt>
-<dd><p>Calculate non-compliancy at a specified threshold level.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model_results</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Array of gap values for each sample. If provided, non-compliancy
-is determined based on these values.</p></li>
-<li><p><strong>compliancy_threshold</strong> (<em>float</em><em>, </em><em>optional</em>) – Threshold value for determining compliancy. Defaults to 0.0.</p></li>
-<li><p><strong>optimizations</strong> (<em>List</em><em>[</em><em>OptimizeResult</em><em>]</em><em>, </em><em>optional</em>) – List of optimization results. Used if <cite>model_results</cite> is
-not provided. Defaults to None.</p></li>
-<li><p><strong>optimization_variable</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag indicating whether the optimizations represent a variable to
-be checked for compliancy. Defaults to False.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><dl class="simple">
-<dt>np.ndarray: Array indicating non-compliancy at each sample or optimization result. Each element is 1 if the</dt><dd><p>sample/optimization is non-compliant (below threshold), otherwise 0.</p>
-</dd>
-</dl>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="otaf.uncertainty.sample_non_compliancy_rate">
-<span class="sig-prename descclassname"><span class="pre">otaf.uncertainty.</span></span><span class="sig-name descname"><span class="pre">sample_non_compliancy_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">non_compliancy_indicator_sample</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/uncertainty/_reliability.html#sample_non_compliancy_rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.uncertainty.sample_non_compliancy_rate" title="Link to this definition"></a></dt>
-<dd><p>Return the mean of an indicator sample. The sample is supposed to be representative of the
-distribution and only is valid in monte carlo simulations.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>non_compliancy_indicator_sample</strong> (<em>ndarray</em>)</p>
-</dd>
-</dl>
 </dd></dl>
 
 </section>

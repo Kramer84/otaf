@@ -361,8 +361,7 @@
 <a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.get_symbols_in_expressions">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_symbols_in_expressions</span><span class="p">(</span><span class="n">expr_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Extract and sort unique symbols from a list of sympy expressions.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract and sort unique symbols from a list of sympy expressions.</span>
 
 <span class="sd">    This function processes a list of sympy expressions, extracts the free symbols, and</span>
 <span class="sd">    categorizes them into deviation symbols and gap symbols based on their naming patterns.</span>
@@ -399,7 +398,6 @@
 <span class="sd">    &gt;&gt;&gt; get_symbols_in_expressions(expr_list)</span>
 <span class="sd">    ([u_d_1, w_d_3], [v_g_2])</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">sort_order</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;u_&quot;</span><span class="p">,</span> <span class="s2">&quot;v_&quot;</span><span class="p">,</span> <span class="s2">&quot;w_&quot;</span><span class="p">,</span> <span class="s2">&quot;alpha_&quot;</span><span class="p">,</span> <span class="s2">&quot;beta_&quot;</span><span class="p">,</span> <span class="s2">&quot;gamma_&quot;</span><span class="p">]</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">sort_key</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
         <span class="n">id_var</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\d+)$&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
@@ -552,7 +550,7 @@
 <div class="viewcode-block" id="validate_dict_keys">
 <a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.validate_dict_keys">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">validate_dict_keys</span><span class="p">(</span>
-    <span class="n">dictionary</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">dictionary_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value_checks</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">dictionary</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">dictionary_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value_checks</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Validate the presence of specific keys in a dictionary and optionally check their values.</span>
@@ -688,9 +686,10 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">threshold_for_percentile_positive_values_below</span><span class="p">(</span>
     <span class="n">arr</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">percentile</span><span class="p">:</span> <span class="nb">float</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute the threshold value such that the given percentage of positive values</span>
-<span class="sd">    in the input array are below this threshold.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the threshold value for a given percentile of positive values.</span>
+
+<span class="sd">    This function extracts all positive values from the input array and calculates</span>
+<span class="sd">    the threshold such that the specified percentage of these values fall below it.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -746,14 +745,17 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">arr_to_str</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a numeric array to a formatted string representation.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="s2">&quot;[&quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">num</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;]&quot;</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">str_to_arr</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a formatted string representation back to a list of floats.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">_</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
 
 <div class="viewcode-block" id="bidirectional_string_to_array_conversion">
 <a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.bidirectional_string_to_array_conversion">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">bidirectional_string_to_array_conversion</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert input between a numeric array and its string representation.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">str_to_arr</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -763,6 +765,7 @@
 <div class="viewcode-block" id="arrays_close_enough">
 <a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.arrays_close_enough">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">arrays_close_enough</span><span class="p">(</span><span class="n">arr1</span><span class="p">,</span> <span class="n">arr2</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if two arrays are element-wise equal within a specified tolerance.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">arr1</span><span class="p">,</span> <span class="n">arr2</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="n">tolerance</span><span class="p">)</span></div>
 
 </pre></div>

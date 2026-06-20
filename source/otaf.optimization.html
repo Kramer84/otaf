@@ -173,27 +173,22 @@
 <dt class="sig sig-object py" id="otaf.optimization.AcceptTest.__call__">
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f_new</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_new</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_old</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_basinhopping_step_accept.html#AcceptTest.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.AcceptTest.__call__" title="Link to this definition"></a></dt>
 <dd><p>Decide whether to accept or reject a new step in the optimization.</p>
-<section id="parameters">
-<h4>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading"></a></h4>
-<dl class="simple">
-<dt>f_new<span class="classifier">float</span></dt><dd><p>The function value at the new point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f_new</strong> (<em>float</em>) – The function value at the new point.</p></li>
+<li><p><strong>x_new</strong> (<em>array-like</em>) – The coordinates of the new point.</p></li>
+<li><p><strong>f_old</strong> (<em>float</em>) – The function value at the previous point.</p></li>
+<li><p><strong>x_old</strong> (<em>array-like</em>) – The coordinates of the previous point.</p></li>
+</ul>
 </dd>
-<dt>x_new<span class="classifier">array-like</span></dt><dd><p>The coordinates of the new point.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the new step is accepted, False otherwise.</p>
 </dd>
-<dt>f_old<span class="classifier">float</span></dt><dd><p>The function value at the previous point.</p>
-</dd>
-<dt>x_old<span class="classifier">array-like</span></dt><dd><p>The coordinates of the previous point.</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
-</section>
-<section id="returns">
-<h4>Returns:<a class="headerlink" href="#returns" title="Link to this heading"></a></h4>
-<p>:
-bool</p>
-<blockquote>
-<div><p>True if the new step is accepted, False otherwise.</p>
-</div></blockquote>
-</section>
 </dd></dl>
 
 </section>
@@ -208,25 +203,21 @@ bool</p>
 <dt class="sig sig-object py" id="otaf.optimization.Callback.__call__">
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accept</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_basinhopping_step_accept.html#Callback.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.Callback.__call__" title="Link to this definition"></a></dt>
 <dd><p>Store the current local minimum if accepted and apply the stop criterion if provided.</p>
-<section id="id1">
-<h3>Parameters:<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
-<dl class="simple">
-<dt>x<span class="classifier">array-like</span></dt><dd><p>The coordinates of the current minimum.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>array-like</em>) – The coordinates of the current minimum.</p></li>
+<li><p><strong>f</strong> (<em>float</em>) – The function value at the current minimum.</p></li>
+<li><p><strong>accept</strong> (<em>bool</em>) – Whether the current minimum was accepted.</p></li>
+</ul>
 </dd>
-<dt>f<span class="classifier">float</span></dt><dd><p>The function value at the current minimum.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Return True to stop the basinhopping routine if the stop criterion is met, otherwise return None.</p>
 </dd>
-<dt>accept<span class="classifier">bool</span></dt><dd><p>Whether the current minimum was accepted.</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool or None</p>
 </dd>
 </dl>
-</section>
-<section id="id2">
-<h3>Returns:<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
-<p>:
-bool or None</p>
-<blockquote>
-<div><p>Return True to stop the basinhopping routine if the stop criterion is met, otherwise return None.</p>
-</div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
@@ -308,8 +299,8 @@ Replaces the old ‘get_all_data’ and avoids loop bottleneck.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.optimization.</span></span><span class="sig-name descname"><span class="pre">StepTaking</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defect_description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_basinhopping_step_accept.html#StepTaking"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.StepTaking" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Custom class for generating bounded steps in the optimization space.</p>
-<section id="id3">
-<h3>Attributes:<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<section id="id1">
+<h3>Attributes:<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>linear_condition<span class="classifier">callable</span></dt><dd><p>A function to enforce linear constraints on subsets of variables.</p>
 </dd>
@@ -321,21 +312,17 @@ Replaces the old ‘get_all_data’ and avoids loop bottleneck.</p>
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_basinhopping_step_accept.html#StepTaking.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.StepTaking.__call__" title="Link to this definition"></a></dt>
 <dd><p>Generate a new candidate step based on the current position ‘x’.
 The step respects the provided bounds and enforces the linear condition.</p>
-<section id="id4">
-<h4>Parameters:<a class="headerlink" href="#id4" title="Link to this heading"></a></h4>
-<dl class="simple">
-<dt>x<span class="classifier">array-like</span></dt><dd><p>The current point in the search space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>array-like</em>) – The current point in the search space.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>new_x</strong> – The new point after taking a step.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array-like</p>
 </dd>
 </dl>
-</section>
-<section id="id5">
-<h4>Returns:<a class="headerlink" href="#id5" title="Link to this heading"></a></h4>
-<p>:
-new_x : array-like</p>
-<blockquote>
-<div><p>The new point after taking a step.</p>
-</div></blockquote>
-</section>
 </dd></dl>
 
 </section>

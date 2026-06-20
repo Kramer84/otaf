@@ -92,47 +92,54 @@
 <span class="p">]</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
+<span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <div class="viewcode-block" id="project_samples_to_hyperplane">
 <a class="viewcode-back" href="../../../source/otaf.sampling.html#otaf.sampling.project_samples_to_hyperplane">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">project_samples_to_hyperplane</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Project (N-1)-dimensional samples onto the N-dimensional hyperplane defined by the equation:</span>
+<span class="nd">@beartype</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">project_samples_to_hyperplane</span><span class="p">(</span>
+    <span class="n">a</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">samples</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">bounds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Project (N-1)-dimensional samples onto an N-dimensional hyperplane.</span>
 
-<span class="sd">    a_0 * x_0 + a_1 * x_1 + ... + a_{N-1} * x_{N-1} = b</span>
+<span class="sd">    Solve the hyperplane equation $a_0 x_0 + a_1 x_1 + ... + a_{N-1} x_{N-1} = b$</span>
+<span class="sd">    to find the coordinate $x_0$, then reconstruct the full N-dimensional point.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">    a (list or np.ndarray): Coefficients of the hyperplane equation.</span>
-<span class="sd">    b (float): Constant term in the hyperplane equation.</span>
-<span class="sd">    samples (np.ndarray): Samples in (N-1)-dimensional space.</span>
-<span class="sd">    bounds (list of tuples): Bounds for each dimension in the format [(min, max), ..., (min, max)].</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a : Union[list[float], np.ndarray]</span>
+<span class="sd">        Coefficients of the hyperplane equation.</span>
+<span class="sd">    b : float</span>
+<span class="sd">        Constant term in the hyperplane equation.</span>
+<span class="sd">    samples : np.ndarray</span>
+<span class="sd">        Samples in (N-1)-dimensional space with shape (M, N-1).</span>
+<span class="sd">    bounds : list[tuple[float, float]], optional</span>
+<span class="sd">        Bounds for each dimension in the format [(min, max), ...].</span>
+<span class="sd">        Only samples whose projections fall within these bounds are returned.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">    np.ndarray: Projected samples in N-dimensional space that satisfy the hyperplane equation.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        Projected samples in N-dimensional space that satisfy the hyperplane equation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
     <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
     <span class="n">projected_samples</span> <span class="o">=</span> <span class="p">[]</span>
-
     <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">:</span>
-        <span class="c1"># Solve for x0 in the equation a_0 x_0 + a_1 x_1 + ... + a_N-1 x_N-1 = b</span>
         <span class="n">x_rest_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">sample</span><span class="p">)</span>
         <span class="n">x0</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">x_rest_sum</span><span class="p">)</span> <span class="o">/</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">projected_sample</span> <span class="o">=</span> <span class="p">[</span><span class="n">x0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
-
-        <span class="c1"># Check if the projected point satisfies the bounds, if bounds are provided</span>
-        <span class="k">if</span> <span class="n">bounds</span><span class="p">:</span>
+        <span class="n">projected_sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x0</span><span class="p">,</span> <span class="o">*</span><span class="n">sample</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">bounds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">projected_sample</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)):</span>
                 <span class="n">projected_samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">projected_sample</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">projected_samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">projected_sample</span><span class="p">)</span>
-
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">projected_samples</span><span class="p">)</span></div>
 
-
-
-<span class="c1"># Example usage in 2D (to be used in the next steps with matplotlib)</span>
 </pre></div>
 
            </div>

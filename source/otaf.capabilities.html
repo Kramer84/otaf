@@ -17,6 +17,8 @@
       <script src="../_static/doctools.js?v=9a2dae69"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -120,28 +122,55 @@
 <h1>otaf.capabilities package<a class="headerlink" href="#otaf-capabilities-package" title="Link to this heading"></a></h1>
 <section id="module-otaf.capabilities">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-otaf.capabilities" title="Link to this heading"></a></h2>
+<p>Capability assessment and process analysis tools.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.capabilities.process_capability">
-<span class="sig-prename descclassname"><span class="pre">otaf.capabilities.</span></span><span class="sig-name descname"><span class="pre">process_capability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">USL</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">LSL</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std_dev</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/capabilities/_capabilities.html#process_capability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.capabilities.process_capability" title="Link to this definition"></a></dt>
-<dd><p>Calculates the process capability indices Cp, CPU, CPL, Cpk, and k.</p>
-<p>Parameters:
-USL (float): Upper Specification Limit
-LSL (float): Lower Specification Limit
-mean (float): Mean of the process (x̄)
-std_dev (float): Standard deviation of the process (σ)</p>
-<p>Returns:
-dict: Dictionary containing Cp, CPU, CPL, Cpk, and k.</p>
+<span class="sig-prename descclassname"><span class="pre">otaf.capabilities.</span></span><span class="sig-name descname"><span class="pre">process_capability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">usl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lsl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std_dev</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/capabilities/_capabilities.html#process_capability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.capabilities.process_capability" title="Link to this definition"></a></dt>
+<dd><p>Calculate the process capability indices Cp, CPU, CPL, Cpk, and k.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>usl</strong> (<em>float</em>) – Upper Specification Limit.</p></li>
+<li><p><strong>lsl</strong> (<em>float</em>) – Lower Specification Limit.</p></li>
+<li><p><strong>mean</strong> (<em>float</em>) – Mean of the process ($bar{x}$).</p></li>
+<li><p><strong>std_dev</strong> (<em>float</em>) – Standard deviation of the process ($sigma$).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>dict of {str</strong> – A dictionary containing the calculated capability metrics:
+- ‘Cp’ : Process potential index.
+- ‘CPU’ : Upper process capability index.
+- ‘CPL’ : Lower process capability index.
+- ‘Cpk’ : Minimum process capability index.
+- ‘k’ : Standardized deviation from the specification center.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span></p>
+<dd class="field-odd"><p>float}</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The capability indices are computed using the following formulas:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}C_p = \frac{usl - lsl}{6\sigma}\\CPU = \frac{usl - \mu}{3\sigma}\\CPL = \frac{\mu - lsl}{3\sigma}\\C_{pk} = \min(CPU, CPL)\\k = \frac{|\mu - m|}{\frac{usl - lsl}{2}}\end{aligned}\end{align} \]</div>
+<p>Where $m = frac{usl + lsl}{2}$ is the specification midpoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ZeroDivisionError</strong> – If <cite>std_dev</cite> is 0, resulting in a division by zero during indices calculation.</p></li>
+<li><p><strong>ValueError</strong> – If <cite>usl</cite> is less than <cite>lsl</cite>, resulting in an invalid specification range,
+    or if <cite>std_dev</cite> is negative.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>USL</strong> (<em>float</em>)</p></li>
-<li><p><strong>LSL</strong> (<em>float</em>)</p></li>
+<li><p><strong>usl</strong> (<em>float</em>)</p></li>
+<li><p><strong>lsl</strong> (<em>float</em>)</p></li>
 <li><p><strong>mean</strong> (<em>float</em>)</p></li>
 <li><p><strong>std_dev</strong> (<em>float</em>)</p></li>
 </ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, float]</p>
 </dd>
 </dl>
 </dd></dl>

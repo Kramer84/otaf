@@ -134,6 +134,7 @@
 <h1>otaf.common package<a class="headerlink" href="#otaf-common-package" title="Link to this heading"></a></h1>
 <section id="module-otaf.common">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-otaf.common" title="Link to this heading"></a></h2>
+<p>Common utility functions and helpers for OTAF.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.common.alphabet_generator">
 <span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">alphabet_generator</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#alphabet_generator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.alphabet_generator" title="Link to this definition"></a></dt>
@@ -156,12 +157,14 @@ with multi-letter combinations (e.g., ‘aa’, ‘ab’, …, ‘zz’, ‘aaa�
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.common.arrays_close_enough">
 <span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">arrays_close_enough</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arr2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#arrays_close_enough"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.arrays_close_enough" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Check if two arrays are element-wise equal within a specified tolerance.</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.common.bidirectional_string_to_array_conversion">
 <span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">bidirectional_string_to_array_conversion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#bidirectional_string_to_array_conversion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.bidirectional_string_to_array_conversion" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Convert input between a numeric array and its string representation.</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.common.extract_expressions_with_variables">
@@ -475,8 +478,9 @@ type of matrix but typically include:
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.common.threshold_for_percentile_positive_values_below">
 <span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">threshold_for_percentile_positive_values_below</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percentile</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#threshold_for_percentile_positive_values_below"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.threshold_for_percentile_positive_values_below" title="Link to this definition"></a></dt>
-<dd><p>Compute the threshold value such that the given percentage of positive values
-in the input array are below this threshold.</p>
+<dd><p>Compute the threshold value for a given percentile of positive values.</p>
+<p>This function extracts all positive values from the input array and calculates
+the threshold such that the specified percentage of these values fall below it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -513,7 +517,7 @@ None</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.common.validate_dict_keys">
-<span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">validate_dict_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dictionary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dictionary_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_checks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#validate_dict_keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.validate_dict_keys" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">validate_dict_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dictionary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dictionary_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_checks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#validate_dict_keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.validate_dict_keys" title="Link to this definition"></a></dt>
 <dd><p>Validate the presence of specific keys in a dictionary and optionally check their values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

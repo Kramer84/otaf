@@ -88,8 +88,6 @@
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;sample_non_compliancy_at_threshold&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;sample_non_compliancy_rate&quot;</span><span class="p">,</span>
     <span class="s2">&quot;compute_failure_probability_subset_sampling&quot;</span><span class="p">,</span>
     <span class="s2">&quot;compute_failure_probability_FORM&quot;</span><span class="p">,</span>
     <span class="s2">&quot;compute_failure_probability_NAIS&quot;</span><span class="p">,</span>
@@ -126,67 +124,6 @@
 <span class="k">else</span><span class="p">:</span>
     <span class="c1"># Older versions</span>
     <span class="n">JointDistribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span>
-
-<span class="c1">#######################################################################################</span>
-<span class="c1">########### MODEL POST-PROCESSING</span>
-
-
-<div class="viewcode-block" id="sample_non_compliancy_at_threshold">
-<a class="viewcode-back" href="../../../source/otaf.uncertainty.html#otaf.uncertainty.sample_non_compliancy_at_threshold">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">sample_non_compliancy_at_threshold</span><span class="p">(</span>
-    <span class="n">model_results</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">compliancy_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
-    <span class="n">optimizations</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">OptimizeResult</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">optimization_variable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate non-compliancy at a specified threshold level.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        model_results (np.ndarray, optional): Array of gap values for each sample. If provided, non-compliancy</span>
-<span class="sd">            is determined based on these values.</span>
-<span class="sd">        compliancy_threshold (float, optional): Threshold value for determining compliancy. Defaults to 0.0.</span>
-<span class="sd">        optimizations (List[OptimizeResult], optional): List of optimization results. Used if `model_results` is</span>
-<span class="sd">            not provided. Defaults to None.</span>
-<span class="sd">        optimization_variable (bool, optional): Flag indicating whether the optimizations represent a variable to</span>
-<span class="sd">            be checked for compliancy. Defaults to False.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">        np.ndarray: Array indicating non-compliancy at each sample or optimization result. Each element is 1 if the</span>
-<span class="sd">            sample/optimization is non-compliant (below threshold), otherwise 0.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">model_results</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">model_results</span> <span class="o">&lt;=</span> <span class="n">compliancy_threshold</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-
-    <span class="k">elif</span> <span class="n">optimization_variable</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="n">opt_var_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">opt</span><span class="o">.</span><span class="n">fun</span> <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="n">optimizations</span><span class="p">]</span>
-        <span class="p">)</span>  <span class="c1"># if s variable all the others are 0 so c@y=s</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">opt_var_values</span> <span class="o">&lt;=</span> <span class="n">compliancy_threshold</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-
-    <span class="k">elif</span> <span class="n">optimizations</span><span class="p">:</span>
-        <span class="n">successes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">success</span><span class="p">)</span> <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="n">optimizations</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
-        <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">successes</span>  <span class="c1"># Inevrting to get non compliancy rate</span>
-
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Arguments missing&quot;</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="sample_non_compliancy_rate">
-<a class="viewcode-back" href="../../../source/otaf.uncertainty.html#otaf.uncertainty.sample_non_compliancy_rate">[docs]</a>
-<span class="nd">@beartype</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">sample_non_compliancy_rate</span><span class="p">(</span><span class="n">non_compliancy_indicator_sample</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the mean of an indicator sample. The sample is supposed to be representative of the</span>
-<span class="sd">    distribution and only is valid in monte carlo simulations.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">non_compliancy_indicator_sample</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span></div>
-
-
-
-<span class="c1">#######################################################################################</span>
-<span class="c1">########### MODEL EVALUATIONS / FAILURE PROBABILITIES</span>
-
 
 <div class="viewcode-block" id="compute_failure_probability_FORM">
 <a class="viewcode-back" href="../../../source/otaf.uncertainty.html#otaf.uncertainty.compute_failure_probability_FORM">[docs]</a>

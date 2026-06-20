@@ -125,17 +125,20 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JointDistribution</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a composed distribution of defects based on their names and associated standard deviations.</span>
 
-<span class="sd">    Args:</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
 <span class="sd">        defect_names (list): A list of defect variable names (symbols).</span>
 <span class="sd">        mu_list (list, optional): List of means for each defect. If not provided, defaults to 0.0 for all defects.</span>
 <span class="sd">        sigma_list (list, optional): List of standard deviations for each defect. If not provided, defaults to 1.0 for all defects.</span>
 <span class="sd">        mu_dict (dict, optional): Dictionary mapping defect names to their mean values.</span>
 <span class="sd">        sigma_dict (dict, optional): Dictionary mapping defect names to their standard deviation values.</span>
 
-<span class="sd">    Returns:</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">        JointDistribution: A composed distribution object.</span>
 
-<span class="sd">    Notes:</span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
 <span class="sd">        - The defect names are expected to have specific prefixes to identify their type:</span>
 <span class="sd">            - ``u_`` for translation along the x-axis</span>
 <span class="sd">            - ``v_`` for translation along the y-axis</span>
@@ -232,13 +235,15 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Multiply all parameters in a JointDistribution by a constant.</span>
 
-<span class="sd">    Args:</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
 <span class="sd">        composed_distribution (JointDistribution):</span>
 <span class="sd">            The original composed distribution.</span>
 <span class="sd">        constant (float):</span>
 <span class="sd">            The constant value by which to multiply all parameters.</span>
 
-<span class="sd">    Returns:</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">        JointDistribution:</span>
 <span class="sd">            A copy of the original composed distribution,</span>
 <span class="sd">            with its parameters scaled by the given constant.</span>
@@ -260,13 +265,15 @@
 <span class="sd">    This function assumes each sub-distribution is a Normal distribution,</span>
 <span class="sd">    where each distribution&#39;s parameters are in the form [mean, std, mean, std, ...].</span>
 
-<span class="sd">    Args:</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
 <span class="sd">        composed_distribution (JointDistribution):</span>
 <span class="sd">            The original composed distribution.</span>
 <span class="sd">        constants (list[float]):</span>
 <span class="sd">            A list of constants to multiply each distribution&#39;s standard deviation.</span>
 
-<span class="sd">    Returns:</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">        JointDistribution:</span>
 <span class="sd">            A copy of the original composed distribution,</span>
 <span class="sd">            with updated standard deviations.</span>
@@ -283,14 +290,16 @@
 <div class="viewcode-block" id="get_means_standards_composed_distribution">
 <a class="viewcode-back" href="../../../source/otaf.distribution.html#otaf.distribution.get_means_standards_composed_distribution">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_means_standards_composed_distribution</span><span class="p">(</span><span class="n">composed_distribution</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Extracts the means and standard deviations from the composed distribution.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract means and standard deviations from a composed distribution.</span>
+
 <span class="sd">    Assumes all distributions are normal (mean/std).</span>
 
-<span class="sd">    Parameters:</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
 <span class="sd">        composed_distribution: The composed distribution of normal distributions.</span>
 
-<span class="sd">    Returns:</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">        means: A list of the means of the distributions.</span>
 <span class="sd">        stds: A list of the standard deviations of the distributions.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -330,7 +339,7 @@
 <span class="sd">    It then computes the pointwise supremum and infimum of the CDFs across the</span>
 <span class="sd">    distributions at each of these points.</span>
 
-<span class="sd">    Parameters:</span>
+<span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    distributions : list</span>
 <span class="sd">        A list of objects where each object has a `computeCDF(x)` method to evaluate</span>
@@ -343,7 +352,7 @@
 <span class="sd">        The number of points at which the CDFs are evaluated between `x_min` and `x_max`.</span>
 <span class="sd">        Default is 10,000.</span>
 
-<span class="sd">    Returns:</span>
+<span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    sup_data : np.ndarray</span>
 <span class="sd">        A 2D array with shape (n_points, 2), where the first column is the x values</span>
@@ -378,13 +387,15 @@
 <span class="sd">    absolute value of the difference between the first column and the threshold</span>
 <span class="sd">    is the smallest, and then returns the corresponding value from the second column.</span>
 
-<span class="sd">    Parameters:</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
 <span class="sd">    data_inf_sup : numpy array</span>
 <span class="sd">        Array where the first column contains gap values and the second column contains probabilities.</span>
 <span class="sd">    threshold : float, optional</span>
 <span class="sd">        The threshold to check against (default is 0).</span>
 
-<span class="sd">    Returns:</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">    float</span>
 <span class="sd">        The probability corresponding to the gap closest to the threshold.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
