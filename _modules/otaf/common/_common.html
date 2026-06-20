@@ -103,7 +103,8 @@
     <span class="s2">&quot;alphabet_generator&quot;</span><span class="p">,</span>
     <span class="s2">&quot;threshold_for_percentile_positive_values_below&quot;</span><span class="p">,</span>
     <span class="s2">&quot;bidirectional_string_to_array_conversion&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;arrays_close_enough&quot;</span>
+    <span class="s2">&quot;arrays_close_enough&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;scaling&quot;</span>
 <span class="p">]</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
@@ -768,6 +769,35 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">arrays_close_enough</span><span class="p">(</span><span class="n">arr1</span><span class="p">,</span> <span class="n">arr2</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if two arrays are element-wise equal within a specified tolerance.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">arr1</span><span class="p">,</span> <span class="n">arr2</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="n">tolerance</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="scaling">
+<a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.scaling">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">scaling</span><span class="p">(</span><span class="n">scale_factor</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decorator to scale the output of a function by a specified scaling factor.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    scale_factor : float</span>
+<span class="sd">        The factor by which to scale the output of the wrapped function.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    function</span>
+<span class="sd">        A decorator that applies the scaling to the output of the wrapped function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="c1"># Scale both objective and Jacobian if it&#39;s a tuple (result and Jacobian)</span>
+                <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="n">scale_factor</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">result</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Scale only the result</span>
+                <span class="k">return</span> <span class="n">result</span> <span class="o">*</span> <span class="n">scale_factor</span>
+        <span class="k">return</span> <span class="n">wrapper</span>
+    <span class="k">return</span> <span class="n">decorator</span></div>
 
 </pre></div>
 

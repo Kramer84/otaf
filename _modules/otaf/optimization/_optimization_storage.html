@@ -128,6 +128,7 @@
 <span class="sd">    constraint_tolerance : float</span>
 <span class="sd">        Tolerance threshold for constraint validation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">bounds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Bounds</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -141,9 +142,9 @@
 
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;OptimizationTracker initialized with bounds: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_hash_x</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_hash_x</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Hashes the coordinates of a point using rounded byte representations.</span>
+<span class="sd">        Hash the coordinates of a point using rounded byte representations.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -157,9 +158,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">precision_decimals</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_init_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_key</span><span class="p">,</span> <span class="n">x_hash</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_init_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_key</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">x_hash</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initializes an empty structured entry in the evaluation history if absent.</span>
+<span class="sd">        Initialize an empty structured entry in the evaluation history if absent.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -180,7 +181,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_check_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Evaluates whether a given point stays within the registered bounds.</span>
+<span class="sd">        Evaluate whether a given point stays within the registered bounds.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -199,9 +200,18 @@
 
 <div class="viewcode-block" id="OptimizationTracker.update_objective_data">
 <a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.OptimizationTracker.update_objective_data">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">update_objective_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_key</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">fp_gld</span><span class="p">,</span> <span class="n">fp_slack</span><span class="p">,</span> <span class="n">gld_params</span><span class="p">,</span> <span class="n">failure_slack</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="s2">&quot;local&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_objective_data</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">exp_key</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+        <span class="n">x</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="n">fp_gld</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">fp_slack</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">gld_params</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
+        <span class="n">failure_slack</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;local&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Updates objective function metrics and associated parameters for a specific point.</span>
+<span class="sd">        Update objective function metrics and associated parameters for a specific point.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -235,9 +245,14 @@
 
 <div class="viewcode-block" id="OptimizationTracker.update_constraint_data">
 <a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.OptimizationTracker.update_constraint_data">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">update_constraint_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_key</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">constraints</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_constraint_data</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">exp_key</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+        <span class="n">x</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="n">constraints</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Updates constraint evaluation metrics and assesses tolerance breaches.</span>
+<span class="sd">        Update constraint evaluation metrics and assess tolerance breaches.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -263,9 +278,9 @@
 
 <div class="viewcode-block" id="OptimizationTracker.get_data">
 <a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.OptimizationTracker.get_data">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_key</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_key</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Retrieves internal stored attributes for a point if existing.</span>
+<span class="sd">        Retrieve internal stored attributes for a point if existing.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -285,9 +300,9 @@
 
 <div class="viewcode-block" id="OptimizationTracker.to_dataframe">
 <a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.OptimizationTracker.to_dataframe">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">to_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Converts the internal dictionary to a Pandas DataFrame.</span>
+<span class="sd">        Convert the internal dictionary to a Pandas DataFrame.</span>
 
 <span class="sd">        Replaces the old &#39;get_all_data&#39; and avoids loop bottleneck.</span>
 
@@ -319,9 +334,15 @@
 
 <div class="viewcode-block" id="OptimizationTracker.filter_points">
 <a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.OptimizationTracker.filter_points">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">filter_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bounds_respected</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">constraints_respected</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter_points</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">exp_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">source</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">bounds_respected</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">constraints_respected</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Filters tracking records against targeted properties via Pandas DataFrame representation.</span>
+<span class="sd">        Filter tracking records against targeted properties via Pandas DataFrame representation.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>

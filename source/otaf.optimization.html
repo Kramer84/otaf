@@ -196,7 +196,7 @@ for post-processing and filtering.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.optimization.OptimizationTracker.filter_points">
 <span class="sig-name descname"><span class="pre">filter_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exp_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds_respected</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraints_respected</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationTracker.filter_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationTracker.filter_points" title="Link to this definition"></a></dt>
-<dd><p>Filters tracking records against targeted properties via Pandas DataFrame representation.</p>
+<dd><p>Filter tracking records against targeted properties via Pandas DataFrame representation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -218,7 +218,7 @@ for post-processing and filtering.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.optimization.OptimizationTracker.get_data">
 <span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exp_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationTracker.get_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationTracker.get_data" title="Link to this definition"></a></dt>
-<dd><p>Retrieves internal stored attributes for a point if existing.</p>
+<dd><p>Retrieve internal stored attributes for a point if existing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -238,7 +238,7 @@ for post-processing and filtering.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.optimization.OptimizationTracker.to_dataframe">
 <span class="sig-name descname"><span class="pre">to_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exp_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationTracker.to_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationTracker.to_dataframe" title="Link to this definition"></a></dt>
-<dd><p>Converts the internal dictionary to a Pandas DataFrame.</p>
+<dd><p>Convert the internal dictionary to a Pandas DataFrame.</p>
 <p>Replaces the old ‘get_all_data’ and avoids loop bottleneck.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -257,7 +257,7 @@ all stored items across tracking sequences.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.optimization.OptimizationTracker.update_constraint_data">
 <span class="sig-name descname"><span class="pre">update_constraint_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exp_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraints</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationTracker.update_constraint_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationTracker.update_constraint_data" title="Link to this definition"></a></dt>
-<dd><p>Updates constraint evaluation metrics and assesses tolerance breaches.</p>
+<dd><p>Update constraint evaluation metrics and assess tolerance breaches.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -266,13 +266,16 @@ all stored items across tracking sequences.</p>
 <li><p><strong>constraints</strong> (<em>Union</em><em>[</em><em>np.ndarray</em><em>, </em><em>List</em><em>[</em><em>float</em><em>]</em><em>, </em><em>float</em><em>]</em>) – Array or values representing current constraint evaluation outputs.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.optimization.OptimizationTracker.update_objective_data">
 <span class="sig-name descname"><span class="pre">update_objective_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exp_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp_gld</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp_slack</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gld_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">failure_slack</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'local'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationTracker.update_objective_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationTracker.update_objective_data" title="Link to this definition"></a></dt>
-<dd><p>Updates objective function metrics and associated parameters for a specific point.</p>
+<dd><p>Update objective function metrics and associated parameters for a specific point.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -285,6 +288,9 @@ all stored items across tracking sequences.</p>
 <li><p><strong>failure_slack</strong> (<em>float</em>) – The slack value used to define failure.</p></li>
 <li><p><strong>source</strong> (<em>str</em><em>, </em><em>default=&quot;local&quot;</em>) – The metadata tracking origin string of the evaluation.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
