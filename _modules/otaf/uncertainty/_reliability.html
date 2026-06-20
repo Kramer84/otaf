@@ -88,15 +88,6 @@
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;normal_score_mu&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;normal_score_sigma&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;intermediate_lambda_function&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;intermediate_lambda_function_derivative&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;monte_carlo_non_compliancy_rate_gradient&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;monte_carlo_non_compliancy_rate_gradient_start_space&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;lambda_sample_composition&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;monte_carlo_non_compliancy_rate_at_threshold_w_gradient&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;monte_carlo_non_compliancy_rate_w_gradient&quot;</span><span class="p">,</span>
     <span class="s2">&quot;sample_non_compliancy_at_threshold&quot;</span><span class="p">,</span>
     <span class="s2">&quot;sample_non_compliancy_rate&quot;</span><span class="p">,</span>
     <span class="s2">&quot;compute_failure_probability_subset_sampling&quot;</span><span class="p">,</span>
@@ -120,7 +111,6 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">linprog</span><span class="p">,</span> <span class="n">milp</span><span class="p">,</span> <span class="n">OptimizeResult</span><span class="p">,</span> <span class="n">LinearConstraint</span><span class="p">,</span> <span class="n">Bounds</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">joblib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span><span class="p">,</span> <span class="n">cpu_count</span>
 
@@ -136,142 +126,6 @@
 <span class="k">else</span><span class="p">:</span>
     <span class="c1"># Older versions</span>
     <span class="n">JointDistribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span>
-
-<span class="c1">#######################################################################################</span>
-<span class="c1">########### SCORE FUNCTIONS / GRADIENTS</span>
-
-
-<div class="viewcode-block" id="intermediate_lambda_function">
-<a class="viewcode-back" href="../../../source/otaf.uncertainty.html#otaf.uncertainty.intermediate_lambda_function">[docs]</a>
-<span class="nd">@beartype</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">intermediate_lambda_function</span><span class="p">(</span><span class="n">lambdas</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ensure sum(lambdas**2) == 1.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lambdas</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="intermediate_lambda_function_derivative">
-<a class="viewcode-back" href="../../../source/otaf.uncertainty.html#otaf.uncertainty.intermediate_lambda_function_derivative">[docs]</a>
-<span class="nd">@beartype</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">intermediate_lambda_function_derivative</span><span class="p">(</span><span class="n">lambdas</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Derivative of the lambda function.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lambdas</span><span class="p">))</span></div>
-
-
-
-<div class="viewcode-block" id="normal_score_mu">
-<a class="viewcode-back" href="../../../source/otaf.uncertainty.html#otaf.uncertainty.normal_score_mu">[docs]</a>
-<span class="nd">@beartype</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">normal_score_mu</span><span class="p">(</span>
-    <span class="n">sample</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">mean</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">std</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gradient of log Gaussian w.r.t. mean.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">std</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="n">sample</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span> <span class="o">/</span> <span class="n">std</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="normal_score_sigma">
-<a class="viewcode-back" href="../../../source/otaf.uncertainty.html#otaf.uncertainty.normal_score_sigma">[docs]</a>
-<span class="nd">@beartype</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">normal_score_sigma</span><span class="p">(</span>
-    <span class="n">sample</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">mean</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">std</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gradient of log Gaussian w.r.t. standard deviation.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">std</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">((</span><span class="n">sample</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span> <span class="o">/</span> <span class="n">std</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="monte_carlo_non_compliancy_rate_gradient">
-<a class="viewcode-back" href="../../../source/otaf.uncertainty.html#otaf.uncertainty.monte_carlo_non_compliancy_rate_gradient">[docs]</a>
-<span class="nd">@beartype</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">monte_carlo_non_compliancy_rate_gradient</span><span class="p">(</span>
-    <span class="n">input_samples</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-    <span class="n">output_non_compliancy_sample</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-    <span class="n">input_distribution_mean</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
-    <span class="n">input_distribution_standard</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
-    <span class="n">ref_standards</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">list</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gradient of non-compliancy rate w.r.t. standard deviations.&quot;&quot;&quot;</span>
-    <span class="n">gradients</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span>
-        <span class="n">output_non_compliancy_sample</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span>
-        <span class="n">normal_score_sigma</span><span class="p">(</span><span class="n">input_samples</span><span class="p">,</span> <span class="n">input_distribution_mean</span><span class="p">,</span> <span class="n">input_distribution_standard</span><span class="p">),</span>
-    <span class="p">)</span>
-    <span class="n">gradients</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">gradients</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">ref_standards</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">gradients</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="monte_carlo_non_compliancy_rate_gradient_start_space">
-<a class="viewcode-back" href="../../../source/otaf.uncertainty.html#otaf.uncertainty.monte_carlo_non_compliancy_rate_gradient_start_space">[docs]</a>
-<span class="nd">@beartype</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">monte_carlo_non_compliancy_rate_gradient_start_space</span><span class="p">(</span>
-    <span class="n">lambdas</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">gradient_composed</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gradient in the space of lambdas.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">intermediate_lambda_function_derivative</span><span class="p">(</span><span class="n">lambdas</span><span class="p">)</span> <span class="o">*</span> <span class="n">gradient_composed</span></div>
-
-
-
-<div class="viewcode-block" id="lambda_sample_composition">
-<a class="viewcode-back" href="../../../source/otaf.uncertainty.html#otaf.uncertainty.lambda_sample_composition">[docs]</a>
-<span class="nd">@beartype</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">lambda_sample_composition</span><span class="p">(</span><span class="n">lambdas</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">sample</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compose lambdas with samples.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">sample</span> <span class="o">*</span> <span class="n">lambdas</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span></div>
-
-
-
-<span class="nd">@beartype</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">monte_carlo_non_compliancy_rate</span><span class="p">(</span><span class="n">non_compliancy_monte_carlo_sample</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Real</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute non-compliancy rate.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">non_compliancy_monte_carlo_sample</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-
-
-<div class="viewcode-block" id="monte_carlo_non_compliancy_rate_at_threshold_w_gradient">
-<a class="viewcode-back" href="../../../source/otaf.uncertainty.html#otaf.uncertainty.monte_carlo_non_compliancy_rate_at_threshold_w_gradient">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">monte_carlo_non_compliancy_rate_at_threshold_w_gradient</span><span class="p">(</span>
-    <span class="n">lambdas</span><span class="p">,</span> <span class="n">compliancy_threshold</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="n">means</span><span class="p">,</span> <span class="n">standards</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">model_is_bool</span><span class="o">=</span><span class="kc">False</span>
-<span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute non-compliancy rate and its gradient at a given lambda.&quot;&quot;&quot;</span>
-    <span class="n">lambdas_sqrt</span> <span class="o">=</span> <span class="n">intermediate_lambda_function</span><span class="p">(</span><span class="n">lambdas</span><span class="p">)</span>
-    <span class="n">standards_composed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">lambdas_sqrt</span><span class="p">,</span> <span class="n">standards</span><span class="p">)</span>
-    <span class="n">means_composed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">lambdas_sqrt</span><span class="p">,</span> <span class="n">means</span><span class="p">)</span>
-    <span class="n">samples_composed</span> <span class="o">=</span> <span class="n">lambda_sample_composition</span><span class="p">(</span><span class="n">lambdas_sqrt</span><span class="p">,</span> <span class="n">sample</span><span class="p">)</span>
-    <span class="n">model_results</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">samples_composed</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">model_is_bool</span><span class="p">:</span>
-        <span class="n">model_non_compliancy_sample</span> <span class="o">=</span> <span class="n">sample_non_compliancy_at_threshold</span><span class="p">(</span>
-            <span class="n">model_results</span><span class="p">,</span> <span class="n">compliancy_threshold</span>
-        <span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">model_non_compliancy_sample</span> <span class="o">=</span> <span class="n">model_results</span>
-    <span class="n">model_non_compliancy_gradient</span> <span class="o">=</span> <span class="n">monte_carlo_non_compliancy_rate_gradient</span><span class="p">(</span>
-        <span class="n">samples_composed</span><span class="p">,</span> <span class="n">model_non_compliancy_sample</span><span class="p">,</span> <span class="n">means_composed</span><span class="p">,</span> <span class="n">standards_composed</span><span class="p">,</span> <span class="n">standards</span>
-    <span class="p">)</span>
-    <span class="n">model_non_compliancy_gradient_start_space</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">monte_carlo_non_compliancy_rate_gradient_start_space</span><span class="p">(</span><span class="n">lambdas</span><span class="p">,</span> <span class="n">model_non_compliancy_gradient</span><span class="p">)</span>
-    <span class="p">)</span>
-    <span class="n">model_non_compliancy_rate</span> <span class="o">=</span> <span class="n">monte_carlo_non_compliancy_rate</span><span class="p">(</span><span class="n">model_non_compliancy_sample</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">model_non_compliancy_rate</span><span class="p">,</span> <span class="n">model_non_compliancy_gradient_start_space</span></div>
-
-
-
-<div class="viewcode-block" id="monte_carlo_non_compliancy_rate_w_gradient">
-<a class="viewcode-back" href="../../../source/otaf.uncertainty.html#otaf.uncertainty.monte_carlo_non_compliancy_rate_w_gradient">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">monte_carlo_non_compliancy_rate_w_gradient</span><span class="p">(</span>
-    <span class="n">compliancy_threshold</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="n">means</span><span class="p">,</span> <span class="n">standards</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">model_is_bool</span><span class="o">=</span><span class="kc">False</span>
-<span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Partial function for computing non-compliancy rate and gradient.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">partial</span><span class="p">(</span>
-        <span class="n">monte_carlo_non_compliancy_rate_at_threshold_w_gradient</span><span class="p">,</span>
-        <span class="n">compliancy_threshold</span><span class="o">=</span><span class="n">compliancy_threshold</span><span class="p">,</span>
-        <span class="n">sample</span><span class="o">=</span><span class="n">sample</span><span class="p">,</span>
-        <span class="n">means</span><span class="o">=</span><span class="n">means</span><span class="p">,</span>
-        <span class="n">standards</span><span class="o">=</span><span class="n">standards</span><span class="p">,</span>
-        <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
-        <span class="n">model_is_bool</span><span class="o">=</span><span class="n">model_is_bool</span><span class="p">,</span>
-    <span class="p">)</span></div>
-
-
 
 <span class="c1">#######################################################################################</span>
 <span class="c1">########### MODEL POST-PROCESSING</span>
@@ -296,7 +150,8 @@
 <span class="sd">        optimization_variable (bool, optional): Flag indicating whether the optimizations represent a variable to</span>
 <span class="sd">            be checked for compliancy. Defaults to False.</span>
 
-<span class="sd">    Returns:</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">        np.ndarray: Array indicating non-compliancy at each sample or optimization result. Each element is 1 if the</span>
 <span class="sd">            sample/optimization is non-compliant (below threshold), otherwise 0.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -322,7 +177,7 @@
 <a class="viewcode-back" href="../../../source/otaf.uncertainty.html#otaf.uncertainty.sample_non_compliancy_rate">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">sample_non_compliancy_rate</span><span class="p">(</span><span class="n">non_compliancy_indicator_sample</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the mean of an indicator sample. The sample is supposed to be representative of the</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the mean of an indicator sample. The sample is supposed to be representative of the</span>
 <span class="sd">    distribution and only is valid in monte carlo simulations.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">non_compliancy_indicator_sample</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span></div>
@@ -369,16 +224,17 @@
     <span class="n">quantile_level</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">,</span>
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">SimulationResult</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute the failure probability using the NAIS algorithm.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the failure probability using the NAIS algorithm.</span>
 
-<span class="sd">    Parameters:</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
 <span class="sd">    - func: The function g(X)</span>
 <span class="sd">    - distribution: The input random vector distribution</span>
 <span class="sd">    - threshold: The threshold value (default=0.0)</span>
 <span class="sd">    - verbose: Print additional information (default=False)</span>
 
-<span class="sd">    Returns:</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">    - proba: The estimated failure probability</span>
 <span class="sd">    - result: Additional NAIS algorithm results (see docstring)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -412,17 +268,19 @@
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">proposalRange</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="n">targetProbability</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">SimulationResult</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">SimulationResult</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the failure probability using the NAIS algorithm.</span>
 
-<span class="sd">    Parameters:</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
 <span class="sd">    - func: The function g(X)</span>
 <span class="sd">    - distribution: The input random vector distribution</span>
 <span class="sd">    - threshold: The threshold value (default=0.0)</span>
 <span class="sd">    - verbose: Print additional information (default=False)</span>
 
-<span class="sd">    Returns:</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">    - proba: The estimated failure probability</span>
 <span class="sd">    - result: Additional NAIS algorithm results (see docstring)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -468,10 +326,12 @@
 <span class="sd">        method (str, optional): Algorithm for the optimization problem. Defaults to &#39;highs&#39;.</span>
 <span class="sd">        n_cpu (int, optional): Number of CPUs to use for parallel execution. Defaults to 1.</span>
 
-<span class="sd">    Returns:</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">        float: Failure probability for the fixed deviations.</span>
 
-<span class="sd">    Raises:</span>
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
 <span class="sd">        TypeError: If constraint_matrix_generator is not callable.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -515,7 +375,8 @@
 <span class="sd">        progress_bar (bool, optional): Whether to show a progress bar.</span>
 <span class="sd">        verbose (int, optional): Level of verbosity for debugging.</span>
 
-<span class="sd">    Returns:</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">        list: List of optimization results.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">c</span><span class="p">,</span> <span class="n">a_ub</span><span class="p">,</span> <span class="n">b_ub</span><span class="p">,</span> <span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="n">constraint_matrix_generator</span><span class="p">(</span>
@@ -635,7 +496,8 @@
 <span class="sd">        progress_bar (bool, optional): Whether to show a progress bar.</span>
 <span class="sd">        verbose (int, optional): Level of verbosity for debugging.</span>
 
-<span class="sd">    Returns:</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">        list: List of optimization results.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">c</span><span class="p">,</span> <span class="n">a_ub</span><span class="p">,</span> <span class="n">b_ub</span><span class="p">,</span> <span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="n">constraint_matrix_generator</span><span class="p">(</span>
@@ -692,10 +554,12 @@
 <span class="sd">        method (str, optional): Algorithm for the optimization problem. Defaults to &#39;highs&#39;.</span>
 <span class="sd">        n_cpu (int, optional): Number of CPUs to use for parallel execution. Defaults to 1.</span>
 
-<span class="sd">    Returns:</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">        float: Failure probability for the fixed deviations.</span>
 
-<span class="sd">    Raises:</span>
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
 <span class="sd">        TypeError: If constraint_matrix_generator is not callable.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">c</span><span class="p">,</span> <span class="n">a_ub</span><span class="p">,</span> <span class="n">b_ub</span><span class="p">,</span> <span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="n">constraint_matrix_generator</span><span class="p">(</span>
@@ -762,10 +626,12 @@
 <span class="sd">        epsilon_std (float, optional): Convergence threshold for the standard deviation of failure probabilities. Defaults to 0.005.</span>
 <span class="sd">        verbose (int, optional): Verbosity level for printing progress. Defaults to 0.</span>
 
-<span class="sd">    Returns:</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">        float: Failure probability for the fixed deviations.</span>
 
-<span class="sd">    Raises:</span>
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
 <span class="sd">        TypeError: If constraint_matrix_generator is not callable.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
@@ -885,10 +751,12 @@
 <span class="sd">        verbose (int, optional): Verbosity level. Defaults to 0.</span>
 <span class="sd">        progress_bar (bool, optional): Show progress bar. Defaults to False.</span>
 
-<span class="sd">    Returns:</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
 <span class="sd">        List: List of optimization results including intermediate steps.</span>
 
-<span class="sd">    Raises:</span>
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
 <span class="sd">        TypeError: If constraint_matrix_generator is not callable.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">c</span><span class="p">,</span> <span class="n">a_ub</span><span class="p">,</span> <span class="n">b_ub</span><span class="p">,</span> <span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="n">constraint_matrix_generator</span><span class="p">(</span>
