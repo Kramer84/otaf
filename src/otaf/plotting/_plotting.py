@@ -1562,7 +1562,6 @@ def plot_ensemble_gld_pbox_cdf(
     plt.tight_layout()
     plt.show()
 
-Python
 
 def calculate_graph_layout(
     data: Dict[str, Any],
