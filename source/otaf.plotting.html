@@ -78,7 +78,32 @@
 <li class="toctree-l1"><a class="reference internal" href="otaf.geometry.html">otaf.geometry package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.optimization.html">otaf.optimization package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">otaf.plotting package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-otaf.plotting">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.arrange_axes_in_grid"><code class="docutils literal notranslate"><span class="pre">arrange_axes_in_grid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.calculate_graph_layout"><code class="docutils literal notranslate"><span class="pre">calculate_graph_layout()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.calculate_sample_in_deviation_domain"><code class="docutils literal notranslate"><span class="pre">calculate_sample_in_deviation_domain()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.compare_jacobians"><code class="docutils literal notranslate"><span class="pre">compare_jacobians()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.create_open_cylinder_mesh"><code class="docutils literal notranslate"><span class="pre">create_open_cylinder_mesh()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.create_surface_from_planar_contour"><code class="docutils literal notranslate"><span class="pre">create_surface_from_planar_contour()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.generate_topological_tikz"><code class="docutils literal notranslate"><span class="pre">generate_topological_tikz()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.hex_to_rgba"><code class="docutils literal notranslate"><span class="pre">hex_to_rgba()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.pair_plot"><code class="docutils literal notranslate"><span class="pre">pair_plot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.plot_best_worst_input_data"><code class="docutils literal notranslate"><span class="pre">plot_best_worst_input_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.plot_best_worst_results"><code class="docutils literal notranslate"><span class="pre">plot_best_worst_results()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.plot_combined_CDF"><code class="docutils literal notranslate"><span class="pre">plot_combined_CDF()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.plot_deviated_surfs"><code class="docutils literal notranslate"><span class="pre">plot_deviated_surfs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.plot_deviation_domain"><code class="docutils literal notranslate"><span class="pre">plot_deviation_domain()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.plot_ensemble_gld_pbox_cdf"><code class="docutils literal notranslate"><span class="pre">plot_ensemble_gld_pbox_cdf()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.plot_gld_pbox_cdf"><code class="docutils literal notranslate"><span class="pre">plot_gld_pbox_cdf()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.plot_points_3D"><code class="docutils literal notranslate"><span class="pre">plot_points_3D()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.plot_rect_part"><code class="docutils literal notranslate"><span class="pre">plot_rect_part()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.print_sample_in_deviation_domain"><code class="docutils literal notranslate"><span class="pre">print_sample_in_deviation_domain()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.save_plot"><code class="docutils literal notranslate"><span class="pre">save_plot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.set_graph_legends"><code class="docutils literal notranslate"><span class="pre">set_graph_legends()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.spheres_from_point_cloud"><code class="docutils literal notranslate"><span class="pre">spheres_from_point_cloud()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.trimesh_scene_as_notebook_scene"><code class="docutils literal notranslate"><span class="pre">trimesh_scene_as_notebook_scene()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.sampling.html">otaf.sampling package</a></li>
@@ -116,8 +141,651 @@
              
   <section id="otaf-plotting-package">
 <h1>otaf.plotting package<a class="headerlink" href="#otaf-plotting-package" title="Link to this heading"></a></h1>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="module-otaf.plotting">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-otaf.plotting" title="Link to this heading"></a></h2>
+<p>Codes to plot the various objects, results, shapes, distributions, etc.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.plotting.arrange_axes_in_grid">
+<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">arrange_axes_in_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axes_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#arrange_axes_in_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.arrange_axes_in_grid" title="Link to this definition"></a></dt>
+<dd><p>Arrange a list of existing Matplotlib axes into a new, compact 2D grid plot.</p>
+<p>Calculates the optimal number of rows and columns to form a near-square layout,
+creates a new figure, copies lines and labels from the source axes into the
+subplots, and deletes any unused grid positions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>axes_list</strong> (<em>List</em><em>[</em><em>Any</em><em>]</em>) – A list of Matplotlib axis objects whose lines and metadata should be copied.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.plotting.calculate_graph_layout">
+<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">calculate_graph_layout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_part</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_feat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_feat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">part_spacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">45</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#calculate_graph_layout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.calculate_graph_layout" title="Link to this definition"></a></dt>
+<dd><p>Compute a hierarchical macro/micro graph layout and untangle crossing interaction edges.</p>
+<p>Positions high-level components (parts) using a force-directed layout, initializes
+sub-features along a radial arc centered on their parent part, and iteratively
+reorders the features by orientation to minimize edge crossings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – A structured dictionary containing part entities, features, and their topological interactions.</p></li>
+<li><p><strong>R_part</strong> (<em>float</em><em>, </em><em>default=15</em>) – The outer boundary radius of the parent part node.</p></li>
+<li><p><strong>r_feat</strong> (<em>float</em><em>, </em><em>default=2</em>) – The bounding radius allocated for individual child feature nodes.</p></li>
+<li><p><strong>d_feat</strong> (<em>float</em><em>, </em><em>default=1.5</em>) – The minimum spacing clearance distance between adjacent features on the arc.</p></li>
+<li><p><strong>margin</strong> (<em>float</em><em>, </em><em>default=1.5</em>) – The offset padding gap subtracted from the part radius to establish the feature arc.</p></li>
+<li><p><strong>part_spacing</strong> (<em>float</em><em>, </em><em>default=45</em>) – The scale and expansion modifier configuring the distance between part centers.</p></li>
+<li><p><strong>seed</strong> (<em>int</em><em>, </em><em>default=42</em>) – The seed integer initializing the spring layout random number generator.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>part_positions</strong> (<em>Dict[Any, np.ndarray]</em>) – A mapping from part identifiers to their calculated (X, Y) layout positions.</p></li>
+<li><p><strong>feature_positions</strong> (<em>Dict[str, Tuple[float, float]]</em>) – A mapping from unique feature identifiers to their optimized (X, Y) coordinates.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ImportError</strong> – If the networkx graph processing library is not accessible in the current environment.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.plotting.calculate_sample_in_deviation_domain">
+<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">calculate_sample_in_deviation_domain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos_u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_theta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#calculate_sample_in_deviation_domain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.calculate_sample_in_deviation_domain" title="Link to this definition"></a></dt>
+<dd><p>Scale and stack position and theta arrays into a 2D array of coordinates.</p>
+<p>Applies independent scaling factors to both the positional and angular
+input vectors, then reshapes them into a paired (N, 2) array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pos_u</strong> (<em>Any</em>) – An array or sequence of raw positional coordinates.</p></li>
+<li><p><strong>theta</strong> (<em>Any</em>) – An array or sequence of raw angular coordinates.</p></li>
+<li><p><strong>lambda_pos</strong> (<em>float</em>) – The scalar multiplier applied to scale the position data.</p></li>
+<li><p><strong>lambda_theta</strong> (<em>float</em>) – The scalar multiplier applied to scale the theta data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An (N, 2) NumPy array where each row represents a paired (scaled_pos, scaled_theta) coordinate.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.plotting.compare_jacobians">
+<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">compare_jacobians</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jacobian1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'side_by_side'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#compare_jacobians"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.compare_jacobians" title="Link to this definition"></a></dt>
+<dd><p>Compare two 1D Jacobians visually using bar charts.</p>
+<p>Generates a bar plot comparing two 32-element Jacobian arrays either side-by-side
+or stacked/overlaid. Optionally shades the background of each bar slot based on
+provided categorical class labels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>jacobian1</strong> (<em>np.ndarray</em>) – The first Jacobian data array, must be a 1D array of length 32.</p></li>
+<li><p><strong>jacobian2</strong> (<em>np.ndarray</em>) – The second Jacobian data array, must be a 1D array of length 32.</p></li>
+<li><p><strong>plot_type</strong> (<em>str</em><em>, </em><em>default=&quot;side_by_side&quot;</em>) – The structural layout style for the comparison, either ‘side_by_side’ or ‘overlay’.</p></li>
+<li><p><strong>class_labels</strong> (<em>Optional</em><em>[</em><em>np.ndarray</em><em>]</em><em>, </em><em>default=None</em>) – An optional 1D array of length 32 containing category indices used to apply
+background coloring behind the bars.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Renders and displays the Matplotlib comparison figure.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the input arrays do not match in shape, are not exactly of length 32,
+    if class labels length mismatches, or if an invalid <cite>plot_type</cite> is specified.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.plotting.create_open_cylinder_mesh">
+<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">create_open_cylinder_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sections</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#create_open_cylinder_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.create_open_cylinder_mesh" title="Link to this definition"></a></dt>
+<dd><p>Create a Trimesh cylinder that is open on both ends and apply a transformation matrix.</p>
+<p>Generates a standard cylinder, removes the cap faces connected to the top and
+bottom center vertices, and applies a 4x4 spatial transformation matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> (<em>float</em>) – The radius of the cylinder.</p></li>
+<li><p><strong>height</strong> (<em>float</em>) – The height of the cylinder along its local Z-axis.</p></li>
+<li><p><strong>transform</strong> (<em>np.ndarray</em>) – A 4x4 homogeneous transformation matrix to position and rotate the mesh.</p></li>
+<li><p><strong>sections</strong> (<em>int</em><em>, </em><em>default=64</em>) – The number of radial facets used to approximate the circular cross-section.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The open-ended cylindrical mesh.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>trimesh.Trimesh</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ImportError</strong> – If the trimesh library is not installed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.plotting.create_surface_from_planar_contour">
+<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">create_surface_from_planar_contour</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#create_surface_from_planar_contour"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.create_surface_from_planar_contour" title="Link to this definition"></a></dt>
+<dd><p>Triangulate a 3D planar point contour to generate a flat 2D surface mesh.</p>
+<p>Projects the 3D coordinates onto a local 2D plane, performs a Constrained
+Delaunay Triangulation using the <cite>triangle</cite> library, and then transforms the
+resulting mesh vertices back to their original 3D orientation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vertices</strong> (<em>Union</em><em>[</em><em>List</em><em>[</em><em>Union</em><em>[</em><em>List</em><em>[</em><em>float</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em>) – An (N, 3) array of 3D coordinates representing the boundary of the contour.</p></li>
+<li><p><strong>segments</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><em>List</em><em>[</em><em>Union</em><em>[</em><em>List</em><em>[</em><em>int</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>]</em><em>, </em><em>default=None</em>) – An optional (M, 2) array of vertex indices defining fixed boundary lines
+or holes that must be respected during triangulation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The generated flat surface mesh.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>trimesh.Trimesh</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ImportError</strong> – If either the <cite>triangle</cite> or <cite>trimesh</cite> libraries are not installed.</p></li>
+<li><p><strong>ValueError</strong> – If the input segments do not have a shape ending in 2, or if the input
+    vertices do not all lie on the same 2D plane.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.plotting.generate_topological_tikz">
+<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">generate_topological_tikz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">part_positions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_positions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_palette</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['#023fa5',</span> <span class="pre">'#7d87b9',</span> <span class="pre">'#bec1d4',</span> <span class="pre">'#d6bcc0',</span> <span class="pre">'#bb7784',</span> <span class="pre">'#8e063b',</span> <span class="pre">'#4a6fe3',</span> <span class="pre">'#8595e1',</span> <span class="pre">'#b5bbe3',</span> <span class="pre">'#e6afb9',</span> <span class="pre">'#e07b91',</span> <span class="pre">'#d33f6a',</span> <span class="pre">'#11c638',</span> <span class="pre">'#8dd593',</span> <span class="pre">'#c6dec7',</span> <span class="pre">'#ead3c6',</span> <span class="pre">'#f0b98d',</span> <span class="pre">'#ef9708',</span> <span class="pre">'#0fcfc0',</span> <span class="pre">'#9cded6',</span> <span class="pre">'#d5eae7',</span> <span class="pre">'#f3e1eb',</span> <span class="pre">'#f6c4e1',</span> <span class="pre">'#f79cd4']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_part</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_feat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#generate_topological_tikz"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.generate_topological_tikz" title="Link to this definition"></a></dt>
+<dd><p>Generate the raw TikZ LaTeX code to visualize a system topology diagram.</p>
+<p>Identifies connected feature components to map colors, initializes the TikZ
+canvas settings, draws assembly parts as large circles, embeds child features
+along their outer perimeters, and renders labeled directional loops representing
+geometric constraints between features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – The structured dictionary tracking part properties, feature nodes, and loop pathways.</p></li>
+<li><p><strong>part_positions</strong> (<em>Dict</em><em>[</em><em>Any</em><em>, </em><em>np.ndarray</em><em>]</em>) – A dictionary mapping part identifiers to their global (X, Y) layout center coordinates.</p></li>
+<li><p><strong>feature_positions</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – A dictionary mapping unique feature codes to their calculated (X, Y) positions.</p></li>
+<li><p><strong>color_palette</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – A list of hex color string specs used to format the visual elements dynamically.</p></li>
+<li><p><strong>R_part</strong> (<em>float</em><em>, </em><em>default=15</em>) – The base physical radius assigned to the primary part boundary circles.</p></li>
+<li><p><strong>r_feat</strong> (<em>float</em><em>, </em><em>default=2</em>) – The base physical radius allocated for individual nested feature nodes.</p></li>
+<li><p><strong>scale</strong> (<em>float</em><em>, </em><em>default=0.15</em>) – A scalar factor used to shrink or expand the coordinate dimensions for LaTeX rendering.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The uncompiled, multiline raw TikZ string ready to be placed in a LaTeX document.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ImportError</strong> – If the networkx library is not installed in the execution environment.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.plotting.hex_to_rgba">
+<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">hex_to_rgba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex_color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_float</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#hex_to_rgba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.hex_to_rgba" title="Link to this definition"></a></dt>
+<dd><p>Convert a hexadecimal color string to an RGBA tuple.</p>
+<p>Strips any leading ‘#’ character, extracts the red, green, and blue components,
+and optionally normalizes the RGB values to floats before appending the alpha channel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hex_color</strong> (<em>str</em>) – The hexadecimal color code string (e.g., ‘#ffffff’ or ‘e6e6e6’).</p></li>
+<li><p><strong>alpha</strong> (<em>float</em><em>, </em><em>default=1.0</em>) – The alpha (transparency) value, typically between 0.0 and 1.0.</p></li>
+<li><p><strong>as_float</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, returns RGB values as floats scaled between 0.0 and 1.0.
+If False, returns them as integers between 0 and 255.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing the Red, Green, Blue, and Alpha values in order.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[Union[float, int], Union[float, int], Union[float, int], float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.plotting.pair_plot">
+<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">pair_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subset_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_half</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'both'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hide_diag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#pair_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.pair_plot" title="Link to this definition"></a></dt>
+<dd><p>Generate a matrix of pairwise scatter plots and diagonal histograms for a dataset.</p>
+<p>Iterates through combinations of variables to build a grid of plots, allowing
+customization for subsets of features, rendering only half of the matrix grid,
+hiding diagonal plots, and color-coding data points by an external array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>np.ndarray</em>) – A 2D array where columns represent distinct features/variables and rows are samples.</p></li>
+<li><p><strong>labels</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>default=None</em>) – A list of string names for each column in the data. If None, defaults to [‘Var1’, ‘Var2’, …].</p></li>
+<li><p><strong>subset_labels</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>default=None</em>) – An optional list of column names to restrict the pair plot to a specific subset of features.</p></li>
+<li><p><strong>plot_half</strong> (<em>str</em><em>, </em><em>default=&quot;both&quot;</em>) – Determines which parts of the matrix grid to display. Options are ‘both’,
+‘lower’ (lower triangular matrix), or ‘upper’ (upper triangular matrix).</p></li>
+<li><p><strong>hide_diag</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, prevents histograms from rendering along the diagonal subplots.</p></li>
+<li><p><strong>color_by</strong> (<em>Optional</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>default=None</em>) – An optional array-like mapping used to color-code the scatter plot markers.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Displays the completed Matplotlib pair plot figure.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the input data is not a 2D array, or if the number of provided labels
+    does not match the column count of the data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.plotting.plot_best_worst_input_data">
+<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">plot_best_worst_input_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">best_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worst_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable_labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(16,</span> <span class="pre">8)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as_png</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'images'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'best_worst_input_data.png'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">600</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#plot_best_worst_input_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.plot_best_worst_input_data" title="Link to this definition"></a></dt>
+<dd><p>Plot and compare the feature distributions of the best and worst 5% input data groups.</p>
+<p>Generates side-by-side plots displaying the values and ranges of each feature.
+It formats variable labels into LaTeX symbols, overlays vertical lines to show the
+data spread for each variable, and cross-references the spans between the two groups.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>best_data</strong> (<em>List</em><em>[</em><em>Any</em><em>]</em>) – A list of samples belonging to the top-performing percentile group.</p></li>
+<li><p><strong>worst_data</strong> (<em>List</em><em>[</em><em>Any</em><em>]</em>) – A list of samples belonging to the lowest-performing percentile group.</p></li>
+<li><p><strong>variable_labels</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – The names of the input variables, which will be parsed into LaTeX symbols.</p></li>
+<li><p><strong>figsize</strong> (<em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>, </em><em>default=</em><em>(</em><em>16</em><em>, </em><em>8</em><em>)</em>) – The width and height of each generated figure in inches.</p></li>
+<li><p><strong>labels</strong> (<em>bool</em><em>, </em><em>default=True</em>) – If True, adds sequential sample labels to the plot legend.</p></li>
+<li><p><strong>save_as_png</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, exports the resulting figures as PNG files to disk.</p></li>
+<li><p><strong>save_path</strong> (<em>str</em><em>, </em><em>default=&quot;images&quot;</em>) – The directory path where the exported plot images will be saved.</p></li>
+<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>default=&quot;best_worst_input_data.png&quot;</em>) – The base filename used for the saved images (prefixed with ‘<a href="#id1"><span class="problematic" id="id2">best_</span></a>’ and ‘<a href="#id3"><span class="problematic" id="id4">worst_</span></a>’).</p></li>
+<li><p><strong>dpi</strong> (<em>int</em><em>, </em><em>default=600</em>) – The resolution (dots per inch) of the saved images.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.plotting.plot_best_worst_results">
+<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">plot_best_worst_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">best_results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worst_results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Sample</span> <span class="pre">Index'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Failure</span> <span class="pre">rate'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Best</span> <span class="pre">and</span> <span class="pre">Worst</span> <span class="pre">Results</span> <span class="pre">Plot'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(10,</span> <span class="pre">6)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as_png</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'images'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'best_worst_results.png'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">600</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#plot_best_worst_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.plot_best_worst_results" title="Link to this definition"></a></dt>
+<dd><p>Plot and compare the best and worst execution results on a line graph.</p>
+<p>Generates a line plot that overlays the best performance metrics against the
+worst performance metrics across a shared sample index for comparison.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>best_results</strong> (<em>Any</em>) – An iterable sequence (list, array, etc.) containing the optimal performance data points.</p></li>
+<li><p><strong>worst_results</strong> (<em>Any</em>) – An iterable sequence (list, array, etc.) containing the poorest performance data points.</p></li>
+<li><p><strong>xlabel</strong> (<em>str</em><em>, </em><em>default=&quot;Sample Index&quot;</em>) – The text label for the horizontal X-axis.</p></li>
+<li><p><strong>ylabel</strong> (<em>str</em><em>, </em><em>default=&quot;Failure rate&quot;</em>) – The text label for the vertical Y-axis.</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>default=&quot;Best and Worst Results Plot&quot;</em>) – The main title text displayed above the plot.</p></li>
+<li><p><strong>figsize</strong> (<em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>, </em><em>default=</em><em>(</em><em>10</em><em>, </em><em>6</em><em>)</em>) – The width and height of the figure in inches.</p></li>
+<li><p><strong>save_as_png</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, exports the generated plot as a PNG file to disk.</p></li>
+<li><p><strong>save_path</strong> (<em>str</em><em>, </em><em>default=&quot;images&quot;</em>) – The directory path where the exported plot image will be saved.</p></li>
+<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>default=&quot;best_worst_results.png&quot;</em>) – The name of the exported image file.</p></li>
+<li><p><strong>dpi</strong> (<em>int</em><em>, </em><em>default=600</em>) – The resolution (dots per inch) of the saved image.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.plotting.plot_combined_CDF">
+<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">plot_combined_CDF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distributions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#plot_combined_CDF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.plot_combined_CDF" title="Link to this definition"></a></dt>
+<dd><p>Plot and overlay Cumulative Distribution Functions (CDFs) for multiple distributions.</p>
+<p>Generates the initial CDF curve from the first distribution, sequentially appends
+additional CDF curves from the remaining distributions, and applies corresponding
+colors and legend labels if provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>distributions</strong> (<em>List</em><em>[</em><em>Any</em><em>]</em>) – A list of distribution objects that expose a <cite>drawCDF</cite> method.</p></li>
+<li><p><strong>x_min</strong> (<em>float</em>) – The minimum evaluation bound along the horizontal X-axis for the CDF calculation.</p></li>
+<li><p><strong>x_max</strong> (<em>float</em>) – The maximum evaluation bound along the horizontal X-axis for the CDF calculation.</p></li>
+<li><p><strong>color_list</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>Any</em><em>]</em><em>]</em><em>, </em><em>default=None</em>) – An optional list of color identifiers matched sequentially to each distribution curve.</p></li>
+<li><p><strong>legend_list</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>default=None</em>) – An optional list of string labels applied sequentially to the graph legends.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A combined graph object containing all overlaid CDF curves and styling elements.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.plotting.plot_deviated_surfs">
+<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">plot_deviated_surfs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">se_pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">se_rot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_factor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#plot_deviated_surfs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.plot_deviated_surfs" title="Link to this definition"></a></dt>
+<dd><p>Overlay deviated profile lines onto a plot to visualize geometric defects.</p>
+<p>Iterates through paired positional and rotational variations, scales them by
+the provided modifiers, and draws calculated deviation lines across a constant
+vertical span on the Matplotlib axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<em>matplotlib.axes.Axes</em>) – The Matplotlib axis object where the geometric lines will be drawn.</p></li>
+<li><p><strong>se_pos</strong> (<em>Any</em>) – An array or sequence containing positional deviation tracking data.</p></li>
+<li><p><strong>se_rot</strong> (<em>Any</em>) – An array or sequence containing rotational deviation tracking data.</p></li>
+<li><p><strong>lambda</strong> (<em>float</em>) – A weight multiplier balancing positional vs rotational defect components.</p></li>
+<li><p><strong>scale_factor</strong> (<em>float</em>) – A scalar multiplier used to visually exaggerate the defects for readability.</p></li>
+<li><p><strong>lambda_</strong> (<em>float</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The modified axis object containing the plotted deviation lines.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>matplotlib.axes.Axes</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If the lengths of the <cite>se_pos</cite> and <cite>se_rot</cite> arrays do not match.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.plotting.plot_deviation_domain">
+<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">plot_deviation_domain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'X'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Y'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(-0.15,</span> <span class="pre">0.15)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(-1,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tick_spacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.25,</span> <span class="pre">0.25]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#plot_deviation_domain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.plot_deviation_domain" title="Link to this definition"></a></dt>
+<dd><p>Plot sample coordinates on a Matplotlib axis with a diamond-shaped tolerance polygon.</p>
+<p>Draws a 4-sided boundary polygon using the specified limits, splits data points
+into groups based on whether they fall inside or outside the polygon boundaries,
+colors them separately, and prints the count of points outside the boundary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<em>matplotlib.axes.Axes</em>) – The Matplotlib axis object where the polygon and data points will be rendered.</p></li>
+<li><p><strong>sample</strong> (<em>np.ndarray</em>) – An (N, 2) array containing the coordinate points to plot.</p></li>
+<li><p><strong>x_label</strong> (<em>str</em><em>, </em><em>default=&quot;X&quot;</em>) – The text label for the horizontal X-axis.</p></li>
+<li><p><strong>y_label</strong> (<em>str</em><em>, </em><em>default=&quot;Y&quot;</em>) – The text label for the vertical Y-axis.</p></li>
+<li><p><strong>x_bounds</strong> (<em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>, </em><em>default=</em><em>(</em><em>-0.15</em><em>, </em><em>0.15</em><em>)</em>) – The minimum and maximum horizontal intercept coordinates for the polygon.</p></li>
+<li><p><strong>y_bounds</strong> (<em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>, </em><em>default=</em><em>(</em><em>-1</em><em>, </em><em>1</em><em>)</em>) – The minimum and maximum vertical intercept coordinates for the polygon.</p></li>
+<li><p><strong>ratio_bounds</strong> (<em>float</em><em>, </em><em>default=1.5</em>) – A multiplier used to pad the outer limits of the plot viewport.</p></li>
+<li><p><strong>r</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em><em>, </em><em>default=None</em>) – An unused legacy placeholder parameter.</p></li>
+<li><p><strong>tick_spacing</strong> (<em>List</em><em>[</em><em>float</em><em>]</em><em>, </em><em>default=</em><em>[</em><em>0.25</em><em>, </em><em>0.25</em><em>]</em>) – The major locator stepping interval for the X and Y axes ticks respectively.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The modified axis object containing the rendered polygon, scatter plots, and text.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>matplotlib.axes.Axes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.plotting.plot_ensemble_gld_pbox_cdf">
+<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">plot_ensemble_gld_pbox_cdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gld_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xtol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('Lower</span> <span class="pre">bound',</span> <span class="pre">'Upper</span> <span class="pre">bound')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('tab:blue',</span> <span class="pre">'tab:orange')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gray'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Slack</span> <span class="pre">Threshold'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Probability</span> <span class="pre">of</span> <span class="pre">Failure</span> <span class="pre">(Pf)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Probability-Box</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">CDF'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_zoom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom_x_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(-0.05,</span> <span class="pre">0.05)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom_y_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1e-06,</span> <span class="pre">0.1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inset_log_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#plot_ensemble_gld_pbox_cdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.plot_ensemble_gld_pbox_cdf" title="Link to this definition"></a></dt>
+<dd><p>Plot a Probability-Box (P-Box) from an ensemble of GLD parameters with an optional zoom inset.</p>
+<p>Vectorizes the evaluation of an ensemble of Generalized Lambda Distribution parameter
+sets using the quantile function, extracts the composite bounding envelope, and plots
+the resulting lower and upper cumulative curves. Optionally embeds a zoomed-in
+inset axes to inspect critical threshold regions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gld_obj</strong> (<em>Any</em>) – An instance of the GLD class used for distribution configuration.</p></li>
+<li><p><strong>param_list</strong> (<em>np.ndarray</em>) – A 2D array of shape (N, 4) containing the four parameters for each GLD in the ensemble.</p></li>
+<li><p><strong>x_values</strong> (<em>np.ndarray</em>) – A 1D array of horizontal coordinates at which to evaluate the final P-box curves.</p></li>
+<li><p><strong>xtol</strong> (<em>float</em><em>, </em><em>default=1e-5</em>) – The numerical tolerance threshold used during curve evaluation.</p></li>
+<li><p><strong>labels</strong> (<em>Tuple</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>, </em><em>default=</em><em>(</em><em>'Lower bound'</em><em>, </em><em>'Upper bound'</em><em>)</em>) – The text labels assigned to the lower and upper bounding curves in the plot legend.</p></li>
+<li><p><strong>colors</strong> (<em>Tuple</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>, </em><em>default=</em><em>(</em><em>'tab:blue'</em><em>, </em><em>'tab:orange'</em><em>)</em>) – The colors assigned to the lower and upper bounding lines.</p></li>
+<li><p><strong>fill_color</strong> (<em>str</em><em>, </em><em>default='gray'</em>) – The color used to shade the epistemic uncertainty area between the bounds.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em><em>, </em><em>default=0.3</em>) – The opacity level of the filled uncertainty region.</p></li>
+<li><p><strong>xlabel</strong> (<em>str</em><em>, </em><em>default=&quot;Slack Threshold&quot;</em>) – The text label for the horizontal X-axis.</p></li>
+<li><p><strong>ylabel</strong> (<em>str</em><em>, </em><em>default=&quot;Probability</em><em> of </em><em>Failure</em><em> (</em><em>Pf</em><em>)</em><em>&quot;</em>) – The text label for the vertical Y-axis.</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>default=&quot;Probability-Box</em><em> of </em><em>the CDF&quot;</em>) – The main title text displayed above the figure.</p></li>
+<li><p><strong>add_zoom</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, displays a zoomed inset panel inside the main viewport.</p></li>
+<li><p><strong>zoom_x_range</strong> (<em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>, </em><em>default=</em><em>(</em><em>-0.05</em><em>, </em><em>0.05</em><em>)</em>) – The minimum and maximum X-axis data limits for the zoomed inset panel.</p></li>
+<li><p><strong>zoom_y_range</strong> (<em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>, </em><em>default=</em><em>(</em><em>1e-6</em><em>, </em><em>0.1</em><em>)</em>) – The minimum and maximum Y-axis data limits for the zoomed inset panel.</p></li>
+<li><p><strong>inset_log_y</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, sets the vertical Y-axis scale of the zoomed inset panel to logarithmic.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.plotting.plot_gld_pbox_cdf">
+<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">plot_gld_pbox_cdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gld_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xtol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('tab:blue',</span> <span class="pre">'tab:orange')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gray'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'X'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'P'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Probability-Box</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">CDF'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#plot_gld_pbox_cdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.plot_gld_pbox_cdf" title="Link to this definition"></a></dt>
+<dd><p>Plot a Probability-Box (P-Box) by shading the region between two GLD cumulative distributions.</p>
+<p>Computes the numerical CDF arrays for both the lower and upper Generalized Lambda
+Distribution parameters, plots them as bounding lines, and fills the area between
+them to visualize the uncertainty envelope.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gld_obj</strong> (<em>Any</em>) – An instance of the GLD class used to calculate numerical CDF values.</p></li>
+<li><p><strong>lower_params</strong> (<em>Any</em>) – An array or sequence of parameters defining the lower-bound distribution.</p></li>
+<li><p><strong>upper_params</strong> (<em>Any</em>) – An array or sequence of parameters defining the upper-bound distribution.</p></li>
+<li><p><strong>x_values</strong> (<em>Any</em>) – An array or sequence of horizontal coordinate points where the curves are evaluated.</p></li>
+<li><p><strong>xtol</strong> (<em>float</em><em>, </em><em>default=1e-5</em>) – The numerical convergence tolerance threshold passed to the CDF evaluation function.</p></li>
+<li><p><strong>labels</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>]</em><em>, </em><em>default=None</em>) – An optional pair of string labels used to identify the bounding curves in the plot legend.</p></li>
+<li><p><strong>colors</strong> (<em>Tuple</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>, </em><em>default=</em><em>(</em><em>'tab:blue'</em><em>, </em><em>'tab:orange'</em><em>)</em>) – A pair of color strings assigned to the lower and upper bounding lines respectively.</p></li>
+<li><p><strong>fill_color</strong> (<em>str</em><em>, </em><em>default='gray'</em>) – The color used to shade the uncertainty region encapsulated between the bounds.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em><em>, </em><em>default=0.3</em>) – The opacity level (ranging from 0.0 to 1.0) applied to the filled background region.</p></li>
+<li><p><strong>xlabel</strong> (<em>str</em><em>, </em><em>default=&quot;X&quot;</em>) – The text label for the horizontal X-axis.</p></li>
+<li><p><strong>ylabel</strong> (<em>str</em><em>, </em><em>default=&quot;P&quot;</em>) – The text label for the vertical Y-axis.</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>default=&quot;Probability-Box</em><em> of </em><em>the CDF&quot;</em>) – The main header title displayed above the plot grid.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.plotting.plot_points_3D">
+<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">plot_points_3D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'r'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'o'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#plot_points_3D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.plot_points_3D" title="Link to this definition"></a></dt>
+<dd><p>Plot a dictionary of 3D points on a scatter plot.</p>
+<p>Takes a set of labeled 3D coordinates and renders them in a three-dimensional
+plot with customizable markers, coloring, and horizontal viewing angle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points_dict</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – A dictionary where keys are point labels (strings) and values are
+tuples representing (X, Y, Z) coordinates.</p></li>
+<li><p><strong>color</strong> (<em>str</em><em>, </em><em>default=&quot;r&quot;</em>) – The color of the plotted scatter points.</p></li>
+<li><p><strong>marker</strong> (<em>str</em><em>, </em><em>default=&quot;o&quot;</em>) – The shape/style of the marker used for the points.</p></li>
+<li><p><strong>azim</strong> (<em>float</em><em>, </em><em>default=0</em>) – The azimuthal viewing angle in degrees to set the initial camera perspective.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.plotting.plot_rect_part">
+<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">plot_rect_part</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#plot_rect_part"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.plot_rect_part" title="Link to this definition"></a></dt>
+<dd><p>Plot the rectangular component of the example mesh or model on a Matplotlib axis.</p>
+<p>Draws a bounding rectangle using line segments, modifies the visual aspect
+ratio to be twice as tall and half as wide, and overlays dimensional tracking
+arrows along with text annotations onto the canvas viewport.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<em>matplotlib.axes.Axes</em>) – The Matplotlib axis object where the geometric lines and annotations are drawn.</p></li>
+<li><p><strong>scale_factor</strong> (<em>float</em><em>, </em><em>default=100</em>) – A multiplier applied to scale the horizontal span of the indicator arrows.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The modified axis object containing the rendered layout elements.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>matplotlib.axes.Axes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.plotting.print_sample_in_deviation_domain">
+<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">print_sample_in_deviation_domain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_theta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'U'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Theta'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_ticks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fontsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#print_sample_in_deviation_domain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.print_sample_in_deviation_domain" title="Link to this definition"></a></dt>
+<dd><p>Plot data points inside a diamond-shaped boundary domain on a Matplotlib axis.</p>
+<p>Draws a four-sided boundary envelope defined by maximum limits, overlays a
+scatter plot of the scaled input signals, and configures the viewport aspect ratio.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<em>matplotlib.axes.Axes</em>) – The Matplotlib axis object where the geometric elements will be drawn.</p></li>
+<li><p><strong>pos_u</strong> (<em>Any</em>) – An iterable sequence of position coordinates for the horizontal axis.</p></li>
+<li><p><strong>theta</strong> (<em>Any</em>) – An iterable sequence of angular coordinates for the vertical axis.</p></li>
+<li><p><strong>lambda_pos</strong> (<em>float</em>) – The scalar multiplier applied to scale the position coordinates.</p></li>
+<li><p><strong>lambda_theta</strong> (<em>float</em>) – The scalar multiplier applied to scale the theta coordinates.</p></li>
+<li><p><strong>t_max</strong> (<em>float</em>) – The absolute horizontal intercept limit determining the diamond width.</p></li>
+<li><p><strong>theta_max</strong> (<em>float</em>) – The absolute vertical intercept limit determining the diamond height.</p></li>
+<li><p><strong>ratio</strong> (<em>float</em><em>, </em><em>default=1</em>) – The structural modifier used to adjust the final visual aspect ratio.</p></li>
+<li><p><strong>r</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em><em>, </em><em>default=None</em>) – An optional evaluation metric string to overlay as text inside the viewport.</p></li>
+<li><p><strong>xlabel</strong> (<em>str</em><em>, </em><em>default=&quot;U&quot;</em>) – The text label for the horizontal X-axis.</p></li>
+<li><p><strong>ylabel</strong> (<em>str</em><em>, </em><em>default=&quot;Theta&quot;</em>) – The text label for the vertical Y-axis.</p></li>
+<li><p><strong>remove_ticks</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, clears numeric tick readouts from both axes boundaries.</p></li>
+<li><p><strong>fontsize</strong> (<em>int</em><em>, </em><em>default=15</em>) – The text sizing scale applied to labels, ticks, and annotation items.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The modified axis object containing the rendered plot elements.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>matplotlib.axes.Axes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.plotting.save_plot">
+<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">save_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'plot'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'png'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#save_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.save_plot" title="Link to this definition"></a></dt>
+<dd><p>Save a Matplotlib figure or axis plot to disk with custom file settings.</p>
+<p>Creates the destination directory if it does not exist, determines the target
+figure object, infers or appends the file extension, and exports the asset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fig</strong> (<em>Optional</em><em>[</em><em>matplotlib.figure.Figure</em><em>]</em><em>, </em><em>default=None</em>) – The direct figure object to save.</p></li>
+<li><p><strong>ax</strong> (<em>Optional</em><em>[</em><em>matplotlib.axes.Axes</em><em>]</em><em>, </em><em>default=None</em>) – An axis object used to extract the parent figure if <cite>fig</cite> is not provided.</p></li>
+<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>default=&quot;plot&quot;</em>) – The output file name, which can optionally include the file extension.</p></li>
+<li><p><strong>folder</strong> (<em>str</em><em>, </em><em>default=&quot;.&quot;</em>) – The directory path where the exported file will be saved.</p></li>
+<li><p><strong>file_format</strong> (<em>str</em><em>, </em><em>default=&quot;png&quot;</em>) – The export file format (e.g., ‘png’, ‘pdf’, ‘svg’) used if not specified in the filename.</p></li>
+<li><p><strong>dpi</strong> (<em>int</em><em>, </em><em>default=300</em>) – The resolution (dots per inch) for rasterized image output formats.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Any</em>) – Additional keyword arguments passed directly to Matplotlib’s <cite>savefig</cite> method.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The full system file path to the saved plot asset.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If both <cite>fig</cite> and <cite>ax</cite> are set to None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.plotting.set_graph_legends">
+<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">set_graph_legends</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legends</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#set_graph_legends"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.set_graph_legends" title="Link to this definition"></a></dt>
+<dd><p>Configure the axes titles, main title, legend labels, and element colors for a graph.</p>
+<p>Updates the structural metadata of a graph object sequentially, applying labels
+and styling configurations only if they are explicitly provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>graph</strong> (<em>Any</em>) – The target graph or chart object exposing API modification methods.</p></li>
+<li><p><strong>x_title</strong> (<em>str</em><em>, </em><em>default=&quot;&quot;</em>) – The text label assigned to the horizontal X-axis.</p></li>
+<li><p><strong>y_title</strong> (<em>str</em><em>, </em><em>default=&quot;&quot;</em>) – The text label assigned to the vertical Y-axis.</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>default=&quot;&quot;</em>) – The main title banner text displayed above the graph viewport.</p></li>
+<li><p><strong>legends</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>default=None</em>) – A sequence of strings defining labels for the data series legend.</p></li>
+<li><p><strong>colors</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>Any</em><em>]</em><em>]</em><em>, </em><em>default=None</em>) – A sequence of color identifiers applied to individual graph elements.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The updated graph object containing the applied configuration settings.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.plotting.spheres_from_point_cloud">
+<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">spheres_from_point_cloud</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[100,</span> <span class="pre">100,</span> <span class="pre">100,</span> <span class="pre">255]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">global_translation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([0,</span> <span class="pre">0,</span> <span class="pre">0])</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#spheres_from_point_cloud"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.spheres_from_point_cloud" title="Link to this definition"></a></dt>
+<dd><p>Generate a list of Trimesh icospheres centered at each point in a point cloud.</p>
+<p>Instantiates a sphere mesh for every coordinate position, applies a uniform
+color, and shifts each position by an optional global translation vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pc</strong> (<em>np.ndarray</em>) – An (N, 3) array containing the coordinates of the point cloud.</p></li>
+<li><p><strong>radius</strong> (<em>float</em><em>, </em><em>default=1.0</em>) – The radius of each generated sphere.</p></li>
+<li><p><strong>color</strong> (<em>Union</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>List</em><em>[</em><em>Union</em><em>[</em><em>float</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>default=</em><em>[</em><em>100</em><em>, </em><em>100</em><em>, </em><em>100</em><em>, </em><em>255</em><em>]</em>) – The RGBA color applied to the vertices of the spheres.</p></li>
+<li><p><strong>global_translation</strong> (<em>Union</em><em>[</em><em>List</em><em>[</em><em>Union</em><em>[</em><em>float</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>default=np.array</em><em>(</em><em>[</em><em>0</em><em>, </em><em>0</em><em>, </em><em>0</em><em>]</em><em>)</em>) – A 3D offset vector added to every point’s position.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of individual Trimesh icosphere objects.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[trimesh.Trimesh]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ImportError</strong> – If the trimesh library is not installed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.plotting.trimesh_scene_as_notebook_scene">
+<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">trimesh_scene_as_notebook_scene</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scene</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background_hex_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'e6e6e6'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#trimesh_scene_as_notebook_scene"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.trimesh_scene_as_notebook_scene" title="Link to this definition"></a></dt>
+<dd><p>Convert a Trimesh scene into an interactive widget for a Jupyter notebook.</p>
+<p>Generates the HTML/JS representation of the scene and modifies the underlying
+Three.js canvas setup to apply a custom background color.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scene</strong> (<em>trimesh.Scene</em>) – The Trimesh scene object to be displayed.</p></li>
+<li><p><strong>background_hex_color</strong> (<em>str</em><em>, </em><em>default=&quot;e6e6e6&quot;</em>) – The hexadecimal color code (without the ‘#’ prefix) for the background.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The interactive notebook widget containing the rendered scene.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ImportError</strong> – If trimesh viewer dependencies are not installed.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 

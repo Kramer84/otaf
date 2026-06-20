@@ -111,7 +111,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">joblib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span><span class="p">,</span> <span class="n">cpu_count</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">otaf.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_tqdm_range</span>
 
@@ -123,11 +123,14 @@
     <span class="c1"># Older versions</span>
     <span class="n">JointDistribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span>
 
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">otaf</span><span class="w"> </span><span class="kn">import</span> <span class="n">SystemOfConstraintsAssemblyModel</span>
+
 <div class="viewcode-block" id="compute_failure_probability_FORM">
 <a class="viewcode-back" href="../../../source/otaf.uncertainty.html#otaf.uncertainty.compute_failure_probability_FORM">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_failure_probability_FORM</span><span class="p">(</span>
-    <span class="n">otFunc</span><span class="p">:</span> <span class="n">ot</span><span class="o">.</span><span class="n">Function</span><span class="p">,</span>
+    <span class="n">ot_function</span><span class="p">:</span> <span class="n">ot</span><span class="o">.</span><span class="n">Function</span><span class="p">,</span>
     <span class="n">composed_distribution</span><span class="p">:</span> <span class="n">JointDistribution</span><span class="p">,</span>
     <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">start_point</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -142,7 +145,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    otFunc : ot.Function</span>
+<span class="sd">    ot_function : ot.Function</span>
 <span class="sd">        The performance function of the system.</span>
 <span class="sd">    composed_distribution : JointDistribution</span>
 <span class="sd">        The joint probability distribution of the input random variables.</span>
@@ -161,7 +164,7 @@
 <span class="sd">    tuple[float, ot.FORMResult]</span>
 <span class="sd">        The calculated failure probability and the full FORM result object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">comp_rand_vect</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span><span class="n">otFunc</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">composed_distribution</span><span class="p">))</span>
+    <span class="n">comp_rand_vect</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span><span class="n">ot_function</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">composed_distribution</span><span class="p">))</span>
     <span class="n">event</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ThresholdEvent</span><span class="p">(</span><span class="n">comp_rand_vect</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">Less</span><span class="p">(),</span> <span class="n">threshold</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">solver</span><span class="p">:</span>
         <span class="n">solver</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cobyla</span><span class="p">()</span>
@@ -186,7 +189,7 @@
 <div class="viewcode-block" id="compute_failure_probability_NAIS">
 <a class="viewcode-back" href="../../../source/otaf.uncertainty.html#otaf.uncertainty.compute_failure_probability_NAIS">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_failure_probability_NAIS</span><span class="p">(</span>
-    <span class="n">func</span><span class="p">:</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span><span class="p">,</span>
+    <span class="n">ot_python_function</span><span class="p">:</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span><span class="p">,</span>
     <span class="n">distribution</span><span class="p">:</span> <span class="n">JointDistribution</span><span class="p">,</span>
     <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">quantile_level</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">,</span>
@@ -196,7 +199,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    - func: The function g(X)</span>
+<span class="sd">    - ot_python_function: The function g(X)</span>
 <span class="sd">    - distribution: The input random vector distribution</span>
 <span class="sd">    - threshold: The threshold value (default=0.0)</span>
 <span class="sd">    - verbose: Print additional information (default=False)</span>
@@ -207,7 +210,7 @@
 <span class="sd">    - result: Additional NAIS algorithm results (see docstring)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Create the output random vector Y = g(X)</span>
-    <span class="n">output_random_vector</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">distribution</span><span class="p">))</span>
+    <span class="n">output_random_vector</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span><span class="n">ot_python_function</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">distribution</span><span class="p">))</span>
     <span class="c1"># Create the event { Y = g(X) &lt;= threshold }</span>
     <span class="n">failure_event</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ThresholdEvent</span><span class="p">(</span><span class="n">output_random_vector</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">LessOrEqual</span><span class="p">(),</span> <span class="n">threshold</span><span class="p">)</span>
 
@@ -230,19 +233,19 @@
 <div class="viewcode-block" id="compute_failure_probability_SUBSET">
 <a class="viewcode-back" href="../../../source/otaf.uncertainty.html#otaf.uncertainty.compute_failure_probability_SUBSET">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_failure_probability_SUBSET</span><span class="p">(</span>
-    <span class="n">func</span><span class="p">:</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span><span class="p">,</span>
+    <span class="n">ot_python_function</span><span class="p">:</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span><span class="p">,</span>
     <span class="n">distribution</span><span class="p">:</span> <span class="n">JointDistribution</span><span class="p">,</span>
     <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">proposalRange</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-    <span class="n">targetProbability</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">proposal_range</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">target_probability</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">SimulationResult</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the failure probability using the NAIS algorithm.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    - func: The function g(X)</span>
+<span class="sd">    - ot_python_function: The function g(X)</span>
 <span class="sd">    - distribution: The input random vector distribution</span>
 <span class="sd">    - threshold: The threshold value (default=0.0)</span>
 <span class="sd">    - verbose: Print additional information (default=False)</span>
@@ -253,12 +256,12 @@
 <span class="sd">    - result: Additional NAIS algorithm results (see docstring)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Create the output random vector Y = g(X)</span>
-    <span class="n">output_random_vector</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">distribution</span><span class="p">))</span>
+    <span class="n">output_random_vector</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span><span class="n">ot_python_function</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">distribution</span><span class="p">))</span>
     <span class="c1"># Create the event { Y = g(X) &lt;= threshold }</span>
     <span class="n">failure_event</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ThresholdEvent</span><span class="p">(</span><span class="n">output_random_vector</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">LessOrEqual</span><span class="p">(),</span> <span class="n">threshold</span><span class="p">)</span>
 
     <span class="c1"># Set up the NAIS algorithm &amp; run</span>
-    <span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SubsetSampling</span><span class="p">(</span><span class="n">failure_event</span><span class="p">,</span> <span class="n">proposalRange</span><span class="p">,</span> <span class="n">targetProbability</span><span class="p">)</span>
+    <span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SubsetSampling</span><span class="p">(</span><span class="n">failure_event</span><span class="p">,</span> <span class="n">proposal_range</span><span class="p">,</span> <span class="n">target_probability</span><span class="p">)</span>
     <span class="n">algo</span><span class="o">.</span><span class="n">setKeepSample</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
     <span class="c1"># Retrieve results</span>
@@ -326,7 +329,7 @@
 <div class="viewcode-block" id="compute_gap_optimizations_on_sample">
 <a class="viewcode-back" href="../../../source/otaf.uncertainty.html#otaf.uncertainty.compute_gap_optimizations_on_sample">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_gap_optimizations_on_sample</span><span class="p">(</span>
-    <span class="n">constraint_matrix_generator</span><span class="p">:</span> <span class="s2">&quot;SystemOfConstraintsAssemblyModel&quot;</span><span class="p">,</span>
+    <span class="n">constraint_matrix_generator</span><span class="p">:</span> <span class="n">SystemOfConstraintsAssemblyModel</span><span class="p">,</span>
     <span class="n">deviation_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">C</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">bounds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -370,7 +373,7 @@
         <span class="n">_range</span> <span class="o">=</span> <span class="n">get_tqdm_range</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">_range</span> <span class="o">=</span> <span class="nb">range</span>
-
+    <span class="n">optimizations</span><span class="o">=</span><span class="p">[]</span>
     <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">n_cpu</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">optimizations</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">milp</span><span class="p">(</span>
@@ -463,7 +466,7 @@
 <div class="viewcode-block" id="compute_gap_optimizations_on_sample_batch">
 <a class="viewcode-back" href="../../../source/otaf.uncertainty.html#otaf.uncertainty.compute_gap_optimizations_on_sample_batch">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_gap_optimizations_on_sample_batch</span><span class="p">(</span>
-    <span class="n">constraint_matrix_generator</span><span class="p">:</span> <span class="s2">&quot;SystemOfConstraintsAssemblyModel&quot;</span><span class="p">,</span>
+    <span class="n">constraint_matrix_generator</span><span class="p">:</span> <span class="n">SystemOfConstraintsAssemblyModel</span><span class="p">,</span>
     <span class="n">deviation_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">C</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">bounds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
