@@ -3,15 +3,6 @@ from __future__ import annotations
 
 __author__ = "Kramer84"
 __all__ = [
-    "normal_score_mu",
-    "normal_score_sigma",
-    "intermediate_lambda_function",
-    "intermediate_lambda_function_derivative",
-    "monte_carlo_non_compliancy_rate_gradient",
-    "monte_carlo_non_compliancy_rate_gradient_start_space",
-    "lambda_sample_composition",
-    "monte_carlo_non_compliancy_rate_at_threshold_w_gradient",
-    "monte_carlo_non_compliancy_rate_w_gradient",
     "sample_non_compliancy_at_threshold",
     "sample_non_compliancy_rate",
     "compute_failure_probability_subset_sampling",
@@ -35,7 +26,6 @@ import numpy as np
 from scipy.optimize import linprog, milp, OptimizeResult, LinearConstraint, Bounds
 
 import openturns as ot
-from functools import partial
 
 from joblib import Parallel, delayed, cpu_count
 
@@ -51,115 +41,6 @@ if hasattr(ot, 'JointDistribution'):
 else:
     # Older versions
     JointDistribution = ot.ComposedDistribution
-
-#######################################################################################
-########### SCORE FUNCTIONS / GRADIENTS
-
-
-@beartype
-def intermediate_lambda_function(lambdas: np.ndarray) -> np.ndarray:
-    """Ensure sum(lambdas**2) == 1."""
-    return np.sqrt(lambdas)
-
-
-@beartype
-def intermediate_lambda_function_derivative(lambdas: np.ndarray) -> np.ndarray:
-    """Derivative of the lambda function."""
-    return 1 / (2 * np.sqrt(lambdas))
-
-
-@beartype
-def normal_score_mu(
-    sample: np.ndarray, mean: Union[np.ndarray, float], std: Union[np.ndarray, float]
-) -> np.ndarray:
-    """Gradient of log Gaussian w.r.t. mean."""
-    return (1 / std) * ((sample - mean) / std)
-
-
-@beartype
-def normal_score_sigma(
-    sample: np.ndarray, mean: Union[np.ndarray, float], std: Union[np.ndarray, float]
-) -> np.ndarray:
-    """Gradient of log Gaussian w.r.t. standard deviation."""
-    return (1 / std) * (np.square((sample - mean) / std) - 1)
-
-
-@beartype
-def monte_carlo_non_compliancy_rate_gradient(
-    input_samples: np.ndarray,
-    output_non_compliancy_sample: np.ndarray,
-    input_distribution_mean: Union[np.ndarray, float],
-    input_distribution_standard: Union[np.ndarray, float],
-    ref_standards: Union[np.ndarray, list],
-) -> np.ndarray:
-    """Gradient of non-compliancy rate w.r.t. standard deviations."""
-    gradients = np.multiply(
-        output_non_compliancy_sample[:, np.newaxis],
-        normal_score_sigma(input_samples, input_distribution_mean, input_distribution_standard),
-    )
-    gradients = np.multiply(gradients, np.asarray(ref_standards))
-    return gradients.mean(axis=0)
-
-
-@beartype
-def monte_carlo_non_compliancy_rate_gradient_start_space(
-    lambdas: np.ndarray, gradient_composed: np.ndarray
-) -> np.ndarray:
-    """Gradient in the space of lambdas."""
-    return intermediate_lambda_function_derivative(lambdas) * gradient_composed
-
-
-@beartype
-def lambda_sample_composition(lambdas: np.ndarray, sample: np.ndarray) -> np.ndarray:
-    """Compose lambdas with samples."""
-    return sample * lambdas[np.newaxis, :]
-
-
-@beartype
-def monte_carlo_non_compliancy_rate(non_compliancy_monte_carlo_sample: np.ndarray) -> numbers.Real:
-    """Compute non-compliancy rate."""
-    return non_compliancy_monte_carlo_sample.mean()
-
-
-def monte_carlo_non_compliancy_rate_at_threshold_w_gradient(
-    lambdas, compliancy_threshold, sample, means, standards, model, model_is_bool=False
-):
-    """Compute non-compliancy rate and its gradient at a given lambda."""
-    lambdas_sqrt = intermediate_lambda_function(lambdas)
-    standards_composed = np.multiply(lambdas_sqrt, standards)
-    means_composed = np.multiply(lambdas_sqrt, means)
-    samples_composed = lambda_sample_composition(lambdas_sqrt, sample)
-    model_results = model(samples_composed)
-    if not model_is_bool:
-        model_non_compliancy_sample = sample_non_compliancy_at_threshold(
-            model_results, compliancy_threshold
-        )
-    else:
-        model_non_compliancy_sample = model_results
-    model_non_compliancy_gradient = monte_carlo_non_compliancy_rate_gradient(
-        samples_composed, model_non_compliancy_sample, means_composed, standards_composed, standards
-    )
-    model_non_compliancy_gradient_start_space = (
-        monte_carlo_non_compliancy_rate_gradient_start_space(lambdas, model_non_compliancy_gradient)
-    )
-    model_non_compliancy_rate = monte_carlo_non_compliancy_rate(model_non_compliancy_sample)
-    return model_non_compliancy_rate, model_non_compliancy_gradient_start_space
-
-
-def monte_carlo_non_compliancy_rate_w_gradient(
-    compliancy_threshold, sample, means, standards, model, model_is_bool=False
-):
-    """Partial function for computing non-compliancy rate and gradient."""
-    return partial(
-        monte_carlo_non_compliancy_rate_at_threshold_w_gradient,
-        compliancy_threshold=compliancy_threshold,
-        sample=sample,
-        means=means,
-        standards=standards,
-        model=model,
-        model_is_bool=model_is_bool,
-    )
-
 
 #######################################################################################
 ########### MODEL POST-PROCESSING
@@ -182,7 +63,8 @@ def sample_non_compliancy_at_threshold(
         optimization_variable (bool, optional): Flag indicating whether the optimizations represent a variable to
             be checked for compliancy. Defaults to False.
 
-    Returns:
+    Returns
+    -------
         np.ndarray: Array indicating non-compliancy at each sample or optimization result. Each element is 1 if the
             sample/optimization is non-compliant (below threshold), otherwise 0.
     """
@@ -205,7 +87,7 @@ def sample_non_compliancy_at_threshold(
 
 @beartype
 def sample_non_compliancy_rate(non_compliancy_indicator_sample: np.ndarray):
-    """Returns the mean of an indicator sample. The sample is supposed to be representative of the
+    """Return the mean of an indicator sample. The sample is supposed to be representative of the
     distribution and only is valid in monte carlo simulations.
     """
     return non_compliancy_indicator_sample.mean()
@@ -246,16 +128,17 @@ def compute_failure_probability_NAIS(
     quantile_level: float = 0.001,
     verbose: bool = False,
 ) -> tuple[float, ot.SimulationResult]:
-    """
-    Compute the failure probability using the NAIS algorithm.
+    """Compute the failure probability using the NAIS algorithm.
 
-    Parameters:
+    Parameters
+    ----------
     - func: The function g(X)
     - distribution: The input random vector distribution
     - threshold: The threshold value (default=0.0)
     - verbose: Print additional information (default=False)
 
-    Returns:
+    Returns
+    -------
     - proba: The estimated failure probability
     - result: Additional NAIS algorithm results (see docstring)
     """
@@ -286,17 +169,19 @@ def compute_failure_probability_SUBSET(
     verbose: bool = False,
     proposalRange=2,
     targetProbability=0.1,
-) -> tuple[float, ot.SimulationResult]:
+) -> tuple[float, ot.SimulationResult, Any]:
     """
     Compute the failure probability using the NAIS algorithm.
 
-    Parameters:
+    Parameters
+    ----------
     - func: The function g(X)
     - distribution: The input random vector distribution
     - threshold: The threshold value (default=0.0)
     - verbose: Print additional information (default=False)
 
-    Returns:
+    Returns
+    -------
     - proba: The estimated failure probability
     - result: Additional NAIS algorithm results (see docstring)
     """
@@ -339,10 +224,12 @@ def compute_failure_probability_subset_sampling(
         method (str, optional): Algorithm for the optimization problem. Defaults to 'highs'.
         n_cpu (int, optional): Number of CPUs to use for parallel execution. Defaults to 1.
 
-    Returns:
+    Returns
+    -------
         float: Failure probability for the fixed deviations.
 
-    Raises:
+    Raises
+    ------
         TypeError: If constraint_matrix_generator is not callable.
     """
 
@@ -383,7 +270,8 @@ def compute_gap_optimizations_on_sample(
         progress_bar (bool, optional): Whether to show a progress bar.
         verbose (int, optional): Level of verbosity for debugging.
 
-    Returns:
+    Returns
+    -------
         list: List of optimization results.
     """
     c, a_ub, b_ub, a_eq, b_eq, bounds = constraint_matrix_generator(
@@ -497,7 +385,8 @@ def compute_gap_optimizations_on_sample_batch(
         progress_bar (bool, optional): Whether to show a progress bar.
         verbose (int, optional): Level of verbosity for debugging.
 
-    Returns:
+    Returns
+    -------
         list: List of optimization results.
     """
     c, a_ub, b_ub, a_eq, b_eq, bounds = constraint_matrix_generator(
@@ -551,10 +440,12 @@ def compute_failure_probability_basic(
         method (str, optional): Algorithm for the optimization problem. Defaults to 'highs'.
         n_cpu (int, optional): Number of CPUs to use for parallel execution. Defaults to 1.
 
-    Returns:
+    Returns
+    -------
         float: Failure probability for the fixed deviations.
 
-    Raises:
+    Raises
+    ------
         TypeError: If constraint_matrix_generator is not callable.
     """
     c, a_ub, b_ub, a_eq, b_eq, bounds = constraint_matrix_generator(
@@ -618,10 +509,12 @@ def compute_adaptive_failure_probability(
         epsilon_std (float, optional): Convergence threshold for the standard deviation of failure probabilities. Defaults to 0.005.
         verbose (int, optional): Verbosity level for printing progress. Defaults to 0.
 
-    Returns:
+    Returns
+    -------
         float: Failure probability for the fixed deviations.
 
-    Raises:
+    Raises
+    ------
         TypeError: If constraint_matrix_generator is not callable.
     """
     start_time = time()
@@ -738,10 +631,12 @@ def compute_gap_optimizations_on_sample_w_steps(
         verbose (int, optional): Verbosity level. Defaults to 0.
         progress_bar (bool, optional): Show progress bar. Defaults to False.
 
-    Returns:
+    Returns
+    -------
         List: List of optimization results including intermediate steps.
 
-    Raises:
+    Raises
+    ------
         TypeError: If constraint_matrix_generator is not callable.
     """
     c, a_ub, b_ub, a_eq, b_eq, bounds = constraint_matrix_generator(
