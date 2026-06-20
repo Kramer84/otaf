@@ -91,19 +91,48 @@
     <span class="s2">&quot;OptimizationTracker&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bounds</span>
 
 <div class="viewcode-block" id="OptimizationTracker">
 <a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.OptimizationTracker">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">OptimizationTracker</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    High-performance storage for optimization loops.</span>
+
 <span class="sd">    Uses byte-hashing for O(1) lookups during execution, and exports to Pandas</span>
 <span class="sd">    for post-processing and filtering.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bounds : Optional[Bounds], default=None</span>
+<span class="sd">        The optimization bounds object exposing a `.residual(x)` method.</span>
+<span class="sd">    constraint_tolerance : float, default=1e-4</span>
+<span class="sd">        The maximum allowed tolerance for constraint violations.</span>
+<span class="sd">    precision_decimals : int, default=8</span>
+<span class="sd">        The number of decimals to round `x` before byte-hashing.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    history : Dict[Any, Dict[bytes, Dict[str, Any]]]</span>
+<span class="sd">        Nested dictionary tracking evaluation points by experiment key and point hash.</span>
+<span class="sd">    precision_decimals : int</span>
+<span class="sd">        Decimal precision for coordinate rounding.</span>
+<span class="sd">    bounds : Optional[Bounds]</span>
+<span class="sd">        Optimization bounds constraint definition.</span>
+<span class="sd">    constraint_tolerance : float</span>
+<span class="sd">        Tolerance threshold for constraint validation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">constraint_tolerance</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">precision_decimals</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">bounds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Bounds</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">constraint_tolerance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-4</span><span class="p">,</span>
+        <span class="n">precision_decimals</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">history</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">precision_decimals</span> <span class="o">=</span> <span class="n">precision_decimals</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="n">bounds</span>
@@ -112,9 +141,34 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;OptimizationTracker initialized with bounds: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_hash_x</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Hashes the coordinates of a point using rounded byte representations.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : Union[np.ndarray, List[float], float]</span>
+<span class="sd">            The input coordinate point.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bytes</span>
+<span class="sd">            The immutable byte-string representation of the rounded input array.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">precision_decimals</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_init_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_key</span><span class="p">,</span> <span class="n">x_hash</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes an empty structured entry in the evaluation history if absent.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        exp_key : Any</span>
+<span class="sd">            The identifier of the active experiment.</span>
+<span class="sd">        x_hash : bytes</span>
+<span class="sd">            The calculated hash key of the point coordinate.</span>
+<span class="sd">        x : Union[np.ndarray, List[float], float]</span>
+<span class="sd">            The raw coordinate array.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">exp_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="n">exp_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">x_hash</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="n">exp_key</span><span class="p">]:</span>
@@ -123,15 +177,49 @@
                 <span class="s2">&quot;bounds_respected&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_bounds</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
             <span class="p">}</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_check_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluates whether a given point stays within the registered bounds.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : Union[np.ndarray, List[float], float]</span>
+<span class="sd">            The target coordinate array to evaluate.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            True if all bounds residuals are greater than or equal to 0, or if bounds are omitted.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span>
         <span class="n">sl</span><span class="p">,</span> <span class="n">sb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">residual</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">sl</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">sb</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">sl</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">sb</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">))</span>
 
 <div class="viewcode-block" id="OptimizationTracker.update_objective_data">
 <a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.OptimizationTracker.update_objective_data">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_objective_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_key</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">fp_gld</span><span class="p">,</span> <span class="n">fp_slack</span><span class="p">,</span> <span class="n">gld_params</span><span class="p">,</span> <span class="n">failure_slack</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="s2">&quot;local&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates objective function metrics and associated parameters for a specific point.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        exp_key : Any</span>
+<span class="sd">            The identifier of the active experiment.</span>
+<span class="sd">        x : Union[np.ndarray, List[float], float]</span>
+<span class="sd">            The coordinates of the evaluated point.</span>
+<span class="sd">        fp_gld : float</span>
+<span class="sd">            Failure probability obtained from the GLD distribution approximation </span>
+<span class="sd">            (converted to NaN if input is NaN).</span>
+<span class="sd">        fp_slack : float</span>
+<span class="sd">            Failure probability obtained from number of failed points in sample.</span>
+<span class="sd">        gld_params : Union[np.ndarray, List[float]]</span>
+<span class="sd">            Parameters of the GLD distribution.</span>
+<span class="sd">        failure_slack : float</span>
+<span class="sd">            The slack value used to define failure.</span>
+<span class="sd">        source : str, default=&quot;local&quot;</span>
+<span class="sd">            The metadata tracking origin string of the evaluation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">x_hash</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hash_x</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_init_entry</span><span class="p">(</span><span class="n">exp_key</span><span class="p">,</span> <span class="n">x_hash</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 
@@ -147,6 +235,18 @@
 <div class="viewcode-block" id="OptimizationTracker.update_constraint_data">
 <a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.OptimizationTracker.update_constraint_data">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_constraint_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_key</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">constraints</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates constraint evaluation metrics and assesses tolerance breaches.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        exp_key : Any</span>
+<span class="sd">            The identifier of the active experiment.</span>
+<span class="sd">        x : Union[np.ndarray, List[float], float]</span>
+<span class="sd">            The coordinates of the evaluated point.</span>
+<span class="sd">        constraints : Union[np.ndarray, List[float], float]</span>
+<span class="sd">            Array or values representing current constraint evaluation outputs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">x_hash</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hash_x</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_init_entry</span><span class="p">(</span><span class="n">exp_key</span><span class="p">,</span> <span class="n">x_hash</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 
@@ -163,6 +263,21 @@
 <div class="viewcode-block" id="OptimizationTracker.get_data">
 <a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.OptimizationTracker.get_data">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_key</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves internal stored attributes for a point if existing.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        exp_key : Any</span>
+<span class="sd">            The identification key for the tracking sequence.</span>
+<span class="sd">        x : Union[np.ndarray, List[float], float]</span>
+<span class="sd">            The exact coordinate values to fetch.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Optional[Dict[str, Any]]</span>
+<span class="sd">            The dictionary of matching parameters, or None if the point cannot be found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">x_hash</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hash_x</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">exp_key</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">x_hash</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
@@ -172,7 +287,19 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">to_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts the internal dictionary to a Pandas DataFrame.</span>
+
 <span class="sd">        Replaces the old &#39;get_all_data&#39; and avoids loop bottleneck.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        exp_key : Optional[Any], default=None</span>
+<span class="sd">            The specific experiment key to extract. If None, flattens and extracts</span>
+<span class="sd">            all stored items across tracking sequences.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pd.DataFrame</span>
+<span class="sd">            Flattened historical evaluation frame containing structural parameter rows.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1"># If no key is provided, aggregate all experiments</span>
@@ -193,7 +320,23 @@
 <a class="viewcode-back" href="../../../source/otaf.optimization.html#otaf.optimization.OptimizationTracker.filter_points">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">filter_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bounds_respected</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">constraints_respected</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Re-implementation of your old filter_points method.</span>
+<span class="sd">        Filters tracking records against targeted properties via Pandas DataFrame representation.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        exp_key : Optional[Any], default=None</span>
+<span class="sd">            Filters historical points to a single tracked experiment key sequence.</span>
+<span class="sd">        source : Optional[str], default=None</span>
+<span class="sd">            Filters matching points by execution string label.</span>
+<span class="sd">        bounds_respected : Optional[bool], default=None</span>
+<span class="sd">            Filters items based on validation boundary constraints compliance.</span>
+<span class="sd">        constraints_respected : Optional[bool], default=None</span>
+<span class="sd">            Filters items based on tolerance limit boundary validation.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pd.DataFrame</span>
+<span class="sd">            A targeted slice of history matching all provided validation conditions.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_dataframe</span><span class="p">(</span><span class="n">exp_key</span><span class="p">)</span>
 
@@ -212,25 +355,6 @@
         <span class="k">return</span> <span class="n">df</span></div>
 </div>
 
-
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">store_results</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fp_gld</span><span class="p">,</span> <span class="n">fp_slack</span><span class="p">,</span> <span class="n">gld_params</span><span class="p">,</span> <span class="n">result_dict</span><span class="p">,</span> <span class="n">experiment_key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="c1"># Legacy function</span>
-    <span class="n">x_key</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">bidirectional_string_to_array_conversion</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="n">x_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;FP_GLD&quot;</span><span class="p">:</span> <span class="n">fp_gld</span><span class="p">,</span> <span class="s2">&quot;FP_SLACK&quot;</span><span class="p">:</span><span class="n">fp_slack</span><span class="p">,</span> <span class="s2">&quot;GLD_PARAMS&quot;</span><span class="p">:</span> <span class="n">gld_params</span><span class="p">}</span>
-    <span class="k">if</span> <span class="n">experiment_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">x_key</span> <span class="ow">in</span> <span class="n">result_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="n">result_dict</span><span class="p">[</span><span class="n">x_key</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">x_dict</span><span class="p">)</span>
-        <span class="k">else</span> <span class="p">:</span>
-            <span class="n">result_dict</span><span class="p">[</span><span class="n">x_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_dict</span>
-    <span class="k">else</span> <span class="p">:</span>
-        <span class="k">if</span> <span class="n">experiment_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">result_dict</span><span class="p">:</span>
-            <span class="n">result_dict</span><span class="p">[</span><span class="n">experiment_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">if</span> <span class="n">x_key</span> <span class="ow">in</span> <span class="n">result_dict</span><span class="p">[</span><span class="n">experiment_key</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="n">result_dict</span><span class="p">[</span><span class="n">experiment_key</span><span class="p">][</span><span class="n">x_key</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">x_dict</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">result_dict</span><span class="p">[</span><span class="n">experiment_key</span><span class="p">][</span><span class="n">x_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_dict</span>
 </pre></div>
 
            </div>
