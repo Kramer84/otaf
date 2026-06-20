@@ -17,7 +17,8 @@ __all__ = [
     "alphabet_generator",
     "threshold_for_percentile_positive_values_below",
     "bidirectional_string_to_array_conversion",
-    "arrays_close_enough"
+    "arrays_close_enough",
+    "scaling"
 ]
 
 import re
@@ -638,3 +639,29 @@ def bidirectional_string_to_array_conversion(x):
 def arrays_close_enough(arr1, arr2, tolerance=1e-6):
     """Check if two arrays are element-wise equal within a specified tolerance."""
     return np.allclose(arr1, arr2, atol=tolerance)
+
+def scaling(scale_factor):
+    """
+    Decorator to scale the output of a function by a specified scaling factor.
+
+    Parameters
+    ----------
+    scale_factor : float
+        The factor by which to scale the output of the wrapped function.
+
+    Returns
+    -------
+    function
+        A decorator that applies the scaling to the output of the wrapped function.
+    """
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            result = func(*args, **kwargs)
+            if isinstance(result, tuple):
+                # Scale both objective and Jacobian if it's a tuple (result and Jacobian)
+                return tuple(r * scale_factor for r in result)
+            else:
+                # Scale only the result
+                return result * scale_factor
+        return wrapper
+    return decorator
