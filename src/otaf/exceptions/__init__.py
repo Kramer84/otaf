@@ -1,3 +1,4 @@
+"""Custom exception classes for the OTAF project."""
 from __future__ import annotations
 # -*- coding: utf-8 -*-
 

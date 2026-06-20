@@ -696,6 +696,7 @@ def plot_deviation_domain(
     y_label (str, optional): Label for the y-axis. Defaults to "Y".
     x_bounds (tuple, optional): Bounds for the x-axis. Defaults to (-0.15, 0.15).
     y_bounds (tuple, optional): Bounds for the y-axis. Defaults to (-1, 1).
+
     Returns:
     matplotlib.axes.Axes: The axis with the plot.
     """

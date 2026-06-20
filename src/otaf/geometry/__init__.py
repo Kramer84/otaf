@@ -1,3 +1,4 @@
+"""Geometric primitives and spatial analysis utilities for the OTAF project."""
 from __future__ import annotations
 # -*- coding: utf-8 -*-
 

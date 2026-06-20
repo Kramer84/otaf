@@ -16,11 +16,10 @@ class TimeoutError(Exception):
 
 
 def timeout(seconds=10, error_message="Function call timed out"):
-    """
-    Decorator that limits the execution time of a function.
+    """Limit the execution time of a function using a decorator.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     seconds : int
         The number of seconds before the function is terminated with a timeout error.
     error_message : str

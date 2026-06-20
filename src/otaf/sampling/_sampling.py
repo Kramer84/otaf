@@ -198,7 +198,7 @@ def generate_random_permutations_with_sampling(subgroup_sizes, num_samples=None,
     where each subgroup has exactly one non-zero element. Additionally, each non-zero element
     is randomly assigned either a +1 or -1 value.
 
-    Parameters:
+    Parameters
     ----------
     subgroup_sizes : list of int
         A list where each entry corresponds to the size of a subgroup (the number of possible one-hot
@@ -212,7 +212,7 @@ def generate_random_permutations_with_sampling(subgroup_sizes, num_samples=None,
     seed : int, optional
         A seed for the random number generator to ensure reproducibility of results.
 
-    Returns:
+    Returns
     -------
     numpy.ndarray
         A 2D array where each row is a randomly generated permutation, and each column corresponds
@@ -292,7 +292,7 @@ def generate_scaled_permutations(subgroup_sizes, scaling_factors, num_samples=No
     based on the specified number of samples (`num_samples`). The resulting permutations
     are scaled by the given scaling factors.
 
-    Parameters:
+    Parameters
     ----------
     subgroup_sizes : list of int
         A list where each entry corresponds to the size of a subgroup (the number of possible
@@ -311,7 +311,7 @@ def generate_scaled_permutations(subgroup_sizes, scaling_factors, num_samples=No
     seed : int, optional
         A seed for the random number generator to ensure reproducibility of results.
 
-    Returns:
+    Returns
     -------
     numpy.ndarray
         A 2D array where each row is a randomly generated permutation, and each column corresponds
@@ -348,7 +348,7 @@ def generate_imprecise_probabilistic_samples(
     The sum of the elements in each subgroup is constrained to 1, and the function samples random
     permutations from the imprecise space of possible contributions for these subgroups.
 
-    Parameters:
+    Parameters
     ----------
     subgroup_sizes : list of int
         A list where each entry corresponds to the size of a subgroup (the number of variables in that group).
@@ -365,7 +365,7 @@ def generate_imprecise_probabilistic_samples(
         The number of steps to discretize the space between [0, 1]. Higher values allow for finer
         granularity in the space of possible contributions.
 
-    Returns:
+    Returns
     -------
     Generator
         A generator yielding valid samples of probabilistic contributions for the subgroups,
@@ -488,15 +488,15 @@ def compose_defects_with_lambdas(lds, rdv):
     sample by multiplying it with the point from the lambda sample. The dimensions
     of the lambda sample and the defect sample must match.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     lds : ot.Sample
         Lambda sample of size Nl.
     rdv : ot.Sample
         Random defects sample of size Nd.
 
-    Returns:
-    --------
+    Returns
+    -------
     list[ot.Sample]
         List of size Nl, where each element is a sample of defects, each with size Nd.
     """

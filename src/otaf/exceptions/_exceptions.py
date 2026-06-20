@@ -235,7 +235,8 @@ class InvalidAffineTransformException(Exception):
     """
     Exception raised when a matrix is not a valid affine transformation matrix.
 
-    Attributes:
+    Attributes
+    ----------
         matrix (np.ndarray): The matrix that caused the exception.
         message (str): Explanation of the error.
     """

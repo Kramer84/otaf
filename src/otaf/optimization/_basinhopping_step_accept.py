@@ -32,7 +32,7 @@ class StepTaking:
         """
         Initialize the StepTaking class.
 
-        Parameters:
+        Parameters
         ----------
         storage : OptimizationStorage
             An instance of the OptimizationStorage class to manage optimization points.
@@ -55,12 +55,12 @@ class StepTaking:
         Generate a new candidate step based on the current position 'x'.
         The step respects the provided bounds and enforces the linear condition.
 
-        Parameters:
+        Parameters
         ----------
         x : array-like
             The current point in the search space.
 
-        Returns:
+        Returns
         -------
         new_x : array-like
             The new point after taking a step.
@@ -109,7 +109,7 @@ class AcceptTest:
         """
         Decide whether to accept or reject a new step in the optimization.
 
-        Parameters:
+        Parameters
         ----------
         f_new : float
             The function value at the new point.
@@ -120,7 +120,7 @@ class AcceptTest:
         x_old : array-like
             The coordinates of the previous point.
 
-        Returns:
+        Returns
         -------
         bool
             True if the new step is accepted, False otherwise.
@@ -149,12 +149,12 @@ class AcceptTest:
         """
         Check if the new point is too close to any existing points in the storage.
 
-        Parameters:
+        Parameters
         ----------
         x_new : array-like
             The coordinates of the new point.
 
-        Returns:
+        Returns
         -------
         bool
             True if the point is too close to any existing point, False otherwise.
@@ -172,14 +172,14 @@ class AcceptTest:
         """
         Decide whether to accept the new point based on its function value.
 
-        Parameters:
+        Parameters
         ----------
         f_new : float
             The function value at the new point.
         f_old : float
             The function value at the previous point.
 
-        Returns:
+        Returns
         -------
         bool
             True if the new point is accepted, False otherwise.
@@ -198,7 +198,7 @@ class Callback:
         """
         Initialize the Callback class.
 
-        Parameters:
+        Parameters
         ----------
         storage : OptimizationStorage
             An instance of the OptimizationStorage class to manage optimization data.
@@ -212,7 +212,7 @@ class Callback:
         """
         Store the current local minimum if accepted and apply the stop criterion if provided.
 
-        Parameters:
+        Parameters
         ----------
         x : array-like
             The coordinates of the current minimum.
@@ -221,7 +221,7 @@ class Callback:
         accept : bool
             Whether the current minimum was accepted.
 
-        Returns:
+        Returns
         -------
         bool or None
             Return True to stop the basinhopping routine if the stop criterion is met, otherwise return None.

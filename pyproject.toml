@@ -70,3 +70,6 @@ all = [
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"

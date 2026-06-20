@@ -265,8 +265,7 @@ def parse_matrix_string(matrix_str: str) -> Dict[str, Union[str, bool]]:
 
 @beartype
 def get_symbols_in_expressions(expr_list: List[sp.Expr]) -> Tuple[List[sp.Symbol], List[sp.Symbol]]:
-    """
-    Extract and sort unique symbols from a list of sympy expressions.
+    """Extract and sort unique symbols from a list of sympy expressions.
 
     This function processes a list of sympy expressions, extracts the free symbols, and
     categorizes them into deviation symbols and gap symbols based on their naming patterns.
@@ -303,7 +302,6 @@ def get_symbols_in_expressions(expr_list: List[sp.Expr]) -> Tuple[List[sp.Symbol
     >>> get_symbols_in_expressions(expr_list)
     ([u_d_1, w_d_3], [v_g_2])
     """
-
     sort_order = ["u_", "v_", "w_", "alpha_", "beta_", "gamma_"]
     def sort_key(x):
         id_var = int(re.search(r"(\d+)$", x.name).group(1))
@@ -441,7 +439,7 @@ def get_SE3_matrices_from_indices(
 
 
 def validate_dict_keys(
-    dictionary: dict, keys: List[str], dictionary_name: str, value_checks: dict = None
+    dictionary: dict, keys: List[str], dictionary_name: str, value_checks: dict = {}
 ) -> None:
     """
     Validate the presence of specific keys in a dictionary and optionally check their values.
@@ -565,9 +563,10 @@ def alphabet_generator():
 def threshold_for_percentile_positive_values_below(
     arr: Union[list, np.ndarray], percentile: float
 ) -> Optional[float]:
-    """
-    Compute the threshold value such that the given percentage of positive values
-    in the input array are below this threshold.
+    """Compute the threshold value for a given percentile of positive values.
+
+    This function extracts all positive values from the input array and calculates
+    the threshold such that the specified percentage of these values fall below it.
 
     Parameters
     ----------
@@ -622,16 +621,20 @@ def threshold_for_percentile_positive_values_below(
 
 
 def arr_to_str(x):
+    """Convert a numeric array to a formatted string representation."""
     return "[" + " ".join(f"{num:.6f}" for num in x) + "]"
 
 def str_to_arr(s):
+    """Convert a formatted string representation back to a list of floats."""
     return [float(_) for _ in s[1:-1].split()]
 
 def bidirectional_string_to_array_conversion(x):
+    """Convert input between a numeric array and its string representation."""
     if isinstance(x, str):
         return str_to_arr(x)
     else:
         return arr_to_str(x)
 
 def arrays_close_enough(arr1, arr2, tolerance=1e-6):
+    """Check if two arrays are element-wise equal within a specified tolerance."""
     return np.allclose(arr1, arr2, atol=tolerance)

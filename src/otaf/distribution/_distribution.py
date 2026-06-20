@@ -38,17 +38,20 @@ def get_composed_normal_defect_distribution(
 ) -> JointDistribution:
     """Create a composed distribution of defects based on their names and associated standard deviations.
 
-    Args:
+    Parameters
+    ----------
         defect_names (list): A list of defect variable names (symbols).
         mu_list (list, optional): List of means for each defect. If not provided, defaults to 0.0 for all defects.
         sigma_list (list, optional): List of standard deviations for each defect. If not provided, defaults to 1.0 for all defects.
         mu_dict (dict, optional): Dictionary mapping defect names to their mean values.
         sigma_dict (dict, optional): Dictionary mapping defect names to their standard deviation values.
 
-    Returns:
+    Returns
+    -------
         JointDistribution: A composed distribution object.
 
-    Notes:
+    Notes
+    -----
         - The defect names are expected to have specific prefixes to identify their type:
             - ``u_`` for translation along the x-axis
             - ``v_`` for translation along the y-axis
@@ -142,13 +145,15 @@ def multiply_composed_distribution_with_constant(composed_distribution, constant
     """
     Multiply all parameters in a JointDistribution by a constant.
 
-    Args:
+    Parameters
+    ----------
         composed_distribution (JointDistribution):
             The original composed distribution.
         constant (float):
             The constant value by which to multiply all parameters.
 
-    Returns:
+    Returns
+    -------
         JointDistribution:
             A copy of the original composed distribution,
             with its parameters scaled by the given constant.
@@ -167,13 +172,15 @@ def multiply_composed_distribution_standard_with_constants(composed_distribution
     This function assumes each sub-distribution is a Normal distribution,
     where each distribution's parameters are in the form [mean, std, mean, std, ...].
 
-    Args:
+    Parameters
+    ----------
         composed_distribution (JointDistribution):
             The original composed distribution.
         constants (list[float]):
             A list of constants to multiply each distribution's standard deviation.
 
-    Returns:
+    Returns
+    -------
         JointDistribution:
             A copy of the original composed distribution,
             with updated standard deviations.
@@ -187,14 +194,16 @@ def multiply_composed_distribution_standard_with_constants(composed_distribution
 
 
 def get_means_standards_composed_distribution(composed_distribution):
-    """
-    Extracts the means and standard deviations from the composed distribution.
+    """Extract means and standard deviations from a composed distribution.
+
     Assumes all distributions are normal (mean/std).
 
-    Parameters:
+    Parameters
+    ----------
         composed_distribution: The composed distribution of normal distributions.
 
-    Returns:
+    Returns
+    -------
         means: A list of the means of the distributions.
         stds: A list of the standard deviations of the distributions.
     """
@@ -228,7 +237,7 @@ def compute_sup_inf_distributions(distributions, x_min=-10, x_max=10, n_points=i
     It then computes the pointwise supremum and infimum of the CDFs across the
     distributions at each of these points.
 
-    Parameters:
+    Parameters
     ----------
     distributions : list
         A list of objects where each object has a `computeCDF(x)` method to evaluate
@@ -241,7 +250,7 @@ def compute_sup_inf_distributions(distributions, x_min=-10, x_max=10, n_points=i
         The number of points at which the CDFs are evaluated between `x_min` and `x_max`.
         Default is 10,000.
 
-    Returns:
+    Returns
     -------
     sup_data : np.ndarray
         A 2D array with shape (n_points, 2), where the first column is the x values
@@ -273,13 +282,15 @@ def get_prob_below_threshold(data_inf_sup, threshold=0):
     absolute value of the difference between the first column and the threshold
     is the smallest, and then returns the corresponding value from the second column.
 
-    Parameters:
+    Parameters
+    ----------
     data_inf_sup : numpy array
         Array where the first column contains gap values and the second column contains probabilities.
     threshold : float, optional
         The threshold to check against (default is 0).
 
-    Returns:
+    Returns
+    -------
     float
         The probability corresponding to the gap closest to the threshold.
     """

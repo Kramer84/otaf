@@ -1,3 +1,4 @@
+"""Constants and configuration values for the OTAF project."""
 from __future__ import annotations
 # -*- coding: utf-8 -*-
 

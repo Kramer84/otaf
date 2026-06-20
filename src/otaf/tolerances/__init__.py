@@ -1,3 +1,4 @@
+"""Tools for calculating defect standard deviations and implicit credal sets."""
 from __future__ import annotations
 # -*- coding: utf-8 -*-
 

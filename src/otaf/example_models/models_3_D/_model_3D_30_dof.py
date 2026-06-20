@@ -1,6 +1,5 @@
-"""
-constraint_matrix_builder.py
-============================
+"""Constraint matrix builder for 3D assembly models.
+
 Builds the linear constraint matrices for the assembly tolerance analysis problem,
 ready to be passed to SystemOfConstraintsAssemblyModel(matrices=...).
 
