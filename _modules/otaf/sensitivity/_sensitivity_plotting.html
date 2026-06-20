@@ -45,7 +45,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../source/modules.html">otaf</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.capabilities.html">otaf.capabilities package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.common.html">otaf.common package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.constants.html">otaf.constants module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.constants.html">otaf.constants package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.distribution.html">otaf.distribution package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.example_models.html">otaf.example_models package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.exceptions.html">otaf.exceptions package</a></li>
@@ -55,6 +55,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.sampling.html">otaf.sampling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.sensitivity.html">otaf.sensitivity package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.surrogate.html">otaf.surrogate package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.tolerances.html">otaf.tolerances package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.uncertainty.html">otaf.uncertainty package</a></li>
 </ul>
 
@@ -98,16 +99,38 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">plotSobolIndicesWithErr</span><span class="p">(</span>
     <span class="n">S</span><span class="p">,</span> <span class="n">errS</span><span class="p">,</span> <span class="n">varNames</span><span class="p">,</span> <span class="n">n_dims</span><span class="p">,</span> <span class="n">Stot</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">errStot</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dimNames</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Function to plot the Sobol&#39; indices with an errorbar to visualize the</span>
-<span class="sd">    uncertaintity in the estimator. (only first and total order yet)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot Sobol&#39; indices with error bars to visualize estimator uncertainty.</span>
 
-<span class="sd">    Note</span>
-<span class="sd">    ----</span>
-<span class="sd">    Function is written to adapt the plotting according to the dimensions of</span>
-<span class="sd">    the input, for higher level inputs, mayavi seems the most reasonable choice</span>
-<span class="sd">    for plotting</span>
+<span class="sd">    Supports plotting for scalar outputs (1D array of indices) using discrete </span>
+<span class="sd">    errorbar markers, and vector outputs (2D array of indices) using either subplots </span>
+<span class="sd">    or comprehensive heatmaps via an `ImageGrid`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    S : numpy.ndarray</span>
+<span class="sd">        First-order Sobol&#39; indices. Can be shape `(n_dims,)` for scalar outputs </span>
+<span class="sd">        or `(n_dims, dimOut)` for vector outputs.</span>
+<span class="sd">    errS : numpy.ndarray</span>
+<span class="sd">        Confidence intervals or errors corresponding to `S`. Must match the shape of `S`.</span>
+<span class="sd">    varNames : list of str</span>
+<span class="sd">        Names of the input variables (length must match `n_dims`).</span>
+<span class="sd">    n_dims : int</span>
+<span class="sd">        The total number of input variables/dimensions analyzed.</span>
+<span class="sd">    Stot : numpy.ndarray, optional</span>
+<span class="sd">        Total-order Sobol&#39; indices. Must match the shape of `S`. Default is None.</span>
+<span class="sd">    errStot : numpy.ndarray, optional</span>
+<span class="sd">        Confidence intervals or errors corresponding to `Stot`. Must match the shape of `Stot`.</span>
+<span class="sd">    dimNames : list of str, optional</span>
+<span class="sd">        Names of the output vector dimensions. Only evaluated for vector outputs in </span>
+<span class="sd">        heatmap configurations. Default is None.</span>
+<span class="sd">    figsize : tuple of int, optional</span>
+<span class="sd">        Width and height of the target matplotlib figure in inches. Default is (20, 10).</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The function adapts dynamically based on the dimensionality of `S`. For high-dimensional </span>
+<span class="sd">    vector outputs, it uses heatmaps to manage visual density.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;classic&quot;</span><span class="p">)</span>
     <span class="n">S</span><span class="p">,</span> <span class="n">errS</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">S</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">errS</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">Stot</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">errStot</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -282,28 +305,34 @@
 
 <span class="c1"># From : https://matplotlib.org/stable/gallery/images_contours_and_fields/image_annotated_heatmap.html</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">heatmap</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">row_labels</span><span class="p">,</span> <span class="n">col_labels</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cbar_kw</span><span class="o">=</span><span class="p">{},</span> <span class="n">cbarlabel</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Create a heatmap from a numpy array and two lists of labels.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a heatmap from a 2D numpy array and two lists of axis labels.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    data</span>
-<span class="sd">        A 2D numpy array of shape (N, M).</span>
-<span class="sd">    row_labels</span>
-<span class="sd">        A list or array of length N with the labels for the rows.</span>
-<span class="sd">    col_labels</span>
-<span class="sd">        A list or array of length M with the labels for the columns.</span>
-<span class="sd">    ax</span>
-<span class="sd">        A `matplotlib.axes.Axes` instance to which the heatmap is plotted.  If</span>
-<span class="sd">        not provided, use current axes or create a new one.  Optional.</span>
-<span class="sd">    cbar_kw</span>
-<span class="sd">        A dictionary with arguments to `matplotlib.Figure.colorbar`.  Optional.</span>
-<span class="sd">    cbarlabel</span>
-<span class="sd">        The label for the colorbar.  Optional.</span>
-<span class="sd">    **kwargs</span>
-<span class="sd">        All other arguments are forwarded to `imshow`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    data : numpy.ndarray</span>
+<span class="sd">        A 2D numpy array of shape (N, M) containing the matrix values to plot.</span>
+<span class="sd">    row_labels : list or array-like of str</span>
+<span class="sd">        A list or array of length N containing labels for the rows.</span>
+<span class="sd">    col_labels : list or array-like of str</span>
+<span class="sd">        A list or array of length M containing labels for the columns.</span>
+<span class="sd">    ax : matplotlib.axes.Axes, optional</span>
+<span class="sd">        An existing axes instance to draw the heatmap onto. If None, the current </span>
+<span class="sd">        active axes (`plt.gca()`) will be used or generated. Default is None.</span>
+<span class="sd">    cbar_kw : dict, optional</span>
+<span class="sd">        A dictionary containing keyword arguments forwarded directly to </span>
+<span class="sd">        `matplotlib.figure.Figure.colorbar`. Default is None.</span>
+<span class="sd">    cbarlabel : str, optional</span>
+<span class="sd">        The text label assigned to the colorbar&#39;s y-axis. Default is &quot;&quot;.</span>
+<span class="sd">    **kwargs : dict</span>
+<span class="sd">        All other keyword arguments are forwarded directly to `ax.imshow`.</span>
 
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    im : matplotlib.image.AxesImage</span>
+<span class="sd">        The generated image plot mapping data values to the colormap.</span>
+<span class="sd">    cbar : matplotlib.colorbar.Colorbar</span>
+<span class="sd">        The colorbar instance tied to the image plotting axes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">ax</span><span class="p">:</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
 
@@ -341,31 +370,40 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">annotate_heatmap</span><span class="p">(</span>
     <span class="n">im</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">valfmt</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{x:.3f}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">textcolors</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="s2">&quot;white&quot;</span><span class="p">),</span> <span class="n">threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">textkw</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A function to annotate a heatmap.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Annotate a text layer over a pre-existing matplotlib heatmap image.</span>
+
+<span class="sd">    Loops through the individual cells of a heatmap grid and renders an explicit text </span>
+<span class="sd">    string displaying the cell&#39;s underlying value, adjusting text contrast color dynamically </span>
+<span class="sd">    based on a defined threshold map.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    im</span>
-<span class="sd">        The AxesImage to be labeled.</span>
-<span class="sd">    data</span>
-<span class="sd">        Data used to annotate.  If None, the image&#39;s data is used.  Optional.</span>
-<span class="sd">    valfmt</span>
-<span class="sd">        The format of the annotations inside the heatmap.  This should either</span>
-<span class="sd">        use the string format method, e.g. &quot;$ {x:.2f}&quot;, or be a</span>
-<span class="sd">        `matplotlib.ticker.Formatter`.  Optional.</span>
-<span class="sd">    textcolors</span>
-<span class="sd">        A pair of colors.  The first is used for values below a threshold,</span>
-<span class="sd">        the second for those above.  Optional.</span>
-<span class="sd">    threshold</span>
-<span class="sd">        Value in data units according to which the colors from textcolors are</span>
-<span class="sd">        applied.  If None (the default) uses the middle of the colormap as</span>
-<span class="sd">        separation.  Optional.</span>
-<span class="sd">    **kwargs</span>
-<span class="sd">        All other arguments are forwarded to each call to `text` used to create</span>
-<span class="sd">        the text labels.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    im : matplotlib.image.AxesImage</span>
+<span class="sd">        The active heatmap image axes instance to be annotated.</span>
+<span class="sd">    data : list or numpy.ndarray, optional</span>
+<span class="sd">        The numerical data used to populate the text labels. If None, the function </span>
+<span class="sd">        extracts data directly from `im.get_array()`. Default is None.</span>
+<span class="sd">    valfmt : str or matplotlib.ticker.Formatter, optional</span>
+<span class="sd">        The formatting blueprint used for the text overlays. Accepts a standard </span>
+<span class="sd">        string format scheme (e.g., &quot;${x:.2f}&quot;) or an instance of a Matplotlib Formatter. </span>
+<span class="sd">        Default is &quot;{x:.3f}&quot;.</span>
+<span class="sd">    textcolors : tuple of str, optional</span>
+<span class="sd">        A structural pair of color definitions. The first index string specifies </span>
+<span class="sd">        the color used for values sitting below the threshold; the second index </span>
+<span class="sd">        handles values sitting above. Default is (&quot;black&quot;, &quot;white&quot;).</span>
+<span class="sd">    threshold : float, optional</span>
+<span class="sd">        The value limit in raw data units determining when text contrast colors switch. </span>
+<span class="sd">        If None, the separation boundary defaults precisely to the center of the </span>
+<span class="sd">        colormap&#39;s range. Default is None.</span>
+<span class="sd">    **textkw : dict</span>
+<span class="sd">        All other keyword arguments are forwarded directly into each individual </span>
+<span class="sd">        `ax.text` rendering invocation.</span>
 
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list of matplotlib.text.Text</span>
+<span class="sd">        A list containing all text label instances rendered into the heatmap grid.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">get_array</span><span class="p">()</span>
 

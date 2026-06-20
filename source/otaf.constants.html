@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>otaf.constants module &mdash; otaf 0.1 documentation</title>
+  <title>otaf.constants package &mdash; otaf 0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
 
@@ -48,10 +48,9 @@
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">otaf</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="otaf.html">otaf package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="otaf.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="otaf.assembly_modeling.html">otaf.assembly_modeling package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.capabilities.html">otaf.capabilities package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.common.html">otaf.common package</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">otaf.constants module</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">otaf.constants package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.distribution.html">otaf.distribution package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.example_models.html">otaf.example_models package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.exceptions.html">otaf.exceptions package</a></li>
@@ -61,6 +60,7 @@
 <li class="toctree-l4"><a class="reference internal" href="otaf.sampling.html">otaf.sampling package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.sensitivity.html">otaf.sensitivity package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.surrogate.html">otaf.surrogate package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.tolerances.html">otaf.tolerances package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.uncertainty.html">otaf.uncertainty package</a></li>
 </ul>
 </li>
@@ -71,14 +71,8 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.capabilities.html">otaf.capabilities package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.common.html">otaf.common package</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">otaf.constants module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#constants-overview">Constants Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#base-surface-types-and-directions">Base Surface Types and Directions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#regular-expression-patterns">Regular Expression Patterns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#mappings-for-constraints-and-degrees-of-freedom">Mappings for Constraints and Degrees of Freedom</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#gap-interaction-and-nullified-components">Gap Interaction and Nullified Components</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#matrix-basis-for-modeling">Matrix Basis for Modeling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#surface-property-validation">Surface Property Validation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">otaf.constants package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-otaf.constants">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.distribution.html">otaf.distribution package</a></li>
@@ -90,6 +84,7 @@
 <li class="toctree-l1"><a class="reference internal" href="otaf.sampling.html">otaf.sampling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.sensitivity.html">otaf.sensitivity package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.surrogate.html">otaf.surrogate package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="otaf.tolerances.html">otaf.tolerances package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.uncertainty.html">otaf.uncertainty package</a></li>
 </ul>
 
@@ -109,7 +104,7 @@
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="modules.html">otaf</a></li>
           <li class="breadcrumb-item"><a href="otaf.html">otaf package</a></li>
-      <li class="breadcrumb-item active">otaf.constants module</li>
+      <li class="breadcrumb-item active">otaf.constants package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/source/otaf.constants.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -119,143 +114,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="otaf-constants-module">
-<h1>otaf.constants module<a class="headerlink" href="#otaf-constants-module" title="Link to this heading"></a></h1>
-<p>The <cite>otaf.constants</cite> module defines constants, regex patterns, mappings, and utility dictionaries essential for surface and gap modeling in the OTAF framework. These include definitions of surface types, regular expressions for validating naming patterns, and mappings for constraints, degrees of freedom, and nullified components.</p>
-<section id="constants-overview">
-<h2>Constants Overview<a class="headerlink" href="#constants-overview" title="Link to this heading"></a></h2>
-<p>Below is a detailed description of each constant, its purpose, and examples.</p>
-<p>—</p>
-</section>
-<section id="base-surface-types-and-directions">
-<h2>Base Surface Types and Directions<a class="headerlink" href="#base-surface-types-and-directions" title="Link to this heading"></a></h2>
-<p><strong>BASE_SURFACE_TYPES</strong></p>
-<p>List of supported surface types for modeling:
-- <cite>plane</cite>
-- <cite>cylinder</cite>
-- <cite>cone</cite>
-- <cite>sphere</cite></p>
-<p><strong>SURFACE_DIRECTIONS</strong></p>
-<p>List of valid surface directions for interactions:
-- <cite>centripetal</cite>
-- <cite>centrifugal</cite></p>
-<p><strong>CONTACT_TYPES</strong></p>
-<p>Types of contact interactions between surfaces:
-- <cite>FIXED</cite>
-- <cite>SLIDING</cite>
-- <cite>FLOATING</cite></p>
-<p>—</p>
-</section>
-<section id="regular-expression-patterns">
-<h2>Regular Expression Patterns<a class="headerlink" href="#regular-expression-patterns" title="Link to this heading"></a></h2>
-<p><strong>SURF_POINT_PATTERN</strong></p>
-<p>Regex to validate surface point names, e.g., <cite>‘AA01’</cite>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[A-Z]+[0-9]+$
-</pre></div>
-</div>
-<p><strong>SURF_ORIGIN_PATTERN</strong></p>
-<p>Regex to validate surface origin names, e.g., <cite>‘AA0000’</cite>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[A-Z]+0+$
-</pre></div>
-</div>
-<p><strong>BASE_PART_SURF_PATTERN</strong></p>
-<p>Regex for part-surface naming patterns, e.g., <cite>‘P1a’</cite>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>^P(\d+)([a-z]+)$
-</pre></div>
-</div>
-<p><strong>LOOP_ELEMENT_PATTERN</strong></p>
-<p>Regex for loop element names, e.g., <cite>‘P1aA5’</cite>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>^P\d+[a-z]+[A-Z]+\d+$
-</pre></div>
-</div>
-<p><strong>LOC_STAMP_PATTERN</strong></p>
-<p>Regex for location stamp naming, e.g., <cite>‘P1aA5’</cite>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>^P(\d+)([a-z]+)([A-Z]+\d+)$
-</pre></div>
-</div>
-<p><strong>Transformation and Deviation Patterns</strong></p>
-<ul class="simple">
-<li><p><strong>T_MATRIX_PATTERN</strong>: Regex for transformation matrix naming, e.g., <cite>‘TP1aA0bB99’</cite>.</p></li>
-</ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>^TP(\d+)([a-z]+)([A-Z]+\d+)([a-z]+)([A-Z]+\d+)$
-</pre></div>
-</div>
-<ul class="simple">
-<li><p><strong>D_MATRIX_PATTERN1</strong>: Regex for deviation matrix type 1, e.g., <cite>‘D1a’</cite> or <cite>‘Di1a’</cite>.</p></li>
-</ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>^D(i*)(\d+)([a-z]+)$
-</pre></div>
-</div>
-<ul class="simple">
-<li><p><strong>D_MATRIX_PATTERN2</strong>: Regex for deviation matrix type 2, e.g., <cite>‘D1aA5’</cite>.</p></li>
-</ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>^D(i*)(\d+)([a-z]+)([A-Z]+\d+)$
-</pre></div>
-</div>
-<ul class="simple">
-<li><p><strong>D_MATRIX_PATTERN3</strong>: Regex for deviation matrix type 3, e.g., <cite>‘D1a5b’</cite>.</p></li>
-</ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>^D(i*)(\d+)([a-z]+)(\d+)([a-z]+)$
-</pre></div>
-</div>
-<p>—</p>
-</section>
-<section id="mappings-for-constraints-and-degrees-of-freedom">
-<h2>Mappings for Constraints and Degrees of Freedom<a class="headerlink" href="#mappings-for-constraints-and-degrees-of-freedom" title="Link to this heading"></a></h2>
-<p><strong>GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF</strong></p>
-<p>Mapping of global constraints to degrees of freedom for deviations:</p>
-<ul class="simple">
-<li><p><strong>3D</strong>: <cite>translations_2remove = “”</cite>, <cite>rotations_2remove = “”</cite></p></li>
-<li><p><strong>2D_NX</strong>: <cite>translations_2remove = “x”</cite>, <cite>rotations_2remove = “yz”</cite></p></li>
-<li><p><strong>2D_NY</strong>: <cite>translations_2remove = “y”</cite>, <cite>rotations_2remove = “xz”</cite></p></li>
-<li><p><strong>2D_NZ</strong>: <cite>translations_2remove = “z”</cite>, <cite>rotations_2remove = “xy”</cite></p></li>
-</ul>
-<p><strong>SURF_TYPE_TO_DEVIATION_DOF</strong></p>
-<p>Mapping of surface types to deviation degrees of freedom (DOF):</p>
-<ul class="simple">
-<li><p><strong>plane-none</strong>: <cite>translations = “x”</cite>, <cite>rotations = “yz”</cite></p></li>
-<li><p><strong>cylinder-none</strong>: <cite>translations = “yz”</cite>, <cite>rotations = “yz”</cite></p></li>
-</ul>
-<p><strong>GLOBAL_CONSTRAINTS_TO_GAP_DOF</strong></p>
-<p>Mapping of global constraints to blocked degrees of freedom for gaps:</p>
-<ul class="simple">
-<li><p><strong>3D</strong>: <cite>translations_blocked = “”</cite>, <cite>rotations_blocked = “”</cite></p></li>
-<li><p><strong>2D_NX</strong>: <cite>translations_blocked = “x”</cite>, <cite>rotations_blocked = “yz”</cite></p></li>
-</ul>
-<p>—</p>
-</section>
-<section id="gap-interaction-and-nullified-components">
-<h2>Gap Interaction and Nullified Components<a class="headerlink" href="#gap-interaction-and-nullified-components" title="Link to this heading"></a></h2>
-<p><strong>GAP_TYPE_TO_NULLIFIED_NOMINAL_COMPONENTS</strong></p>
-<p>Mapping gap type interaction to gap components nullified in the nominal gap matrix:</p>
-<ul class="simple">
-<li><p><strong>plane-plane</strong>: <cite>nullify_x = True</cite>, <cite>nullify_y = False</cite>, <cite>nullify_z = False</cite></p></li>
-<li><p><strong>cylinder-cylinder</strong>: <cite>nullify_x = True</cite>, <cite>nullify_y = True</cite>, <cite>nullify_z = True</cite></p></li>
-</ul>
-<p>—</p>
-</section>
-<section id="matrix-basis-for-modeling">
-<h2>Matrix Basis for Modeling<a class="headerlink" href="#matrix-basis-for-modeling" title="Link to this heading"></a></h2>
-<p><strong>BASIS_DICT</strong></p>
-<p>Defines components of the matrix basis used for modeling defects and rotations under the small displacement hypothesis.</p>
-<p>Example:
-- <strong>Basis 1</strong>:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p><cite>AXIS = “x”</cite></p></li>
-<li><p><cite>VARIABLE_D = “u_d”</cite></p></li>
-<li><p><cite>VARIABLE_G = “u_g”</cite></p></li>
-</ul>
-</div></blockquote>
-<p>—</p>
-</section>
-<section id="surface-property-validation">
-<h2>Surface Property Validation<a class="headerlink" href="#surface-property-validation" title="Link to this heading"></a></h2>
-<p><strong>SURFACE_DICT_VALUE_CHECKS</strong></p>
-<p>Validation functions for surface property values:
-- <strong>TYPE</strong>: Validates surface type matches <cite>BASE_SURFACE_TYPES</cite>.
-- <strong>FRAME</strong>: Checks for orthogonality and determinant of 1.
-- <strong>ORIGIN</strong>: Validates the shape of <cite>np.array(x)</cite> is <cite>(3,)</cite>.</p>
+  <section id="otaf-constants-package">
+<h1>otaf.constants package<a class="headerlink" href="#otaf-constants-package" title="Link to this heading"></a></h1>
+<section id="module-otaf.constants">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-otaf.constants" title="Link to this heading"></a></h2>
+<p>Constants and configuration values for the OTAF project.</p>
 </section>
 </section>
 

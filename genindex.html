@@ -45,7 +45,7 @@
 <li class="toctree-l1"><a class="reference internal" href="source/modules.html">otaf</a></li>
 <li class="toctree-l1"><a class="reference internal" href="source/otaf.capabilities.html">otaf.capabilities package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="source/otaf.common.html">otaf.common package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.constants.html">otaf.constants module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/otaf.constants.html">otaf.constants package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="source/otaf.distribution.html">otaf.distribution package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="source/otaf.example_models.html">otaf.example_models package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="source/otaf.exceptions.html">otaf.exceptions package</a></li>
@@ -55,6 +55,7 @@
 <li class="toctree-l1"><a class="reference internal" href="source/otaf.sampling.html">otaf.sampling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="source/otaf.sensitivity.html">otaf.sensitivity package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="source/otaf.surrogate.html">otaf.surrogate package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/otaf.tolerances.html">otaf.tolerances package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="source/otaf.uncertainty.html">otaf.uncertainty package</a></li>
 </ul>
 
@@ -250,13 +251,9 @@
 </li>
       <li><a href="source/otaf.sampling.html#otaf.sampling.compose_defects_with_lambdas">compose_defects_with_lambdas() (in module otaf.sampling)</a>
 </li>
-      <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.compute_adaptive_failure_probability">compute_adaptive_failure_probability() (in module otaf.uncertainty)</a>
-</li>
-      <li><a href="source/otaf.geometry.html#otaf.geometry.compute_bounding_box">compute_bounding_box() (in module otaf.geometry)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.compute_failure_probability_basic">compute_failure_probability_basic() (in module otaf.uncertainty)</a>
+      <li><a href="source/otaf.geometry.html#otaf.geometry.compute_bounding_box">compute_bounding_box() (in module otaf.geometry)</a>
 </li>
       <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.compute_failure_probability_FORM">compute_failure_probability_FORM() (in module otaf.uncertainty)</a>
 </li>
@@ -271,8 +268,6 @@
       <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.compute_gap_optimizations_on_sample">compute_gap_optimizations_on_sample() (in module otaf.uncertainty)</a>
 </li>
       <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.compute_gap_optimizations_on_sample_batch">compute_gap_optimizations_on_sample_batch() (in module otaf.uncertainty)</a>
-</li>
-      <li><a href="source/otaf.uncertainty.html#otaf.uncertainty.compute_gap_optimizations_on_sample_w_steps">compute_gap_optimizations_on_sample_w_steps() (in module otaf.uncertainty)</a>
 </li>
       <li><a href="source/otaf.distribution.html#otaf.distribution.compute_sup_inf_distributions">compute_sup_inf_distributions() (in module otaf.distribution)</a>
 </li>
@@ -650,9 +645,15 @@
 </li>
         <li><a href="source/otaf.common.html#module-otaf.common">otaf.common</a>
 </li>
+        <li><a href="source/otaf.constants.html#module-otaf.constants">otaf.constants</a>
+</li>
         <li><a href="source/otaf.distribution.html#module-otaf.distribution">otaf.distribution</a>
 </li>
         <li><a href="source/otaf.example_models.html#module-otaf.example_models">otaf.example_models</a>
+</li>
+        <li><a href="source/otaf.example_models.models_2_D.html#module-otaf.example_models.models_2_D">otaf.example_models.models_2_D</a>
+</li>
+        <li><a href="source/otaf.example_models.models_3_D.html#module-otaf.example_models.models_3_D">otaf.example_models.models_3_D</a>
 </li>
         <li><a href="source/otaf.exceptions.html#module-otaf.exceptions">otaf.exceptions</a>
 </li>
@@ -667,6 +668,8 @@
         <li><a href="source/otaf.sensitivity.html#module-otaf.sensitivity">otaf.sensitivity</a>
 </li>
         <li><a href="source/otaf.surrogate.html#module-otaf.surrogate">otaf.surrogate</a>
+</li>
+        <li><a href="source/otaf.tolerances.html#module-otaf.tolerances">otaf.tolerances</a>
 </li>
         <li><a href="source/otaf.uncertainty.html#module-otaf.uncertainty">otaf.uncertainty</a>
 </li>
@@ -739,6 +742,13 @@
 </li>
       </ul></li>
       <li>
+    otaf.constants
+
+      <ul>
+        <li><a href="source/otaf.constants.html#module-otaf.constants">module</a>
+</li>
+      </ul></li>
+      <li>
     otaf.distribution
 
       <ul>
@@ -753,14 +763,28 @@
 </li>
       </ul></li>
       <li>
+    otaf.example_models.models_2_D
+
+      <ul>
+        <li><a href="source/otaf.example_models.models_2_D.html#module-otaf.example_models.models_2_D">module</a>
+</li>
+      </ul></li>
+      <li>
+    otaf.example_models.models_3_D
+
+      <ul>
+        <li><a href="source/otaf.example_models.models_3_D.html#module-otaf.example_models.models_3_D">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
     otaf.exceptions
 
       <ul>
         <li><a href="source/otaf.exceptions.html#module-otaf.exceptions">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     otaf.geometry
 
@@ -801,6 +825,13 @@
 
       <ul>
         <li><a href="source/otaf.surrogate.html#module-otaf.surrogate">module</a>
+</li>
+      </ul></li>
+      <li>
+    otaf.tolerances
+
+      <ul>
+        <li><a href="source/otaf.tolerances.html#module-otaf.tolerances">module</a>
 </li>
       </ul></li>
       <li>
@@ -898,6 +929,8 @@
 </li>
       <li><a href="source/otaf.sampling.html#otaf.sampling.scale_sample_with_params">scale_sample_with_params() (in module otaf.sampling)</a>
 </li>
+      <li><a href="source/otaf.common.html#otaf.common.scaling">scaling() (in module otaf.common)</a>
+</li>
       <li><a href="source/otaf.plotting.html#otaf.plotting.set_graph_legends">set_graph_legends() (in module otaf.plotting)</a>
 </li>
       <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setComposedDistribution">setComposedDistribution() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
@@ -908,8 +941,14 @@
 </li>
       <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setSize">setSize() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
 </li>
+      <li><a href="source/otaf.tolerances.html#otaf.tolerances.sigma_delta_3D_plane">sigma_delta_3D_plane() (in module otaf.tolerances)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="source/otaf.tolerances.html#otaf.tolerances.sigma_delta_circular_feature">sigma_delta_circular_feature() (in module otaf.tolerances)</a>
+</li>
+      <li><a href="source/otaf.tolerances.html#otaf.tolerances.sigma_delta_cylindrical_feature">sigma_delta_cylindrical_feature() (in module otaf.tolerances)</a>
+</li>
       <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution">SobolIndicesExperimentWithComposedDistribution (class in otaf.sensitivity)</a>
 </li>
       <li><a href="source/otaf.sampling.html#otaf.sampling.LagrangeConstraintSolver.solve">solve() (otaf.sampling.LagrangeConstraintSolver method)</a>

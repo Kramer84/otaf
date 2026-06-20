@@ -22,7 +22,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="otaf.assembly_modeling package" href="otaf.assembly_modeling.html" />
+    <link rel="next" title="otaf.capabilities package" href="otaf.capabilities.html" />
     <link rel="prev" title="otaf" href="modules.html" /> 
 </head>
 
@@ -50,10 +50,9 @@
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">otaf</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">otaf package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="otaf.assembly_modeling.html">otaf.assembly_modeling package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.capabilities.html">otaf.capabilities package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.common.html">otaf.common package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="otaf.constants.html">otaf.constants module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.constants.html">otaf.constants package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.distribution.html">otaf.distribution package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.example_models.html">otaf.example_models package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.exceptions.html">otaf.exceptions package</a></li>
@@ -63,6 +62,7 @@
 <li class="toctree-l4"><a class="reference internal" href="otaf.sampling.html">otaf.sampling package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.sensitivity.html">otaf.sensitivity package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.surrogate.html">otaf.surrogate package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.tolerances.html">otaf.tolerances package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.uncertainty.html">otaf.uncertainty package</a></li>
 </ul>
 </li>
@@ -85,7 +85,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.capabilities.html">otaf.capabilities package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.common.html">otaf.common package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.constants.html">otaf.constants module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="otaf.constants.html">otaf.constants package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.distribution.html">otaf.distribution package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.example_models.html">otaf.example_models package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.exceptions.html">otaf.exceptions package</a></li>
@@ -95,6 +95,7 @@
 <li class="toctree-l1"><a class="reference internal" href="otaf.sampling.html">otaf.sampling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.sensitivity.html">otaf.sensitivity package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.surrogate.html">otaf.surrogate package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="otaf.tolerances.html">otaf.tolerances package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.uncertainty.html">otaf.uncertainty package</a></li>
 </ul>
 
@@ -129,16 +130,6 @@
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="otaf.assembly_modeling.html">otaf.assembly_modeling package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="otaf.assembly_modeling.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="otaf.assembly_modeling.html#otaf-assembly-modeling-assemblydataprocessor-module">otaf.assembly_modeling.assemblyDataProcessor module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="otaf.assembly_modeling.html#otaf-assembly-modeling-assemblymodelingbaseobjects-module">otaf.assembly_modeling.assemblyModelingBaseObjects module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="otaf.assembly_modeling.html#otaf-assembly-modeling-compatibilityloophandling-module">otaf.assembly_modeling.compatibilityLoopHandling module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="otaf.assembly_modeling.html#otaf-assembly-modeling-firstordermatrixexpansion-module">otaf.assembly_modeling.firstOrderMatrixExpansion module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="otaf.assembly_modeling.html#otaf-assembly-modeling-systemofconstraintsassemblymodel-module">otaf.assembly_modeling.systemOfConstraintsAssemblyModel module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="otaf.assembly_modeling.html#module-contents">Module contents</a></li>
-</ul>
-</li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.capabilities.html">otaf.capabilities package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="otaf.capabilities.html#module-otaf.capabilities">Module contents</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="otaf.capabilities.html#otaf.capabilities.process_capability"><code class="docutils literal notranslate"><span class="pre">process_capability()</span></code></a></li>
@@ -161,20 +152,15 @@
 <li class="toctree-l3"><a class="reference internal" href="otaf.common.html#otaf.common.is_running_in_notebook"><code class="docutils literal notranslate"><span class="pre">is_running_in_notebook()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.common.html#otaf.common.merge_with_checks"><code class="docutils literal notranslate"><span class="pre">merge_with_checks()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.common.html#otaf.common.parse_matrix_string"><code class="docutils literal notranslate"><span class="pre">parse_matrix_string()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.common.html#otaf.common.scaling"><code class="docutils literal notranslate"><span class="pre">scaling()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.common.html#otaf.common.threshold_for_percentile_positive_values_below"><code class="docutils literal notranslate"><span class="pre">threshold_for_percentile_positive_values_below()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.common.html#otaf.common.validate_dict_keys"><code class="docutils literal notranslate"><span class="pre">validate_dict_keys()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.constants.html">otaf.constants module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="otaf.constants.html#constants-overview">Constants Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="otaf.constants.html#base-surface-types-and-directions">Base Surface Types and Directions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="otaf.constants.html#regular-expression-patterns">Regular Expression Patterns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="otaf.constants.html#mappings-for-constraints-and-degrees-of-freedom">Mappings for Constraints and Degrees of Freedom</a></li>
-<li class="toctree-l2"><a class="reference internal" href="otaf.constants.html#gap-interaction-and-nullified-components">Gap Interaction and Nullified Components</a></li>
-<li class="toctree-l2"><a class="reference internal" href="otaf.constants.html#matrix-basis-for-modeling">Matrix Basis for Modeling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="otaf.constants.html#surface-property-validation">Surface Property Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="otaf.constants.html">otaf.constants package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="otaf.constants.html#module-otaf.constants">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.distribution.html">otaf.distribution package</a><ul>
@@ -191,6 +177,17 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.example_models.html">otaf.example_models package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="otaf.example_models.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="otaf.example_models.models_2_D.html">otaf.example_models.models_2_D package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="otaf.example_models.models_2_D.html#module-otaf.example_models.models_2_D">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.example_models.models_3_D.html">otaf.example_models.models_3_D package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="otaf.example_models.models_3_D.html#module-otaf.example_models.models_3_D">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="otaf.example_models.html#module-otaf.example_models">Module contents</a></li>
 </ul>
 </li>
@@ -409,17 +406,23 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="otaf.tolerances.html">otaf.tolerances package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="otaf.tolerances.html#module-otaf.tolerances">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="otaf.tolerances.html#otaf.tolerances.sigma_delta_3D_plane"><code class="docutils literal notranslate"><span class="pre">sigma_delta_3D_plane()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.tolerances.html#otaf.tolerances.sigma_delta_circular_feature"><code class="docutils literal notranslate"><span class="pre">sigma_delta_circular_feature()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.tolerances.html#otaf.tolerances.sigma_delta_cylindrical_feature"><code class="docutils literal notranslate"><span class="pre">sigma_delta_cylindrical_feature()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.uncertainty.html">otaf.uncertainty package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="otaf.uncertainty.html#module-otaf.uncertainty">Module contents</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="otaf.uncertainty.html#otaf.uncertainty.compute_adaptive_failure_probability"><code class="docutils literal notranslate"><span class="pre">compute_adaptive_failure_probability()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.uncertainty.html#otaf.uncertainty.compute_failure_probability_FORM"><code class="docutils literal notranslate"><span class="pre">compute_failure_probability_FORM()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.uncertainty.html#otaf.uncertainty.compute_failure_probability_NAIS"><code class="docutils literal notranslate"><span class="pre">compute_failure_probability_NAIS()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.uncertainty.html#otaf.uncertainty.compute_failure_probability_SUBSET"><code class="docutils literal notranslate"><span class="pre">compute_failure_probability_SUBSET()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="otaf.uncertainty.html#otaf.uncertainty.compute_failure_probability_basic"><code class="docutils literal notranslate"><span class="pre">compute_failure_probability_basic()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.uncertainty.html#otaf.uncertainty.compute_failure_probability_subset_sampling"><code class="docutils literal notranslate"><span class="pre">compute_failure_probability_subset_sampling()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.uncertainty.html#otaf.uncertainty.compute_gap_optimizations_on_sample"><code class="docutils literal notranslate"><span class="pre">compute_gap_optimizations_on_sample()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.uncertainty.html#otaf.uncertainty.compute_gap_optimizations_on_sample_batch"><code class="docutils literal notranslate"><span class="pre">compute_gap_optimizations_on_sample_batch()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="otaf.uncertainty.html#otaf.uncertainty.compute_gap_optimizations_on_sample_w_steps"><code class="docutils literal notranslate"><span class="pre">compute_gap_optimizations_on_sample_w_steps()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.uncertainty.html#otaf.uncertainty.milp_batch_sequential"><code class="docutils literal notranslate"><span class="pre">milp_batch_sequential()</span></code></a></li>
 </ul>
 </li>
@@ -2262,7 +2265,7 @@ Otherwise, the inverse is calculated as the change of basis matrix between the f
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="modules.html" class="btn btn-neutral float-left" title="otaf" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="otaf.assembly_modeling.html" class="btn btn-neutral float-right" title="otaf.assembly_modeling package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="otaf.capabilities.html" class="btn btn-neutral float-right" title="otaf.capabilities package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

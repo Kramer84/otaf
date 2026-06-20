@@ -45,7 +45,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../source/modules.html">otaf</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.capabilities.html">otaf.capabilities package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.common.html">otaf.common package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.constants.html">otaf.constants module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.constants.html">otaf.constants package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.distribution.html">otaf.distribution package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.example_models.html">otaf.example_models package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.exceptions.html">otaf.exceptions package</a></li>
@@ -55,6 +55,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.sampling.html">otaf.sampling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.sensitivity.html">otaf.sensitivity package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.surrogate.html">otaf.surrogate package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.tolerances.html">otaf.tolerances package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.uncertainty.html">otaf.uncertainty package</a></li>
 </ul>
 
@@ -93,9 +94,6 @@
     <span class="s2">&quot;compute_failure_probability_NAIS&quot;</span><span class="p">,</span>
     <span class="s2">&quot;compute_failure_probability_SUBSET&quot;</span><span class="p">,</span>
     <span class="s2">&quot;compute_gap_optimizations_on_sample&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;compute_failure_probability_basic&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;compute_adaptive_failure_probability&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;compute_gap_optimizations_on_sample_w_steps&quot;</span><span class="p">,</span>
     <span class="s2">&quot;milp_batch_sequential&quot;</span><span class="p">,</span>
     <span class="s2">&quot;compute_gap_optimizations_on_sample_batch&quot;</span><span class="p">,</span>
 <span class="p">]</span>
@@ -106,14 +104,14 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">linprog</span><span class="p">,</span> <span class="n">milp</span><span class="p">,</span> <span class="n">OptimizeResult</span><span class="p">,</span> <span class="n">LinearConstraint</span><span class="p">,</span> <span class="n">Bounds</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">milp</span><span class="p">,</span> <span class="n">OptimizeResult</span><span class="p">,</span> <span class="n">LinearConstraint</span><span class="p">,</span> <span class="n">Bounds</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">joblib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span><span class="p">,</span> <span class="n">cpu_count</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">otaf.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_tqdm_range</span>
 
@@ -127,9 +125,42 @@
 
 <div class="viewcode-block" id="compute_failure_probability_FORM">
 <a class="viewcode-back" href="../../../source/otaf.uncertainty.html#otaf.uncertainty.compute_failure_probability_FORM">[docs]</a>
+<span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_failure_probability_FORM</span><span class="p">(</span>
-    <span class="n">otFunc</span><span class="p">,</span> <span class="n">composed_distribution</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">start_point</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="kc">None</span>
-<span class="p">):</span>
+    <span class="n">otFunc</span><span class="p">:</span> <span class="n">ot</span><span class="o">.</span><span class="n">Function</span><span class="p">,</span>
+    <span class="n">composed_distribution</span><span class="p">:</span> <span class="n">JointDistribution</span><span class="p">,</span>
+    <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">start_point</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">solver</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ot</span><span class="o">.</span><span class="n">OptimizationAlgorithm</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">FORMResult</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the probability of failure using the First-Order Reliability Method (FORM).</span>
+
+<span class="sd">    Calculate the failure probability for an event defined by a threshold violation</span>
+<span class="sd">    by finding the design point in the standard normal space and applying a</span>
+<span class="sd">    first-order approximation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    otFunc : ot.Function</span>
+<span class="sd">        The performance function of the system.</span>
+<span class="sd">    composed_distribution : JointDistribution</span>
+<span class="sd">        The joint probability distribution of the input random variables.</span>
+<span class="sd">    threshold : float, optional</span>
+<span class="sd">        The limit state threshold, by default 0.0.</span>
+<span class="sd">    start_point : ot.Point, optional</span>
+<span class="sd">        Initial starting point for the optimization algorithm in physical space.</span>
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        If True, print reliability diagnostics, by default False.</span>
+<span class="sd">    solver : ot.OptimizationAlgorithm, optional</span>
+<span class="sd">        The optimization algorithm to find the design point. Uses COBYLA </span>
+<span class="sd">        with strict convergence tolerances if None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple[float, ot.FORMResult]</span>
+<span class="sd">        The calculated failure probability and the full FORM result object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">comp_rand_vect</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span><span class="n">otFunc</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">composed_distribution</span><span class="p">))</span>
     <span class="n">event</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ThresholdEvent</span><span class="p">(</span><span class="n">comp_rand_vect</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">Less</span><span class="p">(),</span> <span class="n">threshold</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">solver</span><span class="p">:</span>
@@ -144,10 +175,10 @@
     <span class="n">result</span> <span class="o">=</span> <span class="n">algoFORM</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
     <span class="n">pf</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getEventProbability</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Design point in physical space : &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getPhysicalSpaceDesignPoint</span><span class="p">())</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Design point in standard space : &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getStandardSpaceDesignPoint</span><span class="p">())</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hasofer index : &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getHasoferReliabilityIndex</span><span class="p">())</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Probability of failure (FORM) Pf = </span><span class="si">{:.16f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">getEventProbability</span><span class="p">()))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Design point in physical space : </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">getPhysicalSpaceDesignPoint</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Design point in standard space : </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">getStandardSpaceDesignPoint</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hasofer index : </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">getHasoferReliabilityIndex</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Probability of failure (FORM) Pf = </span><span class="si">{</span><span class="n">pf</span><span class="si">:</span><span class="s2">.16f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">pf</span><span class="p">,</span> <span class="n">result</span></div>
 
 
@@ -255,7 +286,8 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ot</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">ProbabilitySimulationResult</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate failure probability for a sample of defects.</span>
 
-<span class="sd">    Args:</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
 <span class="sd">        constraint_matrix_generator (Callable): Class for fixing deviations and defining constraints.</span>
 <span class="sd">        deviation_array (np.ndarray): Array of random deviations for each variable.</span>
 <span class="sd">        C (np.ndarray, optional): Coefficient matrix for the linear objective function. Defaults to None.</span>
@@ -301,20 +333,32 @@
     <span class="n">n_cpu</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
     <span class="n">progress_bar</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">OptimizeResult</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute gap optimizations on a sample using a constraint matrix generator.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute gap optimizations for a set of samples using MILP.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        constraint_matrix_generator (otaf.SystemOfConstraintsAssemblyModel): Generator for constraint matrices.</span>
-<span class="sd">        deviation_array (np.ndarray): Deviation array.</span>
-<span class="sd">        C (np.ndarray, optional): Coefficient matrix for the linear objective function.</span>
-<span class="sd">        bounds (Union[list[list[float]], np.ndarray], optional): Bounds for the variables.</span>
-<span class="sd">        n_cpu (int, optional): Number of CPUs to use for parallel processing.</span>
-<span class="sd">        progress_bar (bool, optional): Whether to show a progress bar.</span>
-<span class="sd">        verbose (int, optional): Level of verbosity for debugging.</span>
+<span class="sd">    Solve a sequence of Mixed-Integer Linear Programming (MILP) problems derived </span>
+<span class="sd">    from a system of constraints to determine the optimal gap for each sample.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    constraint_matrix_generator : SystemOfConstraintsAssemblyModel</span>
+<span class="sd">        Generator object that produces the constraint matrices and bounds.</span>
+<span class="sd">    deviation_array : np.ndarray</span>
+<span class="sd">        Array representing deviations to be processed.</span>
+<span class="sd">    C : np.ndarray, optional</span>
+<span class="sd">        Coefficient matrix for the linear objective function.</span>
+<span class="sd">    bounds : Union[List[List[float]], np.ndarray], optional</span>
+<span class="sd">        Bounds for the optimization variables.</span>
+<span class="sd">    n_cpu : int, optional</span>
+<span class="sd">        Number of CPUs to use for parallel processing, by default 1.</span>
+<span class="sd">    progress_bar : bool, optional</span>
+<span class="sd">        Whether to display a progress bar, by default False.</span>
+<span class="sd">    verbose : int, optional</span>
+<span class="sd">        Verbosity level for debugging, by default 0.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        list: List of optimization results.</span>
+<span class="sd">    List[OptimizeResult]</span>
+<span class="sd">        A list of optimization result objects for each sample in the input array.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">c</span><span class="p">,</span> <span class="n">a_ub</span><span class="p">,</span> <span class="n">b_ub</span><span class="p">,</span> <span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="n">constraint_matrix_generator</span><span class="p">(</span>
         <span class="n">deviation_array</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C</span>
@@ -340,7 +384,6 @@
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">_range</span><span class="p">(</span><span class="n">b_ub</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="p">]</span>
-
     <span class="k">elif</span> <span class="n">n_cpu</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">n_cpu</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">optimizations</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">n_cpu</span><span class="p">)(</span>
             <span class="n">delayed</span><span class="p">(</span><span class="n">milp</span><span class="p">)(</span>
@@ -354,43 +397,51 @@
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">_range</span><span class="p">(</span><span class="n">b_ub</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="p">)</span>
-
     <span class="k">return</span> <span class="n">optimizations</span></div>
 
 
 
 <div class="viewcode-block" id="milp_batch_sequential">
 <a class="viewcode-back" href="../../../source/otaf.uncertainty.html#otaf.uncertainty.milp_batch_sequential">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">milp_batch_sequential</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">a_ub</span><span class="p">,</span> <span class="n">b_ub</span><span class="p">,</span> <span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Optimize a batch of linear optimization problems iteratively.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">milp_batch_sequential</span><span class="p">(</span>
+    <span class="n">c</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">bounds</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">a_ub</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">b_ub</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">a_eq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">b_eq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Optimize a batch of linear problems iteratively using MILP.</span>
+
+<span class="sd">    Solve a sequence of Mixed-Integer Linear Programming (MILP) problems </span>
+<span class="sd">    sharing common objective coefficients and constraint matrices, but </span>
+<span class="sd">    varying constraint bounds.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    c : array_like</span>
+<span class="sd">    c : np.ndarray</span>
 <span class="sd">        Coefficients of the linear objective function to be minimized.</span>
-<span class="sd">    bounds : array_like</span>
+<span class="sd">    bounds : np.ndarray</span>
 <span class="sd">        An (n, 2) array defining the lower and upper bounds of variables.</span>
-<span class="sd">    a_ub : array_like</span>
-<span class="sd">        2-D array for the upper-bound inequality constraints.</span>
-<span class="sd">    b_ub : array_like</span>
-<span class="sd">        2-D array of upper-bound values for each inequality constraint per problem.</span>
-<span class="sd">    a_eq : array_like</span>
-<span class="sd">        2-D array for the equality constraints.</span>
-<span class="sd">    b_eq : array_like</span>
-<span class="sd">        2-D array of equality constraint values per problem.</span>
+<span class="sd">    a_ub : np.ndarray</span>
+<span class="sd">        2D array for the upper-bound inequality constraints.</span>
+<span class="sd">    b_ub : np.ndarray</span>
+<span class="sd">        2D array of upper-bound values for each inequality constraint per problem.</span>
+<span class="sd">    a_eq : np.ndarray</span>
+<span class="sd">        2D array for the equality constraints.</span>
+<span class="sd">    b_eq : np.ndarray</span>
+<span class="sd">        2D array of equality constraint values per problem.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    np.ndarray</span>
-<span class="sd">        2-D array of optimized decision variables for each problem in the batch.</span>
+<span class="sd">        2D array of optimized decision variables for each problem in the batch.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    Solves a batch of mixed-integer linear programming (MILP) problems iteratively</span>
-<span class="sd">    using the `milp` solver from `scipy.optimize`. Each problem shares `c`, `a_ub`,</span>
-<span class="sd">    and `a_eq`, but has unique `b_ub` and `b_eq` vectors. Solver options disable</span>
-<span class="sd">    display (`disp: False`) and enable presolve (`presolve: True`).</span>
+<span class="sd">    - This function solves MILP problems using `scipy.optimize.milp`.</span>
+<span class="sd">    - Solver options are set to `disp=False` and `presolve=True` for efficiency.</span>
+<span class="sd">    - Problems share `c`, `a_ub`, and `a_eq`, while `b_ub` and `b_eq` vary per batch element.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">bounds</span> <span class="o">=</span> <span class="n">Bounds</span><span class="p">(</span><span class="n">bounds</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">keep_feasible</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">optimizations</span> <span class="o">=</span> <span class="p">[</span>
@@ -417,25 +468,43 @@
     <span class="n">C</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">bounds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">n_cpu</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="n">batch_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-    <span class="n">progress_bar</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-    <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float32&quot;</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">OptimizeResult</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute gap optimizations on a sample using a constraint matrix generator with batching.</span>
+    <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="n">progress_bar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">dtype</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;float32&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute gap optimizations on a sample using batch processing and MILP.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        constraint_matrix_generator (otaf.SystemOfConstraintsAssemblyModel): Generator for constraint matrices.</span>
-<span class="sd">        deviation_array (np.ndarray): Deviation array.</span>
-<span class="sd">        C (np.ndarray, optional): Coefficient matrix for the linear objective function.</span>
-<span class="sd">        bounds (Union[list[list[float]], np.ndarray], optional): Bounds for the variables.</span>
-<span class="sd">        n_cpu (int, optional): Number of CPUs to use for parallel processing.</span>
-<span class="sd">        progress_bar (bool, optional): Whether to show a progress bar.</span>
-<span class="sd">        verbose (int, optional): Level of verbosity for debugging.</span>
+<span class="sd">    Perform parallel batch optimization for a system of constraints, grouping </span>
+<span class="sd">    samples into batches to improve computational throughput and reduce parallelization </span>
+<span class="sd">    overhead.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    constraint_matrix_generator : SystemOfConstraintsAssemblyModel</span>
+<span class="sd">        Generator object that produces constraint matrices.</span>
+<span class="sd">    deviation_array : np.ndarray</span>
+<span class="sd">        Array of deviations to process.</span>
+<span class="sd">    C : np.ndarray, optional</span>
+<span class="sd">        Coefficient matrix for the linear objective function.</span>
+<span class="sd">    bounds : Union[List[List[float]], np.ndarray], optional</span>
+<span class="sd">        Bounds for the optimization variables.</span>
+<span class="sd">    n_cpu : int, optional</span>
+<span class="sd">        Number of CPUs for parallel processing. Negative values are relative </span>
+<span class="sd">        to total available CPUs, by default 1.</span>
+<span class="sd">    batch_size : int, optional</span>
+<span class="sd">        Number of points per parallel batch, by default 1000.</span>
+<span class="sd">    progress_bar : bool, optional</span>
+<span class="sd">        Whether to display a progress bar, by default False.</span>
+<span class="sd">    verbose : int, optional</span>
+<span class="sd">        Verbosity level for debugging, by default 0.</span>
+<span class="sd">    dtype : str, optional</span>
+<span class="sd">        Data type for the resulting optimized decision variable array, by default &quot;float32&quot;.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        list: List of optimization results.</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        Optimized decision variables for all samples stacked into a single array.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">c</span><span class="p">,</span> <span class="n">a_ub</span><span class="p">,</span> <span class="n">b_ub</span><span class="p">,</span> <span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="n">constraint_matrix_generator</span><span class="p">(</span>
         <span class="n">deviation_array</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C</span>
@@ -468,263 +537,6 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">optimizations</span> <span class="o">=</span> <span class="n">milp_batch_sequential</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">a_ub</span><span class="p">,</span> <span class="n">b_ub</span><span class="p">,</span> <span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">optimizations</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="compute_failure_probability_basic">
-<a class="viewcode-back" href="../../../source/otaf.uncertainty.html#otaf.uncertainty.compute_failure_probability_basic">[docs]</a>
-<span class="nd">@beartype</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">compute_failure_probability_basic</span><span class="p">(</span>
-    <span class="n">constraint_matrix_generator</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
-    <span class="n">deviation_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-    <span class="n">C</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">bounds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">n_cpu</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate failure probability for a sample of defects.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        constraint_matrix_generator (Callable): Class for fixing deviations and defining constraints.</span>
-<span class="sd">        deviation_array (np.ndarray): Array of random deviations for each variable.</span>
-<span class="sd">        C (np.ndarray, optional): Coefficient matrix for the linear objective function. Defaults to None.</span>
-<span class="sd">        bounds (List, optional): Bounds for gap variables. Defaults to None.</span>
-<span class="sd">        method (str, optional): Algorithm for the optimization problem. Defaults to &#39;highs&#39;.</span>
-<span class="sd">        n_cpu (int, optional): Number of CPUs to use for parallel execution. Defaults to 1.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">        float: Failure probability for the fixed deviations.</span>
-
-<span class="sd">    Raises</span>
-<span class="sd">    ------</span>
-<span class="sd">        TypeError: If constraint_matrix_generator is not callable.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">c</span><span class="p">,</span> <span class="n">a_ub</span><span class="p">,</span> <span class="n">b_ub</span><span class="p">,</span> <span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="n">constraint_matrix_generator</span><span class="p">(</span>
-        <span class="n">deviation_array</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C</span>
-    <span class="p">)</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="n">b_ub</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">n_cpu</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">optimizations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-            <span class="p">[</span>
-                <span class="n">linprog</span><span class="p">(</span>
-                    <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span>
-                    <span class="n">A_ub</span><span class="o">=</span><span class="n">a_ub</span><span class="p">,</span>
-                    <span class="n">b_ub</span><span class="o">=</span><span class="n">b_ub</span><span class="p">[:,</span> <span class="n">k</span><span class="p">],</span>
-                    <span class="n">A_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span>
-                    <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">[:,</span> <span class="n">k</span><span class="p">],</span>
-                    <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span>
-                    <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
-                <span class="p">)</span>
-                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-            <span class="p">],</span>
-            <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
-        <span class="p">)</span>
-    <span class="k">elif</span> <span class="n">n_cpu</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">n_cpu</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">optimizations</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">n_cpu</span><span class="p">)(</span>
-            <span class="n">delayed</span><span class="p">(</span><span class="n">linprog</span><span class="p">)(</span>
-                <span class="n">c</span><span class="p">,</span>
-                <span class="n">A_ub</span><span class="o">=</span><span class="n">a_ub</span><span class="p">,</span>
-                <span class="n">b_ub</span><span class="o">=</span><span class="n">b_ub</span><span class="p">[:,</span> <span class="n">k</span><span class="p">],</span>
-                <span class="n">A_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span>
-                <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">[:,</span> <span class="n">k</span><span class="p">],</span>
-                <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span>
-                <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-        <span class="p">)</span>
-        <span class="n">successes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">opti</span><span class="o">.</span><span class="n">success</span><span class="p">)</span> <span class="k">for</span> <span class="n">opti</span> <span class="ow">in</span> <span class="n">optimizations</span><span class="p">],</span> <span class="nb">int</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Experiment size: </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> | N_success: </span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="n">successes</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">successes</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span></div>
-
-
-
-<div class="viewcode-block" id="compute_adaptive_failure_probability">
-<a class="viewcode-back" href="../../../source/otaf.uncertainty.html#otaf.uncertainty.compute_adaptive_failure_probability">[docs]</a>
-<span class="nd">@beartype</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">compute_adaptive_failure_probability</span><span class="p">(</span>
-    <span class="n">constraint_matrix_generator</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
-    <span class="n">deviation_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-    <span class="n">C</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">bounds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">epsilon_pf</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">,</span>
-    <span class="n">epsilon_std</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.005</span><span class="p">,</span>
-    <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the failure probability for a sample of defects.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        deviation_array (np.ndarray): Array representing the range of random deviations for each variable.</span>
-<span class="sd">        constraint_matrix_generator (Callable): Class responsible for fixing deviations and defining constraints.</span>
-<span class="sd">        bounds (List, optional): Bounds for the gap variables. Defaults to None.</span>
-<span class="sd">        C (np.ndarray, optional): Coefficient matrix for the linear objective function. Defaults to None.</span>
-<span class="sd">        method (str, optional): The algorithm to use in the optimization problem. Defaults to &#39;highs&#39;.</span>
-<span class="sd">        epsilon_pf (float, optional): Convergence threshold for the ratio of change in failure probability. Defaults to 0.001.</span>
-<span class="sd">        epsilon_std (float, optional): Convergence threshold for the standard deviation of failure probabilities. Defaults to 0.005.</span>
-<span class="sd">        verbose (int, optional): Verbosity level for printing progress. Defaults to 0.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">        float: Failure probability for the fixed deviations.</span>
-
-<span class="sd">    Raises</span>
-<span class="sd">    ------</span>
-<span class="sd">        TypeError: If constraint_matrix_generator is not callable.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-    <span class="n">c</span><span class="p">,</span> <span class="n">a_ub</span><span class="p">,</span> <span class="n">b_ub</span><span class="p">,</span> <span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="n">constraint_matrix_generator</span><span class="p">(</span>
-        <span class="n">deviation_array</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C</span>
-    <span class="p">)</span>
-    <span class="n">successes_count</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Initialize sum of successes</span>
-    <span class="n">successes</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">failure_probs</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">b_ub</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
-        <span class="n">success</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
-            <span class="n">milp</span><span class="p">(</span>
-                <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span>
-                <span class="n">bounds</span><span class="o">=</span><span class="n">Bounds</span><span class="p">(</span><span class="n">bounds</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">keep_feasible</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
-                <span class="n">constraints</span><span class="o">=</span><span class="p">(</span>
-                    <span class="n">LinearConstraint</span><span class="p">(</span><span class="n">a_ub</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">b_ub</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]),</span>
-                    <span class="n">LinearConstraint</span><span class="p">(</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="p">[:,</span> <span class="n">k</span><span class="p">],</span> <span class="n">b_eq</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]),</span>
-                <span class="p">),</span>
-                <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;disp&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;presolve&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
-            <span class="p">)</span><span class="o">.</span><span class="n">success</span>
-        <span class="p">)</span>
-
-        <span class="n">successes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">success</span><span class="p">)</span>
-        <span class="n">successes_count</span> <span class="o">+=</span> <span class="n">success</span>
-        <span class="n">failure_probs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">successes_count</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">successes</span><span class="p">)))</span>
-        <span class="k">if</span> <span class="p">(</span>
-            <span class="n">k</span> <span class="o">&gt;=</span> <span class="mi">100</span>
-            <span class="ow">and</span> <span class="p">(</span>
-                <span class="nb">abs</span><span class="p">(</span><span class="n">failure_probs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">successes</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">successes</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)))</span>
-                <span class="o">&lt;=</span> <span class="n">epsilon_pf</span>
-            <span class="p">)</span>
-            <span class="ow">and</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">failure_probs</span><span class="p">[</span><span class="n">k</span><span class="p">:])</span> <span class="o">&lt;=</span> <span class="n">epsilon_std</span><span class="p">)</span>
-            <span class="ow">and</span> <span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">successes</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="ow">and</span> <span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">successes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="p">):</span>
-            <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span>
-                    <span class="s2">&quot; | &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;Experiment size : </span><span class="si">{</span><span class="n">k</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                        <span class="sa">f</span><span class="s2">&quot;N_success : </span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="n">successes</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                        <span class="sa">f</span><span class="s2">&quot;Pf : </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">failure_probs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                        <span class="sa">f</span><span class="s2">&quot;eps std : </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">failure_probs</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                        <span class="sa">f</span><span class="s2">&quot;eps Pf : </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">failure_probs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">successes</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">successes</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">))),</span><span class="mi">5</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                        <span class="sa">f</span><span class="s2">&quot;Elapsed time: </span><span class="si">{</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start_time</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> s.&quot;</span><span class="p">,</span>
-                    <span class="p">)</span>
-                <span class="p">)</span>
-            <span class="k">return</span> <span class="n">failure_probs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="mi">200</span> <span class="ow">and</span> <span class="n">failure_probs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.999</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">failure_probs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="n">b_ub</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">failure_probs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">failure_probs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
-
-
-
-<span class="nd">@beartype</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">linprog_w_steps</span><span class="p">(</span>
-    <span class="n">c</span><span class="p">,</span>
-    <span class="n">A_ub</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">b_ub</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">A_eq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">b_eq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;revised simplex&quot;</span><span class="p">,</span>
-    <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">x0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<span class="p">):</span>
-    <span class="c1"># List to store intermediate solutions</span>
-    <span class="n">intermediate_solutions</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="c1"># Define a callback function to collect intermediate solutions</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">internal_callback</span><span class="p">(</span><span class="n">res</span><span class="p">):</span>
-        <span class="n">intermediate_solutions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
-        <span class="k">if</span> <span class="n">callback</span><span class="p">:</span>
-            <span class="n">callback</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
-
-    <span class="c1"># Perform the linear programming optimization</span>
-    <span class="n">res</span> <span class="o">=</span> <span class="n">linprog</span><span class="p">(</span>
-        <span class="n">c</span><span class="p">,</span>
-        <span class="n">A_ub</span><span class="o">=</span><span class="n">A_ub</span><span class="p">,</span>
-        <span class="n">b_ub</span><span class="o">=</span><span class="n">b_ub</span><span class="p">,</span>
-        <span class="n">A_eq</span><span class="o">=</span><span class="n">A_eq</span><span class="p">,</span>
-        <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">,</span>
-        <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span>
-        <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
-        <span class="n">callback</span><span class="o">=</span><span class="n">internal_callback</span><span class="p">,</span>
-        <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
-        <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="c1"># Return the array of all solutions for each step</span>
-    <span class="k">return</span> <span class="n">intermediate_solutions</span><span class="p">,</span> <span class="n">res</span>
-
-
-<div class="viewcode-block" id="compute_gap_optimizations_on_sample_w_steps">
-<a class="viewcode-back" href="../../../source/otaf.uncertainty.html#otaf.uncertainty.compute_gap_optimizations_on_sample_w_steps">[docs]</a>
-<span class="nd">@beartype</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">compute_gap_optimizations_on_sample_w_steps</span><span class="p">(</span>
-    <span class="n">constraint_matrix_generator</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
-    <span class="n">deviation_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-    <span class="n">C</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">bounds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">n_cpu</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">progress_bar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate failure probability for a sample of defects.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        constraint_matrix_generator (Callable): Class for fixing deviations and defining constraints.</span>
-<span class="sd">        deviation_array (np.ndarray): Array of random deviations for each variable.</span>
-<span class="sd">        C (np.ndarray, optional): Coefficient matrix for the linear objective function. Defaults to None.</span>
-<span class="sd">        bounds (List, optional): Bounds for gap variables. Defaults to None.</span>
-<span class="sd">        n_cpu (int, optional): Number of CPUs to use for parallel execution. Defaults to 1.</span>
-<span class="sd">        verbose (int, optional): Verbosity level. Defaults to 0.</span>
-<span class="sd">        progress_bar (bool, optional): Show progress bar. Defaults to False.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">        List: List of optimization results including intermediate steps.</span>
-
-<span class="sd">    Raises</span>
-<span class="sd">    ------</span>
-<span class="sd">        TypeError: If constraint_matrix_generator is not callable.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">c</span><span class="p">,</span> <span class="n">a_ub</span><span class="p">,</span> <span class="n">b_ub</span><span class="p">,</span> <span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="n">constraint_matrix_generator</span><span class="p">(</span>
-        <span class="n">deviation_array</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C</span>
-    <span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Bounds:&quot;</span><span class="p">,</span> <span class="n">bounds</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">progress_bar</span><span class="p">:</span>
-        <span class="n">_range</span> <span class="o">=</span> <span class="n">get_tqdm_range</span><span class="p">()(</span><span class="n">b_ub</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">b_ub</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">optimize_single</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">linprog_w_steps</span><span class="p">(</span>
-            <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span>
-            <span class="n">A_ub</span><span class="o">=</span><span class="n">a_ub</span><span class="p">,</span>
-            <span class="n">b_ub</span><span class="o">=</span><span class="n">b_ub</span><span class="p">[:,</span> <span class="n">k</span><span class="p">],</span>
-            <span class="n">A_eq</span><span class="o">=</span><span class="n">a_eq</span><span class="p">,</span>
-            <span class="n">b_eq</span><span class="o">=</span><span class="n">b_eq</span><span class="p">[:,</span> <span class="n">k</span><span class="p">],</span>
-            <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span>
-            <span class="n">method</span><span class="o">=</span><span class="s2">&quot;revised simplex&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">n_cpu</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">optimizations</span> <span class="o">=</span> <span class="p">[</span><span class="n">optimize_single</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">_range</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">optimizations</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">n_cpu</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">optimize_single</span><span class="p">)(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">_range</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">optimizations</span></div>
 
 </pre></div>
 

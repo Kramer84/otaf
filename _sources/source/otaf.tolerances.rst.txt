@@ -1,10 +1,10 @@
-otaf.sampling package
-=====================
+otaf.tolerances package
+=======================
 
 Module contents
 ---------------
 
-.. automodule:: otaf.sampling
+.. automodule:: otaf.tolerances
    :members:
    :show-inheritance:
    :undoc-members:

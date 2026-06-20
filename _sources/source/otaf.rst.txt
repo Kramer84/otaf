@@ -7,7 +7,6 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   otaf.assembly_modeling
    otaf.capabilities
    otaf.common
    otaf.constants
@@ -20,6 +19,7 @@ Subpackages
    otaf.sampling
    otaf.sensitivity
    otaf.surrogate
+   otaf.tolerances
    otaf.uncertainty
 
 Module contents
@@ -27,5 +27,5 @@ Module contents
 
 .. automodule:: otaf
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

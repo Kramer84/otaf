@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>otaf.example_models package &mdash; otaf 0.1 documentation</title>
+  <title>otaf.tolerances package &mdash; otaf 0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
 
@@ -20,8 +20,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="otaf.example_models.models_2_D package" href="otaf.example_models.models_2_D.html" />
-    <link rel="prev" title="otaf.distribution package" href="otaf.distribution.html" /> 
+    <link rel="next" title="otaf.uncertainty package" href="otaf.uncertainty.html" />
+    <link rel="prev" title="otaf.surrogate package" href="otaf.surrogate.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -52,7 +52,7 @@
 <li class="toctree-l4"><a class="reference internal" href="otaf.common.html">otaf.common package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.constants.html">otaf.constants package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.distribution.html">otaf.distribution package</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">otaf.example_models package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.example_models.html">otaf.example_models package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.exceptions.html">otaf.exceptions package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.geometry.html">otaf.geometry package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.optimization.html">otaf.optimization package</a></li>
@@ -60,7 +60,7 @@
 <li class="toctree-l4"><a class="reference internal" href="otaf.sampling.html">otaf.sampling package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.sensitivity.html">otaf.sensitivity package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.surrogate.html">otaf.surrogate package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="otaf.tolerances.html">otaf.tolerances package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">otaf.tolerances package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.uncertainty.html">otaf.uncertainty package</a></li>
 </ul>
 </li>
@@ -73,15 +73,7 @@
 <li class="toctree-l1"><a class="reference internal" href="otaf.common.html">otaf.common package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.constants.html">otaf.constants package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.distribution.html">otaf.distribution package</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">otaf.example_models package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="otaf.example_models.models_2_D.html">otaf.example_models.models_2_D package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="otaf.example_models.models_3_D.html">otaf.example_models.models_3_D package</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-otaf.example_models">Module contents</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="otaf.example_models.html">otaf.example_models package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.exceptions.html">otaf.exceptions package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.geometry.html">otaf.geometry package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.optimization.html">otaf.optimization package</a></li>
@@ -89,7 +81,15 @@
 <li class="toctree-l1"><a class="reference internal" href="otaf.sampling.html">otaf.sampling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.sensitivity.html">otaf.sensitivity package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.surrogate.html">otaf.surrogate package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.tolerances.html">otaf.tolerances package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">otaf.tolerances package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-otaf.tolerances">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.tolerances.sigma_delta_3D_plane"><code class="docutils literal notranslate"><span class="pre">sigma_delta_3D_plane()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.tolerances.sigma_delta_circular_feature"><code class="docutils literal notranslate"><span class="pre">sigma_delta_circular_feature()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.tolerances.sigma_delta_cylindrical_feature"><code class="docutils literal notranslate"><span class="pre">sigma_delta_cylindrical_feature()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.uncertainty.html">otaf.uncertainty package</a></li>
 </ul>
 
@@ -109,9 +109,9 @@
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="modules.html">otaf</a></li>
           <li class="breadcrumb-item"><a href="otaf.html">otaf package</a></li>
-      <li class="breadcrumb-item active">otaf.example_models package</li>
+      <li class="breadcrumb-item active">otaf.tolerances package</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/source/otaf.example_models.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/source/otaf.tolerances.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -119,25 +119,34 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="otaf-example-models-package">
-<h1>otaf.example_models package<a class="headerlink" href="#otaf-example-models-package" title="Link to this heading"></a></h1>
-<section id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="otaf.example_models.models_2_D.html">otaf.example_models.models_2_D package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="otaf.example_models.models_2_D.html#module-otaf.example_models.models_2_D">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.example_models.models_3_D.html">otaf.example_models.models_3_D package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="otaf.example_models.models_3_D.html#module-otaf.example_models.models_3_D">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</section>
-<section id="module-otaf.example_models">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-otaf.example_models" title="Link to this heading"></a></h2>
+  <section id="otaf-tolerances-package">
+<h1>otaf.tolerances package<a class="headerlink" href="#otaf-tolerances-package" title="Link to this heading"></a></h1>
+<section id="module-otaf.tolerances">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-otaf.tolerances" title="Link to this heading"></a></h2>
+<p>Tools for calculating defect standard deviations and implicit credal sets.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.tolerances.sigma_delta_3D_plane">
+<span class="sig-prename descclassname"><span class="pre">otaf.tolerances.</span></span><span class="sig-name descname"><span class="pre">sigma_delta_3D_plane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sa</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sb</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/tolerances/_tolerance_zones_standards.html#sigma_delta_3D_plane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.tolerances.sigma_delta_3D_plane" title="Link to this definition"></a></dt>
+<dd><p>Calculate the standard deviation of the defect for a 3D plane feature.</p>
+<p>This result can be used as a basis for a constraint function.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.tolerances.sigma_delta_circular_feature">
+<span class="sig-prename descclassname"><span class="pre">otaf.tolerances.</span></span><span class="sig-name descname"><span class="pre">sigma_delta_circular_feature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">su</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sv</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/tolerances/_tolerance_zones_standards.html#sigma_delta_circular_feature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.tolerances.sigma_delta_circular_feature" title="Link to this definition"></a></dt>
+<dd><p>Calculate the standard deviation of the defect for a circular feature.</p>
+<p>This result can be used as a basis for a constraint function to maintain
+a constant maximum standard deviation over the circular feature.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.tolerances.sigma_delta_cylindrical_feature">
+<span class="sig-prename descclassname"><span class="pre">otaf.tolerances.</span></span><span class="sig-name descname"><span class="pre">sigma_delta_cylindrical_feature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">su</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">salpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sbeta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/tolerances/_tolerance_zones_standards.html#sigma_delta_cylindrical_feature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.tolerances.sigma_delta_cylindrical_feature" title="Link to this definition"></a></dt>
+<dd><p>Calculate the standard deviation of the defect for a cylindrical feature.</p>
+<p>Accounts for variations in radial, axial, and angular parameters along the
+cylinder’s height and circumference.</p>
+</dd></dl>
+
 </section>
 </section>
 
@@ -145,8 +154,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="otaf.distribution.html" class="btn btn-neutral float-left" title="otaf.distribution package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="otaf.example_models.models_2_D.html" class="btn btn-neutral float-right" title="otaf.example_models.models_2_D package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="otaf.surrogate.html" class="btn btn-neutral float-left" title="otaf.surrogate package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="otaf.uncertainty.html" class="btn btn-neutral float-right" title="otaf.uncertainty package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

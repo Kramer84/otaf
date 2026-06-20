@@ -6,5 +6,5 @@ Module contents
 
 .. automodule:: otaf.uncertainty
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

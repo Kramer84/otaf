@@ -20,7 +20,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="otaf.constants module" href="otaf.constants.html" />
+    <link rel="next" title="otaf.constants package" href="otaf.constants.html" />
     <link rel="prev" title="otaf.capabilities package" href="otaf.capabilities.html" /> 
 </head>
 
@@ -48,10 +48,9 @@
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">otaf</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="otaf.html">otaf package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="otaf.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="otaf.assembly_modeling.html">otaf.assembly_modeling package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.capabilities.html">otaf.capabilities package</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">otaf.common package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="otaf.constants.html">otaf.constants module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.constants.html">otaf.constants package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.distribution.html">otaf.distribution package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.example_models.html">otaf.example_models package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.exceptions.html">otaf.exceptions package</a></li>
@@ -61,6 +60,7 @@
 <li class="toctree-l4"><a class="reference internal" href="otaf.sampling.html">otaf.sampling package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.sensitivity.html">otaf.sensitivity package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.surrogate.html">otaf.surrogate package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.tolerances.html">otaf.tolerances package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.uncertainty.html">otaf.uncertainty package</a></li>
 </ul>
 </li>
@@ -85,13 +85,14 @@
 <li class="toctree-l3"><a class="reference internal" href="#otaf.common.is_running_in_notebook"><code class="docutils literal notranslate"><span class="pre">is_running_in_notebook()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.common.merge_with_checks"><code class="docutils literal notranslate"><span class="pre">merge_with_checks()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.common.parse_matrix_string"><code class="docutils literal notranslate"><span class="pre">parse_matrix_string()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.common.scaling"><code class="docutils literal notranslate"><span class="pre">scaling()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.common.threshold_for_percentile_positive_values_below"><code class="docutils literal notranslate"><span class="pre">threshold_for_percentile_positive_values_below()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.common.validate_dict_keys"><code class="docutils literal notranslate"><span class="pre">validate_dict_keys()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.constants.html">otaf.constants module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="otaf.constants.html">otaf.constants package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.distribution.html">otaf.distribution package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.example_models.html">otaf.example_models package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.exceptions.html">otaf.exceptions package</a></li>
@@ -101,6 +102,7 @@
 <li class="toctree-l1"><a class="reference internal" href="otaf.sampling.html">otaf.sampling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.sensitivity.html">otaf.sensitivity package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.surrogate.html">otaf.surrogate package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="otaf.tolerances.html">otaf.tolerances package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.uncertainty.html">otaf.uncertainty package</a></li>
 </ul>
 
@@ -476,6 +478,23 @@ type of matrix but typically include:
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="otaf.common.scaling">
+<span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">scaling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scale_factor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#scaling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.scaling" title="Link to this definition"></a></dt>
+<dd><p>Decorator to scale the output of a function by a specified scaling factor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>scale_factor</strong> (<em>float</em>) – The factor by which to scale the output of the wrapped function.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A decorator that applies the scaling to the output of the wrapped function.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>function</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="otaf.common.threshold_for_percentile_positive_values_below">
 <span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">threshold_for_percentile_positive_values_below</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percentile</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#threshold_for_percentile_positive_values_below"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.threshold_for_percentile_positive_values_below" title="Link to this definition"></a></dt>
 <dd><p>Compute the threshold value for a given percentile of positive values.</p>
@@ -555,7 +574,7 @@ If None, value validation is skipped (default is None).</p></li>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="otaf.capabilities.html" class="btn btn-neutral float-left" title="otaf.capabilities package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="otaf.constants.html" class="btn btn-neutral float-right" title="otaf.constants module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="otaf.constants.html" class="btn btn-neutral float-right" title="otaf.constants package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
