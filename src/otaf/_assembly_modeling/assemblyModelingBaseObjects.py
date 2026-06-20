@@ -39,6 +39,7 @@ class DeviationMatrix:
     name : str, optional
         Name of the matrix for identification (default is an empty string).
     """
+
     def __init__(
         self,
         index: int = -1,
@@ -215,6 +216,7 @@ class GapMatrix:
     name : str, optional
         Name of the matrix for identification (default is an empty string).
     """
+
     def __init__(
         self,
         index: int = -1,
@@ -396,6 +398,7 @@ class TransformationMatrix:
     AssertionError
         If the provided matrix is not a valid affine transformation matrix.
     """
+
     def __init__(
         self,
         index: int = -1,
@@ -591,6 +594,7 @@ class I4:
     The identity matrix is commonly used in transformations as a neutral element, where no
     translation or rotation is applied.
     """
+
     def __init__(self):
         """
         Initialize a 4x4 identity matrix.
@@ -601,9 +605,7 @@ class I4:
         self.ID = -1
 
     def __repr__(self):
-        """
-        Generate a string representation of I4.
-        """
+        """Generate a string representation of I4."""
         return f"I4 Identity Matrix"
 
     def get_matrix(self) -> sp.MatrixBase:
@@ -643,6 +645,7 @@ class J4:
     This matrix is often used to represent a transformation involving a half-turn
     rotation in a Cartesian coordinate system.
     """
+
     def __init__(self):
         """
         Initialize a 4x4 rotation matrix representing a 180° rotation around the z-axis.
@@ -653,9 +656,7 @@ class J4:
         self.ID = -1
 
     def __repr__(self):
-        """
-        Generate a string representation of J4.
-        """
+        """Generate a string representation of J4."""
         return f"J4 Rotation Matrix"
 
     def get_matrix(self) -> sp.MatrixBase:

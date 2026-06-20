@@ -97,9 +97,7 @@ class InterfaceLoopBuilder:
     ###################################################################################################
 
     def populate_interface_expressions(self) -> None:
-        """
-        Populate the interface expressions attribute with calculated interface equations.
-        """
+        """Populate the interface expressions attribute with calculated interface equations."""
         self.interface_expressions = self.get_interface_equations_from_facing_parts()
 
     def get_interface_equations_from_facing_parts(self) -> List[Any]:

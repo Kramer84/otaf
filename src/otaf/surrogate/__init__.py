@@ -1,3 +1,4 @@
+"""Tools for the construction of neural network surrogate models, including base architectures and utility functions."""
 from __future__ import annotations
 # -*- coding: utf-8 -*-
 

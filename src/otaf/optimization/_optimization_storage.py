@@ -40,6 +40,7 @@ class OptimizationTracker:
     constraint_tolerance : float
         Tolerance threshold for constraint validation.
     """
+
     def __init__(
         self,
         bounds: Optional[Bounds] = None,
@@ -53,9 +54,9 @@ class OptimizationTracker:
 
         logging.info("OptimizationTracker initialized with bounds: %s", self.bounds)
 
-    def _hash_x(self, x):
+    def _hash_x(self, x: Union[np.ndarray, List[float], float]) -> bytes:
         """
-        Hashes the coordinates of a point using rounded byte representations.
+        Hash the coordinates of a point using rounded byte representations.
 
         Parameters
         ----------
@@ -69,9 +70,9 @@ class OptimizationTracker:
         """
         return np.round(x, self.precision_decimals).tobytes()
 
-    def _init_entry(self, exp_key, x_hash, x):
+    def _init_entry(self, exp_key: Any, x_hash: bytes, x: Union[np.ndarray, List[float], float]) -> None:
         """
-        Initializes an empty structured entry in the evaluation history if absent.
+        Initialize an empty structured entry in the evaluation history if absent.
 
         Parameters
         ----------
@@ -92,7 +93,7 @@ class OptimizationTracker:
 
     def _check_bounds(self, x: Union[np.ndarray, List[float], float]) -> bool:
         """
-        Evaluates whether a given point stays within the registered bounds.
+        Evaluate whether a given point stays within the registered bounds.
 
         Parameters
         ----------
@@ -109,9 +110,18 @@ class OptimizationTracker:
         sl, sb = self.bounds.residual(x)
         return bool(np.all(sl >= 0) and np.all(sb >= 0))
 
-    def update_objective_data(self, exp_key, x, fp_gld, fp_slack, gld_params, failure_slack, source="local"):
+    def update_objective_data(
+        self,
+        exp_key: Any,
+        x: Union[np.ndarray, List[float], float],
+        fp_gld: float,
+        fp_slack: float,
+        gld_params: Union[np.ndarray, List[float]],
+        failure_slack: float,
+        source: str = "local",
+    ) -> None:
         """
-        Updates objective function metrics and associated parameters for a specific point.
+        Update objective function metrics and associated parameters for a specific point.
 
         Parameters
         ----------
@@ -142,9 +152,14 @@ class OptimizationTracker:
             "FAILURE_SLACK": float(failure_slack)
         })
 
-    def update_constraint_data(self, exp_key, x, constraints):
+    def update_constraint_data(
+        self,
+        exp_key: Any,
+        x: Union[np.ndarray, List[float], float],
+        constraints: Union[np.ndarray, List[float], float],
+    ) -> None:
         """
-        Updates constraint evaluation metrics and assesses tolerance breaches.
+        Update constraint evaluation metrics and assess tolerance breaches.
 
         Parameters
         ----------
@@ -167,9 +182,9 @@ class OptimizationTracker:
             "constraints_respected": constraints_respected
         })
 
-    def get_data(self, exp_key, x):
+    def get_data(self, exp_key: Any, x: Union[np.ndarray, List[float], float]) -> Optional[Dict[str, Any]]:
         """
-        Retrieves internal stored attributes for a point if existing.
+        Retrieve internal stored attributes for a point if existing.
 
         Parameters
         ----------
@@ -186,9 +201,9 @@ class OptimizationTracker:
         x_hash = self._hash_x(x)
         return self.history.get(exp_key, {}).get(x_hash, None)
 
-    def to_dataframe(self, exp_key=None):
+    def to_dataframe(self, exp_key: Optional[Any] = None) -> pd.DataFrame:
         """
-        Converts the internal dictionary to a Pandas DataFrame.
+        Convert the internal dictionary to a Pandas DataFrame.
 
         Replaces the old 'get_all_data' and avoids loop bottleneck.
 
@@ -217,9 +232,15 @@ class OptimizationTracker:
 
         return pd.DataFrame(rows)
 
-    def filter_points(self, exp_key=None, source=None, bounds_respected=None, constraints_respected=None):
+    def filter_points(
+        self,
+        exp_key: Optional[Any] = None,
+        source: Optional[str] = None,
+        bounds_respected: Optional[bool] = None,
+        constraints_respected: Optional[bool] = None,
+    ) -> pd.DataFrame:
         """
-        Filters tracking records against targeted properties via Pandas DataFrame representation.
+        Filter tracking records against targeted properties via Pandas DataFrame representation.
 
         Parameters
         ----------

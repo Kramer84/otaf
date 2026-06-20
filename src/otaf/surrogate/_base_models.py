@@ -9,20 +9,47 @@ __all__ = [
 ]
 
 
-
+from typing import Any, List, Optional, Type, Callable, Dict, Union
 import torch
 import torch.nn as nn
 
 
 def get_variable_size_sequential_linear_model(
-    input_dim,
-    activation=None,
-    relative_max_layer_size=3.0,
-    relative_max_layer_depth=1 / 4,
-    relative_layer_number=1 / 2,
-    min_layer_number=4,
-):
-    """Constructs a variable sized neural network models based on input dimensions."""
+    input_dim: int,
+    activation: Optional[Type[nn.Module]] = None,
+    relative_max_layer_size: float = 3.0,
+    relative_max_layer_depth: float = 0.25,
+    relative_layer_number: float = 0.5,
+    min_layer_number: int = 4,
+) -> nn.Sequential:
+    """
+    Construct a variable-sized sequential linear neural network model.
+
+    The network size, depth, and layer sizing profile scale dynamically based on 
+    the provided input dimensions, forming a bottleneck or expansion pyramid 
+    that peaks at a designated intermediate layer depth before scaling down.
+
+    Parameters
+    ----------
+    input_dim : int
+        The number of input features for the initial linear layer.
+    activation : Optional[Type[nn.Module]], default=None
+        The PyTorch activation function class to instantiate between hidden layers.
+        Defaults to `nn.ReLU` if not specified.
+    relative_max_layer_size : float, default=3.0
+        Multiplier determining the maximum hidden layer size relative to `input_dim`.
+    relative_max_layer_depth : float, default=0.25
+        Fraction of the total layers at which the maximum layer size occurs.
+    relative_layer_number : float, default=0.5
+        Multiplier used to scale the total number of layers relative to `input_dim`.
+    min_layer_number : int, default=4
+        The absolute minimum number of layer sizing transitions allowed.
+
+    Returns
+    -------
+    nn.Sequential
+        A sequential container containing the constructed linear and activation layers.
+    """
     if activation is None:
         activation = nn.ReLU
 
@@ -67,7 +94,31 @@ def get_variable_size_sequential_linear_model(
     return nn.Sequential(*seq_args)
 
 
-def get_base_relu_mlp_model(input_dim, output_dim, compile_model=False):
+def get_base_relu_mlp_model(
+    input_dim: int, 
+    output_dim: int, 
+    compile_model: bool = False
+) -> Union[nn.Sequential, Any]:
+    """
+    Construct a baseline multi-layer perceptron with specialized progressive sizing.
+
+    Calculate hidden layer dimensions using linear interpolations heavily biased toward
+    width expansions in the initial sections before tapering down to the target dimension.
+
+    Parameters
+    ----------
+    input_dim : int
+        The number of input features entering the network.
+    output_dim : int
+        The number of output channels leaving the final linear projection.
+    compile_model : bool, default=False
+        Flag determining whether to apply JIT compilation optimizations via `torch.compile`.
+
+    Returns
+    -------
+    Union[nn.Sequential, Any]
+        The constructed sequential neural network container, wrapped via compilation if requested.
+    """
     layer_sizes = list(
         map(
             int,
@@ -90,7 +141,31 @@ def get_base_relu_mlp_model(input_dim, output_dim, compile_model=False):
         return model
 
 
-def get_base_tanh_mlp_model(input_dim, output_dim, compile_model=False):
+def get_base_tanh_mlp_model(
+    input_dim: int, 
+    output_dim: int, 
+    compile_model: bool = False
+) -> Union[nn.Sequential, Any]:
+    """
+    Construct a baseline multi-layer perceptron utilizing Tanh activation functions.
+
+    Calculate specific intermediate hidden layer sizes via heavily expanded linear 
+    interpolations between input and output boundaries, building a smooth bottleneck topology.
+
+    Parameters
+    ----------
+    input_dim : int
+        The number of input dimensions entering the network.
+    output_dim : int
+        The number of output channels leaving the final linear projection.
+    compile_model : bool, default=False
+        Flag determining whether to apply JIT compilation optimizations via `torch.compile`.
+
+    Returns
+    -------
+    Union[nn.Sequential, Any]
+        The constructed sequential neural network container, wrapped via compilation if requested.
+    """
     layer_sizes = list(
         map(
             int,
@@ -113,27 +188,43 @@ def get_base_tanh_mlp_model(input_dim, output_dim, compile_model=False):
 
 
 def get_custom_mlp_layers(
-    layer_sizes,
-    layer_class=nn.Linear,
-    activation_class=nn.ReLU,
-    layer_kwargs=None,
-    activation_kwargs=None,
-    dropout_class=None,
-    dropout_kwargs=None,
-):
+    layer_sizes: List[int],
+    layer_class: Callable[..., nn.Module] = nn.Linear,
+    activation_class: Optional[Type[nn.Module]] = nn.ReLU,
+    layer_kwargs: Optional[Dict[str, Any]] = None,
+    activation_kwargs: Optional[Dict[str, Any]] = None,
+    dropout_class: Optional[Type[nn.Module]] = None,
+    dropout_kwargs: Optional[Dict[str, Any]] = None,
+) -> List[nn.Module]:
     """
-    Creates a list of layers for a multi-layer perceptron (MLP) with specified layer sizes, layer class, activation function, and optional dropout layers.
+    Create a list of structural layers for building a multi-layer perceptron.
 
-    Args:
-        layer_sizes (list of int): List of layer sizes [input, hidden1, ..., hiddenN, output].
-        layer_class (callable): Layer class to use (e.g., nn.Linear).
-        activation_class (callable): Activation function class to use (e.g., nn.ReLU).
-        layer_kwargs (dict): Dictionary of additional keyword arguments for the layer class.
-        activation_kwargs (dict): Dictionary of additional keyword arguments for the activation function class.
-        dropout_prob (float, optional): Dropout probability. If None, no dropout layers are added.
+    Iterate through the specified size sequence to instantiate and chain the hidden 
+    layers, activation functions, and optional regularization tracking components.
 
-    Returns:
-        list: List of layers for the MLP.
+    Parameters
+    ----------
+    layer_sizes : List[int]
+        Sequence of layer dimensions defining the structural boundaries 
+        [input_dim, hidden_1, ..., hidden_n, output_dim].
+    layer_class : Callable[..., nn.Module], default=nn.Linear
+        The constructor or class template used to instantiate transformation blocks.
+    activation_class : Optional[Type[nn.Module]], default=nn.ReLU
+        The class type of the chosen non-linear activation unit. If None, drops
+        activation layers from hidden transitions.
+    layer_kwargs : Optional[Dict[str, Any]], default=None
+        Additional keyword configurations passed directly to the `layer_class`.
+    activation_kwargs : Optional[Dict[str, Any]], default=None
+        Additional keyword configurations passed directly to the `activation_class`.
+    dropout_class : Optional[Type[nn.Module]], default=None
+        The class type of a dropout or regularization layer (e.g., `nn.Dropout`).
+    dropout_kwargs : Optional[Dict[str, Any]], default=None
+        Additional keyword configurations passed directly to the `dropout_class`.
+
+    Returns
+    -------
+    List[nn.Module]
+        An ordered collection of structural network components ready for execution.
     """
     if layer_kwargs is None:
         layer_kwargs = {}
@@ -153,16 +244,25 @@ def get_custom_mlp_layers(
     return layers
 
 
-def add_gaussian_noise(tensor, alpha):
+def add_gaussian_noise(tensor: torch.Tensor, alpha: float) -> torch.Tensor:
     """
-    Add Gaussian noise to a tensor.
+    Add feature-wise Gaussian noise to an input tensor.
 
-    Args:
-        tensor (torch.Tensor): Input tensor of shape (N, M).
-        alpha (float): Scaling factor for the standard deviation.
+    Calculate the standard deviation across the feature dimension (axis 1) for 
+    each sample, scale it by a distortion factor, and inject zero-mean normal 
+    distribution perturbations into the original matrix.
 
-    Returns:
-        torch.Tensor: Tensor with added Gaussian noise.
+    Parameters
+    ----------
+    tensor : torch.Tensor
+        Input tensor of shape (N, M) to be corrupted with noise.
+    alpha : float
+        Scaling coefficient applied to the calculated standard deviation.
+
+    Returns
+    -------
+    torch.Tensor
+        The corrupted tensor containing the injected Gaussian perturbations.
     """
     # Calculate the standard deviation along axis 1
     std_dev = tensor.std(dim=1, keepdim=True)

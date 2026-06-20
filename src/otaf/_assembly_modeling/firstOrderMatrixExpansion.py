@@ -23,6 +23,7 @@ class FirstOrderMatrixExpansion:
     matrix_list : List[Union[otaf.DeviationMatrix, otaf.GapMatrix, otaf.TransformationMatrix, otaf.I4, otaf.J4]]
         List of matrices to be used in the first-order Taylor expansion.
     """
+
     def __init__(
         self,
         matrix_list: List[

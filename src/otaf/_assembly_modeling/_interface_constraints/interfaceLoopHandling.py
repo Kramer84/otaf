@@ -136,7 +136,8 @@ class InterfaceLoopHandling:
             all_gap_matrices (Dict[str, Dict[str, Set[str]]]): A dictionary of all gap matrices,
                 structured by parts and surfaces.
 
-        Returns:
+        Returns
+        -------
             Dict[str, Dict[str, Dict[str, Set[str]]]]: A nested dictionary categorizing gap matrices
             into 'used' and 'unused' for each part and surface.
         """

@@ -3,8 +3,7 @@ __author__ = "Kramer84"
 __all__ = ["NeuralRegressorNetwork", "initialize_model_weights"]
 
 import copy
-
-
+from typing import Any, List, Optional
 import numpy as np
 import matplotlib.pyplot as plt
 import tqdm
@@ -24,28 +23,77 @@ DEVICE = (
 
 
 class NeuralRegressorNetwork(nn.Module):
+    """
+    Construct a regression neural network with built-in data pipeline scaling.
+
+    Orchestrate forward prediction transitions, data standardization buffers, 
+    on-the-fly regularization noise injection, training execution monitors, 
+    and multi-backend integrations (such as OpenTURNS wrappers).
+
+    Parameters
+    ----------
+    input_dim : int
+        The number of expected input features.
+    output_dim : int
+        The number of target regression prediction properties.
+    X : Any
+        Training input source matrix used to initialize normalization stats.
+    y : Any
+        Training target labels matrix used to initialize normalization stats.
+    clamping : bool, default=False
+        Flag forcing network parameter weights to bound inside `[-1.0, 1.0]`.
+    finish_critertion_epoch : int, default=20
+        The evaluation epoch count threshold required before evaluating early stopping.
+    loss_finish : float, default=1e-16
+        The absolute loss evaluation target minimum defining a perfect optimization termination.
+    metric_finish : float, default=0.999
+        The target validation R2 score metric triggering an optimized performance cutoff.
+    max_epochs : int, default=100
+        The upper restriction limit tracking total validation epoch runs.
+    batch_size : int, default=100
+        The structural size constraints partitioning batch iteration runs.
+    compile_model : bool, default=True
+        Flag enabling structural compilation graphs optimization wrappers.
+    train_size : float, default=0.7
+        The linear fraction determining the initial dataset splits partition layout.
+    save_path : Optional[str], default=None
+        Target operational file path pointing to tracking parameter serialization destinations.
+    input_description : Optional[List[str]], default=None
+        Descriptive string documentation defining features label elements properties.
+    display_progress_disable : bool, default=True
+        Flag disabling internal console progress indicator displays.
+    input_normalization : bool, default=True
+        Flag determining if input vectors undergo standard scale transformations.
+    output_normalization : bool, default=True
+        Flag determining if targets undergo standardization during optimization updates.
+    noise_dims : List[int], default=[]
+        Target dimensions collection selected to receive Gaussian noise augmentation.
+    noise_level : float, default=0.1
+        The structural coefficient multiplier applied to standard deviation noise scaling.
+    """
+    
     def __init__(
         self,
-        input_dim,
-        output_dim,
-        X,
-        y,
-        clamping=False,
-        finish_critertion_epoch=20,
-        loss_finish=1e-16,
-        metric_finish=0.999,
-        max_epochs=100,
-        batch_size=100,
-        compile_model=True,
-        train_size=0.7,
-        save_path=None,
-        input_description=None,
-        display_progress_disable=True,
-        input_normalization=True,  # If off the inputs are first normalized and then the mean reaplied to keep the mean information within it.
-        output_normalization=True,  # If off the mean is re-added after normalization.
-        noise_dims=[],  # If populated it generated noise for the selected dimensions during training.
-        noise_level=0.1,
-    ):
+        input_dim: int,
+        output_dim: int,
+        X: Any,
+        y: Any,
+        clamping: bool = False,
+        finish_critertion_epoch: int = 20,
+        loss_finish: float = 1e-16,
+        metric_finish: float = 0.999,
+        max_epochs: int = 100,
+        batch_size: int = 100,
+        compile_model: bool = True,
+        train_size: float = 0.7,
+        save_path: Optional[str] = None,
+        input_description: Optional[List[str]] = None,
+        display_progress_disable: bool = True,
+        input_normalization: bool = True,
+        output_normalization: bool = True,
+        noise_dims: List[int] = [],
+        noise_level: float = 0.1,
+    ) -> None:
         super().__init__()
 
         self.register_buffer("input_dim", torch.tensor(input_dim, dtype=int, requires_grad=False))
@@ -132,10 +180,22 @@ class NeuralRegressorNetwork(nn.Module):
         self.noise_level = noise_level
 
     @classmethod
-    def from_checkpoint(cls, filepath):
+    def from_checkpoint(cls, filepath: str) -> NeuralRegressorNetwork:
         """
-        Instantiates the network directly from a saved checkpoint,
-        bypassing the need for training data.
+        Instantiate the network directly from a saved checkpoint, bypassing the need for training data.
+
+        Extract normalization statistics, tracking buffers metadata, and architectural state dictionaries 
+        to rebuild the complete operational execution module instance.
+
+        Parameters
+        ----------
+        filepath : str
+            The path pointing to the serialized target checkpoint storage dictionary.
+
+        Returns
+        -------
+        NeuralRegressorNetwork
+            The fully restored, evaluation-ready model instance context.
         """
         checkpoint = torch.load(filepath, map_location=DEVICE, weights_only=False)
 
@@ -171,17 +231,31 @@ class NeuralRegressorNetwork(nn.Module):
 
         return instance
 
-    def evaluate_model_non_standard_space(self, x, batch_size=50000, return_on_gpu=False):
+    def evaluate_model_non_standard_space(
+        self, 
+        x: Any, 
+        batch_size: int = 50000, 
+        return_on_gpu: bool = False
+    ) -> torch.Tensor:
         """
-        Evaluates the model in non-standard space, processing the input in batches.
+        Evaluate the model in non-standard space, processing the input in batches.
 
-        Args:
-            x (array-like or torch.Tensor): Input data to evaluate.
-            batch_size (int, optional): Size of batches for evaluation. Default is 50000.
-            return_on_gpu (bool, optional): Whether to return the result on the GPU. Default is False.
+        Apply input preprocessing standardization steps, stream vectors through network layers via memory-safe 
+        batch windows, restore structural target scaling properties, and gather predictions.
 
-        Returns:
-            torch.Tensor: The model's output.
+        Parameters
+        ----------
+        x : Any
+            The input coordinates collection requiring evaluation inference.
+        batch_size : int, default=50000
+            The linear size constraints bounding separate batch passes.
+        return_on_gpu : bool, default=False
+            Flag forcing the final aggregated matrix allocations to remain tracking on active device pools.
+
+        Returns
+        -------
+        torch.Tensor
+            The consolidated prediction outputs translated back into original target scaling.
         """
         # Standardize the input
         if not isinstance(x, torch.Tensor):
@@ -223,18 +297,39 @@ class NeuralRegressorNetwork(nn.Module):
 
     def pf_monte_carlo_bruteforce(
         self,
-        composed_distribution,
-        N_MC_MAX=int(1e9),
-        N_GEN_MAX=int(1e7),
-        batch_size=500000,
-        PF_STAB=1e-6,
-        threshold=0.0,
-    ):
+        composed_distribution: Any,
+        N_MC_MAX: int = int(1e9),
+        N_GEN_MAX: int = int(1e7),
+        batch_size: int = 500000,
+        PF_STAB: float = 1e-6,
+        threshold: float = 0.0,
+    ) -> float:
         """
-        N_MC_MAX : Monte carlo size
-        N_GEN_MAX : Max sample size to generate
-        PF_STAB : Max variability of probability if one new point is added.
-        threshold : failure threshold
+        Estimate failure probabilities via highly optimized brute force Monte Carlo random sampling loops.
+
+        Sample sequentially from the provided statistical distribution boundary configurations, map features 
+        into standard normalization metrics spaces, pass elements through evaluation layers, and monitor 
+        convergence variances against tracking limits.
+
+        Parameters
+        ----------
+        composed_distribution : Any
+            Statistical multivariate distribution template generating coordinate variations.
+        N_MC_MAX : int, default=1000000000
+            The ultimate absolute sampling ceiling threshold bounding execution parameters.
+        N_GEN_MAX : int, default=10000000
+            The generation buffer block size managing separate structural sampling intervals.
+        batch_size : int, default=500000
+            The structural segmentation sizes parsing inference tensor blocks.
+        PF_STAB : float, default=1e-6
+            The target stability variance checking boundary delta used to confirm optimization stability.
+        threshold : float, default=0.0
+            The objective scalar valuation defining the transition boundary into failure conditions.
+
+        Returns
+        -------
+        float
+            The final calculated empirical probability of failure score indicator.
         """
         with torch.no_grad():
             N_FIN = 0  # Final size of monte carlo
@@ -288,8 +383,12 @@ class NeuralRegressorNetwork(nn.Module):
 
         return pf_array[-1]  # or np.mean(pf_array) if averaging is preferred
 
-    def get_train_test_data(self):
-        # train-test split of the dataset
+    def get_train_test_data(self) -> None:
+        """
+        Partition structural data sources into distinct localized training and validation slices.
+
+        Utilize proportional tracking division configurations to build randomized test boundaries.
+        """
         X_train, X_test, y_train, y_test = train_test_split(
             self.X, self.y, train_size=self.train_size, shuffle=True
         )
@@ -298,11 +397,30 @@ class NeuralRegressorNetwork(nn.Module):
         self.X_test = X_test
         self.y_test = torch.atleast_2d(y_test)
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Execute forward propagation transitions mapping inputs through standard hidden processing layers.
+
+        Parameters
+        ----------
+        x : torch.Tensor
+            The normalized feature tensor block submitted for predictive transformation.
+
+        Returns
+        -------
+        torch.Tensor
+            The direct unscaled target linear prediction layers response.
+        """
         logits = self.model(x)
         return logits
 
-    def train_model(self):
+    def train_model(self) -> None:
+        """
+        Execute the structural multi-epoch optimization training routine sequence loops.
+
+        Manage batch data streams distributions, coordinate backward auto-differentiation passes, track loss 
+        and validation metric states histories, evaluate convergence metrics, and cache optimized parameter profiles.
+        """
         self.to(DEVICE)
         self.model.to(DEVICE)
         if otaf.common.is_running_in_notebook():
@@ -384,7 +502,13 @@ class NeuralRegressorNetwork(nn.Module):
         self.load_state_dict(self.best_weights)
         torch.cuda.empty_cache()
 
-    def plot_results(self):
+    def plot_results(self) -> None:
+        """
+        Visualize multi-axis training history performance tracking diagrams.
+
+        Render historical evaluation sequences contrasting training loss declines against tracked target 
+        performance metrics development pathways across execution cycles.
+        """
         fig = plt.figure()
         ax1 = fig.add_subplot(111, label="1")
         ax2 = fig.add_subplot(111, label="2", frame_on=False)
@@ -404,14 +528,32 @@ class NeuralRegressorNetwork(nn.Module):
 
         plt.show()
 
-    def save_model(self):
+    def save_model(self) -> None:
+        """Serialize current weight attributes and parameters properties targeting the configured destination path."""
         torch.save(self.state_dict(), self.save_path)
 
-    def load_model(self):
+    def load_model(self) -> None:
+        """Restore structural model attributes configurations from target destination parameters storage paths."""
         self.load_state_dict(torch.load(self.save_path))
         self.best_weights = copy.deepcopy(self.state_dict())
 
-    def get_model_as_openturns_function(self, batch_size=50000):
+    def get_model_as_openturns_function(self, batch_size: int = 50000) -> ot.PythonFunction:
+        """
+        Wrap the localized surrogate network instance inside an OpenTURNS Python compatibility module container.
+
+        Expose functional evaluation wrappers, gradients tracking pipelines, and structural second-order partial 
+        derivative Hessian interfaces matching backend data tracking requirements.
+
+        Parameters
+        ----------
+        batch_size : int, default=50000
+            The block streaming partition limits tracking data evaluations.
+
+        Returns
+        -------
+        ot.PythonFunction
+            The instantiated OpenTURNS functional interface object tracking the neural surrogate model mappings.
+        """
         func = lambda x: np.array(
             self.evaluate_model_non_standard_space(x, batch_size).detach().numpy()
         )
@@ -428,30 +570,59 @@ class NeuralRegressorNetwork(nn.Module):
             otFunc.setInputDescription(self.input_description)
         return otFunc
 
-    def gradient(self, inP):
+    def gradient(self, inP: Any) -> np.ndarray:
+        """
+        Calculate first-order partial derivative Jacobian values targeting input tracking vectors configurations.
+
+        Parameters
+        ----------
+        inP : Any
+            The coordinate input array profile subjected to differentiation tracking.
+
+        Returns
+        -------
+        np.ndarray
+            The converted array tracking structural gradient slopes.
+        """
         inP = torch.tensor(np.array(inP), dtype=torch.float32, requires_grad=True)
         y = self.evaluate_model_non_standard_space(inP)
         return np.array(jacobian(y, inP))
 
-    def hessian(self, inP):
+    def hessian(self, inP: Any) -> np.ndarray:
+        """
+        Calculate second-order partial derivative Hessian values targeting input tracking vectors configurations.
+
+        Parameters
+        ----------
+        inP : Any
+            The coordinate input array profile subjected to second-order differentiation tracking.
+
+        Returns
+        -------
+        np.ndarray
+            The converted array matrix tracking structural curvature parameters components.
+        """
         inP = torch.tensor(np.array(inP), dtype=torch.float32, requires_grad=True)
         y = self.evaluate_model_non_standard_space(inP)
         return np.array(hessian(y, inP))
 
-    def training_stopping_criterion(self, epoch):
+    def training_stopping_criterion(self, epoch: int) -> bool:
         """
-        Determines whether training should stop based on various criteria including:
-        - Minimum loss tolerance.
-        - Gradient changes.
-        - R2 score achievement.
+        Determine whether training should stop based on various criteria.
 
-        Args:
-        epoch (int): The current epoch number.
+        Assess performance indicators including minimum loss tolerances achievement thresholds 
+        and validation performance requirements completion targets.
 
-        Returns:
-        bool: True if training should stop, False otherwise.
+        Parameters
+        ----------
+        epoch : int
+            The identifier integer index tracking the active model optimization cycle.
+
+        Returns
+        -------
+        bool
+            True if any termination threshold evaluates as fulfilled, directing operations to close.
         """
-
         # Check various conditions to determine if training should stop
         if epoch > self.finish_critertion_epoch:
             if self.best_loss <= self.loss_finish:
@@ -463,17 +634,34 @@ class NeuralRegressorNetwork(nn.Module):
         return False
 
 
-def initialize_model_weights(model, init_type="xavier_uniform", init_gain=0.02):
+def initialize_model_weights(
+    model: nn.Module, 
+    init_type: str = "xavier_uniform", 
+    init_gain: float = 0.02
+) -> None:
     """
-    Initialize network weights.
+    Initialize structural weights and biases across all compatible sub-modules.
 
-    Parameters:
-    model (torch.nn.Module): PyTorch model.
-    init_type (str): The name of an initialization method: 'normal', 'xavier_uniform', 'xavier_normal',
-                     'kaiming_uniform', 'kaiming_normal', 'orthogonal', 'uniform'.
-    init_gain (float): Scaling factor for normal, xavier and orthogonal.
+    Apply a designated initialization distribution algorithm to parameterized 
+    convolutional, linear, and batch normalization layers found within the network.
+
+    Parameters
+    ----------
+    model : nn.Module
+        The PyTorch neural network model instance to undergo weight initialization.
+    init_type : str, default="xavier_uniform"
+        The identification name of the initialization technique. Must be one of:
+        'normal', 'xavier_uniform', 'xavier_normal', 'kaiming_uniform',
+        'kaiming_normal', 'orthogonal', 'uniform'.
+    init_gain : float, default=0.02
+        Scaling multiplier configuration applied to normal, xavier, orthogonal, 
+        and uniform distributions.
+
+    Raises
+    ------
+    NotImplementedError
+        If the provided `init_type` string does not match any known initialization routine.
     """
-
     def init_func(m):
         classname = m.__class__.__name__
         if hasattr(m, "weight") and (
@@ -509,17 +697,28 @@ def initialize_model_weights(model, init_type="xavier_uniform", init_gain=0.02):
 ## Custom jacobian and hessian in pytorch #########################################################
 
 
-def jacobian(y, x, create_graph=False):
+def jacobian(y: torch.Tensor, x: torch.Tensor, create_graph: bool = False) -> torch.Tensor:
     """
-    Compute the Jacobian matrix of y with respect to x.
+    Compute the Jacobian matrix of a tensor y with respect to an input tensor x.
 
-    Args:
-        y (torch.Tensor): Output tensor.
-        x (torch.Tensor): Input tensor whose gradients are required.
-        create_graph (bool): If True, constructs the graph during the computation, allowing for higher order derivatives.
+    Evaluate first-order partial derivatives tracking individual element gradients 
+    sequentially via vector-Jacobian products, reconstruction-shaping the aggregated 
+    outputs to correspond to the tensor dimension combinations.
 
-    Returns:
-        torch.Tensor: The Jacobian matrix.
+    Parameters
+    ----------
+    y : torch.Tensor
+        The dependent target output tensor to differentiate.
+    x : torch.Tensor
+        The independent input tensor with respect to which gradients are evaluated.
+    create_graph : bool, default=False
+        If True, construct the graph during the computation, allowing for higher-order 
+        derivative evaluations (such as Hessians).
+
+    Returns
+    -------
+    torch.Tensor
+        The compiled Jacobian matrix matching the combined shapes of `y` and `x`.
     """
     jac = []
     flat_y = y.reshape(-1)
@@ -534,15 +733,23 @@ def jacobian(y, x, create_graph=False):
     return torch.stack(jac).reshape(y.shape + x.shape)
 
 
-def hessian(y, x):
+def hessian(y: torch.Tensor, x: torch.Tensor) -> torch.Tensor:
     """
-    Compute the Hessian matrix of y with respect to x.
+    Compute the Hessian matrix of a scalar or tensor y with respect to x.
 
-    Args:
-        y (torch.Tensor): Output tensor.
-        x (torch.Tensor): Input tensor whose second order gradients are required.
+    Evaluate the second-order partial derivatives by executing nested auto-differentiation 
+    jacobian operations, tracking gradients through the computational graph.
 
-    Returns:
-        torch.Tensor: The Hessian matrix.
+    Parameters
+    ----------
+    y : torch.Tensor
+        The dependent target output tensor to differentiate.
+    x : torch.Tensor
+        The independent input tensor with respect to which second-order gradients are evaluated.
+
+    Returns
+    -------
+    torch.Tensor
+        The computed Hessian matrix containing the second-order partial derivative combinations.
     """
     return jacobian(jacobian(y, x, create_graph=True), x)

@@ -34,7 +34,6 @@ import math
 from itertools import product
 
 import numpy as np
-
 import sympy as sp
 
 import matplotlib.pyplot as plt
@@ -42,10 +41,10 @@ import matplotlib.ticker as ticker
 from matplotlib.patches import Polygon, Rectangle
 
 from beartype import beartype
-from beartype.typing import Dict, List, Tuple, Union, TYPE_CHECKING
+from beartype.typing import Dict, List, Tuple, Union, TYPE_CHECKING, Optional, Any
 
 if TYPE_CHECKING:
-    pass
+    import trimesh
 
 from otaf.geometry import are_points_on_2d_plane, rotation_matrix_from_vectors
 from ._color_palettes import color_palette_2
@@ -59,13 +58,22 @@ def plot_points_3D(
     azim: float = 0,
 ) -> None:
     """
-    Create a 3D scatter plot of points.
+    Plot a dictionary of 3D points on a scatter plot.
 
-    Args:
-        points_dict (dict): A dictionary where keys are labels and values are 3D points (tuples of floats).
-        color (str, optional): Color of the markers. Defaults to 'r' (red).
-        marker (str, optional): Marker style. Defaults to 'o' (circle).
-        azim (float, optional): Azimuthal viewing angle. Defaults to 0 (front view).
+    Takes a set of labeled 3D coordinates and renders them in a three-dimensional 
+    plot with customizable markers, coloring, and horizontal viewing angle.
+
+    Parameters
+    ----------
+    points_dict : Dict[str, Tuple[float, float, float]]
+        A dictionary where keys are point labels (strings) and values are 
+        tuples representing (X, Y, Z) coordinates.
+    color : str, default="r"
+        The color of the plotted scatter points.
+    marker : str, default="o"
+        The shape/style of the marker used for the points.
+    azim : float, default=0
+        The azimuthal viewing angle in degrees to set the initial camera perspective.
     """
     fig = plt.figure()
     ax = fig.add_subplot(111, projection="3d")
@@ -81,7 +89,33 @@ def plot_points_3D(
     plt.show()
 
 
-def trimesh_scene_as_notebook_scene(scene, background_hex_color="e6e6e6"):
+def trimesh_scene_as_notebook_scene(
+    scene: trimesh.Scene, 
+    background_hex_color: str = "e6e6e6"
+) -> Any:
+    """
+    Convert a Trimesh scene into an interactive widget for a Jupyter notebook.
+
+    Generates the HTML/JS representation of the scene and modifies the underlying 
+    Three.js canvas setup to apply a custom background color.
+
+    Parameters
+    ----------
+    scene : trimesh.Scene
+        The Trimesh scene object to be displayed.
+    background_hex_color : str, default="e6e6e6"
+        The hexadecimal color code (without the '#' prefix) for the background.
+
+    Returns
+    -------
+    Any
+        The interactive notebook widget containing the rendered scene.
+
+    Raises
+    ------
+    ImportError
+        If trimesh viewer dependencies are not installed.
+    """
     try :
         from trimesh import viewer
     except ImportError :
@@ -97,24 +131,40 @@ def trimesh_scene_as_notebook_scene(scene, background_hex_color="e6e6e6"):
 def spheres_from_point_cloud(
     pc: np.ndarray,
     radius: float = 1.0,
-    color: Union[Tuple[int, int, int, float], List[Union[float, int]], np.ndarray] = [
+    color: Union[Tuple[int, int, int, int], List[Union[float, int]], np.ndarray] = [
         100,
         100,
         100,
         255,
     ],
     global_translation: Union[List[Union[float, int]], np.ndarray] = np.array([0, 0, 0]),
-):
-    """Create a list of spheres from a point cloud.
+) -> List[trimesh.Trimesh]:
+    """
+    Generate a list of Trimesh icospheres centered at each point in a point cloud.
 
-    Args:
-        pc (np.ndarray): The point cloud as an Nx3 numpy array, where N is the number of points.
-        radius (float, optional): The radius of the spheres. Defaults to 1.0.
-        color (List[float], optional): The color of the spheres as an RGBA list. Defaults to gray.
-        global_translation (np.ndarray, optional): A translation vector to apply to all spheres. Defaults to [0, 0, 0].
+    Instantiates a sphere mesh for every coordinate position, applies a uniform 
+    color, and shifts each position by an optional global translation vector.
 
-    Returns:
-        List[trimesh.Trimesh]: A list of trimesh.Trimesh objects representing the spheres.
+    Parameters
+    ----------
+    pc : np.ndarray
+        An (N, 3) array containing the coordinates of the point cloud.
+    radius : float, default=1.0
+        The radius of each generated sphere.
+    color : Union[Tuple[int, int, int, int], List[Union[float, int]], np.ndarray], default=[100, 100, 100, 255]
+        The RGBA color applied to the vertices of the spheres.
+    global_translation : Union[List[Union[float, int]], np.ndarray], default=np.array([0, 0, 0])
+        A 3D offset vector added to every point's position.
+
+    Returns
+    -------
+    List[trimesh.Trimesh]
+        A list of individual Trimesh icosphere objects.
+
+    Raises
+    ------
+    ImportError
+        If the trimesh library is not installed.
     """
     try :
         import trimesh
@@ -130,17 +180,44 @@ def spheres_from_point_cloud(
     return spheres
 
 
-def create_open_cylinder_mesh(radius: float, height: float, transform: np.ndarray, sections: int = 64):
+def create_open_cylinder_mesh(
+    radius: float, 
+    height: float, 
+    transform: np.ndarray, 
+    sections: int = 64
+) -> trimesh.Trimesh:
     """
-    Creates a trimesh cylinder open on both ends and applies a transformation.
+    Create a Trimesh cylinder that is open on both ends and apply a transformation matrix.
+
+    Generates a standard cylinder, removes the cap faces connected to the top and 
+    bottom center vertices, and applies a 4x4 spatial transformation matrix.
+
+    Parameters
+    ----------
+    radius : float
+        The radius of the cylinder.
+    height : float
+        The height of the cylinder along its local Z-axis.
+    transform : np.ndarray
+        A 4x4 homogeneous transformation matrix to position and rotate the mesh.
+    sections : int, default=64
+        The number of radial facets used to approximate the circular cross-section.
+
+    Returns
+    -------
+    trimesh.Trimesh
+        The open-ended cylindrical mesh.
+
+    Raises
+    ------
+    ImportError
+        If the trimesh library is not installed.
     """
     try :
         import trimesh
     except ImportError :
         raise otaf_exceptions._raise_missing_dependency("trimesh", "create_open_cylinder_mesh")
-
     temp_cyl = trimesh.creation.cylinder(radius=radius, height=height, sections=sections)
-
     # Identify cap center vertices (local Z is +/- height/2)
     z_limit = height / 2.0
     center_v_indices = np.where(
@@ -148,20 +225,47 @@ def create_open_cylinder_mesh(radius: float, height: float, transform: np.ndarra
         (np.abs(temp_cyl.vertices[:, 1]) < 1e-5) &
         (np.abs(np.abs(temp_cyl.vertices[:, 2]) - z_limit) < 1e-5)
     )[0]
-
     # Filter faces: keep only those that DON'T use a cap center vertex
     face_mask = ~np.any(np.isin(temp_cyl.faces, center_v_indices), axis=1)
-
     # Process=False prevents trimesh from trying to "fix" the open ends
     cyl = trimesh.Trimesh(vertices=temp_cyl.vertices, faces=temp_cyl.faces[face_mask], process=False)
     cyl.remove_unreferenced_vertices()
-
     # Apply global transform
     cyl.apply_transform(transform)
-
     return cyl
 
-def create_surface_from_planar_contour(vertices, segments=None):
+def create_surface_from_planar_contour(
+    vertices: Union[List[Union[List[float], np.ndarray]], np.ndarray],
+    segments: Optional[Union[List[Union[List[int], np.ndarray]], np.ndarray]] = None,
+) -> trimesh.Trimesh:
+    """
+    Triangulate a 3D planar point contour to generate a flat 2D surface mesh.
+
+    Projects the 3D coordinates onto a local 2D plane, performs a Constrained 
+    Delaunay Triangulation using the `triangle` library, and then transforms the 
+    resulting mesh vertices back to their original 3D orientation.
+
+    Parameters
+    ----------
+    vertices : Union[List[Union[List[float], np.ndarray]], np.ndarray]
+        An (N, 3) array of 3D coordinates representing the boundary of the contour.
+    segments : Optional[Union[List[Union[List[int], np.ndarray]], np.ndarray]], default=None
+        An optional (M, 2) array of vertex indices defining fixed boundary lines 
+        or holes that must be respected during triangulation.
+
+    Returns
+    -------
+    trimesh.Trimesh
+        The generated flat surface mesh.
+
+    Raises
+    ------
+    ImportError
+        If either the `triangle` or `trimesh` libraries are not installed.
+    ValueError
+        If the input segments do not have a shape ending in 2, or if the input 
+        vertices do not all lie on the same 2D plane.
+    """
     try :
         import triangle
     except ImportError :
@@ -214,59 +318,81 @@ def create_surface_from_planar_contour(vertices, segments=None):
 @beartype
 def hex_to_rgba(
     hex_color: str, alpha: float = 1.0, as_float: bool = False
-) -> Tuple[Union[float, int], Union[float, int], Union[float, int], Union[float, int]]:
-    """Converts a hexadecimal color code to RGBA values.
+) -> Tuple[Union[float, int], Union[float, int], Union[float, int], float]:
+    """
+    Convert a hexadecimal color string to an RGBA tuple.
 
-    Args:
-        hex_color (str): The hexadecimal color code (e.g., '#ffffff').
-        alpha (float): The alpha (transparency) value between 0.0 and 1.0 (default is 1.0).
-        as_float (bool): If True, returns RGBA values as floats between 0 and 1. If False (default), returns integers.
+    Strips any leading '#' character, extracts the red, green, and blue components, 
+    and optionally normalizes the RGB values to floats before appending the alpha channel.
 
-    Returns:
-        tuple: A tuple containing the RGBA values as floats (or integers if as_float is False)
-               and the alpha value as a float (e.g., (1.0, 1.0, 1.0, 1.0)).
+    Parameters
+    ----------
+    hex_color : str
+        The hexadecimal color code string (e.g., '#ffffff' or 'e6e6e6').
+    alpha : float, default=1.0
+        The alpha (transparency) value, typically between 0.0 and 1.0.
+    as_float : bool, default=False
+        If True, returns RGB values as floats scaled between 0.0 and 1.0. 
+        If False, returns them as integers between 0 and 255.
+
+    Returns
+    -------
+    Tuple[Union[float, int], Union[float, int], Union[float, int], float]
+        A tuple containing the Red, Green, Blue, and Alpha values in order.
     """
     # Remove the '#' if it exists in the input
     hex_color = hex_color.lstrip("#")
-
     # Convert the hex values to integers
     r = int(hex_color[0:2], 16)
     g = int(hex_color[2:4], 16)
     b = int(hex_color[4:6], 16)
-
     if as_float:
         r /= 255.0
         g /= 255.0
         b /= 255.0
-
     return (r, g, b, alpha)
 
 
 def plot_best_worst_results(
-    best_results,
-    worst_results,
-    xlabel="Sample Index",
-    ylabel="Failure rate",
-    title="Best and Worst Results Plot",
-    figsize=(10, 6),
-    save_as_png=False,
-    save_path="images",
-    filename="best_worst_results.png",
-    dpi=600,
-):
-    """Plot the best and worst results.
+    best_results: Any,
+    worst_results: Any,
+    xlabel: str = "Sample Index",
+    ylabel: str = "Failure rate",
+    title: str = "Best and Worst Results Plot",
+    figsize: Tuple[float, float] = (10, 6),
+    save_as_png: bool = False,
+    save_path: str = "images",
+    filename: str = "best_worst_results.png",
+    dpi: int = 600,
+) -> None:
+    """
+    Plot and compare the best and worst execution results on a line graph.
 
-    Args:
-        best_results (array-like): Array containing the best results.
-        worst_results (array-like): Array containing the worst results.
-        xlabel (str, optional): Label for the x-axis. Defaults to 'Sample Index'.
-        ylabel (str, optional): Label for the y-axis. Defaults to 'Failure rate'.
-        title (str, optional): Title of the plot. Defaults to 'Best and Worst Results Plot'.
-        figsize (tuple, optional): Size of the figure (width, height) in inches. Defaults to (10, 6).
-        save_as_png (bool, optional): Whether to save the plot as a PNG. Defaults to False.
-        save_path (str, optional): Path to save the plot. Defaults to 'images'.
-        filename (str, optional): Name of the file to save the plot. Defaults to 'best_worst_results.png'.
-        dpi (int, optional): Resolution of the saved plot. Defaults to 600 dpi.
+    Generates a line plot that overlays the best performance metrics against the 
+    worst performance metrics across a shared sample index for comparison.
+
+    Parameters
+    ----------
+    best_results : Any
+        An iterable sequence (list, array, etc.) containing the optimal performance data points.
+    worst_results : Any
+        An iterable sequence (list, array, etc.) containing the poorest performance data points.
+    xlabel : str, default="Sample Index"
+        The text label for the horizontal X-axis.
+    ylabel : str, default="Failure rate"
+        The text label for the vertical Y-axis.
+    title : str, default="Best and Worst Results Plot"
+        The main title text displayed above the plot.
+    figsize : Tuple[float, float], default=(10, 6)
+        The width and height of the figure in inches.
+    save_as_png : bool, default=False
+        If True, exports the generated plot as a PNG file to disk.
+    save_path : str, default="images"
+        The directory path where the exported plot image will be saved.
+    filename : str, default="best_worst_results.png"
+        The name of the exported image file.
+    dpi : int, default=600
+        The resolution (dots per inch) of the saved image.
     """
     # Create a figure and axis
     fig, ax = plt.subplots(figsize=figsize)
@@ -304,28 +430,43 @@ def plot_best_worst_results(
 
 
 def plot_best_worst_input_data(
-    best_data,
-    worst_data,
-    variable_labels,
-    figsize=(16, 8),
-    labels=True,
-    save_as_png=False,
-    save_path="images",
-    filename="best_worst_input_data.png",
-    dpi=600,
-):
-    """Plot the best and worst 5% input data.
+    best_data: List[Any],
+    worst_data: List[Any],
+    variable_labels: List[str],
+    figsize: Tuple[float, float] = (16, 8),
+    labels: bool = True,
+    save_as_png: bool = False,
+    save_path: str = "images",
+    filename: str = "best_worst_input_data.png",
+    dpi: int = 600,
+) -> None:
+    """
+    Plot and compare the feature distributions of the best and worst 5% input data groups.
 
-    Args:
-        best_data (list): List of input data for the best 5%.
-        worst_data (list): List of input data for the worst 5%.
-        variable_labels (list): List of variable labels.
-        figsize (tuple, optional): Size of the figure (width, height) in inches. Defaults to (16, 8).
-        labels (bool, optional): Whether to label samples. Defaults to True.
-        save_as_png (bool, optional): Whether to save the plot as a PNG. Defaults to False.
-        save_path (str, optional): Path to save the plot. Defaults to 'images'.
-        filename (str, optional): Name of the file to save the plot. Defaults to 'best_worst_input_data.png'.
-        dpi (int, optional): Resolution of the saved plot. Defaults to 600 dpi.
+    Generates side-by-side plots displaying the values and ranges of each feature. 
+    It formats variable labels into LaTeX symbols, overlays vertical lines to show the 
+    data spread for each variable, and cross-references the spans between the two groups.
+
+    Parameters
+    ----------
+    best_data : List[Any]
+        A list of samples belonging to the top-performing percentile group.
+    worst_data : List[Any]
+        A list of samples belonging to the lowest-performing percentile group.
+    variable_labels : List[str]
+        The names of the input variables, which will be parsed into LaTeX symbols.
+    figsize : Tuple[float, float], default=(16, 8)
+        The width and height of each generated figure in inches.
+    labels : bool, default=True
+        If True, adds sequential sample labels to the plot legend.
+    save_as_png : bool, default=False
+        If True, exports the resulting figures as PNG files to disk.
+    save_path : str, default="images"
+        The directory path where the exported plot images will be saved.
+    filename : str, default="best_worst_input_data.png"
+        The base filename used for the saved images (prefixed with 'best_' and 'worst_').
+    dpi : int, default=600
+        The resolution (dots per inch) of the saved images.
     """
     # Create LaTeX formatted labels
     variable_labels_tex = [f"${sp.printing.latex(sp.Symbol(var))}$" for var in variable_labels]
@@ -446,39 +587,59 @@ def plot_best_worst_input_data(
 
 
 def print_sample_in_deviation_domain(
-    ax,
-    pos_u,
-    theta,
-    lambda_pos,
-    lambda_theta,
-    t_max,
-    theta_max,
-    ratio=1,
-    r=None,
-    xlabel="U",
-    ylabel="Theta",
-    remove_ticks=False,
-    fontsize=15
-):
+    ax: Any,
+    pos_u: Any,
+    theta: Any,
+    lambda_pos: float,
+    lambda_theta: float,
+    t_max: float,
+    theta_max: float,
+    ratio: float = 1,
+    r: Optional[float] = None,
+    xlabel: str = "U",
+    ylabel: str = "Theta",
+    remove_ticks: bool = False,
+    fontsize: int = 15,
+) -> Any:
     """
-    Plots a sample in the deviation domain on the provided matplotlib axis with customizable labels and tick options.
+    Plot data points inside a diamond-shaped boundary domain on a Matplotlib axis.
 
-    Parameters:
-    ax (matplotlib.axes.Axes): The axis on which to plot.
-    pos_u (array-like): Position data.
-    theta (array-like): Theta data.
-    lambda_pos (float): Lambda position scaling factor.
-    lambda_theta (float): Lambda theta scaling factor.
-    t_max (float): Maximum value for t (U domain).
-    theta_max (float): Maximum value for theta (Theta domain).
-    ratio (float, optional): Aspect ratio for the plot. Defaults to 1.
-    r (float, optional): Additional parameter to display. Defaults to None.
-    xlabel (str, optional): Label for the x-axis. Defaults to "U".
-    ylabel (str, optional): Label for the y-axis. Defaults to "Theta".
-    remove_ticks (bool, optional): If True, removes axis ticks. Defaults to False.
+    Draws a four-sided boundary envelope defined by maximum limits, overlays a 
+    scatter plot of the scaled input signals, and configures the viewport aspect ratio.
 
-    Returns:
-    matplotlib.axes.Axes: The axis with the plot.
+    Parameters
+    ----------
+    ax : matplotlib.axes.Axes
+        The Matplotlib axis object where the geometric elements will be drawn.
+    pos_u : Any
+        An iterable sequence of position coordinates for the horizontal axis.
+    theta : Any
+        An iterable sequence of angular coordinates for the vertical axis.
+    lambda_pos : float
+        The scalar multiplier applied to scale the position coordinates.
+    lambda_theta : float
+        The scalar multiplier applied to scale the theta coordinates.
+    t_max : float
+        The absolute horizontal intercept limit determining the diamond width.
+    theta_max : float
+        The absolute vertical intercept limit determining the diamond height.
+    ratio : float, default=1
+        The structural modifier used to adjust the final visual aspect ratio.
+    r : Optional[float], default=None
+        An optional evaluation metric string to overlay as text inside the viewport.
+    xlabel : str, default="U"
+        The text label for the horizontal X-axis.
+    ylabel : str, default="Theta"
+        The text label for the vertical Y-axis.
+    remove_ticks : bool, default=False
+        If True, clears numeric tick readouts from both axes boundaries.
+    fontsize : int, default=15
+        The text sizing scale applied to labels, ticks, and annotation items.
+
+    Returns
+    -------
+    matplotlib.axes.Axes
+        The modified axis object containing the rendered plot elements.
     """
     ax.set_xlabel(xlabel, fontsize=fontsize)
     ax.set_ylabel(ylabel, fontsize=fontsize)
@@ -518,20 +679,39 @@ def print_sample_in_deviation_domain(
     return ax
 
 
-def set_graph_legends(graph, x_title="", y_title="", title="", legends=None, colors=None):
+def set_graph_legends(
+    graph: Any,
+    x_title: str = "",
+    y_title: str = "",
+    title: str = "",
+    legends: Optional[List[str]] = None,
+    colors: Optional[List[Any]] = None,
+) -> Any:
     """
-    Sets titles, legends, and colors for the given graph.
+    Configure the axes titles, main title, legend labels, and element colors for a graph.
 
-    Parameters:
-    graph (object): The graph object to be modified.
-    x_title (str, optional): Title for the x-axis. Defaults to an empty string.
-    y_title (str, optional): Title for the y-axis. Defaults to an empty string.
-    title (str, optional): Title for the graph. Defaults to an empty string.
-    legends (list, optional): List of legend labels. Defaults to None.
-    colors (list, optional): List of colors for the graph elements. Defaults to None.
+    Updates the structural metadata of a graph object sequentially, applying labels 
+    and styling configurations only if they are explicitly provided.
 
-    Returns:
-    object: The modified graph object.
+    Parameters
+    ----------
+    graph : Any
+        The target graph or chart object exposing API modification methods.
+    x_title : str, default=""
+        The text label assigned to the horizontal X-axis.
+    y_title : str, default=""
+        The text label assigned to the vertical Y-axis.
+    title : str, default=""
+        The main title banner text displayed above the graph viewport.
+    legends : Optional[List[str]], default=None
+        A sequence of strings defining labels for the data series legend.
+    colors : Optional[List[Any]], default=None
+        A sequence of color identifiers applied to individual graph elements.
+
+    Returns
+    -------
+    Any
+        The updated graph object containing the applied configuration settings.
     """
     if x_title:
         graph.setXTitle(x_title)
@@ -547,17 +727,25 @@ def set_graph_legends(graph, x_title="", y_title="", title="", legends=None, col
     return graph
 
 
-def plot_rect_part(ax, scale_factor=100):
+def plot_rect_part(ax: Any, scale_factor: float = 100) -> Any:
     """
-    Plots the rectangular part of the example and changes the aspect ratio,
-    so that it is 2 times higher and 2 times shorter.
+    Plot the rectangular component of the example mesh or model on a Matplotlib axis.
 
-    Parameters:
-    ax (matplotlib.axes.Axes): The axis on which to plot.
-    scale_factor (float, optional): Scaling factor for the arrows. Defaults to 100.
+    Draws a bounding rectangle using line segments, modifies the visual aspect 
+    ratio to be twice as tall and half as wide, and overlays dimensional tracking 
+    arrows along with text annotations onto the canvas viewport.
 
-    Returns:
-    matplotlib.axes.Axes: The axis with the plot.
+    Parameters
+    ----------
+    ax : matplotlib.axes.Axes
+        The Matplotlib axis object where the geometric lines and annotations are drawn.
+    scale_factor : float, default=100
+        A multiplier applied to scale the horizontal span of the indicator arrows.
+
+    Returns
+    -------
+    matplotlib.axes.Axes
+        The modified axis object containing the rendered layout elements.
     """
     t_ = 10  # Ensure t_ is defined for arrow scaling
 
@@ -623,21 +811,38 @@ def plot_rect_part(ax, scale_factor=100):
     return ax
 
 
-def plot_deviated_surfs(ax, se_pos, se_rot, lambda_, scale_factor):
+def plot_deviated_surfs(
+    ax: Any, se_pos: Any, se_rot: Any, lambda_: float, scale_factor: float
+) -> Any:
     """
-    Adds on the rectangular part a set of deviated lines to
-    visualize the geometrical distribution of the defects and the impact
-    of the allocations. The defects are multiplied by a scaleFactor.
+    Overlay deviated profile lines onto a plot to visualize geometric defects.
 
-    Parameters:
-    ax (matplotlib.axes.Axes): The axis on which to plot.
-    se_pos (array-like): Positional deviations.
-    se_rot (array-like): Rotational deviations.
-    lambda_ (float): Scaling factor for the deviations.
-    scale_factor (float): Factor to scale the deviations.
+    Iterates through paired positional and rotational variations, scales them by 
+    the provided modifiers, and draws calculated deviation lines across a constant 
+    vertical span on the Matplotlib axis.
 
-    Returns:
-    matplotlib.axes.Axes: The axis with the plot.
+    Parameters
+    ----------
+    ax : matplotlib.axes.Axes
+        The Matplotlib axis object where the geometric lines will be drawn.
+    se_pos : Any
+        An array or sequence containing positional deviation tracking data.
+    se_rot : Any
+        An array or sequence containing rotational deviation tracking data.
+    lambda_ : float
+        A weight multiplier balancing positional vs rotational defect components.
+    scale_factor : float
+        A scalar multiplier used to visually exaggerate the defects for readability.
+
+    Returns
+    -------
+    matplotlib.axes.Axes
+        The modified axis object containing the plotted deviation lines.
+
+    Raises
+    ------
+    AssertionError
+        If the lengths of the `se_pos` and `se_rot` arrays do not match.
     """
     se_pos = np.squeeze(se_pos)
     se_rot = np.squeeze(se_rot)
@@ -656,18 +861,30 @@ def plot_deviated_surfs(ax, se_pos, se_rot, lambda_, scale_factor):
     return ax
 
 
-def calculate_sample_in_deviation_domain(pos_u, theta, lambda_pos, lambda_theta):
+def calculate_sample_in_deviation_domain(
+    pos_u: Any, theta: Any, lambda_pos: float, lambda_theta: float
+) -> np.ndarray:
     """
-    Calculates the sample data in the deviation domain.
+    Scale and stack position and theta arrays into a 2D array of coordinates.
 
-    Parameters:
-    pos_u (array-like): Position data.
-    theta (array-like): Theta data.
-    lambda_pos (float): Lambda position scaling factor.
-    lambda_theta (float): Lambda theta scaling factor.
+    Applies independent scaling factors to both the positional and angular 
+    input vectors, then reshapes them into a paired (N, 2) array.
 
-    Returns:
-    np.ndarray: 2D sample data with scaled position and theta.
+    Parameters
+    ----------
+    pos_u : Any
+        An array or sequence of raw positional coordinates.
+    theta : Any
+        An array or sequence of raw angular coordinates.
+    lambda_pos : float
+        The scalar multiplier applied to scale the position data.
+    lambda_theta : float
+        The scalar multiplier applied to scale the theta data.
+
+    Returns
+    -------
+    np.ndarray
+        An (N, 2) NumPy array where each row represents a paired (scaled_pos, scaled_theta) coordinate.
     """
     scaled_pos = lambda_pos * pos_u
     scaled_theta = lambda_theta * theta
@@ -676,29 +893,48 @@ def calculate_sample_in_deviation_domain(pos_u, theta, lambda_pos, lambda_theta)
 
 
 def plot_deviation_domain(
-    ax,
-    sample,
-    x_label="X",
-    y_label="Y",
-    x_bounds=(-0.15, 0.15),
-    y_bounds=(-1, 1),
-    ratio_bounds=1.5,
-    r=None,
-    tick_spacing=[0.25, 0.25],
-):
+    ax: Any,
+    sample: np.ndarray,
+    x_label: str = "X",
+    y_label: str = "Y",
+    x_bounds: Tuple[float, float] = (-0.15, 0.15),
+    y_bounds: Tuple[float, float] = (-1, 1),
+    ratio_bounds: float = 1.5,
+    r: Optional[float] = None,
+    tick_spacing: List[float] = [0.25, 0.25],
+) -> Any:
     """
-    Plots a sample in the deviation domain on the provided matplotlib axis.
+    Plot sample coordinates on a Matplotlib axis with a diamond-shaped tolerance polygon.
 
-    Parameters:
-    ax (matplotlib.axes.Axes): The axis on which to plot.
-    sample (array-like): 2D sample data with scaled position and theta.
-    x_label (str, optional): Label for the x-axis. Defaults to "X".
-    y_label (str, optional): Label for the y-axis. Defaults to "Y".
-    x_bounds (tuple, optional): Bounds for the x-axis. Defaults to (-0.15, 0.15).
-    y_bounds (tuple, optional): Bounds for the y-axis. Defaults to (-1, 1).
+    Draws a 4-sided boundary polygon using the specified limits, splits data points 
+    into groups based on whether they fall inside or outside the polygon boundaries, 
+    colors them separately, and prints the count of points outside the boundary.
 
-    Returns:
-    matplotlib.axes.Axes: The axis with the plot.
+    Parameters
+    ----------
+    ax : matplotlib.axes.Axes
+        The Matplotlib axis object where the polygon and data points will be rendered.
+    sample : np.ndarray
+        An (N, 2) array containing the coordinate points to plot.
+    x_label : str, default="X"
+        The text label for the horizontal X-axis.
+    y_label : str, default="Y"
+        The text label for the vertical Y-axis.
+    x_bounds : Tuple[float, float], default=(-0.15, 0.15)
+        The minimum and maximum horizontal intercept coordinates for the polygon.
+    y_bounds : Tuple[float, float], default=(-1, 1)
+        The minimum and maximum vertical intercept coordinates for the polygon.
+    ratio_bounds : float, default=1.5
+        A multiplier used to pad the outer limits of the plot viewport.
+    r : Optional[float], default=None
+        An unused legacy placeholder parameter.
+    tick_spacing : List[float], default=[0.25, 0.25]
+        The major locator stepping interval for the X and Y axes ticks respectively.
+
+    Returns
+    -------
+    matplotlib.axes.Axes
+        The modified axis object containing the rendered polygon, scatter plots, and text.
     """
     ax.grid(True)
     ax.set_xlabel(x_label)
@@ -762,12 +998,18 @@ def plot_deviation_domain(
     return ax
 
 
-def arrange_axes_in_grid(axes_list):
+def arrange_axes_in_grid(axes_list: List[Any]) -> None:
     """
-    Arrange a list of matplotlib axes in a 2D grid as close to a square as possible.
+    Arrange a list of existing Matplotlib axes into a new, compact 2D grid plot.
 
-    Parameters:
-    axes_list (list): List of matplotlib axes to be arranged in the grid.
+    Calculates the optimal number of rows and columns to form a near-square layout, 
+    creates a new figure, copies lines and labels from the source axes into the 
+    subplots, and deletes any unused grid positions.
+
+    Parameters
+    ----------
+    axes_list : List[Any]
+        A list of Matplotlib axis objects whose lines and metadata should be copied.
     """
     num_axes = len(axes_list)
     num_cols = math.ceil(math.sqrt(num_axes))
@@ -807,19 +1049,37 @@ def compare_jacobians(
     jacobian1: np.ndarray,
     jacobian2: np.ndarray,
     plot_type: str = "side_by_side",
-    class_labels: np.ndarray = None,
-):
+    class_labels: Optional[np.ndarray] = None,
+) -> None:
     """
-    Compare two Jacobians visually using bar plots with optional class-based background coloring.
+    Compare two 1D Jacobians visually using bar charts.
 
-    Parameters:
-    jacobian1 (np.ndarray): First Jacobian array of shape (32,).
-    jacobian2 (np.ndarray): Second Jacobian array of shape (32,).
-    plot_type (str): Either 'side_by_side' or 'overlay' to choose plot style.
-    class_labels (np.ndarray): Array of class labels to apply background coloring. Must be same length as Jacobians.
+    Generates a bar plot comparing two 32-element Jacobian arrays either side-by-side 
+    or stacked/overlaid. Optionally shades the background of each bar slot based on 
+    provided categorical class labels.
 
-    Returns:
-    None: Displays a bar plot for visual comparison.
+    Parameters
+    ----------
+    jacobian1 : np.ndarray
+        The first Jacobian data array, must be a 1D array of length 32.
+    jacobian2 : np.ndarray
+        The second Jacobian data array, must be a 1D array of length 32.
+    plot_type : str, default="side_by_side"
+        The structural layout style for the comparison, either 'side_by_side' or 'overlay'.
+    class_labels : Optional[np.ndarray], default=None
+        An optional 1D array of length 32 containing category indices used to apply 
+        background coloring behind the bars.
+
+    Returns
+    -------
+    None
+        Renders and displays the Matplotlib comparison figure.
+
+    Raises
+    ------
+    ValueError
+        If the input arrays do not match in shape, are not exactly of length 32, 
+        if class labels length mismatches, or if an invalid `plot_type` is specified.
     """
     if jacobian1.shape != jacobian2.shape or jacobian1.shape != (32,):
         raise ValueError("Both Jacobians must be 1D arrays of length 32.")
@@ -866,25 +1126,48 @@ def compare_jacobians(
     plt.show()
 
 
-def pair_plot(data, labels=None, subset_labels=None, plot_half="both", hide_diag=False, color_by=None):
+def pair_plot(
+    data: np.ndarray,
+    labels: Optional[List[str]] = None,
+    subset_labels: Optional[List[str]] = None,
+    plot_half: str = "both",
+    hide_diag: bool = False,
+    color_by: Optional[Any] = None,
+) -> None:
     """
-    Creates a pair plot of all combinations of variables in the data array, with additional customization options.
+    Generate a matrix of pairwise scatter plots and diagonal histograms for a dataset.
 
-    Parameters:
-    - data: 2D numpy array or similar where each column corresponds to a variable.
-    - labels: List of variable names corresponding to the columns of data.
-              If None, default labels will be used as 'Var1', 'Var2', etc.
-    - subset_labels: List of variable names to plot a specific subset of the pair plot.
-                     If None, all variables will be plotted.
-    - plot_half: Whether to plot the full matrix ('both'), only the lower triangular ('lower'),
-                 or only the upper triangular ('upper'). Defaults to 'both'.
-    - hide_diag: If True, the diagonal plots will be hidden.
-    - color_by: If provided, the data points will be colored based on the values of this column (array-like).
+    Iterates through combinations of variables to build a grid of plots, allowing 
+    customization for subsets of features, rendering only half of the matrix grid, 
+    hiding diagonal plots, and color-coding data points by an external array.
 
-    Returns:
-    - A customized pair plot of all variable combinations.
+    Parameters
+    ----------
+    data : np.ndarray
+        A 2D array where columns represent distinct features/variables and rows are samples.
+    labels : Optional[List[str]], default=None
+        A list of string names for each column in the data. If None, defaults to ['Var1', 'Var2', ...].
+    subset_labels : Optional[List[str]], default=None
+        An optional list of column names to restrict the pair plot to a specific subset of features.
+    plot_half : str, default="both"
+        Determines which parts of the matrix grid to display. Options are 'both', 
+        'lower' (lower triangular matrix), or 'upper' (upper triangular matrix).
+    hide_diag : bool, default=False
+        If True, prevents histograms from rendering along the diagonal subplots.
+    color_by : Optional[Any], default=None
+        An optional array-like mapping used to color-code the scatter plot markers.
+
+    Returns
+    -------
+    None
+        Displays the completed Matplotlib pair plot figure.
+
+    Raises
+    ------
+    ValueError
+        If the input data is not a 2D array, or if the number of provided labels 
+        does not match the column count of the data.
     """
-    # Ensure the data is a 2D array
     if len(data.shape) != 2:
         raise ValueError("Input data must be a 2D array-like structure")
 
@@ -943,8 +1226,38 @@ def pair_plot(data, labels=None, subset_labels=None, plot_half="both", hide_diag
     plt.show()
 
 
-def plot_combined_CDF(distributions, x_min, x_max, color_list=None, legend_list=None):
-    """Plot combined CDFs for multiple distributions."""
+def plot_combined_CDF(
+    distributions: List[Any],
+    x_min: float,
+    x_max: float,
+    color_list: Optional[List[Any]] = None,
+    legend_list: Optional[List[str]] = None,
+) -> Any:
+    """
+    Plot and overlay Cumulative Distribution Functions (CDFs) for multiple distributions.
+
+    Generates the initial CDF curve from the first distribution, sequentially appends 
+    additional CDF curves from the remaining distributions, and applies corresponding 
+    colors and legend labels if provided.
+
+    Parameters
+    ----------
+    distributions : List[Any]
+        A list of distribution objects that expose a `drawCDF` method.
+    x_min : float
+        The minimum evaluation bound along the horizontal X-axis for the CDF calculation.
+    x_max : float
+        The maximum evaluation bound along the horizontal X-axis for the CDF calculation.
+    color_list : Optional[List[Any]], default=None
+        An optional list of color identifiers matched sequentially to each distribution curve.
+    legend_list : Optional[List[str]], default=None
+        An optional list of string labels applied sequentially to the graph legends.
+
+    Returns
+    -------
+    Any
+        A combined graph object containing all overlaid CDF curves and styling elements.
+    """
     color_list = color_list or []
     legend_list = legend_list or []
 
@@ -966,22 +1279,47 @@ def plot_combined_CDF(distributions, x_min, x_max, color_list=None, legend_list=
     return graph_full
 
 
-
-def save_plot(fig=None, ax=None, filename='plot', folder='.', file_format='png', dpi=300, **kwargs):
+def save_plot(
+    fig: Optional[Any] = None,
+    ax: Optional[Any] = None,
+    filename: str = "plot",
+    folder: str = ".",
+    file_format: str = "png",
+    dpi: int = 300,
+    **kwargs: Any,
+) -> str:
     """
-    Saves a Matplotlib figure or axis to a specified location with customizable parameters.
+    Save a Matplotlib figure or axis plot to disk with custom file settings.
 
-    Parameters:
-        fig (matplotlib.figure.Figure): The figure to save. Default is None.
-        ax (matplotlib.axes.Axes): The axis to save. Default is None.
-        filename (str): The name of the file (with or without extension). Default is 'plot'.
-        folder (str): The folder where the file will be saved. Default is current directory '.'.
-        file_format (str): The format to save the file (e.g., 'png', 'pdf', 'svg'). Default is 'png'.
-        dpi (int): The dots per inch (DPI) for the output file. Default is 300.
-        **kwargs: Other optional keyword arguments for plt.savefig().
+    Creates the destination directory if it does not exist, determines the target 
+    figure object, infers or appends the file extension, and exports the asset.
 
-    Returns:
-        str: The full path of the saved file.
+    Parameters
+    ----------
+    fig : Optional[matplotlib.figure.Figure], default=None
+        The direct figure object to save.
+    ax : Optional[matplotlib.axes.Axes], default=None
+        An axis object used to extract the parent figure if `fig` is not provided.
+    filename : str, default="plot"
+        The output file name, which can optionally include the file extension.
+    folder : str, default="."
+        The directory path where the exported file will be saved.
+    file_format : str, default="png"
+        The export file format (e.g., 'png', 'pdf', 'svg') used if not specified in the filename.
+    dpi : int, default=300
+        The resolution (dots per inch) for rasterized image output formats.
+    **kwargs : Any
+        Additional keyword arguments passed directly to Matplotlib's `savefig` method.
+
+    Returns
+    -------
+    str
+        The full system file path to the saved plot asset.
+
+    Raises
+    ------
+    ValueError
+        If both `fig` and `ax` are set to None.
     """
     if not os.path.exists(folder):
         os.makedirs(folder)
@@ -1008,36 +1346,53 @@ def save_plot(fig=None, ax=None, filename='plot', folder='.', file_format='png',
     return file_path
 
 
-def plot_gld_pbox_cdf(gld_obj, lower_params, upper_params, x_values, xtol=1e-5, labels=None, colors=('tab:blue', 'tab:orange'), fill_color='gray', alpha=0.3, xlabel="X", ylabel="P", title="Probability-Box of the CDF"):
+def plot_gld_pbox_cdf(
+    gld_obj: Any,
+    lower_params: Any,
+    upper_params: Any,
+    x_values: Any,
+    xtol: float = 1e-5,
+    labels: Optional[Tuple[str, str]] = None,
+    colors: Tuple[str, str] = ("tab:blue", "tab:orange"),
+    fill_color: str = "gray",
+    alpha: float = 0.3,
+    xlabel: str = "X",
+    ylabel: str = "P",
+    title: str = "Probability-Box of the CDF",
+) -> None:
     """
-    Plot a Probability-Box (P-Box) using two specific sets of GLD parameters representing the lower and upper bounds of the CDF.
+    Plot a Probability-Box (P-Box) by shading the region between two GLD cumulative distributions.
+
+    Computes the numerical CDF arrays for both the lower and upper Generalized Lambda 
+    Distribution parameters, plots them as bounding lines, and fills the area between 
+    them to visualize the uncertainty envelope.
 
     Parameters
     ----------
-    gld_obj : object
-        An instance of the GLD class from gldpy used to compute the numerical CDF.
-    lower_params : array-like
-        Parameters for the lower bound Generalized Lambda Distribution.
-    upper_params : array-like
-        Parameters for the upper bound Generalized Lambda Distribution.
-    x_values : array-like
-        The sequence of x-coordinates where the P-box bounds should be evaluated.
-    xtol : float, optional
-        Tolerance for numerical CDF computation. Default is 1e-5.
-    labels : tuple of str, optional
-        Labels for the lower and upper bound CDFs in the legend. Default is None (uses generic labels).
-    colors : tuple of str, optional
-        Colors for the lower and upper bound CDF lines. Default is ('tab:blue', 'tab:orange').
-    fill_color : str, optional
-        Color used to shade the area between the bounds. Default is 'gray'.
-    alpha : float, optional
-        Transparency level of the filled region between the bounds (0.0 to 1.0). Default is 0.3.
-    xlabel : str, optional
-        Label for the X-axis. Default is "X".
-    ylabel : str, optional
-        Label for the Y-axis. Default is "P".
-    title : str, optional
-        Title of the plot. Default is "Probability-Box of the CDF".
+    gld_obj : Any
+        An instance of the GLD class used to calculate numerical CDF values.
+    lower_params : Any
+        An array or sequence of parameters defining the lower-bound distribution.
+    upper_params : Any
+        An array or sequence of parameters defining the upper-bound distribution.
+    x_values : Any
+        An array or sequence of horizontal coordinate points where the curves are evaluated.
+    xtol : float, default=1e-5
+        The numerical convergence tolerance threshold passed to the CDF evaluation function.
+    labels : Optional[Tuple[str, str]], default=None
+        An optional pair of string labels used to identify the bounding curves in the plot legend.
+    colors : Tuple[str, str], default=('tab:blue', 'tab:orange')
+        A pair of color strings assigned to the lower and upper bounding lines respectively.
+    fill_color : str, default='gray'
+        The color used to shade the uncertainty region encapsulated between the bounds.
+    alpha : float, default=0.3
+        The opacity level (ranging from 0.0 to 1.0) applied to the filled background region.
+    xlabel : str, default="X"
+        The text label for the horizontal X-axis.
+    ylabel : str, default="P"
+        The text label for the vertical Y-axis.
+    title : str, default="Probability-Box of the CDF"
+        The main header title displayed above the plot grid.
     """
     lower_cdf = gld_obj.CDF_num(x_values, lower_params, xtol=xtol)
     upper_cdf = gld_obj.CDF_num(x_values, upper_params, xtol=xtol)
@@ -1057,33 +1412,65 @@ def plot_gld_pbox_cdf(gld_obj, lower_params, upper_params, x_values, xtol=1e-5, 
     plt.show()
 
 
-def plot_ensemble_gld_pbox_cdf(gld_obj, param_list, x_values, xtol=1e-5,
-                               labels=('Lower bound', 'Upper bound'),
-                               colors=('tab:blue', 'tab:orange'),
-                               fill_color='gray', alpha=0.3,
-                               xlabel="Slack Threshold", ylabel="Probability of Failure (Pf)",
-                               title="Probability-Box of the CDF",
-                               add_zoom=False, zoom_x_range=(-0.05, 0.05), zoom_y_range=(1e-6, 0.1),
-                               inset_log_y=False):
+def plot_ensemble_gld_pbox_cdf(
+    gld_obj: Any,
+    param_list: np.ndarray,
+    x_values: np.ndarray,
+    xtol: float = 1e-5,
+    labels: Tuple[str, str] = ("Lower bound", "Upper bound"),
+    colors: Tuple[str, str] = ("tab:blue", "tab:orange"),
+    fill_color: str = "gray",
+    alpha: float = 0.3,
+    xlabel: str = "Slack Threshold",
+    ylabel: str = "Probability of Failure (Pf)",
+    title: str = "Probability-Box of the CDF",
+    add_zoom: bool = False,
+    zoom_x_range: Tuple[float, float] = (-0.05, 0.05),
+    zoom_y_range: Tuple[float, float] = (1e-6, 0.1),
+    inset_log_y: bool = False,
+) -> None:
     """
-    Plot a Probability-Box (P-Box) by evaluating an ensemble of GLD parameter sets,
-    with an optional zoomed-in inset axis to analyze critical thresholds (e.g., slack = 0).
+    Plot a Probability-Box (P-Box) from an ensemble of GLD parameters with an optional zoom inset.
+
+    Vectorizes the evaluation of an ensemble of Generalized Lambda Distribution parameter 
+    sets using the quantile function, extracts the composite bounding envelope, and plots 
+    the resulting lower and upper cumulative curves. Optionally embeds a zoomed-in 
+    inset axes to inspect critical threshold regions.
 
     Parameters
     ----------
-    [... previous parameters remain the same ...]
-    add_zoom : bool, optional
-        If True, adds a zoomed inset plot to the figure.
-    zoom_x_range : tuple of float, optional
-        The (xmin, xmax) limits for the zoomed inset. Default is (-0.05, 0.05).
-    zoom_y_range : tuple of float, optional
-        The (ymin, ymax) limits for the zoomed inset. Default is (1e-6, 0.1).
-    inset_log_y : bool, optional
-        If True, applies a logarithmic scale to the Y-axis of the zoomed inset.
+    gld_obj : Any
+        An instance of the GLD class used for distribution configuration.
+    param_list : np.ndarray
+        A 2D array of shape (N, 4) containing the four parameters for each GLD in the ensemble.
+    x_values : np.ndarray
+        A 1D array of horizontal coordinates at which to evaluate the final P-box curves.
+    xtol : float, default=1e-5
+        The numerical tolerance threshold used during curve evaluation.
+    labels : Tuple[str, str], default=('Lower bound', 'Upper bound')
+        The text labels assigned to the lower and upper bounding curves in the plot legend.
+    colors : Tuple[str, str], default=('tab:blue', 'tab:orange')
+        The colors assigned to the lower and upper bounding lines.
+    fill_color : str, default='gray'
+        The color used to shade the epistemic uncertainty area between the bounds.
+    alpha : float, default=0.3
+        The opacity level of the filled uncertainty region.
+    xlabel : str, default="Slack Threshold"
+        The text label for the horizontal X-axis.
+    ylabel : str, default="Probability of Failure (Pf)"
+        The text label for the vertical Y-axis.
+    title : str, default="Probability-Box of the CDF"
+        The main title text displayed above the figure.
+    add_zoom : bool, default=False
+        If True, displays a zoomed inset panel inside the main viewport.
+    zoom_x_range : Tuple[float, float], default=(-0.05, 0.05)
+        The minimum and maximum X-axis data limits for the zoomed inset panel.
+    zoom_y_range : Tuple[float, float], default=(1e-6, 0.1)
+        The minimum and maximum Y-axis data limits for the zoomed inset panel.
+    inset_log_y : bool, default=False
+        If True, sets the vertical Y-axis scale of the zoomed inset panel to logarithmic.
     """
-
     # Compute the ensemble bounds
-
     def compute_fast_pbox_bounds(param_list, x_values):
         print("using fast pbox bounds")
         # 1. Define a dense grid of probabilities (Y-axis)
@@ -1175,12 +1562,53 @@ def plot_ensemble_gld_pbox_cdf(gld_obj, param_list, x_values, xtol=1e-5,
     plt.tight_layout()
     plt.show()
 
-def calculate_graph_layout(data, R_part=15, r_feat=2, d_feat=1.5, margin=1.5, part_spacing=45, seed=42):
+Python
+
+def calculate_graph_layout(
+    data: Dict[str, Any],
+    R_part: float = 15,
+    r_feat: float = 2,
+    d_feat: float = 1.5,
+    margin: float = 1.5,
+    part_spacing: float = 45,
+    seed: int = 42,
+) -> Tuple[Dict[Any, np.ndarray], Dict[str, Tuple[float, float]]]:
     """
-    Creates the graph-based representation and computes all spatial coordinates.
-    Includes an iterative untangling step to prevent crossing interaction edges.
+    Compute a hierarchical macro/micro graph layout and untangle crossing interaction edges.
+
+    Positions high-level components (parts) using a force-directed layout, initializes 
+    sub-features along a radial arc centered on their parent part, and iteratively 
+    reorders the features by orientation to minimize edge crossings.
+
+    Parameters
+    ----------
+    data : Dict[str, Any]
+        A structured dictionary containing part entities, features, and their topological interactions.
+    R_part : float, default=15
+        The outer boundary radius of the parent part node.
+    r_feat : float, default=2
+        The bounding radius allocated for individual child feature nodes.
+    d_feat : float, default=1.5
+        The minimum spacing clearance distance between adjacent features on the arc.
+    margin : float, default=1.5
+        The offset padding gap subtracted from the part radius to establish the feature arc.
+    part_spacing : float, default=45
+        The scale and expansion modifier configuring the distance between part centers.
+    seed : int, default=42
+        The seed integer initializing the spring layout random number generator.
+
+    Returns
+    -------
+    part_positions : Dict[Any, np.ndarray]
+        A mapping from part identifiers to their calculated (X, Y) layout positions.
+    feature_positions : Dict[str, Tuple[float, float]]
+        A mapping from unique feature identifiers to their optimized (X, Y) coordinates.
+
+    Raises
+    ------
+    ImportError
+        If the networkx graph processing library is not accessible in the current environment.
     """
-    # Optional lazy import
     try:
         import networkx as nx
     except ImportError:
@@ -1297,13 +1725,50 @@ def calculate_graph_layout(data, R_part=15, r_feat=2, d_feat=1.5, margin=1.5, pa
     return part_positions, feature_positions
 
 
-def generate_topological_tikz(data, part_positions, feature_positions, color_palette=color_palette_2, R_part=15, r_feat=2, scale=0.15):
+def generate_topological_tikz(
+    data: Dict[str, Any],
+    part_positions: Dict[Any, np.ndarray],
+    feature_positions: Dict[str, Tuple[float, float]],
+    color_palette: List[str] = color_palette_2,
+    R_part: float = 15,
+    r_feat: float = 2,
+    scale: float = 0.15,
+) -> str:
     """
-    Outputs the raw TikZ string. Features are colored by their interaction group,
-    and loops are uniquely colored using the provided palette.
-    Interaction labels are drawn only once per pair to prevent clutter.
+    Generate the raw TikZ LaTeX code to visualize a system topology diagram.
+
+    Identifies connected feature components to map colors, initializes the TikZ 
+    canvas settings, draws assembly parts as large circles, embeds child features 
+    along their outer perimeters, and renders labeled directional loops representing 
+    geometric constraints between features.
+
+    Parameters
+    ----------
+    data : Dict[str, Any]
+        The structured dictionary tracking part properties, feature nodes, and loop pathways.
+    part_positions : Dict[Any, np.ndarray]
+        A dictionary mapping part identifiers to their global (X, Y) layout center coordinates.
+    feature_positions : Dict[str, Tuple[float, float]]
+        A dictionary mapping unique feature codes to their calculated (X, Y) positions.
+    color_palette : List[str]
+        A list of hex color string specs used to format the visual elements dynamically.
+    R_part : float, default=15
+        The base physical radius assigned to the primary part boundary circles.
+    r_feat : float, default=2
+        The base physical radius allocated for individual nested feature nodes.
+    scale : float, default=0.15
+        A scalar factor used to shrink or expand the coordinate dimensions for LaTeX rendering.
+
+    Returns
+    -------
+    str
+        The uncompiled, multiline raw TikZ string ready to be placed in a LaTeX document.
+
+    Raises
+    ------
+    ImportError
+        If the networkx library is not installed in the execution environment.
     """
-    # Optional lazy import
     try:
         import networkx as nx
     except ImportError:

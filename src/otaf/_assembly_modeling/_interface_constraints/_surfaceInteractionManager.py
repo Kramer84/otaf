@@ -30,6 +30,7 @@ class SurfaceInteractionManager:
     interacting surfaces. It supports multiple surface types and ensures the data is structured
     for further analysis or tolerance evaluation.
     """
+
     def __init__(self, assemblyDataProcessor:AssemblyDataProcessor):
         self.ADP = assemblyDataProcessor
         self.facingPointDict = tree()
@@ -43,7 +44,8 @@ class SurfaceInteractionManager:
         within the mechanical assembly. Relationships are based on geometrical alignment
         and compatibility.
 
-        Notes:
+        Notes
+        -----
             - Surfaces and points are processed based on the system data stored in `self.ADP`.
             - This method iterates over all parts and their surfaces to establish facing relationships.
         """
@@ -60,12 +62,14 @@ class SurfaceInteractionManager:
         and its interacting surfaces as defined in the system data. Interactions are categorized
         based on surface types (e.g., plane-plane or cylinder-cylinder).
 
-        Args:
+        Parameters
+        ----------
             part_id (str): ID of the current part to which the surface belongs.
             surface_id (str): ID of the current surface being processed.
             surface_data (dict): Detailed data describing the surface's properties and interactions.
 
-        Notes:
+        Notes
+        -----
             - Interaction data is retrieved from the `INTERACTIONS` field in `surface_data`.
             - Surface types determine the specific interaction processing method used.
         """
@@ -113,7 +117,8 @@ class SurfaceInteractionManager:
         It validates the geometric alignment of the planes, checks if they are parallel and facing,
         and establishes facing relationships between individual points if conditions are met.
 
-        Args:
+        Parameters
+        ----------
             part_id_current (str): ID of the current part.
             surf_id_current (str): ID of the current surface.
             surf_data_current (dict): Data of the current surface.
@@ -122,7 +127,8 @@ class SurfaceInteractionManager:
             surf_data_interact (dict): Data of the interacting surface.
             point_search_radius (float|int, optional): Radius for determining point-facing relationships. Defaults to 0.5.
 
-        Notes:
+        Notes
+        -----
             - Surfaces must be parallel and facing to establish relationships.
             - Points on both surfaces must be geometrically on the respective planes.
             - If surfaces are not aligned, a warning is logged, and no relationships are established.
@@ -178,17 +184,20 @@ class SurfaceInteractionManager:
         and verifies that the intersection points are within a specified radius
         of the original points.
 
-        Args:
+        Parameters
+        ----------
             point_current (np.ndarray): Coordinates of the point on the current plane.
             point_interact (np.ndarray): Coordinates of the point on the interacting plane.
             surf_data_current (dict): Data of the current plane.
             surf_data_interact (dict): Data of the interacting plane.
             point_search_radius (float|int, optional): Search radius for determining facing relationships. Defaults to 0.25.
 
-        Returns:
+        Returns
+        -------
             bool: True if the points are facing within the specified radius, False otherwise.
 
-        Notes:
+        Notes
+        -----
             - A point is considered "facing" if the line connecting it to the other point intersects
               both planes and the distances between the intersection points and the original points
               are within the specified radius.
@@ -229,7 +238,8 @@ class SurfaceInteractionManager:
         exceptions for conflicts, identical radii, or geometric interference. After validation, it
         updates the system data (`self.ADP["PARTS"]`) to facilitate tolerance analysis.
 
-        Args:
+        Parameters
+        ----------
             idPCur (str): ID of the current part.
             idSCur (str): ID of the current surface.
             datSCur (dict): Data of the current cylindrical surface, including radius, origin, and frame.
@@ -237,14 +247,16 @@ class SurfaceInteractionManager:
             idSInt (str): ID of the interacting surface.
             datSInt (dict): Data of the interacting cylindrical surface, similar to `datSCur`.
 
-        Raises:
+        Raises
+        ------
             NonConcentricCylindersException: If cylinder normals are not aligned and facing.
             ConflictingSurfaceDirectionsException: If both cylinders have conflicting surface directions.
             CylindricalInterferenceGeometricException: If there is geometric interference
                 based on surface directions and radii.
             ValueError: If the inner and outer cylinders have the same radii, which is not supported.
 
-        Notes:
+        Notes
+        -----
             - Concentricity between cylinders is required for nominal cases.
             - Cylinders are classified as inner or outer based on their radii and surface direction.
             - Points are generated for only the top and bottom surfaces of the cylinders, with the inner
