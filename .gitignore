@@ -180,3 +180,5 @@ search_strings.py
 dry_run_prompts/
 _tests.tmp/
 _tests/
+.vscode/
+.virtual_documents/
