@@ -53,7 +53,7 @@
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
-    <li><a href="#mathematical--literature-references">Mathematical & Literature References</a></li>
+<li><a href="#mathematical-literature-references">Mathematical & Literature References</a></li>
   </ol>
 </details>
 
@@ -244,7 +244,7 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 
 ## Contact
 
-**Kristof Attila S.** - ksimady@sigma-clermont.fr
+**Kristof Attila S.** (@Kramer84)
 
 **Project Link:** [https://github.com/Kramer84/otaf](https://github.com/Kramer84/otaf)
 
@@ -252,7 +252,8 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 
 This structural research framework was funded and supported by the **French National Research Agency (ANR)** under project **TRIP: ToleRance analysis with Imprecise Probabilities** (Grant Number: [ANR-21-CE46-0009](https://anr.fr/Projet-ANR-21-CE46-0009)). The framework aims to implement innovative formalisms for statistical tolerancing, helping bridge the gap between abstract epistemic uncertainty theory and industrial mechanical applications.
 
-## 📚 Mathematical & Literature References
+<a id="mathematical-literature-references"></a>
+## Mathematical & Literature References
 
 The theoretical, mathematical, and optimization concepts executed inside OTAF are founded on advanced tolerance research and epistemic uncertainty frameworks. To study the underlying principles of statistical tolerance analysis, statistical process control, and imprecise probabilities, explore the following foundation references:
 
