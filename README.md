@@ -216,7 +216,7 @@ make html
 * **Rigid Variational Modeling:** Analysis is strictly bounded to rigid transformations (translations and rotations). Non-rigid parameters, micro-deformations, thermal growth, and volumetric stress changes are excluded.
 * **Manual Feature Injections:** Custom operational requirements or functional conditions can be injected manually into the optimization queue as additional independent vector loops.
 * **Computational Scaling & Surrogates:** Standard Monte Carlo studies ($10^6$ trials) scale efficiently through the linear programming backend and typically complete in under an hour via `joblib` parallel processing. The neural network-based surrogate modeling package (`otaf.surrogate`) is explicitly optimized to mitigate calculation bottlenecks encountered during extensive multi-dimensional optimization loops within imprecise probability space exploration.
-* **Cylinder Processing Workaround:** High-level automated boundary matching contains known algorithmic parsing limitations for cylinder-to-cylinder interactions. Users analyzing complex multi-primitive cylindrical joints should bypass automated generation scripts and leverage the validated, hand-coded 30-DOF and 50-DOF reference models located in `src/otaf/example_models/models_3_D/`.
+* **Cylinder Processing Workaround:** High-level automated boundary matching contains known algorithmic parsing limitations for cylinder-to-cylinder interactions that still need to be resolved. Users analyzing complex multi-primitive cylindrical joints should bypass automated generation scripts and leverage the validated, hand-coded 30-DOF and 50-DOF reference models located in `src/otaf/example_models/models_3_D/`.
 
 ## Roadmap
 
@@ -244,7 +244,8 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 
 ## Contact
 
-**Kristof Attila S.** (@Kramer84)
+**Kristof Attila S.** ([@Kramer84](https://github.com/Kramer84))
+For bug reports, feature requests, or scientific inquiries, please open an issue on the repository tracking system.
 
 **Project Link:** [https://github.com/Kramer84/otaf](https://github.com/Kramer84/otaf)
 
