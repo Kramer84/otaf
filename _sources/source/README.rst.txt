@@ -1,8 +1,8 @@
-[[Contributors][contributors-shield]][contributors-url]
-[[Forks][forks-shield]][forks-url]
-[[Stargazers][stars-shield]][stars-url]
-[[Issues][issues-shield]][issues-url] [[MIT
-License][license-shield]][license-url]
+|Contributors| |Forks| |Stargazers| |Issues| |MIT License|
+
+.. raw:: html
+
+   <!-- PROJECT LOGO -->
 
 .. container::
 
@@ -508,3 +508,14 @@ ToleRance analysis with Imprecise Probabilities** (Grant Number:
 framework aims to implement innovative formalisms for statistical
 tolerancing, helping bridge the gap between abstract epistemic
 uncertainty theory and industrial mechanical applications.
+
+.. |Contributors| image:: https://img.shields.io/github/contributors/Kramer84/otaf.svg?style=for-the-badge
+   :target: https://github.com/Kramer84/otaf/graphs/contributors
+.. |Forks| image:: https://img.shields.io/github/forks/Kramer84/otaf.svg?style=for-the-badge
+   :target: https://github.com/Kramer84/otaf/network/members
+.. |Stargazers| image:: https://img.shields.io/github/stars/Kramer84/otaf.svg?style=for-the-badge
+   :target: https://github.com/Kramer84/otaf/stargazers
+.. |Issues| image:: https://img.shields.io/github/issues/Kramer84/otaf.svg?style=for-the-badge
+   :target: https://github.com/Kramer84/otaf/issues
+.. |MIT License| image:: https://img.shields.io/github/license/Kramer84/otaf.svg?style=for-the-badge
+   :target: https://github.com/Kramer84/otaf/blob/main/LICENSE
