@@ -53,6 +53,7 @@
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
+    <li><a href="#mathematical--literature-references">Mathematical & Literature References</a></li>
   </ol>
 </details>
 
@@ -251,6 +252,31 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 
 This structural research framework was funded and supported by the **French National Research Agency (ANR)** under project **TRIP: ToleRance analysis with Imprecise Probabilities** (Grant Number: [ANR-21-CE46-0009](https://anr.fr/Projet-ANR-21-CE46-0009)). The framework aims to implement innovative formalisms for statistical tolerancing, helping bridge the gap between abstract epistemic uncertainty theory and industrial mechanical applications.
 
+## 📚 Mathematical & Literature References
+
+The theoretical, mathematical, and optimization concepts executed inside OTAF are founded on advanced tolerance research and epistemic uncertainty frameworks. To study the underlying principles of statistical tolerance analysis, statistical process control, and imprecise probabilities, explore the following foundation references:
+
+* **Over-Constrained System Foundations**
+  * *Citation:* Dumas, A. (2014). *Développement de méthodes probabilistes pour l'analyse des tolérances des systèmes mécaniques sur-contraints* (Doctoral dissertation, École nationale supérieure d'arts et métiers - ENSAM).
+  * *Links:* [[HAL Open Access Archive]](https://tel.archives-ouvertes.fr/tel-01177079) | Copy ID: `tel-01177079`
+
+* **Quantified Constraint Satisfaction & Convex Hulls**
+  * *Citation:* Dantan, J.-Y., & Qureshi, A.-J. (2009). Worst-case and statistical tolerance analysis based on quantified constraint satisfaction problems and Monte Carlo simulation. *Computer-Aided Design*, 41(1), 1–12.
+  * *Links:* [[Resolve via DOI]](https://doi.org/10.1016/j.cad.2008.11.003) | Copy DOI: `10.1016/j.cad.2008.11.003`
+
+* **Advanced Probability-Based Tolerance Analysis (APTA Framework)**
+  * *Citation:* Gayton, N., Beaucaire, P., Bourinet, J.-M., Duc, E., Lemaire, M., & Gauvrit, L. (2011). APTA: advanced probability-based tolerance analysis of products. *Mécanique & Industries*, 12(2), 71–85.
+  * *Links:* [[Resolve via DOI]](https://doi.org/10.1051/meca/2011014) | Copy DOI: `10.1051/meca/2011014`
+
+* **Imprecise Probabilities in Structural Mechanics**
+  * *Citation:* Beer, M., Ferson, S., & Kreinovich, V. (2013). Imprecise probabilities in engineering analyses. *Mechanical Systems and Signal Processing*, 37(1-2), 4–29.
+  * *Links:* [[Resolve via DOI]](https://doi.org/10.1016/j.ymssp.2013.01.024) | Copy DOI: `10.1016/j.ymssp.2013.01.024`
+
+* **Epistemic Tolerance Representation Under Indeterminacy**
+  * *Citation:* Simády, K. A., Beaurepaire, P., & Gayton, N. (2023). Imprecise Probabilities as an Answer to the Indeterminacy Inherent to Mechanical Tolerances. *Proceedings of EURODYN 2023*, 377–390.
+  * *Links:* [[Resolve via DOI]](https://doi.org/10.7712/120223.10344.19792) | Copy DOI: `10.7712/120223.10344.19792`
+
+---
 
 [contributors-shield]: https://img.shields.io/github/contributors/Kramer84/otaf.svg?style=for-the-badge
 [contributors-url]: https://github.com/Kramer84/otaf/graphs/contributors
