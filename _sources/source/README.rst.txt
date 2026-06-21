@@ -504,7 +504,7 @@ information.
 Contact
 -------
 
-**Kristof Attila S.** - ksimady@sigma-clermont.fr
+**Kristof Attila S.** (@Kramer84)
 
 **Project Link:** https://github.com/Kramer84/otaf
 
@@ -519,8 +519,7 @@ framework aims to implement innovative formalisms for statistical
 tolerancing, helping bridge the gap between abstract epistemic
 uncertainty theory and industrial mechanical applications.
 
-📚 Mathematical & Literature References
----------------------------------------
+## Mathematical & Literature References
 
 The theoretical, mathematical, and optimization concepts executed inside
 OTAF are founded on advanced tolerance research and epistemic
