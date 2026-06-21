@@ -10,7 +10,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/Kramer84/otaf">
-    <img src="logo/logo.png" alt="Logo" width="222" height="222" onerror="this.style.display='none'">
+    <img src="logo/logo.png" alt="Logo" width="333" height="333" onerror="this.style.display='none'">
   </a>
 
 <h3 align="center">OTAF</h3>
