@@ -6,6 +6,7 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 
+<!-- PROJECT LOGO -->
 <br />
 <div align="center">
   <a href="https://github.com/Kramer84/otaf">
@@ -249,3 +250,15 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 ## Acknowledgments
 
 This structural research framework was funded and supported by the **French National Research Agency (ANR)** under project **TRIP: ToleRance analysis with Imprecise Probabilities** (Grant Number: [ANR-21-CE46-0009](https://anr.fr/Projet-ANR-21-CE46-0009)). The framework aims to implement innovative formalisms for statistical tolerancing, helping bridge the gap between abstract epistemic uncertainty theory and industrial mechanical applications.
+
+
+[contributors-shield]: https://img.shields.io/github/contributors/Kramer84/otaf.svg?style=for-the-badge
+[contributors-url]: https://github.com/Kramer84/otaf/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/Kramer84/otaf.svg?style=for-the-badge
+[forks-url]: https://github.com/Kramer84/otaf/network/members
+[stars-shield]: https://img.shields.io/github/stars/Kramer84/otaf.svg?style=for-the-badge
+[stars-url]: https://github.com/Kramer84/otaf/stargazers
+[issues-shield]: https://img.shields.io/github/issues/Kramer84/otaf.svg?style=for-the-badge
+[issues-url]: https://github.com/Kramer84/otaf/issues
+[license-shield]: https://img.shields.io/github/license/Kramer84/otaf.svg?style=for-the-badge
+[license-url]: https://github.com/Kramer84/otaf/blob/main/LICENSE
