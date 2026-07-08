@@ -6,10 +6,11 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 
+<!-- PROJECT LOGO -->
 <br />
 <div align="center">
   <a href="https://github.com/Kramer84/otaf">
-    <img src="logo/logo.png" alt="Logo" width="80" height="80" onerror="this.style.display='none'">
+    <img src="logo/logo.png" alt="Logo" width="333" height="333" onerror="this.style.display='none'">
   </a>
 
 <h3 align="center">OTAF</h3>
@@ -52,6 +53,7 @@
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
+<li><a href="#mathematical-literature-references">Mathematical & Literature References</a></li>
   </ol>
 </details>
 
@@ -214,7 +216,7 @@ make html
 * **Rigid Variational Modeling:** Analysis is strictly bounded to rigid transformations (translations and rotations). Non-rigid parameters, micro-deformations, thermal growth, and volumetric stress changes are excluded.
 * **Manual Feature Injections:** Custom operational requirements or functional conditions can be injected manually into the optimization queue as additional independent vector loops.
 * **Computational Scaling & Surrogates:** Standard Monte Carlo studies ($10^6$ trials) scale efficiently through the linear programming backend and typically complete in under an hour via `joblib` parallel processing. The neural network-based surrogate modeling package (`otaf.surrogate`) is explicitly optimized to mitigate calculation bottlenecks encountered during extensive multi-dimensional optimization loops within imprecise probability space exploration.
-* **Cylinder Processing Workaround:** High-level automated boundary matching contains known algorithmic parsing limitations for cylinder-to-cylinder interactions. Users analyzing complex multi-primitive cylindrical joints should bypass automated generation scripts and leverage the validated, hand-coded 30-DOF and 50-DOF reference models located in `src/otaf/example_models/models_3_D/`.
+* **Cylinder Processing Workaround:** High-level automated boundary matching contains known algorithmic parsing limitations for cylinder-to-cylinder interactions that still need to be resolved. Users analyzing complex multi-primitive cylindrical joints should bypass automated generation scripts and leverage the validated, hand-coded 30-DOF and 50-DOF reference models located in `src/otaf/example_models/models_3_D/`.
 
 ## Roadmap
 
@@ -242,10 +244,49 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 
 ## Contact
 
-**Kristof Attila S.** - ksimady@sigma-clermont.fr
+**Kristof Attila S.** ([@Kramer84](https://github.com/Kramer84))
+For bug reports, feature requests, or scientific inquiries, please open an issue on the repository tracking system.
 
 **Project Link:** [https://github.com/Kramer84/otaf](https://github.com/Kramer84/otaf)
 
 ## Acknowledgments
 
 This structural research framework was funded and supported by the **French National Research Agency (ANR)** under project **TRIP: ToleRance analysis with Imprecise Probabilities** (Grant Number: [ANR-21-CE46-0009](https://anr.fr/Projet-ANR-21-CE46-0009)). The framework aims to implement innovative formalisms for statistical tolerancing, helping bridge the gap between abstract epistemic uncertainty theory and industrial mechanical applications.
+
+<a id="mathematical-literature-references"></a>
+## Mathematical & Literature References
+
+The theoretical, mathematical, and optimization concepts executed inside OTAF are founded on advanced tolerance research and epistemic uncertainty frameworks. To study the underlying principles of statistical tolerance analysis, statistical process control, and imprecise probabilities, explore the following foundation references:
+
+* **Over-Constrained System Foundations**
+  * *Citation:* Dumas, A. (2014). *Développement de méthodes probabilistes pour l'analyse des tolérances des systèmes mécaniques sur-contraints* (Doctoral dissertation, École nationale supérieure d'arts et métiers - ENSAM).
+  * *Links:* [[HAL Open Access Archive]](https://tel.archives-ouvertes.fr/tel-01177079) | Copy ID: `tel-01177079`
+
+* **Quantified Constraint Satisfaction & Convex Hulls**
+  * *Citation:* Dantan, J.-Y., & Qureshi, A.-J. (2009). Worst-case and statistical tolerance analysis based on quantified constraint satisfaction problems and Monte Carlo simulation. *Computer-Aided Design*, 41(1), 1–12.
+  * *Links:* [[Resolve via DOI]](https://doi.org/10.1016/j.cad.2008.11.003) | Copy DOI: `10.1016/j.cad.2008.11.003`
+
+* **Advanced Probability-Based Tolerance Analysis (APTA Framework)**
+  * *Citation:* Gayton, N., Beaucaire, P., Bourinet, J.-M., Duc, E., Lemaire, M., & Gauvrit, L. (2011). APTA: advanced probability-based tolerance analysis of products. *Mécanique & Industries*, 12(2), 71–85.
+  * *Links:* [[Resolve via DOI]](https://doi.org/10.1051/meca/2011014) | Copy DOI: `10.1051/meca/2011014`
+
+* **Imprecise Probabilities in Structural Mechanics**
+  * *Citation:* Beer, M., Ferson, S., & Kreinovich, V. (2013). Imprecise probabilities in engineering analyses. *Mechanical Systems and Signal Processing*, 37(1-2), 4–29.
+  * *Links:* [[Resolve via DOI]](https://doi.org/10.1016/j.ymssp.2013.01.024) | Copy DOI: `10.1016/j.ymssp.2013.01.024`
+
+* **Epistemic Tolerance Representation Under Indeterminacy**
+  * *Citation:* Simády, K. A., Beaurepaire, P., & Gayton, N. (2023). Imprecise Probabilities as an Answer to the Indeterminacy Inherent to Mechanical Tolerances. *Proceedings of EURODYN 2023*, 377–390.
+  * *Links:* [[Resolve via DOI]](https://doi.org/10.7712/120223.10344.19792) | Copy DOI: `10.7712/120223.10344.19792`
+
+---
+
+[contributors-shield]: https://img.shields.io/github/contributors/Kramer84/otaf.svg?style=for-the-badge
+[contributors-url]: https://github.com/Kramer84/otaf/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/Kramer84/otaf.svg?style=for-the-badge
+[forks-url]: https://github.com/Kramer84/otaf/network/members
+[stars-shield]: https://img.shields.io/github/stars/Kramer84/otaf.svg?style=for-the-badge
+[stars-url]: https://github.com/Kramer84/otaf/stargazers
+[issues-shield]: https://img.shields.io/github/issues/Kramer84/otaf.svg?style=for-the-badge
+[issues-url]: https://github.com/Kramer84/otaf/issues
+[license-shield]: https://img.shields.io/github/license/Kramer84/otaf.svg?style=for-the-badge
+[license-url]: https://github.com/Kramer84/otaf/blob/main/LICENSE
