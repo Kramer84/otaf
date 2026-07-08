@@ -33,3 +33,9 @@ venv/
 .idea/
 .DS_Store
 Thumbs.db
+
+# --- Documentation Build Artifacts ---
+docs/_build/
+
+# --- Model Weights ---
+*.pth
