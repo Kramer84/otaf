@@ -253,7 +253,7 @@ from a system of constraints to determine the optimal gap for each sample.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>constraint_matrix_generator</strong> (<a class="reference internal" href="otaf.html#otaf.SystemOfConstraintsAssemblyModel" title="otaf.SystemOfConstraintsAssemblyModel"><em>SystemOfConstraintsAssemblyModel</em></a>) – Generator object that produces the constraint matrices and bounds.</p></li>
+<li><p><strong>constraint_matrix_generator</strong> (<em>SystemOfConstraintsAssemblyModel</em>) – Generator object that produces the constraint matrices and bounds.</p></li>
 <li><p><strong>deviation_array</strong> (<em>np.ndarray</em>) – Array representing deviations to be processed.</p></li>
 <li><p><strong>C</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Coefficient matrix for the linear objective function.</p></li>
 <li><p><strong>bounds</strong> (<em>Union</em><em>[</em><em>List</em><em>[</em><em>List</em><em>[</em><em>float</em><em>]</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – Bounds for the optimization variables.</p></li>
@@ -281,7 +281,7 @@ overhead.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>constraint_matrix_generator</strong> (<a class="reference internal" href="otaf.html#otaf.SystemOfConstraintsAssemblyModel" title="otaf.SystemOfConstraintsAssemblyModel"><em>SystemOfConstraintsAssemblyModel</em></a>) – Generator object that produces constraint matrices.</p></li>
+<li><p><strong>constraint_matrix_generator</strong> (<em>SystemOfConstraintsAssemblyModel</em>) – Generator object that produces constraint matrices.</p></li>
 <li><p><strong>deviation_array</strong> (<em>np.ndarray</em>) – Array of deviations to process.</p></li>
 <li><p><strong>C</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Coefficient matrix for the linear objective function.</p></li>
 <li><p><strong>bounds</strong> (<em>Union</em><em>[</em><em>List</em><em>[</em><em>List</em><em>[</em><em>float</em><em>]</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – Bounds for the optimization variables.</p></li>

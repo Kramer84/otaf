@@ -100,6 +100,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#otaf.sampling.UniformSurfaceSampler.solve"><code class="docutils literal notranslate"><span class="pre">UniformSurfaceSampler.solve()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.sampling.calculate_sample_in_deviation_domain"><code class="docutils literal notranslate"><span class="pre">calculate_sample_in_deviation_domain()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.sampling.compose_defects_with_lambdas"><code class="docutils literal notranslate"><span class="pre">compose_defects_with_lambdas()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.sampling.condition_lambda_sample"><code class="docutils literal notranslate"><span class="pre">condition_lambda_sample()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.sampling.condition_sample_array"><code class="docutils literal notranslate"><span class="pre">condition_sample_array()</span></code></a></li>
@@ -369,6 +370,31 @@
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.sampling.calculate_sample_in_deviation_domain">
+<span class="sig-prename descclassname"><span class="pre">otaf.sampling.</span></span><span class="sig-name descname"><span class="pre">calculate_sample_in_deviation_domain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos_u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_theta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sampling/_sampling.html#calculate_sample_in_deviation_domain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sampling.calculate_sample_in_deviation_domain" title="Link to this definition"></a></dt>
+<dd><p>Scale and stack position and theta arrays into a 2D coordinate array.</p>
+<p>Applies independent scaling factors to both the positional and angular
+input vectors, then reshapes them into a paired (N, 2) array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pos_u</strong> (<em>array_like</em>) – An array or sequence of raw positional coordinates.</p></li>
+<li><p><strong>theta</strong> (<em>array_like</em>) – An array or sequence of raw angular coordinates.</p></li>
+<li><p><strong>lambda_pos</strong> (<em>float</em>) – The scalar multiplier applied to scale the position data.</p></li>
+<li><p><strong>lambda_theta</strong> (<em>float</em>) – The scalar multiplier applied to scale the theta data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An (N, 2) NumPy array where each row represents a paired
+(scaled_pos, scaled_theta) coordinate.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array_like</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

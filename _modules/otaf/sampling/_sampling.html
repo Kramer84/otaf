@@ -100,6 +100,7 @@
     <span class="s2">&quot;generate_and_transform_sequence&quot;</span><span class="p">,</span>
     <span class="s2">&quot;compose_defects_with_lambdas&quot;</span><span class="p">,</span>
     <span class="s2">&quot;scale_sample_with_params&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;calculate_sample_in_deviation_domain&quot;</span>
 <span class="p">]</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
@@ -648,6 +649,41 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;All standard deviations must be positive : </span><span class="si">{</span><span class="n">stds</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">scaled_sample</span> <span class="o">=</span> <span class="n">sample</span> <span class="o">*</span> <span class="n">stds</span> <span class="o">+</span> <span class="n">means</span>
     <span class="k">return</span> <span class="n">scaled_sample</span></div>
+
+
+
+<div class="viewcode-block" id="calculate_sample_in_deviation_domain">
+<a class="viewcode-back" href="../../../source/otaf.sampling.html#otaf.sampling.calculate_sample_in_deviation_domain">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_sample_in_deviation_domain</span><span class="p">(</span>
+    <span class="n">pos_u</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">lambda_pos</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lambda_theta</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Scale and stack position and theta arrays into a 2D coordinate array.</span>
+
+<span class="sd">    Applies independent scaling factors to both the positional and angular </span>
+<span class="sd">    input vectors, then reshapes them into a paired (N, 2) array.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pos_u : array_like</span>
+<span class="sd">        An array or sequence of raw positional coordinates.</span>
+<span class="sd">    theta : array_like</span>
+<span class="sd">        An array or sequence of raw angular coordinates.</span>
+<span class="sd">    lambda_pos : float</span>
+<span class="sd">        The scalar multiplier applied to scale the position data.</span>
+<span class="sd">    lambda_theta : float</span>
+<span class="sd">        The scalar multiplier applied to scale the theta data.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    array_like</span>
+<span class="sd">        An (N, 2) NumPy array where each row represents a paired </span>
+<span class="sd">        (scaled_pos, scaled_theta) coordinate.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">scaled_pos</span> <span class="o">=</span> <span class="n">lambda_pos</span> <span class="o">*</span> <span class="n">pos_u</span>
+    <span class="n">scaled_theta</span> <span class="o">=</span> <span class="n">lambda_theta</span> <span class="o">*</span> <span class="n">theta</span>
+    <span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">scaled_pos</span><span class="p">,</span> <span class="n">scaled_theta</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+    <span class="k">return</span> <span class="n">sample</span></div>
 
 </pre></div>
 
