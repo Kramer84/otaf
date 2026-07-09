@@ -3,7 +3,7 @@ name: Deploy Documentation to GitHub Pages
 on:
   push:
     branches:
-      - main  # Or whichever branch you want to trigger the build from
+      - main  
 
 jobs:
   build-and-deploy:
@@ -14,11 +14,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # Step 2: Set up Python
+    # Step 2: Set up Python (Upgraded to match your local 3.12 environment)
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.9'
+        python-version: '3.12'
 
     - name: Install Pandoc
       run: sudo apt-get install -y pandoc
@@ -27,21 +27,121 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install sphinx sphinx-autodoc-typehints sphinx_rtd_theme myst-parser nbsphinx notebook
+        pip install sphinx sphinx_rtd_theme myst-parser nbsphinx notebook
         pip install beartype numpy scipy sympy openturns pandas torch torcheval matplotlib tqdm joblib trimesh gldpy pytransform3d[all]
 
     - name: Convert README.md to README.rst
       run: |
+        # 1. Run the standard translation
         pandoc README.md -f markdown -t rst -o docs/source/README.rst
 
-    # Step 4: Build the documentation
+        # 2. Convert the escaped HTML image tag into a native rST image directive
+        # This replaces the raw HTML string with an operational relative path target
+        sed -i 's|<img src="logo/logo.png".*>|.. image:: ../logo/logo.png\n   :width: 333px\n   :align: center|g' docs/source/README.rst
+
+    # Step 4: Asset Copy Operations & Automated RST Generation
+    - name: Prepare Assets and Generate API Layouts
+      run: |
+        # 1. Handle Logo and Asset copies safely
+        mkdir -p docs/logo
+        if [ -f logo/logo.png ]; then
+          cp logo/logo.png docs/logo/logo.png
+        fi
+
+        # 2. Clear out stale auto-generated API pages
+        rm -f docs/source/otaf*.rst docs/source/modules.rst
+
+        # 3. Run standard apidoc to discover baseline structure
+        sphinx-apidoc -f -o docs/source/ src/otaf
+
+        # 4. Automate the 2D Models deep tree generation
+        cat << 'EOF' > docs/source/otaf.example_models.models_2_D.rst
+        otaf.example_models.models_2_D package
+        ======================================
+
+        .. automodule:: otaf.example_models.models_2_D
+           :members:
+           :undoc-members:
+           :show-inheritance:
+
+        Available Models
+        ----------------
+
+        .. toctree::
+           :maxdepth: 1
+
+           otaf.example_models.models_2_D.model1
+           otaf.example_models.models_2_D.model2
+        EOF
+
+        cat << 'EOF' > docs/source/otaf.example_models.models_2_D.model1.rst
+        Model 1: 2D 4-DOF Analytical Reference
+        ======================================
+
+        .. automodule:: otaf.example_models.models_2_D.model1
+           :members:
+           :undoc-members:
+           :show-inheritance:
+        EOF
+
+        cat << 'EOF' > docs/source/otaf.example_models.models_2_D.model2.rst
+        Model 2: 2D 16-DOF Reference Assembly
+        =====================================
+
+        .. automodule:: otaf.example_models.models_2_D.model2
+           :members:
+           :undoc-members:
+           :show-inheritance:
+        EOF
+
+        # 5. Automate the 3D Models deep tree generation
+        cat << 'EOF' > docs/source/otaf.example_models.models_3_D.rst
+        otaf.example_models.models_3_D package
+        ======================================
+
+        .. automodule:: otaf.example_models.models_3_D
+           :members:
+           :undoc-members:
+           :show-inheritance:
+
+        Available Models
+        ----------------
+
+        .. toctree::
+           :maxdepth: 1
+
+           otaf.example_models.models_3_D.model3
+           otaf.example_models.models_3_D.model4
+        EOF
+
+        cat << 'EOF' > docs/source/otaf.example_models.models_3_D.model3.rst
+        Model 3: 3D 30-DOF Mechanical System
+        ====================================
+
+        .. automodule:: otaf.example_models.models_3_D.model3
+           :members:
+           :undoc-members:
+           :show-inheritance:
+        EOF
+
+        cat << 'EOF' > docs/source/otaf.example_models.models_3_D.model4.rst
+        Model 4: 50-DOF Complex Hyperplane Assembly
+        ============================================
+
+        .. automodule:: otaf.example_models.models_3_D.model4
+           :members:
+           :undoc-members:
+           :show-inheritance:
+        EOF
+
+    # Step 5: Build the final documentation
     - name: Build documentation
       run: |
         cd docs
         make clean
         make html
 
-    # Step 5: Deploy to GitHub Pages
+    # Step 6: Deploy to GitHub Pages
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:

@@ -23,7 +23,6 @@ src/otaf/capabilities/_capabilities.py
 src/otaf/common/__init__.py
 src/otaf/common/_common.py
 src/otaf/constants/__init__.py
-src/otaf/constants/_constants.py
 src/otaf/distribution/__init__.py
 src/otaf/distribution/_distribution.py
 src/otaf/example_models/__init__.py

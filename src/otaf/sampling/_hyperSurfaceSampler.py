@@ -10,17 +10,29 @@ from scipy.optimize import OptimizeResult, minimize
 
 
 class LagrangeConstraintSolver:
-    """Solve for the subspace where the constraint function g(X) equals zero.
+    """
+    Solve for the subspace where the constraint function equals zero.
+
+    Parameters
+    ----------
+    dim : int
+        Dimensionality of the space (number of variables).
+    g : callable
+        Constraint function ``g(X)`` such that ``g(X) = 0``.
+    bounds : list of tuple
+        List of (min, max) bounds for each variable.
+    starting_points : ndarray
+        Initial points for the optimization algorithm.
 
     Attributes
     ----------
     dim : int
         Dimensionality of the space (number of variables).
-    g : Callable[[np.ndarray], float]
-        Constraint function g(X) such that g(X) = 0.
-    bounds : list[tuple[float, float]]
-        List of (min, max) tuples for each variable.
-    starting_points : np.ndarray
+    g : callable
+        Constraint function ``g(X)`` such that ``g(X) = 0``.
+    bounds : list of tuple
+        List of (min, max) bounds for each variable.
+    starting_points : ndarray
         Initial points for the optimization algorithm.
     """
 
@@ -32,19 +44,6 @@ class LagrangeConstraintSolver:
         bounds: list[tuple[float, float]],
         starting_points: np.ndarray,
     ) -> None:
-        """Initialize the solver with dimensionality, constraint function, and bounds.
-
-        Parameters
-        ----------
-        dim : int
-            Dimensionality of the space.
-        g : Callable[[np.ndarray], float]
-            Constraint function g(X) representing g(X) = 0.
-        bounds : list[tuple[float, float]]
-            List of (min, max) bounds for each variable.
-        starting_points : np.ndarray
-            Initial points for the optimization.
-        """
         self.dim = dim
         self.g = g
         self.bounds = bounds
@@ -52,30 +51,33 @@ class LagrangeConstraintSolver:
 
     @beartype
     def objective_function(self, X: np.ndarray) -> float:
-        """Calculate the objective value for the constraint minimization.
+        """
+        Calculate the objective value for the constraint minimization.
 
         Parameters
         ----------
-        X : np.ndarray
+        X : ndarray
             Current vector of variables.
 
         Returns
         -------
         float
-            Absolute value of the constraint function g(X).
+            Absolute value of the constraint function evaluated at `X`.
         """
         return np.abs(self.g(X))
 
     @beartype
     def solve(self) -> OptimizeResult:
-        """Solve the optimization problem using the SLSQP method.
+        """
+        Solve the optimization problem using the SLSQP method.
 
-        Finds the subspace satisfying g(X) = 0 subject to defined variable bounds.
+        Finds the subspace satisfying ``g(X) = 0`` subject to defined 
+        variable bounds.
 
         Returns
         -------
         OptimizeResult
-            The result of the optimization process.
+            The result object of the optimization process.
         """
         constraints = {"type": "eq", "fun": self.g}
         res = minimize(
@@ -90,17 +92,31 @@ class LagrangeConstraintSolver:
 
 
 class UniformSurfaceSampler:
-    """Generate a uniform distribution of points on a surface defined by g(X) = 0.
+    """
+    Generate a uniform distribution of points on a surface where g(X) = 0.
+
+    Parameters
+    ----------
+    dim : int
+        Dimensionality of the space.
+    g : callable
+        Constraint function ``g(X)`` such that ``g(X) = 0``.
+    bounds : list of tuple
+        List of (min, max) bounds for each variable.
+    starting_points : ndarray
+        Initial points already satisfying the constraint.
+    step_size : float, optional
+        Step size for generating new points on the surface. Default is 0.1.
 
     Attributes
     ----------
     dim : int
         Dimensionality of the space.
-    g : Callable[[np.ndarray], float]
-        Constraint function g(X) such that g(X) = 0.
-    bounds : list[tuple[float, float]]
+    g : callable
+        Constraint function ``g(X)`` such that ``g(X) = 0``.
+    bounds : list of tuple
         List of (min, max) bounds for each variable.
-    starting_points : np.ndarray
+    starting_points : ndarray
         Initial points already satisfying the constraint.
     step_size : float
         Magnitude of the random step taken during sampling.
@@ -115,21 +131,6 @@ class UniformSurfaceSampler:
         starting_points: np.ndarray,
         step_size: float = 0.1,
     ) -> None:
-        """Initialize the sampler with constraint function and domain bounds.
-
-        Parameters
-        ----------
-        dim : int
-            Dimensionality of the space.
-        g : Callable[[np.ndarray], float]
-            Constraint function g(X) representing g(X) = 0.
-        bounds : list[tuple[float, float]]
-            List of (min, max) bounds for each variable.
-        starting_points : np.ndarray
-            Initial valid points on the surface.
-        step_size : float, optional
-            Step size for generating new points on the surface, by default 0.1.
-        """
         self.dim = dim
         self.g = g
         self.bounds = bounds
@@ -138,11 +139,12 @@ class UniformSurfaceSampler:
 
     @beartype
     def objective_function(self, X: np.ndarray) -> float:
-        """Calculate the absolute value of the constraint function g(X).
+        """
+        Calculate the absolute value of the constraint function g(X).
 
         Parameters
         ----------
-        X : np.ndarray
+        X : ndarray
             Current vector of variables.
 
         Returns
@@ -154,19 +156,22 @@ class UniformSurfaceSampler:
 
     @beartype
     def solve(self, x0: np.ndarray) -> Optional[np.ndarray]:
-        """Project an arbitrary point onto the surface g(X) = 0.
+        """
+        Project an arbitrary point onto the surface g(X) = 0.
 
-        Uses the SLSQP method to find the nearest point satisfying the constraint.
+        Uses the SLSQP method to find the nearest point satisfying the 
+        constraint.
 
         Parameters
         ----------
-        x0 : np.ndarray
+        x0 : ndarray
             Initial guess point for optimization.
 
         Returns
         -------
-        np.ndarray or None
-            The projected point on the surface, or None if optimization failed.
+        ndarray or None
+            The projected point on the surface, or ``None`` if 
+            optimization failed.
         """
         constraints = {"type": "eq", "fun": self.g}
         res = minimize(
@@ -180,7 +185,8 @@ class UniformSurfaceSampler:
 
     @beartype
     def sample_surface(self, num_samples: int) -> np.ndarray:
-        """Generate a uniform distribution of points on the surface.
+        """
+        Generate a uniform distribution of points on the surface.
 
         Parameters
         ----------
@@ -189,8 +195,8 @@ class UniformSurfaceSampler:
 
         Returns
         -------
-        np.ndarray
-            Array of points satisfying g(X) = 0.
+        ndarray
+            Array of points satisfying ``g(X) = 0``.
         """
         sampled_points = []
         for point in self.starting_points:

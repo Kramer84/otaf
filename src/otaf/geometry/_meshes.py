@@ -23,40 +23,40 @@ import otaf.exceptions as otaf_exceptions
 def spheres_from_point_cloud(
     pc: np.ndarray,
     radius: float = 1.0,
-    color: Union[Tuple[int, int, int, int], List[Union[float, int]], np.ndarray] = [
+    color: np.ndarray | list[int] | tuple[int, int, int, int] = [
         100,
         100,
         100,
         255,
     ],
-    global_translation: Union[List[Union[float, int]], np.ndarray] = np.array([0, 0, 0]),
-) -> List[trimesh.Trimesh]:
-    """
-    Generate a list of Trimesh icospheres centered at each point in a point cloud.
+    global_translation: np.ndarray | list[float] = np.array([0, 0, 0]),
+) -> list[trimesh.Trimesh]:
+    """Generate Trimesh icospheres at each point in a point cloud.
 
-    Instantiates a sphere mesh for every coordinate position, applies a uniform 
-    color, and shifts each position by an optional global translation vector.
+    Instantiates a sphere mesh for each coordinate position, applies
+    a uniform color, and shifts each position by an optional global
+    translation vector.
 
     Parameters
     ----------
-    pc : np.ndarray
+    pc : array_like
         An (N, 3) array containing the coordinates of the point cloud.
-    radius : float, default=1.0
+    radius : float, default 1.0
         The radius of each generated sphere.
-    color : Union[Tuple[int, int, int, int], List[Union[float, int]], np.ndarray], default=[100, 100, 100, 255]
+    color : array_like, default [100, 100, 100, 255]
         The RGBA color applied to the vertices of the spheres.
-    global_translation : Union[List[Union[float, int]], np.ndarray], default=np.array([0, 0, 0])
+    global_translation : array_like, default [0, 0, 0]
         A 3D offset vector added to every point's position.
 
     Returns
     -------
-    List[trimesh.Trimesh]
+    list of trimesh.Trimesh
         A list of individual Trimesh icosphere objects.
 
     Raises
     ------
     ImportError
-        If the trimesh library is not installed.
+        If the ``trimesh`` library is not installed.
     """
     try :
         import trimesh
@@ -79,11 +79,11 @@ def open_cylinder_mesh(
     transform: np.ndarray, 
     sections: int = 64
 ) -> trimesh.Trimesh:
-    """
-    Create a Trimesh cylinder that is open on both ends and apply a transformation matrix.
+    """Create an open-ended cylinder mesh with a transformation.
 
-    Generates a standard cylinder, removes the cap faces connected to the top and 
-    bottom center vertices, and applies a 4x4 spatial transformation matrix.
+    Generates a standard cylinder, removes the cap faces connected
+    to the top and bottom center vertices, and applies a 4x4 spatial
+    transformation matrix.
 
     Parameters
     ----------
@@ -91,10 +91,12 @@ def open_cylinder_mesh(
         The radius of the cylinder.
     height : float
         The height of the cylinder along its local Z-axis.
-    transform : np.ndarray
-        A 4x4 homogeneous transformation matrix to position and rotate the mesh.
-    sections : int, default=64
-        The number of radial facets used to approximate the circular cross-section.
+    transform : array_like
+        A 4x4 homogeneous transformation matrix to position and
+        rotate the mesh.
+    sections : int, default 64
+        The number of radial facets used to approximate the circular
+        cross-section.
 
     Returns
     -------
@@ -104,7 +106,7 @@ def open_cylinder_mesh(
     Raises
     ------
     ImportError
-        If the trimesh library is not installed.
+        If the ``trimesh`` library is not installed.
     """
     try :
         import trimesh
@@ -128,23 +130,25 @@ def open_cylinder_mesh(
     return cyl
 
 def surface_from_planar_contour(
-    vertices: Union[List[Union[List[float], np.ndarray]], np.ndarray],
-    segments: Optional[Union[List[Union[List[int], np.ndarray]], np.ndarray]] = None,
+    vertices: np.ndarray | list,
+    segments: np.ndarray | list | None = None,
 ) -> trimesh.Trimesh:
-    """
-    Triangulate a 3D planar point contour to generate a flat 2D surface mesh.
+    """Triangulate a 3D planar point contour to generate a surface mesh.
 
-    Projects the 3D coordinates onto a local 2D plane, performs a Constrained 
-    Delaunay Triangulation using the `triangle` library, and then transforms the 
-    resulting mesh vertices back to their original 3D orientation.
+    Projects the 3D coordinates onto a local 2D plane, performs a
+    Constrained Delaunay Triangulation using the ``triangle`` library,
+    and then transforms the resulting mesh vertices back to their
+    original 3D orientation.
 
     Parameters
     ----------
-    vertices : Union[List[Union[List[float], np.ndarray]], np.ndarray]
-        An (N, 3) array of 3D coordinates representing the boundary of the contour.
-    segments : Optional[Union[List[Union[List[int], np.ndarray]], np.ndarray]], default=None
-        An optional (M, 2) array of vertex indices defining fixed boundary lines 
-        or holes that must be respected during triangulation.
+    vertices : array_like
+        An (N, 3) array of 3D coordinates representing the boundary
+        of the contour.
+    segments : array_like, optional
+        An optional (M, 2) array of vertex indices defining fixed
+        boundary lines or holes that must be respected during
+        triangulation. Default is None.
 
     Returns
     -------
@@ -154,10 +158,11 @@ def surface_from_planar_contour(
     Raises
     ------
     ImportError
-        If either the `triangle` or `trimesh` libraries are not installed.
+        If either the ``triangle`` or ``trimesh`` libraries are not
+        installed.
     ValueError
-        If the input segments do not have a shape ending in 2, or if the input 
-        vertices do not all lie on the same 2D plane.
+        If the input `segments` do not have a shape ending in 2, or
+        if the input `vertices` do not all lie on the same 2D plane.
     """
     try :
         import triangle

@@ -1,50 +1,65 @@
 __author__ = "Kramer84"
 __all__ = ["plotSobolIndicesWithErr"]
+from typing import Optional, Any, Union
 import matplotlib
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
-import numpy
+import numpy as np
 
 
 def plotSobolIndicesWithErr(
-    S, errS, varNames, n_dims, Stot=None, errStot=None, dimNames=None, figsize=(20, 10)
-):
-    """Plot Sobol' indices with error bars to visualize estimator uncertainty.
+    S: np.ndarray,
+    errS: np.ndarray,
+    varNames: list[str],
+    n_dims: int,
+    Stot: Optional[np.ndarray] = None,
+    errStot: Optional[np.ndarray] = None,
+    dimNames: Optional[list[str]] = None,
+    figsize: tuple[int, int] = (20, 10),
+) -> None:
+    """Plot Sobol' indices with error bars.
 
-    Supports plotting for scalar outputs (1D array of indices) using discrete
-    errorbar markers, and vector outputs (2D array of indices) using either subplots
-    or comprehensive heatmaps via an `ImageGrid`.
+    Visualize estimator uncertainty for sensitivity analysis. Supports
+    plotting for scalar outputs (1D array of indices) using discrete
+    errorbar markers, and vector outputs (2D array of indices) using
+    either subplots or comprehensive heatmaps via an ``ImageGrid``.
 
     Parameters
     ----------
-    S : numpy.ndarray
-        First-order Sobol' indices. Can be shape `(n_dims,)` for scalar outputs
-        or `(n_dims, dimOut)` for vector outputs.
-    errS : numpy.ndarray
-        Confidence intervals or errors corresponding to `S`. Must match the shape of `S`.
+    S : np.ndarray
+        First-order Sobol' indices. Can be of a shape matching the
+        total number of input dimensions `n_dims` for scalar
+        outputs, or a 2D shape for vector outputs.
+    errS : np.ndarray
+        Confidence intervals or errors corresponding to `S`. Must
+        match the shape of `S`.
     varNames : list of str
-        Names of the input variables (length must match `n_dims`).
+        Names of the input variables. The length of this list must
+        match `n_dims`.
     n_dims : int
-        The total number of input variables/dimensions analyzed.
-    Stot : numpy.ndarray, optional
-        Total-order Sobol' indices. Must match the shape of `S`. Default is None.
-    errStot : numpy.ndarray, optional
-        Confidence intervals or errors corresponding to `Stot`. Must match the shape of `Stot`.
+        The total number of input variables or dimensions analyzed.
+    Stot : np.ndarray, optional
+        Total-order Sobol' indices. Must match the shape of `S`.
+        Default is None.
+    errStot : np.ndarray, optional
+        Confidence intervals or errors corresponding to `Stot`.
+        Must match the shape of `Stot`. Default is None.
     dimNames : list of str, optional
-        Names of the output vector dimensions. Only evaluated for vector outputs in
-        heatmap configurations. Default is None.
-    figsize : tuple of int, optional
-        Width and height of the target matplotlib figure in inches. Default is (20, 10).
+        Names of the output vector dimensions. Only evaluated for
+        vector outputs in heatmap configurations. Default is None.
+    figsize : tuple of int, default (20, 10)
+        Width and height of the target matplotlib figure in inches.
 
     Notes
     -----
-    The function adapts dynamically based on the dimensionality of `S`. For high-dimensional
-    vector outputs, it uses heatmaps to manage visual density.
+    The function adapts dynamically based on the dimensionality of
+    `S`. For high-dimensional vector outputs, it uses heatmaps to
+    manage visual density.
     """
     plt.style.use("classic")
-    S, errS = (numpy.squeeze(S), numpy.squeeze(errS))
+    S, errS = (np.squeeze(S), np.squeeze(errS))
     if Stot is not None and errStot is not None:
-        Stot, errStot = (numpy.squeeze(Stot), numpy.squeeze(errStot))
+        Stot, errStot = (np.squeeze(Stot), np.squeeze(errStot))
     if len(S.shape) == 1:
         print("The output is scalar")
         print(
@@ -57,14 +72,14 @@ def plotSobolIndicesWithErr(
             mpatches.Circle((0, 0), radius=7, color="r", label="first order indices"),
             mpatches.Circle((0, 0), radius=7, color="b", label="total order indices"),
         ]
-        x = numpy.arange(n_dims)
+        x = np.arange(n_dims)
         y = S
         yerr = errS
         fig, ax = plt.subplots(figsize=figsize)
         ax.errorbar(x, y, yerr=yerr, fmt="s", color="r", ecolor="r")
         if Stot is not None and errStot is not None:
-            y2 = numpy.squeeze(Stot)
-            y2err = numpy.squeeze(errStot)
+            y2 = np.squeeze(Stot)
+            y2err = np.squeeze(errStot)
             ax.errorbar(x + 0.05, y2, yerr=y2err, fmt="o", color="b", ecolor="b")
         else:
             lgd_elems.pop()
@@ -103,7 +118,7 @@ def plotSobolIndicesWithErr(
                 )
                 graphList[i].set_title(varNames[i], fontsize=10)
                 dimOut = S.shape[1]
-                x = numpy.arange(dimOut)
+                x = np.arange(dimOut)
                 y = S[i, ...]
                 yerr = errS[i, ...]
                 graphList[i].errorbar(x, y, yerr, color="r", ecolor="b")
@@ -137,7 +152,7 @@ def plotSobolIndicesWithErr(
                 )
                 graphList[i].set_title(varNames[i], fontsize=10)
                 dimOut = S.shape[1]
-                x = numpy.arange(dimOut)
+                x = np.arange(dimOut)
                 y = S[i, ...]
                 yerr = errS[i, ...]
                 graphList[i].errorbar(x, y, yerr, color="r", ecolor="b")
@@ -200,32 +215,45 @@ def plotSobolIndicesWithErr(
     plt.style.use("default")
 
 
-def heatmap(data, row_labels, col_labels, ax=None, cbar_kw={}, cbarlabel="", **kwargs):
-    """Create a heatmap from a 2D numpy array and two lists of axis labels.
+def heatmap(
+    data: np.ndarray,
+    row_labels: list[str],
+    col_labels: list[str],
+    ax: Optional[Any] = None,
+    cbar_kw: dict[str, Any] = {},
+    cbarlabel: str = "",
+    **kwargs: Any,
+) -> tuple[Any, Any]:
+    """Create a heatmap from a 2D array and axis labels.
 
     Parameters
     ----------
-    data : numpy.ndarray
-        A 2D numpy array of shape (N, M) containing the matrix values to plot.
-    row_labels : list or array-like of str
+    data : np.ndarray
+        A 2D numpy array of shape (N, M) containing the matrix
+        values to plot.
+    row_labels : list of str
         A list or array of length N containing labels for the rows.
-    col_labels : list or array-like of str
+    col_labels : list of str
         A list or array of length M containing labels for the columns.
     ax : matplotlib.axes.Axes, optional
-        An existing axes instance to draw the heatmap onto. If None, the current
-        active axes (`plt.gca()`) will be used or generated. Default is None.
+        An existing axes instance to draw the heatmap onto. If None,
+        the current active axes is used. Default is None.
     cbar_kw : dict, optional
-        A dictionary containing keyword arguments forwarded directly to
-        `matplotlib.figure.Figure.colorbar`. Default is None.
+        A dictionary containing keyword arguments forwarded directly
+        to ``matplotlib.figure.Figure.colorbar``. Default is an empty
+        dictionary.
     cbarlabel : str, optional
-        The text label assigned to the colorbar's y-axis. Default is "".
+        The text label assigned to the colorbar's y-axis. Default
+        is "".
     **kwargs : dict
-        All other keyword arguments are forwarded directly to `ax.imshow`.
+        All other keyword arguments are forwarded directly to
+        ``ax.imshow``.
 
     Returns
     -------
     im : matplotlib.image.AxesImage
-        The generated image plot mapping data values to the colormap.
+        The generated image plot mapping data values to the
+        colormap.
     cbar : matplotlib.colorbar.Colorbar
         The colorbar instance tied to the image plotting axes.
     """
@@ -234,63 +262,66 @@ def heatmap(data, row_labels, col_labels, ax=None, cbar_kw={}, cbarlabel="", **k
     im = ax.imshow(data, **kwargs)
     cbar = ax.figure.colorbar(im, ax=ax, **cbar_kw)
     cbar.ax.set_ylabel(cbarlabel, rotation=-90, va="bottom")
-    ax.set_xticks(numpy.arange(data.shape[1]))
-    ax.set_yticks(numpy.arange(data.shape[0]))
+    ax.set_xticks(np.arange(data.shape[1]))
+    ax.set_yticks(np.arange(data.shape[0]))
     ax.set_xticklabels(col_labels)
     ax.set_yticklabels(row_labels)
     ax.tick_params(top=True, bottom=False, labeltop=True, labelbottom=False)
     plt.setp(ax.get_xticklabels(), rotation=-30, ha="right", rotation_mode="anchor")
     ax.spines[:].set_visible(False)
-    ax.set_xticks(numpy.arange(data.shape[1] + 1) - 0.5, minor=True)
-    ax.set_yticks(numpy.arange(data.shape[0] + 1) - 0.5, minor=True)
+    ax.set_xticks(np.arange(data.shape[1] + 1) - 0.5, minor=True)
+    ax.set_yticks(np.arange(data.shape[0] + 1) - 0.5, minor=True)
     ax.grid(which="minor", color="w", linestyle="-", linewidth=3)
     ax.tick_params(which="minor", bottom=False, left=False)
     return (im, cbar)
 
 
 def annotate_heatmap(
-    im,
-    data=None,
-    valfmt="{x:.3f}",
-    textcolors=("black", "white"),
-    threshold=None,
-    **textkw,
-):
-    """Annotate a text layer over a pre-existing matplotlib heatmap image.
+    im: Any,
+    data: Optional[Union[list, np.ndarray]] = None,
+    valfmt: Union[str, Any] = "{x:.3f}",
+    textcolors: tuple[str, str] = ("black", "white"),
+    threshold: Optional[float] = None,
+    **textkw: Any,
+) -> list[Any]:
+    """Annotate a text layer over a pre-existing heatmap image.
 
-    Loops through the individual cells of a heatmap grid and renders an explicit text
-    string displaying the cell's underlying value, adjusting text contrast color dynamically
-    based on a defined threshold map.
+    Loop through the individual cells of a heatmap grid and render a
+    text string displaying the cell's underlying value, adjusting
+    the text color dynamically based on a defined threshold.
 
     Parameters
     ----------
-    im : matplotlib.image.AxesImage
+    im : Any
         The active heatmap image axes instance to be annotated.
-    data : list or numpy.ndarray, optional
-        The numerical data used to populate the text labels. If None, the function
-        extracts data directly from `im.get_array()`. Default is None.
-    valfmt : str or matplotlib.ticker.Formatter, optional
-        The formatting blueprint used for the text overlays. Accepts a standard
-        string format scheme (e.g., "${x:.2f}") or an instance of a Matplotlib Formatter.
-        Default is "{x:.3f}".
+    data : list or np.ndarray, optional
+        The numerical data used to populate the text labels. If
+        `data` is None, the function extracts data directly using
+        ``im.get_array()``. Default is None.
+    valfmt : str or Any, optional
+        The formatting blueprint used for the text overlays. Accepts
+        a standard string format scheme or a Matplotlib Formatter
+        instance. Default is ``"{x:.3f}"``.
     textcolors : tuple of str, optional
-        A structural pair of color definitions. The first index string specifies
-        the color used for values sitting below the threshold; the second index
-        handles values sitting above. Default is ("black", "white").
+        A pair of color definitions. The first string specifies the
+        color for values below `threshold`; the second handles
+        values above. Default is ``("black", "white")``.
     threshold : float, optional
-        The value limit in raw data units determining when text contrast colors switch.
-        If None, the separation boundary defaults precisely to the center of the
+        The value limit in raw data units determining when text
+        contrast colors switch. If `threshold` is None, the
+        separation boundary defaults to the center of the
         colormap's range. Default is None.
-    **textkw : dict
-        All other keyword arguments are forwarded directly into each individual
-        `ax.text` rendering invocation.
+    **textkw : Any
+        All other keyword arguments are forwarded directly into each
+        individual ``ax.text`` rendering invocation.
 
     Returns
     -------
     list of matplotlib.text.Text
-        A list containing all text label instances rendered into the heatmap grid.
+        A list containing all text label instances rendered into the
+        heatmap grid.
     """
-    if not isinstance(data, (list, numpy.ndarray)):
+    if not isinstance(data, (list, np.ndarray)):
         data = im.get_array()
     if threshold is not None:
         threshold = im.norm(threshold)

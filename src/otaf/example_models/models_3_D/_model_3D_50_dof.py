@@ -1,9 +1,21 @@
 from __future__ import annotations
 
+__author__ = "Kramer84"
+__all__ = [
+    "get_system_of_constraints_assembly_model"
+    "get_distribution_params",
+    "eval_credal_set_constraints",
+    "eval_scaled_credal_set_constraints",
+    "get_scaled_credal_set_constraints_function",
+    "dim",
+    "sample_multiplier",
+    "no_tol", 
+    ]
+
 import copy
 import re
 from enum import Enum
-from typing import Sequence
+from typing import Sequence, Any, Callable, Iterable
 
 import numpy as np
 import sympy as sp
@@ -24,27 +36,91 @@ _PREFIX_MAP: dict[str, str] = {
 
 
 class LinearizationStrategy(Enum):
+    """Linearization strategy choices for circular features."""
     INSCRIBED = "inscribed"
     MEAN = "mean"
     CIRCUMSCRIBED = "circumscribed"
 
 
 class SmallDispTorsor:
-    def __init__(self, name, omega, v, point, point_name):
+    """Small displacement torsor representation.
+
+    Parameters
+    ----------
+    name : str
+        Name of the torsor.
+    omega : array_like
+        Rotational vector component (angular displacement).
+    v : array_like
+        Translational vector component (linear displacement).
+    point : Any
+        The geometric point where the torsor is expressed. Must
+        support subtraction, equality checks, and cross products.
+    point_name : str
+        Name of the geometric point.
+
+    Attributes
+    ----------
+    name : str
+        Name of the torsor.
+    omega : array_like
+        Rotational vector component.
+    v : array_like
+        Translational vector component.
+    point : Any
+        The geometric point where the torsor is expressed.
+    point_name : str
+        Name of the geometric point.
+    """
+    
+    def __init__(
+        self, name: str, omega: Any, v: Any, point: Any, point_name: str
+    ) -> None:
         self.name = name
         self.omega = omega
         self.v = v
         self.point = point
         self.point_name = point_name
 
-    def move_to(self, target_point, target_name):
+    def move_to(self, target_point: Any, target_name: str) -> SmallDispTorsor:
+        """Transport the torsor to a new geometric point.
+
+        Parameters
+        ----------
+        target_point : Any
+            The new geometric point destination.
+        target_name : str
+            The name of the destination point.
+
+        Returns
+        -------
+        SmallDispTorsor
+            The transported small displacement torsor.
+        """
         target_to_current = self.point - target_point
         v_new = self.v + target_to_current.cross(self.omega)
         return SmallDispTorsor(
             f"{self.name}_{target_name}", self.omega, v_new, target_point, target_name
         )
 
-    def __add__(self, other):
+    def __add__(self, other: SmallDispTorsor) -> SmallDispTorsor:
+        """Add two torsors expressed at the same geometric point.
+
+        Parameters
+        ----------
+        other : SmallDispTorsor
+            The other torsor to add.
+
+        Returns
+        -------
+        SmallDispTorsor
+            The combined torsor sum.
+
+        Raises
+        ------
+        ValueError
+            If the torsors are expressed at different points.
+        """
         if not self.point.equals(other.point):
             raise ValueError(
                 f"Cannot add torsors at different points: '{self.point_name}' vs '{other.point_name}'. Use .move_to() first."
@@ -57,27 +133,88 @@ class SmallDispTorsor:
             self.point_name,
         )
 
-    def __neg__(self):
+    def __neg__(self) -> SmallDispTorsor:
+        """Negate the torsor components.
+
+        Returns
+        -------
+        SmallDispTorsor
+            The negated torsor.
+        """
         return SmallDispTorsor(
             f"(-{self.name})", -self.omega, -self.v, self.point, self.point_name
         )
 
-    def __sub__(self, other):
+    def __sub__(self, other: SmallDispTorsor) -> SmallDispTorsor:
+        """Subtract another torsor from this torsor.
+
+        Parameters
+        ----------
+        other : SmallDispTorsor
+            The torsor to subtract.
+
+        Returns
+        -------
+        SmallDispTorsor
+            The difference torsor.
+        """
         return self + -other
 
 
 class CylindricalInterfaceConstraint:
+    """Cylindrical interface joint constraint evaluator.
+
+    Parameters
+    ----------
+    name : str
+        Name of the interface constraint.
+    gap_torsor : SmallDispTorsor
+        The gap torsor associated with the interface.
+    d_hole : float or sympy.Symbol
+        The diameter of the internal hole feature.
+    d_pin : float or sympy.Symbol
+        The diameter of the mating pin feature.
+    length : float or sympy.Symbol
+        The axial mating length of the cylindrical joint.
+    Nd : int, default 8
+        The number of discretization facets for linearization.
+    strategy : LinearizationStrategy, optional
+        The linearization strategy applied to circular bounds.
+        Default is ``LinearizationStrategy.CIRCUMSCRIBED``.
+    z_eval_points : list of float or list of sympy.Symbol, optional
+        Axial locations along the Z-axis to evaluate constraints.
+        If None, evaluates at the two extreme boundaries.
+
+    Attributes
+    ----------
+    name : str
+        Name of the interface constraint.
+    gap_torsor : SmallDispTorsor
+        The gap torsor associated with the interface.
+    d_hole : float or sympy.Symbol
+        The diameter of the internal hole feature.
+    d_pin : float or sympy.Symbol
+        The diameter of the mating pin feature.
+    length : float or sympy.Symbol
+        The axial mating length of the cylindrical joint.
+    Nd : int
+        The number of discretization facets for linearization.
+    strategy : LinearizationStrategy
+        The linearization strategy applied to circular bounds.
+    z_eval_points : list of float or list of sympy.Symbol
+        Axial locations along the Z-axis to evaluate constraints.
+    """
     def __init__(
         self,
-        name,
-        gap_torsor,
-        d_hole,
-        d_pin,
-        length,
-        Nd=8,
-        strategy=LinearizationStrategy.CIRCUMSCRIBED,
-        z_eval_points=None,
-    ):
+        name: str,
+        gap_torsor: SmallDispTorsor,
+        d_hole: float | sp.Symbol,
+        d_pin: float | sp.Symbol,
+        length: float | sp.Symbol,
+        Nd: int = 8,
+        strategy: LinearizationStrategy = LinearizationStrategy.CIRCUMSCRIBED,
+        z_eval_points: list[float] | list[sp.Symbol] | None = None,
+    ) -> None:
         self.name = name
         self.gap_torsor = gap_torsor
         self.d_hole = d_hole
@@ -91,7 +228,16 @@ class CylindricalInterfaceConstraint:
             else [-self.length / 2, self.length / 2]
         )
 
-    def generate_equations(self):
+    def generate_equations(self) -> list[dict[str, Any]]:
+        """Generate linearized clearance constraint equations.
+
+        Returns
+        -------
+        list of dict
+            A list of dictionaries representing individual constraint
+            facets, each containing keys ``'eval_point_index'``,
+            ``'z_offset'``, ``'facet_k'``, and ``'expression'``.
+        """
         constraints = []
         delta_R = (self.d_hole - self.d_pin) / 2
         theta1 = 2.0 * sp.pi / self.Nd
@@ -124,7 +270,27 @@ class CylindricalInterfaceConstraint:
         return constraints
 
 
-def create_dynamic_mapping(defect_vars: Sequence, clearance_vars: Sequence) -> dict:
+def create_dynamic_mapping(
+    defect_vars: Sequence[Any], clearance_vars: Sequence[Any]
+) -> dict[Any, sp.Symbol]:
+    """Create a standardized symbolic variable mapping dictionary.
+
+    Parses variable names matching regex patterns to rename and index
+    defect and clearance quantities uniformly.
+
+    Parameters
+    ----------
+    defect_vars : iterable object
+        A sequence of symbolic variable objects representing defects.
+    clearance_vars : iterable object
+        A sequence of symbolic variable objects representing clearances.
+
+    Returns
+    -------
+    dict
+        A mapping configuration dictionary translating original variables
+        to standardized `sympy.Symbol` instances.
+    """
     mapping: dict = {}
     defect_index: dict[str, int] = {}
     for var in defect_vars:
@@ -155,8 +321,40 @@ def create_dynamic_mapping(defect_vars: Sequence, clearance_vars: Sequence) -> d
 
 
 def extract_linear_matrices(
-    expressions, clearance_vars, defect_vars, length_vars=None, length_subs=None
-):
+    expressions: Sequence[Any],
+    clearance_vars: Sequence[Any],
+    defect_vars: Sequence[Any],
+    length_vars: Iterable[Any] | None = None,
+    length_subs: dict[Any, Any] | None = None,
+) -> tuple[sp.Matrix, sp.Matrix, sp.Matrix]:
+    """Extract linear constraint matrices from symbolic expressions.
+
+    Solves the given system of linear equations to form standard matrix
+    representations for clearance and defect parameters.
+
+    Parameters
+    ----------
+    expressions : iterable object
+        A sequence of linear symbolic constraint expressions.
+    clearance_vars : iterable object
+        A sequence of sympy symbols representing clearance variables.
+    defect_vars : iterable object
+        A sequence of sympy symbols representing defect variables.
+    length_vars : iterable object, optional
+        A sequence of dimensional parameters to substitute. Default is
+        None.
+    length_subs : dict, optional
+        A dictionary mapping dimensional symbols to numerical values.
+        Default is None.
+
+    Returns
+    -------
+    tuple of sympy.Matrix
+        A tuple containing three matrices: (A, B, C) corresponding
+        to the equality system :math:`\\mathtt{A} \\cdot
+        \\mathtt{clearances} + \\mathtt{B} \\cdot \\mathtt{defects} +
+        \\mathtt{C} = 0`.
+    """
     if length_vars and length_subs:
         valid_subs = {k: v for k, v in length_subs.items() if k in length_vars}
         expressions = [expr.subs(valid_subs) for expr in expressions]
@@ -337,7 +535,7 @@ G_6g_2g = SmallDispTorsor(
     C_prime_3,
     "C'_3",
 )
-defect_vars = [
+defect_vars_glob = [
     a1b1,
     b1b1,
     w1b1,
@@ -389,7 +587,7 @@ defect_vars = [
     d5f,
     d6g,
 ]
-clearance_vars = [
+clearance_vars_glob = [
     u1b2b,
     v1b2b,
     g1b2b,
@@ -436,7 +634,21 @@ clearance_vars = [
 ]
 
 
-def get_kinematic_loop_expressions():
+def get_kinematic_loop_expressions() -> (
+    tuple[list[sp.Expr], list[sp.Symbol], list[sp.Symbol]]
+):
+    """Generate symbolic equations for kinematic loops.
+
+    Returns
+    -------
+    expressions : list of sympy.Expr
+        The expanded symbolic equations tracking rotational and
+        translational loop defects.
+    defect_vars : list of sympy.Symbol
+        The list of symbolic defect tracking variables.
+    clearance_vars : list of sympy.Symbol
+        The list of symbolic clearance tracking variables.
+    """
     T_common = T_1b_1 - G_1b_2b - T_2b_2
     L1 = (
         T_common
@@ -473,12 +685,32 @@ def get_kinematic_loop_expressions():
             expressions.append(sp.expand(loop.omega[i]))
         for i in range(3):
             expressions.append(sp.expand(loop.v[i]))
-    return (expressions, defect_vars, clearance_vars)
+    return (expressions, defect_vars_glob, clearance_vars_glob)
 
 
 def get_interface_constraint_expressions(
-    num_points=16, strategy=LinearizationStrategy.CIRCUMSCRIBED, z_eval_points=None
-):
+    num_points: int = 16,
+    strategy: LinearizationStrategy = LinearizationStrategy.CIRCUMSCRIBED,
+    z_eval_points: list[float] | list[sp.Symbol] | None = None,
+) -> list[sp.Expr]:
+    """Generate cylindrical interface constraint equations.
+
+    Parameters
+    ----------
+    num_points : int, default 16
+        The number of discretization facets for linearization.
+    strategy : LinearizationStrategy, optional
+        The linearization strategy applied to circular bounds.
+        Default is ``LinearizationStrategy.CIRCUMSCRIBED``.
+    z_eval_points : list of float or list of sympy.Symbol, optional
+        Axial locations along the Z-axis to evaluate constraints.
+        If None, evaluates at the two extreme boundaries.
+
+    Returns
+    -------
+    list of sympy.Expr
+        The collected symbolic interface constraint expressions.
+    """
     interfaces = [
         CylindricalInterfaceConstraint(
             "1d/3d",
@@ -569,11 +801,34 @@ def get_interface_constraint_expressions(
     return expressions
 
 
-def rename_variables(expressions, mapping_dict):
+def rename_variables(
+    expressions: list[sp.Expr], mapping_dict: dict[Any, Any]
+) -> list[sp.Expr]:
+    """Substitute variables in symbolic expressions using a mapping.
+
+    Parameters
+    ----------
+    expressions : list of sympy.Expr
+        The input symbolic expressions to modify.
+    mapping_dict : dict
+        A lookup mapping old symbols to their replacement symbols.
+
+    Returns
+    -------
+    list of sympy.Expr
+        The modified expressions with updated variable symbols.
+    """
     return [expr.subs(mapping_dict) for expr in expressions]
 
 
-def print_kinematic_loops(expressions):
+def print_kinematic_loops(expressions: list[sp.Expr]) -> None:
+    """Print formatted kinematic loop equations to stdout.
+
+    Parameters
+    ----------
+    expressions : list of sympy.Expr
+        The symbolic loop expressions to display.
+    """
     axis_names = [
         "Rotation x",
         "Rotation y",
@@ -590,17 +845,48 @@ def print_kinematic_loops(expressions):
         print(f"Eq {eq_num} [{axis_names[eq_num - 1]}]:\n{expr} = 0")
 
 
-def print_interface_constraints(expressions):
+def print_interface_constraints(expressions: list[sp.Expr]) -> None:
+    """Print formatted interface constraints to stdout.
+
+    Parameters
+    ----------
+    expressions : list of sympy.Expr
+        The symbolic interface expressions to display.
+    """
     print("\n=== Interface Constraints (Eq <= 0) ===")
     for idx, expr in enumerate(expressions):
         print(f"Constraint {idx + 1}:\n{expr} <= 0")
 
 
-def getSystemOfConstraintsAssemblyModel(
-    L=[50, 50, 30, 30],
-    CIRCLE_RESOLUTION=64,
-    strategy=LinearizationStrategy.CIRCUMSCRIBED,
-):
+def get_system_of_constraints_assembly_model(
+    L: np.ndarray | list[float] = [50, 50, 30, 30],
+    CIRCLE_RESOLUTION: int = 64,
+    strategy: LinearizationStrategy = LinearizationStrategy.CIRCUMSCRIBED,
+) -> otaf.SystemOfConstraintsAssemblyModel:
+    """Construct the system of constraints assembly model.
+
+    Parameters
+    ----------
+    L : array_like, optional
+        An array containing geometric parameters l0, l1, l2, l3.
+        The default is [50, 50, 30, 30].
+    CIRCLE_RESOLUTION : int, default 64
+        The number of discretization points for linearization.
+    strategy : LinearizationStrategy, optional
+        The linearization strategy applied to circular constraints.
+        Default is ``LinearizationStrategy.CIRCUMSCRIBED``.
+
+    Returns
+    -------
+    otaf.SystemOfConstraintsAssemblyModel
+        The initialized assembly model with embedded optimization
+        variables.
+
+    Raises
+    ------
+    AssertionError
+        If `L` does not contain exactly 4 elements.
+    """
     assert len(L) == 4, (
         "Length list L must contain exactly 4 elements corresponding to l0, l1, l2, l3."
     )
@@ -612,13 +898,13 @@ def getSystemOfConstraintsAssemblyModel(
         strategy=strategy,
         z_eval_points=[-L[2] / 2, L[2] / 2],
     )
-    otaf_mapping = create_dynamic_mapping(defect_vars, clearance_vars)
+    otaf_mapping = create_dynamic_mapping(defect_vars_glob, clearance_vars_glob)
     mapped_loop_exprs = rename_variables(loop_exprs, otaf_mapping)
     mapped_interf_exprs = rename_variables(interf_exprs, otaf_mapping)
     mapped_clearances = [
-        otaf_mapping[var] for var in clearance_vars if var in otaf_mapping
+        otaf_mapping[var] for var in clearance_vars_glob if var in otaf_mapping
     ]
-    mapped_defects = [otaf_mapping[var] for var in defect_vars if var in otaf_mapping]
+    mapped_defects = [otaf_mapping[var] for var in defect_vars_glob if var in otaf_mapping]
     comp_mats = extract_linear_matrices(
         mapped_loop_exprs,
         mapped_clearances,
@@ -647,17 +933,53 @@ def getSystemOfConstraintsAssemblyModel(
     return SOCAM
 
 
-def getDistributionParams(
-    tol=0.21, capa=1.0, hPlate=30.0, EH=50.0, LB=25.0, Dext=20.0, Dint=19.8
-):
+def get_distribution_params(
+    tol: float = 0.21,
+    capa: float = 1.0,
+    hPlate: float = 30.0,
+    EH: float = 50.0,
+    LB: float = 25.0,
+    Dext: float = 20.0,
+    Dint: float = 19.8,
+) -> tuple[Any, list[sp.Symbol], np.ndarray, np.ndarray]:
+    """Compute defect distribution parameters and variance vectors.
+
+    Parameters
+    ----------
+    tol : float, default 0.21
+        Tolerance limit value used to compute standard deviations.
+    capa : float, default 1.0
+        Process capability index factor.
+    hPlate : float, default 30.0
+        The height parameter of the plate component.
+    EH : float, default 50.0
+        The embedment height component.
+    LB : float, default 25.0
+        The length parameter of the base section.
+    Dext : float, default 20.0
+        The nominal external component diameter.
+    Dint : float, default 19.8
+        The nominal internal component diameter.
+
+    Returns
+    -------
+    RandDeviationVect : otaf.distribution.ComposedDistribution
+        The joint normal defect distribution model.
+    mapped_defects : list of sympy.Symbol
+        The descriptive tracking labels for standard deviations.
+    std_vect : np.ndarray
+        A 1D array of calculated maximum standard deviations.
+    mu_vect : np.ndarray
+        A 1D array of calculated mean parameter offsets.
+    """
     sigma_e_pos = tol / (6 * capa)
     theta_max = tol / hPlate
     sigma_e_theta = 2 * theta_max / (6 * capa)
     sigma_e_pos_plate = tol / (6 * capa)
     sigma_e_theta_plate = 2 * (tol / (EH + LB)) / (6 * capa)
     sigma_diam = sigma_e_pos
-    otaf_mapping = create_dynamic_mapping(defect_vars, clearance_vars)
-    mapped_defects = [otaf_mapping[var] for var in defect_vars if var in otaf_mapping]
+    otaf_mapping = create_dynamic_mapping(defect_vars_glob, clearance_vars_glob)
+    mapped_defects = [otaf_mapping[var] for var in defect_vars_glob if var in otaf_mapping]
     mu_vect = np.array([0.0] * 38 + [Dext] * 8 + [Dint] * 4)
     std_vect = np.array(
         [sigma_e_theta_plate, sigma_e_theta_plate, sigma_e_pos_plate] * 2
@@ -675,7 +997,30 @@ sample_multiplier = np.eye(dim)
 no_tol = False
 
 
-def evalCredalSetConstraints(x_std, tol=0.21, capa=1.0, hPlate=30.0):
+def eval_credal_set_constraints(
+    x_std: np.ndarray,
+    tol: float = 0.21,
+    capa: float = 1.0,
+    hPlate: float = 30.0,
+) -> np.ndarray:
+    """Evaluate the normalized credal set boundary conditions.
+
+    Parameters
+    ----------
+    x_std : np.ndarray
+        A 1D array containing standard deviation vector values.
+    tol : float, default 0.21
+        The baseline design tolerance.
+    capa : float, default 1.0
+        The process capability standard multiplier.
+    hPlate : float, default 30.0
+        The height parameter of the plate component.
+
+    Returns
+    -------
+    np.ndarray
+        An array containing the evaluated constraint metrics.
+    """
     target = tol / (6 * capa)
     cons0 = lambda x: (sigma_delta_3D_plane(50, 50, x[2], x[0], x[1]) - target) / target
     cons1 = lambda x: (sigma_delta_3D_plane(50, 50, x[5], x[3], x[4]) - target) / target
@@ -815,17 +1160,41 @@ def evalCredalSetConstraints(x_std, tol=0.21, capa=1.0, hPlate=30.0):
     )
 
 
-def evalScaledCredalSetConstraints(
-    x_scaled,
-    max_std_vect,
-    tracker=None,
-    experiment_key=None,
-    tol=0.21,
-    capa=1.0,
-    hPlate=30.0,
-):
+def eval_scaled_credal_set_constraints(
+    x_scaled: np.ndarray,
+    max_std_vect: np.ndarray,
+    tracker: Any | None = None,
+    experiment_key: Any | None = None,
+    tol: float = 0.21,
+    capa: float = 1.0,
+    hPlate: float = 30.0,
+) -> np.ndarray:
+    """Map scaled deviations to real values and evaluate constraints.
+
+    Parameters
+    ----------
+    x_scaled : np.ndarray
+        The scaled standard deviation vector inputs.
+    max_std_vect : np.ndarray
+        The upper-bound limits for standard deviation mapping.
+    tracker : Any, optional
+        Data logging tracker instance. Default is None.
+    experiment_key : Any, optional
+        Unique identifier key for tracking logs. Default is None.
+    tol : float, default 0.21
+        The baseline design tolerance.
+    capa : float, default 1.0
+        The process capability standard multiplier.
+    hPlate : float, default 30.0
+        The height parameter of the plate component.
+
+    Returns
+    -------
+    np.ndarray
+        The calculated constraint evaluation bounds array.
+    """
     x_real = x_scaled * max_std_vect
-    constraint_array = evalCredalSetConstraints(
+    constraint_array = eval_credal_set_constraints(
         x_real, tol=tol, capa=capa, hPlate=hPlate
     )
     if tracker:
@@ -835,10 +1204,38 @@ def evalScaledCredalSetConstraints(
     return constraint_array
 
 
-def getScaledCredalSetConstraintsFunction(
-    max_std_vect, tracker=None, experiment_key=None, tol=0.21, capa=1.0, hPlate=30.0
-):
-    return lambda x_scaled: evalScaledCredalSetConstraints(
+def get_scaled_credal_set_constraints_function(
+    max_std_vect: np.ndarray,
+    tracker: Any | None = None,
+    experiment_key: Any | None = None,
+    tol: float = 0.21,
+    capa: float = 1.0,
+    hPlate: float = 30.0,
+) -> Callable[[np.ndarray], np.ndarray]:
+    """Generate a wrapped lambda function for scaled constraints.
+
+    Parameters
+    ----------
+    max_std_vect : np.ndarray
+        The upper-bound limits for standard deviation mapping.
+    tracker : Any, optional
+        Data logging tracker instance. Default is None.
+    experiment_key : Any, optional
+        Unique identifier key for tracking logs. Default is None.
+    tol : float, default 0.21
+        The baseline design tolerance.
+    capa : float, default 1.0
+        The process capability standard multiplier.
+    hPlate : float, default 30.0
+        The height parameter of the plate component.
+
+    Returns
+    -------
+    Callable[[np.ndarray], np.ndarray]
+        A single-argument function mapping `x_scaled` to its
+        evaluated constraint array.
+    """
+    return lambda x_scaled: eval_scaled_credal_set_constraints(
         x_scaled,
         max_std_vect,
         tracker,

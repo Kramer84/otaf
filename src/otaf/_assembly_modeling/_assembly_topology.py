@@ -10,48 +10,58 @@ from beartype.typing import Any, Dict, Tuple
 
 def calculate_graph_layout(
     data: Dict[str, Any],
-    R_part: float = 15,
-    r_feat: float = 2,
+    R_part: float = 15.0,
+    r_feat: float = 2.0,
     d_feat: float = 1.5,
     margin: float = 1.5,
-    part_spacing: float = 45,
+    part_spacing: float = 45.0,
     seed: int = 42,
 ) -> Tuple[Dict[Any, np.ndarray], Dict[str, Tuple[float, float]]]:
-    """
-    Compute a hierarchical macro/micro graph layout and untangle crossing interaction edges.
+    """Compute a hierarchical macro/micro graph layout.
 
-    Positions high-level components (parts) using a force-directed layout, initializes
-    sub-features along a radial arc centered on their parent part, and iteratively
-    reorders the features by orientation to minimize edge crossings.
+    Positions high-level components (parts) using a force-directed
+    layout, initializes sub-features along a radial arc centered on
+    their parent part, and iteratively reorders the features by
+    orientation to minimize edge crossings.
 
     Parameters
     ----------
     data : Dict[str, Any]
-        A structured dictionary containing part entities, features, and their topological interactions.
-    R_part : float, default=15
-        The outer boundary radius of the parent part node.
-    r_feat : float, default=2
-        The bounding radius allocated for individual child feature nodes.
-    d_feat : float, default=1.5
-        The minimum spacing clearance distance between adjacent features on the arc.
-    margin : float, default=1.5
-        The offset padding gap subtracted from the part radius to establish the feature arc.
-    part_spacing : float, default=45
-        The scale and expansion modifier configuring the distance between part centers.
-    seed : int, default=42
-        The seed integer initializing the spring layout random number generator.
+        A structured dictionary containing part entities, features,
+        and their topological interactions.
+    R_part : float, optional
+        The outer boundary radius of the parent part node
+        (the default is 15.0).
+    r_feat : float, optional
+        The bounding radius allocated for individual child feature
+        nodes (the default is 2.0).
+    d_feat : float, optional
+        The minimum spacing clearance distance between adjacent
+        features on the arc (the default is 1.5).
+    margin : float, optional
+        The offset padding gap subtracted from the `R_part` to
+        establish the feature arc (the default is 1.5).
+    part_spacing : float, optional
+        The scale and expansion modifier configuring the distance
+        between part centers (the default is 45.0).
+    seed : int, optional
+        The seed integer initializing the spring layout random
+        number generator (the default is 42).
 
     Returns
     -------
     part_positions : Dict[Any, np.ndarray]
-        A mapping from part identifiers to their calculated (X, Y) layout positions.
+        A mapping from part identifiers to their calculated (X, Y)
+        layout positions.
     feature_positions : Dict[str, Tuple[float, float]]
-        A mapping from unique feature identifiers to their optimized (X, Y) coordinates.
+        A mapping from unique feature identifiers to their optimized
+        (X, Y) coordinates.
 
     Raises
     ------
     ImportError
-        If the networkx graph processing library is not accessible in the current environment.
+        If the ``networkx`` graph processing library is not accessible
+        in the current environment.
     """
     try:
         import networkx as nx

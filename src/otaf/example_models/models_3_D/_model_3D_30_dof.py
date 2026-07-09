@@ -1,7 +1,19 @@
 from __future__ import annotations
 
+__author__ = "Kramer84"
+__all__ = [
+    "get_system_of_constraints_assembly_model",
+    "get_distribution_params",
+    "eval_credal_set_constraints",
+    "eval_scaled_credal_set_constraints",
+    "get_scaled_credal_set_constraints_function"
+    "dim",
+    "sample_multiplier",
+    "no_tol", 
+    ]
+
 from enum import Enum
-from typing import Tuple
+from typing import Tuple, Callable, Any
 
 import numpy as np
 import sympy as sp
@@ -19,16 +31,40 @@ class LinearizationStrategy(Enum):
 MatrixBundle = Tuple[
     np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray
 ]
-NX = 30
-NG = 17
-NC = 14
+NX = 30 # Number of defect variables
+NG = 17 # Number of clearance variables
+NC = 14 # Number of compatibility equations
 
 
 def build_constraint_matrices(
-    L: np.ndarray,
+    L: np.ndarray | list[float],
     Nd: int = 32,
     strategy: LinearizationStrategy = LinearizationStrategy.CIRCUMSCRIBED,
 ) -> MatrixBundle:
+    """Build the equality and inequality constraint matrices.
+
+    Parameters
+    ----------
+    L : array_like
+        An 11-element array containing geometric length parameters.
+    Nd : int, default 32
+        The number of discretization points used for circular features.
+        Must be greater than or equal to 3.
+    strategy : LinearizationStrategy, optional
+        The linearization strategy applied to the circular constraints.
+        Default is ``LinearizationStrategy.CIRCUMSCRIBED``.
+
+    Returns
+    -------
+    MatrixBundle
+        A tuple of six NumPy arrays: (A_eq_Def, A_eq_Gap, K_eq,
+        A_ub_Def, A_ub_Gap, K_ub).
+
+    Raises
+    ------
+    ValueError
+        If `L` does not have shape (11,) or if `Nd` is less than 3.
+    """
     L = np.asarray(L, dtype=float)
     if L.shape != (11,):
         raise ValueError(f"L must have shape (11,), got {L.shape}")
@@ -232,8 +268,33 @@ x_mp_labels = [
 
 
 def get_mp_to_xfull_transformation_matrix(
-    L=[100, 40, 30, 30, 20, 20, 120, 50, 40, 50, -30],
-):
+    L: np.ndarray | list[float] = [
+        100,
+        40,
+        30,
+        30,
+        20,
+        20,
+        120,
+        50,
+        40,
+        50,
+        -30,
+    ],
+) -> np.ndarray:
+    """Compute the transformation matrix from MP to full defect space.
+
+    Parameters
+    ----------
+    L : array_like, optional
+        Geometric dimensions and parameters of the assembly.
+        The default is [100, 40, 30, 30, 20, 20, 120, 50, 40, 50, -30].
+
+    Returns
+    -------
+    np.ndarray
+        A 30x30 transformation matrix.
+    """
     T = np.zeros((30, 30))
     D = L[0] * L[10] - L[1] * L[9]
     T[0, 0] = 1.0
@@ -279,11 +340,42 @@ def get_mp_to_xfull_transformation_matrix(
     return T
 
 
-def getSystemOfConstraintsAssemblyModel(
-    L=[100, 40, 30, 30, 20, 20, 120, 50, 40, 50, -30],
-    Nd=64,
-    strategy=LinearizationStrategy.CIRCUMSCRIBED,
-):
+def get_system_of_constraints_assembly_model(
+    L: np.ndarray | list[float] = [
+        100,
+        40,
+        30,
+        30,
+        20,
+        20,
+        120,
+        50,
+        40,
+        50,
+        -30,
+    ],
+    Nd: int = 64,
+    strategy: LinearizationStrategy = LinearizationStrategy.CIRCUMSCRIBED,
+) -> otaf.SystemOfConstraintsAssemblyModel:
+    """Construct the system of constraints assembly model.
+
+    Parameters
+    ----------
+    L : array_like, optional
+        Geometric dimensions and parameters of the assembly.
+        The default is [100, 40, 30, 30, 20, 20, 120, 50, 40, 50, -30].
+    Nd : int, default 64
+        The number of discretization points for linearization.
+    strategy : LinearizationStrategy, optional
+        The linearization strategy applied to circular constraints.
+        Default is ``LinearizationStrategy.CIRCUMSCRIBED``.
+
+    Returns
+    -------
+    otaf.SystemOfConstraintsAssemblyModel
+        The initialized assembly model with embedded optimization
+        variables.
+    """
     mats = build_constraint_matrices(L, Nd, strategy)
     SOCAM = otaf.SystemOfConstraintsAssemblyModel(matrices=list(mats))
     d_labels = [sp.Symbol(x_full_labels_mapping[lab]) for lab in x_full_labels]
@@ -294,7 +386,32 @@ def getSystemOfConstraintsAssemblyModel(
     return SOCAM
 
 
-def getDistributionParams(tol=None, capa=None, param_set=1):
+def get_distribution_params(
+    tol: float | None = None, capa: float | None = None, param_set: int = 1
+) -> tuple[Any, list[str], np.ndarray, np.ndarray]:
+    """Compute defect distribution parameters based on the parameter set.
+
+    Parameters
+    ----------
+    tol : float, optional
+        Tolerance parameter (unused in this configuration).
+    capa : float, optional
+        Process capability index (unused in this configuration).
+    param_set : int, default 1
+        The parameter set choice determining mean and variance shifts.
+        Options are 1, 2, or 3.
+
+    Returns
+    -------
+    RandDeviationVect : otaf.distribution.ComposedDistribution
+        The joint normal defect distribution model.
+    list of str
+        The descriptive tracking labels for mid-point variables.
+    sigma_arr : np.ndarray
+        A 1D array of calculated standard deviations.
+    mu_arr : np.ndarray
+        A 1D array of calculated mean parameter offsets.
+    """
     if param_set == 1:
         mu_d_ext, sigma_d_ext = (20.0, 0.06)
         mu_d_int, sigma_d_int = (19.8, 0.06)
@@ -326,7 +443,30 @@ sample_multiplier = get_mp_to_xfull_transformation_matrix()
 no_tol = True
 
 
-def evalCredalSetConstraints(x_std, tol=None, capa=None, param_set=1):
+def eval_credal_set_constraints(
+    x_std: np.ndarray,
+    tol: float | None = None,
+    capa: float | None = None,
+    param_set: int = 1,
+) -> np.ndarray:
+    """Evaluate the normalized credal set boundary conditions.
+
+    Parameters
+    ----------
+    x_std : np.ndarray
+        A 1D array containing standard deviation vector values.
+    tol : float, optional
+        Tolerance parameter (unused in this configuration).
+    capa : float, optional
+        Process capability index (unused in this configuration).
+    param_set : int, default 1
+        The active parameter configuration variant index.
+
+    Returns
+    -------
+    np.ndarray
+        An array containing the evaluated constraint metrics.
+    """
     if param_set == 1:
         mu_d_ext, sigma_d_ext = (20.0, 0.06)
         mu_d_int, sigma_d_int = (19.8, 0.06)
@@ -381,17 +521,41 @@ def evalCredalSetConstraints(x_std, tol=None, capa=None, param_set=1):
     )
 
 
-def evalScaledCredalSetConstraints(
-    x_scaled,
-    max_std_vect,
-    tracker=None,
-    experiment_key=None,
-    tol=None,
-    capa=None,
-    param_set=1,
-):
+def eval_scaled_credal_set_constraints(
+    x_scaled: np.ndarray,
+    max_std_vect: np.ndarray,
+    tracker: Any | None = None,
+    experiment_key: Any | None = None,
+    tol: float | None = None,
+    capa: float | None = None,
+    param_set: int = 1,
+) -> np.ndarray:
+    """Map scaled deviations to real values and evaluate constraints.
+
+    Parameters
+    ----------
+    x_scaled : np.ndarray
+        The scaled standard deviation vector inputs.
+    max_std_vect : np.ndarray
+        The upper-bound limits for standard deviation mapping.
+    tracker : Any, optional
+        Data logging tracker instance. Default is None.
+    experiment_key : Any, optional
+        Unique identifier key for tracking logs. Default is None.
+    tol : float, optional
+        Tolerance parameter (unused in this configuration).
+    capa : float, optional
+        Process capability index (unused in this configuration).
+    param_set : int, default 1
+        The active parameter configuration variant index.
+
+    Returns
+    -------
+    np.ndarray
+        The calculated constraint evaluation bounds array.
+    """
     x_real = x_scaled * max_std_vect
-    constraint_array = evalCredalSetConstraints(
+    constraint_array = eval_credal_set_constraints(
         x_real, tol=tol, capa=capa, param_set=param_set
     )
     if tracker:
@@ -401,10 +565,38 @@ def evalScaledCredalSetConstraints(
     return constraint_array
 
 
-def getScaledCredalSetConstraintsFunction(
-    max_std_vect, tracker=None, experiment_key=None, tol=None, capa=None, param_set=1
-):
-    return lambda x_scaled: evalScaledCredalSetConstraints(
+def get_scaled_credal_set_constraints_function(
+    max_std_vect: np.ndarray,
+    tracker: Any | None = None,
+    experiment_key: Any | None = None,
+    tol: float | None = None,
+    capa: float | None = None,
+    param_set: int = 1,
+) -> Callable[[np.ndarray], np.ndarray]:
+    """Generate a wrapped lambda function for scaled constraints.
+
+    Parameters
+    ----------
+    max_std_vect : np.ndarray
+        The upper-bound limits for standard deviation mapping.
+    tracker : Any, optional
+        Data logging tracker instance. Default is None.
+    experiment_key : Any, optional
+        Unique identifier key for tracking logs. Default is None.
+    tol : float, optional
+        Tolerance parameter (unused in this configuration).
+    capa : float, optional
+        Process capability index (unused in this configuration).
+    param_set : int, default 1
+        The active parameter configuration variant index.
+
+    Returns
+    -------
+    Callable[[np.ndarray], np.ndarray]
+        A single-argument function mapping `x_scaled` to its
+        evaluated constraint array.
+    """
+    return lambda x_scaled: eval_scaled_credal_set_constraints(
         x_scaled,
         max_std_vect,
         tracker,

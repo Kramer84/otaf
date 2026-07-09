@@ -52,23 +52,44 @@ DEFAULT_FIG_STYLE = {
 }
 
 
-def _cm_to_inch(cm):
-    """Convert a (width, height) tuple from centimeters to inches."""
+def _cm_to_inch(cm: tuple[float, float] | None) -> tuple[float, float] | None:
+    """
+    Convert a (width, height) tuple from centimeters to inches.
+
+    Parameters
+    ----------
+    cm : tuple of float, optional
+        A tuple containing the width and height values in centimeters. 
+        If None, the function returns None.
+
+    Returns
+    -------
+    tuple of float or None
+        The corresponding width and height measurements converted into 
+        inches, or None if the input was None.
+    """
     if cm is None:
         return None
     return tuple((c / 2.54 for c in cm))
 
 
-def _merge_style(style=None, **overrides):
+def _merge_style(style: dict | None = None, **overrides) -> dict:
     """
     Merge DEFAULT_FIG_STYLE, a user style dict, and per-call overrides.
 
     Parameters
     ----------
-    style : dict or None
-        Base style dict shared across figures.
+    style : dict, optional
+        Base style dict shared across figures. Default is None.
     **overrides
-        Per-call overrides like figsize_cm=..., dpi=..., legend=False, etc.
+        Per-call overrides like ``figsize_cm=...``, ``dpi=...``, 
+        ``legend=False``, etc.
+
+    Returns
+    -------
+    dict
+        A fully merged configuration dictionary containing updated 
+        style configurations and color mappings.
     """
     cfg = DEFAULT_FIG_STYLE.copy()
     cfg["colors"] = DEFAULT_FIG_STYLE["colors"].copy()
@@ -87,10 +108,16 @@ def _merge_style(style=None, **overrides):
     return cfg
 
 
-def _setup_mpl_from_style(cfg):
-    """
-    Apply global Matplotlib settings for fonts / LaTeX, using
-    pdfLaTeX + Libertinus (libertinus-type1 + libertinust1math).
+def _setup_mpl_from_style(cfg: dict) -> None:
+    """Configure global Matplotlib settings for typography and LaTeX.
+
+
+    Parameters
+    ----------
+    cfg : dict
+        Configuration dictionary containing plotting styles. Expected keys
+        include ``'font_size'`` (int), ``'font_family'`` (str), and
+        ``'usetex'`` (bool).
     """
     rc = {
         "font.size": cfg.get("font_size", 9),
@@ -106,16 +133,52 @@ def _setup_mpl_from_style(cfg):
     plt.rcParams.update(rc)
 
 
-def _new_fig_ax(cfg):
-    """Create a new (fig, ax) using the style config."""
+def _new_fig_ax(cfg: dict) -> tuple:
+    """Create a new figure and axes using the style configuration.
+
+    Parameters
+    ----------
+    cfg : dict
+        Configuration dictionary containing plotting styles. Expected keys
+        include ``'figsize_cm'`` (tuple of float, optional).
+
+    Returns
+    -------
+    fig : matplotlib.figure.Figure
+        The newly created Matplotlib figure instance.
+    ax : matplotlib.axes.Axes
+        The newly created Matplotlib axes instance.
+    """
     _setup_mpl_from_style(cfg)
     figsize = _cm_to_inch(cfg.get("figsize_cm")) if cfg.get("figsize_cm") else None
     fig, ax = plt.subplots(figsize=figsize)
     return (fig, ax)
 
 
-def _finalize_figure(fig, ax, cfg):
-    """Apply grid, x/y limits, saving and showing."""
+def _finalize_figure(fig, ax, cfg: dict) -> tuple:
+    """Apply styling, configuration limits, save, and display the figure.
+
+    Parameters
+    ----------
+    fig : matplotlib.figure.Figure
+        The Matplotlib figure instance to be finalized.
+    ax : matplotlib.axes.Axes
+        The Matplotlib axes instance to be finalized.
+    cfg : dict
+        Configuration dictionary containing plotting parameters. Expected
+        keys include ``'grid'`` (bool, default True), ``'xlim'`` (tuple,
+        optional), ``'ylim'`` (tuple, optional), ``'tight_layout'`` (bool,
+        default True), ``'save'`` (bool, default False), ``'save_path'``
+        (str, optional), ``'dpi'`` (int, default 300), ``'transparent'``
+        (bool, default True), and ``'show'`` (bool, default True).
+
+    Returns
+    -------
+    fig : matplotlib.figure.Figure
+        The configured Matplotlib figure instance.
+    ax : matplotlib.axes.Axes
+        The configured Matplotlib axes instance.
+    """
     if cfg.get("grid", True):
         ax.grid(True)
     if cfg.get("xlim") is not None:
@@ -139,18 +202,18 @@ def _finalize_figure(fig, ax, cfg):
 def trimesh_scene_as_notebook_scene(
     scene: trimesh.Scene, background_hex_color: str = "e6e6e6"
 ) -> Any:
-    """
-    Convert a Trimesh scene into an interactive widget for a Jupyter notebook.
+    """Convert a Trimesh scene into an interactive Jupyter notebook widget.
 
-    Generates the HTML/JS representation of the scene and modifies the underlying
-    Three.js canvas setup to apply a custom background color.
+    Generates the HTML/JS representation of the scene and modifies the
+    underlying Three.js canvas setup to apply a custom background color.
 
     Parameters
     ----------
     scene : trimesh.Scene
         The Trimesh scene object to be displayed.
-    background_hex_color : str, default="e6e6e6"
-        The hexadecimal color code (without the '#' prefix) for the background.
+    background_hex_color : str, optional
+        The hexadecimal color code (without the ``'#'`` prefix) for the
+        background. Default is ``'e6e6e6'``.
 
     Returns
     -------
@@ -179,27 +242,31 @@ def trimesh_scene_as_notebook_scene(
 @beartype
 def hex_to_rgba(
     hex_color: str, alpha: float = 1.0, as_float: bool = False
-) -> Tuple[Union[float, int], Union[float, int], Union[float, int], float]:
-    """
-    Convert a hexadecimal color string to an RGBA tuple.
+) -> tuple[int | float, int | float, int | float, float]:
+    """Convert a hexadecimal color string to an RGBA tuple.
 
-    Strips any leading '#' character, extracts the red, green, and blue components,
-    and optionally normalizes the RGB values to floats before appending the alpha channel.
+    Strips any leading ``'#'`` character, extracts the red, green, and
+    blue components, and optionally normalizes the RGB values to floats
+    before appending the alpha channel.
 
     Parameters
     ----------
     hex_color : str
-        The hexadecimal color code string (e.g., '#ffffff' or 'e6e6e6').
-    alpha : float, default=1.0
+        The hexadecimal color code string (e.g., ``'#ffffff'`` or
+        ``'e6e6e6'``).
+    alpha : float, optional
         The alpha (transparency) value, typically between 0.0 and 1.0.
-    as_float : bool, default=False
-        If True, returns RGB values as floats scaled between 0.0 and 1.0.
-        If False, returns them as integers between 0 and 255.
+        The default is 1.0.
+    as_float : bool, optional
+        If ``True``, returns RGB values as floats scaled between 0.0 and
+        1.0. If ``False``, returns them as integers between 0 and 255.
+        The default is ``False``.
 
     Returns
     -------
-    Tuple[Union[float, int], Union[float, int], Union[float, int], float]
-        A tuple containing the Red, Green, Blue, and Alpha values in order.
+    tuple
+        A four-element tuple containing the red, green, blue, and
+        alpha values in order.
     """
     hex_color = hex_color.lstrip("#")
     r = int(hex_color[0:2], 16)
@@ -212,18 +279,18 @@ def hex_to_rgba(
     return (r, g, b, alpha)
 
 
-def arrange_axes_in_grid(axes_list: List[Any]) -> None:
-    """
-    Arrange a list of existing Matplotlib axes into a new, compact 2D grid plot.
+def arrange_axes_in_grid(axes_list: list) -> None:
+    """Arrange a list of Matplotlib axes into a new, compact 2D grid plot.
 
-    Calculates the optimal number of rows and columns to form a near-square layout,
-    creates a new figure, copies lines and labels from the source axes into the
-    subplots, and deletes any unused grid positions.
+    Calculates the optimal number of rows and columns to form a near-square
+    layout, creates a new figure, copies lines and labels from the source
+    axes into the subplots, and deletes any unused grid positions.
 
     Parameters
     ----------
-    axes_list : List[Any]
-        A list of Matplotlib axis objects whose lines and metadata should be copied.
+    axes_list : list
+        A list of Matplotlib axis objects whose lines and metadata should
+        be copied.
     """
     num_axes = len(axes_list)
     num_cols = math.ceil(math.sqrt(num_axes))

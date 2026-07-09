@@ -1,6 +1,15 @@
 from __future__ import annotations
 
 __author__ = "Kramer84"
+__all__ = [
+    "get_system_of_constraints_assembly_model",
+    "get_distribution_params",
+    "eval_scaled_credal_set_constraints",
+    "get_scaled_credal_set_constraints_function",
+    "dim",
+    "sample_multiplier",
+    "no_tol", 
+]
 import numpy as np
 import sympy as sp
 
@@ -8,7 +17,40 @@ import otaf
 from otaf.tolerances import sigma_delta_3D_plane
 
 
-def get_assembly_data(hM=10, hF=10.2, L1=30, L2=70, L3=30, lM=10, lF=10.2):
+def get_assembly_data(
+    hM: float = 10.0,
+    hF: float = 10.2,
+    L1: float = 30.0,
+    L2: float = 70.0,
+    L3: float = 30.0,
+    lM: float = 10.0,
+    lF: float = 10.2,
+) -> dict[str, dict[str, Any]]:
+    """Generate the system configuration data for the assembly.
+
+    Parameters
+    ----------
+    hM : float, default 10.0
+        Height parameter for the male component.
+    hF : float, default 10.2
+        Height parameter for the female component.
+    L1 : float, default 30.0
+        Length of the first section.
+    L2 : float, default 70.0
+        Length of the second section.
+    L3 : float, default 30.0
+        Length of the third section.
+    lM : float, default 10.0
+        Interface length for the male component.
+    lF : float, default 10.2
+        Interface length for the female component.
+
+    Returns
+    -------
+    dict
+        A configuration dictionary detailing components, frames,
+        points, interactions, loops, and global constraints.
+    """
     P1A0, P1A1, P1A2 = (
         np.array((L1 - lM / 2, hM / 2, 0.0)),
         np.array((L1 - lM / 2, 0, 0.0)),
@@ -201,34 +243,114 @@ def get_assembly_data(hM=10, hF=10.2, L1=30, L2=70, L3=30, lM=10, lF=10.2):
     return system_data
 
 
-def getAssemblyDataProcessorObject(system_data=None):
+def get_assembly_data_processor_object(
+    system_data: dict[str, Any] | None = None,
+) -> otaf.AssemblyDataProcessor:
+    """Initialize and prepare an AssemblyDataProcessor instance.
+
+    Parameters
+    ----------
+    system_data : dict, optional
+        The configuration dictionary containing assembly definitions.
+        If None, default assembly data is generated.
+
+    Returns
+    -------
+    otaf.AssemblyDataProcessor
+        The data processor with generated expanded loops.
+    """
     SDA = otaf.AssemblyDataProcessor(system_data)
     SDA.generate_expanded_loops()
     return SDA
 
 
-def getCompatibilityLoopHandlingObject(SDA=None):
+def get_compatibility_loop_handling_object(
+    SDA: otaf.AssemblyDataProcessor | None = None,
+) -> otaf.CompatibilityLoopHandling:
+    """Create a CompatibilityLoopHandling instance for assembly loops.
+
+    Parameters
+    ----------
+    SDA : otaf.AssemblyDataProcessor, optional
+        The assembly data processor. If None, a default instance
+        is instantiated.
+
+    Returns
+    -------
+    otaf.CompatibilityLoopHandling
+        The configured compatibility loop handler object.
+    """
     SDA = (
-        SDA if SDA is not None else getAssemblyDataProcessorObject(get_assembly_data())
+        SDA if SDA is not None else get_assembly_data_processor_object(get_assembly_data())
     )
     CLH = otaf.CompatibilityLoopHandling(SDA)
     return CLH
 
 
-def getInterfaceLoopHandlingObject(SDA=None, CLH=None):
+def get_interface_loop_handling_object(
+    SDA: otaf.AssemblyDataProcessor | None = None,
+    CLH: otaf.CompatibilityLoopHandling | None = None,
+) -> otaf.InterfaceLoopHandling:
+    """Create an InterfaceLoopHandling instance with set resolution.
+
+    Parameters
+    ----------
+    SDA : otaf.AssemblyDataProcessor, optional
+        The assembly data processor. If None, a default hierarchy
+        is created along with `CLH`.
+    CLH : otaf.CompatibilityLoopHandling, optional
+        The compatibility loop handler. If None, a default hierarchy
+        is created along with `SDA`.
+
+    Returns
+    -------
+    otaf.InterfaceLoopHandling
+        The initialized interface loop handler object.
+    """
     if not SDA or not CLH:
-        SDA = getAssemblyDataProcessorObject(get_assembly_data())
-        CLH = getCompatibilityLoopHandlingObject(SDA)
+        SDA = get_assembly_data_processor_object(get_assembly_data())
+        CLH = get_compatibility_loop_handling_object(SDA)
     ILH = otaf.InterfaceLoopHandling(SDA, CLH, circle_resolution=20)
     return ILH
 
 
-def getSystemOfConstraintsAssemblyModel(
-    hM=10, hF=10.2, L1=30, L2=70, L3=30, lM=10, lF=10.2
-):
-    SDA = getAssemblyDataProcessorObject(get_assembly_data(hM, hF, L1, L2, L3, lM, lF))
-    CLH = getCompatibilityLoopHandlingObject(SDA)
-    ILH = getInterfaceLoopHandlingObject(SDA, CLH)
+def get_system_of_constraints_assembly_model(
+    hM: float = 10.0,
+    hF: float = 10.2,
+    L1: float = 30.0,
+    L2: float = 70.0,
+    L3: float = 30.0,
+    lM: float = 10.0,
+    lF: float = 10.2,
+) -> otaf.SystemOfConstraintsAssemblyModel:
+    """Construct the complete system of constraints assembly model.
+
+    Parameters
+    ----------
+    hM : float, default 10.0
+        Height parameter for the male component.
+    hF : float, default 10.2
+        Height parameter for the female component.
+    L1 : float, default 30.0
+        Length of the first section.
+    L2 : float, default 70.0
+        Length of the second section.
+    L3 : float, default 30.0
+        Length of the third section.
+    lM : float, default 10.0
+        Interface length for the male component.
+    lF : float, default 10.2
+        Interface length for the female component.
+
+    Returns
+    -------
+    otaf.SystemOfConstraintsAssemblyModel
+        The initialized assembly model with embedded optimization
+        variables.
+    """
+    SDA = get_assembly_data_processor_object(get_assembly_data(hM, hF, L1, L2, L3, lM, lF))
+    CLH = get_compatibility_loop_handling_object(SDA)
+    ILH = get_interface_loop_handling_object(SDA, CLH)
     compatibility_expressions = CLH.get_compatibility_expression_from_FO_matrices()
     interface_constraints = ILH.get_interface_loop_expressions()
     SOCAM = otaf.SystemOfConstraintsAssemblyModel(
@@ -238,7 +360,36 @@ def getSystemOfConstraintsAssemblyModel(
     return SOCAM
 
 
-def getDistributionParams(tol=0.16, capa=1.0, hM=10, hF=10.2):
+def get_distribution_params(
+    tol: float = 0.16,
+    capa: float = 1.0,
+    hM: float = 10.0,
+    hF: float = 10.2,
+) -> tuple[Any, list[sp.Symbol], np.ndarray, np.ndarray]:
+    """Compute defect distribution parameters and variance vectors.
+
+    Parameters
+    ----------
+    tol : float, default 0.16
+        Tolerance limit value used to compute standard deviations.
+    capa : float, default 1.0
+        Process capability index factor.
+    hM : float, default 10.0
+        Height parameter for the male component.
+    hF : float, default 10.2
+        Height parameter for the female component.
+
+    Returns
+    -------
+    RandDeviationVect : otaf.distribution.ComposedDistribution
+        The joint normal defect distribution model.
+    deviation_symbols : list of sympy.Symbol
+        The symbolic tracking parameters for spatial deviations.
+    max_std_vect : np.ndarray
+        A 1D array of calculated maximum standard deviations.
+    np.ndarray
+        A 1D array of zero-initialized mean parameter offsets.
+    """
     deviation_symbols = list(
         sp.symbols(
             "u_d_2 gamma_d_2 u_d_3 gamma_d_3 u_d_4 gamma_d_4 u_d_5 gamma_d_5 u_d_6 gamma_d_6 u_d_7 gamma_d_7 u_d_8 gamma_d_8 u_d_9 gamma_d_9"
@@ -291,7 +442,42 @@ sample_multiplier = np.eye(dim)
 no_tol = False
 
 
-def evalCredalSetConstraints(x_std, tol=0.16, capa=1.0, hM=10, hF=10.2):
+def eval_scaled_credal_set_constraints(
+    x_scaled: np.ndarray,
+    max_std_vect: np.ndarray,
+    tracker: Any | None = None,
+    experiment_key: Any | None = None,
+    tol: float = 0.16,
+    capa: float = 1.0,
+    hM: float = 10.0,
+    hF: float = 10.2,
+) -> np.ndarray:
+    """Map scaled deviations to real values and evaluate constraints.
+
+    Parameters
+    ----------
+    x_scaled : np.ndarray
+        The scaled standard deviation vector inputs.
+    max_std_vect : np.ndarray
+        The upper-bound limits for standard deviation mapping.
+    tracker : Any, optional
+        Data logging tracker instance. Default is None.
+    experiment_key : Any, optional
+        Unique identifier key for tracking logs. Default is None.
+    tol : float, default 0.16
+        The baseline design tolerance.
+    capa : float, default 1.0
+        The process capability standard multiplier.
+    hM : float, default 10.0
+        Height parameter for the male component.
+    hF : float, default 10.2
+        Height parameter for the female component.
+
+    Returns
+    -------
+    np.ndarray
+        The calculated constraint evaluation bounds array.
+    """
     target = tol / (6 * capa)
     constraint1 = (
         sigma_delta_3D_plane(hF / 2, 0, x_std[0], 0, x_std[1]) - target
@@ -331,18 +517,42 @@ def evalCredalSetConstraints(x_std, tol=0.16, capa=1.0, hM=10, hF=10.2):
     )
 
 
-def evalScaledCredalSetConstraints(
-    x_scaled,
-    max_std_vect,
-    tracker=None,
-    experiment_key=None,
-    tol=0.16,
-    capa=1.0,
-    hM=10,
-    hF=10.2,
-):
+def get_scaled_credal_set_constraints_function(
+    max_std_vect: np.ndarray,
+    tracker: Any | None = None,
+    experiment_key: Any | None = None,
+    tol: float = 0.16,
+    capa: float = 1.0,
+    hM: float = 10.0,
+    hF: float = 10.2,
+) -> Callable[[np.ndarray], np.ndarray]:
+    """Generate a wrapped lambda function for scaled constraints.
+
+    Parameters
+    ----------
+    max_std_vect : np.ndarray
+        The upper-bound limits for standard deviation mapping.
+    tracker : Any, optional
+        Data logging tracker instance. Default is None.
+    experiment_key : Any, optional
+        Unique identifier key for tracking logs. Default is None.
+    tol : float, default 0.16
+        The baseline design tolerance.
+    capa : float, default 1.0
+        The process capability index multiplier.
+    hM : float, default 10.0
+        Height parameter for the male component.
+    hF : float, default 10.2
+        Height parameter for the female component.
+
+    Returns
+    -------
+    Callable[[np.ndarray], np.ndarray]
+        A single-argument function mapping `x_scaled` to its
+        evaluated constraint array.
+    """
     x_real = x_scaled * max_std_vect
-    constraint_array = evalCredalSetConstraints(
+    constraint_array = eval_credal_set_constraints(
         x_real, tol=tol, capa=capa, hM=hM, hF=hF
     )
     if tracker:
@@ -352,10 +562,10 @@ def evalScaledCredalSetConstraints(
     return constraint_array
 
 
-def getScaledCredalSetConstraintsFunction(
+def get_scaled_credal_set_constraints_function(
     max_std_vect, tracker=None, experiment_key=None, tol=0.16, capa=1.0, hM=10, hF=10.2
 ):
-    return lambda x_scaled: evalScaledCredalSetConstraints(
+    return lambda x_scaled: eval_scaled_credal_set_constraints(
         x_scaled,
         max_std_vect,
         tracker,

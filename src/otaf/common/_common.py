@@ -417,61 +417,64 @@ def get_SE3_base(index: str) -> sp.MatrixBase:
 
 
 def get_SE3_matrices_from_indices(
-    se3_indices: List[Union[str, int]], multiplier: Union[float, int] = 1.0
-) -> List[sp.MatrixBase]:
+    se3_indices: list[str | int], multiplier: float | int = 1.0
+) -> list[sp.MatrixBase]:
     """
-    Retrieve SE(3) matrices corresponding to a list of indices, optionally scaled by a multiplier.
+    Retrieve SE(3) matrices corresponding to a list of indices.
 
     Parameters
     ----------
-    se3_indices : List[Union[str, int]]
+    se3_indices : list of str or int
         List of indices representing SE(3) base matrices.
-    multiplier : Union[float, int], optional
-        A scalar multiplier applied to each matrix (default is 1.0).
+    multiplier : float or int, optional
+        A scalar multiplier applied to each matrix. Default is 1.0.
 
     Returns
     -------
-    List[sympy.MatrixBase]
-        A list of SE(3) base matrices, each scaled by the specified multiplier.
+    list of sympy.MatrixBase
+        A list of SE(3) base matrices, each scaled by the specified 
+        multiplier.
 
     Notes
     -----
-    The indices are converted to strings and used to retrieve the corresponding SE(3) base matrices
-    from the predefined `BASIS_DICT` in the `otaf.constants` module.
+    The indices are converted to strings and used to retrieve the 
+    corresponding SE(3) base matrices from the predefined ``BASIS_DICT`` 
+    in the ``otaf.constants`` module.
     """
     return [multiplier * get_SE3_base(str(i)) for i in se3_indices]
 
 
 def validate_dict_keys(
-    dictionary: dict, keys: List[str], dictionary_name: str, value_checks: dict = {}
+    dictionary: dict, keys: list[str], dictionary_name: str, value_checks: dict = {}
 ) -> None:
     """
-    Validate the presence of specific keys in a dictionary and optionally check their values.
+    Validate presence of specific keys and optionally check their values.
 
     Parameters
     ----------
     dictionary : dict
         The dictionary to validate.
-    keys : List[str]
+    keys : list of str
         A list of keys that must be present in the dictionary.
     dictionary_name : str
-        The name of the dictionary (used in error messages for clarity).
+        The name of the dictionary used in error messages for clarity.
     value_checks : dict, optional
-        A dictionary where keys are the dictionary keys to validate and values are functions
-        that take the dictionary's value as input and return a boolean indicating whether the value is valid.
-        If None, value validation is skipped (default is None).
+        A dictionary where keys map to validation functions. Each 
+        function takes a value as input and returns a boolean indicating 
+        validity. Default is {}.
 
     Raises
     ------
     MissingKeyError
         If a required key is missing from the dictionary.
     ValueError
-        If a value associated with a key fails the validation function provided in `value_checks`.
+        If a value associated with a key fails the validation function 
+        provided in `value_checks`.
 
     Notes
     -----
-    - `value_checks` is an optional mechanism to enforce additional constraints on dictionary values.
-    - This function is designed for use cases where strict key and value validation is required.
+    The `value_checks` parameter acts as an optional mechanism to 
+    enforce additional constraints on nested dictionary values.
     """
     for key in keys:
         if key not in dictionary:
@@ -488,20 +491,22 @@ def is_running_in_notebook() -> bool:
     """
     Check if the current code is running in a Jupyter notebook environment.
 
-    This function detects the type of IPython shell to determine whether the code is
-    executed in a Jupyter notebook, a terminal, or a standard Python interpreter.
+    This function detects the type of IPython shell to determine whether 
+    the code is executed in a Jupyter notebook, a terminal, or a standard 
+    Python interpreter.
 
     Returns
     -------
     bool
-        True if the code is running in a Jupyter notebook or qtconsole, False otherwise.
+        True if running in a Jupyter notebook or qtconsole, False otherwise.
 
     Notes
     -----
-    - If the IPython shell cannot be detected, it is assumed the code is running
-      in a standard Python interpreter.
-    - This function relies on the `get_ipython()` function, which is available
-      only in IPython environments.
+    If the IPython shell cannot be detected, it is assumed the code is 
+    running in a standard Python interpreter.
+
+    This function relies on the built-in ``get_ipython()`` function, 
+    which is available exclusively within IPython environments.
     """
     try:
         shell = get_ipython().__class__.__name__
@@ -515,19 +520,21 @@ def is_running_in_notebook() -> bool:
         return False
 
 
-def get_tqdm_range():
+def get_tqdm_range() -> callable:
     """
-    Retrieve the appropriate tqdm range function based on the execution environment.
+    Retrieve the appropriate tqdm range function based on environment.
 
     Returns
     -------
-    function
-        `trange_notebook` if running in a Jupyter notebook, otherwise `trange`.
+    callable
+        ``trange_notebook`` if running in a Jupyter notebook, 
+        otherwise ``trange``.
 
     Notes
     -----
-    - This function checks the execution environment using `is_running_in_notebook`.
-    - `trange_notebook` is used for better rendering in notebook environments.
+    This function checks the execution environment using the utility
+    ``is_running_in_notebook``. The ``trange_notebook`` variant is 
+    selected for cleaner HTML progress bar rendering inside notebooks.
     """
     from tqdm import trange
     from tqdm.notebook import trange as trange_notebook
@@ -619,32 +626,89 @@ def threshold_for_percentile_positive_values_below(
     return threshold_value
 
 
-def arr_to_str(x):
-    """Convert a numeric array to a formatted string representation."""
+def arr_to_str(x: np.ndarray | list[float]) -> str:
+    """
+    Convert a numeric array to a formatted string representation.
+
+    Parameters
+    ----------
+    x : array_like
+        The input numeric array or sequence to format.
+
+    Returns
+    -------
+    str
+        The string representation of the array with 6 decimal places.
+    """
     return "[" + " ".join((f"{num:.6f}" for num in x)) + "]"
 
 
-def str_to_arr(s):
-    """Convert a formatted string representation back to a list of floats."""
+def str_to_arr(s: str) -> list[float]:
+    """
+    Convert a formatted string representation back to a list of floats.
+
+    Parameters
+    ----------
+    s : str
+        The string representation of the numeric array, bounded by
+        brackets.
+
+    Returns
+    -------
+    list of str
+        The parsed floats extracted from the string.
+    """
     return [float(_) for _ in s[1:-1].split()]
 
 
-def bidirectional_string_to_array_conversion(x):
-    """Convert input between a numeric array and its string representation."""
+def bidirectional_string_to_array_conversion(
+    x: str | np.ndarray | list[float],
+) -> str | list[float]:
+    """
+    Convert input between a numeric array and its string representation.
+
+    Parameters
+    ----------
+    x : str or array_like
+        The input to transform. If a string is provided, it is parsed
+        into a list of floats. Otherwise, it is formatted into a string.
+
+    Returns
+    -------
+    str or list of str
+        The converted representation.
+    """
     if isinstance(x, str):
         return str_to_arr(x)
     else:
         return arr_to_str(x)
 
 
-def arrays_close_enough(arr1, arr2, tolerance=1e-06):
-    """Check if two arrays are element-wise equal within a specified tolerance."""
+def arrays_close_enough(
+    arr1: np.ndarray, arr2: np.ndarray, tolerance: float = 1e-06
+) -> bool:
+    """
+    Check if two arrays are element-wise equal within a tolerance.
+
+    Parameters
+    ----------
+    arr1, arr2 : array_like
+        The input arrays to compare.
+    tolerance : float, optional
+        The absolute tolerance threshold for comparison. Default is 1e-06.
+
+    Returns
+    -------
+    bool
+        True if the arrays are equal within the given tolerance, 
+        False otherwise.
+    """
     return np.allclose(arr1, arr2, atol=tolerance)
 
 
-def scaling(scale_factor):
+def scaling(scale_factor: float) -> callable:
     """
-    Decorator to scale the output of a function by a specified scaling factor.
+    Decorator to scale the output of a function by a factor.
 
     Parameters
     ----------
@@ -653,8 +717,9 @@ def scaling(scale_factor):
 
     Returns
     -------
-    function
-        A decorator that applies the scaling to the output of the wrapped function.
+    callable
+        A decorator that applies the `scale_factor` to the output of 
+        the wrapped function.
     """
 
     def decorator(func):

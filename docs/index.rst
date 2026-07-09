@@ -8,17 +8,11 @@ Welcome to OTAF's Documentation!
    :caption: API Reference:
 
    source/modules
-   source/otaf.capabilities
-   source/otaf.common
-   source/otaf.constants
-   source/otaf.distribution
-   source/otaf.example_models
-   source/otaf.exceptions
-   source/otaf.geometry
-   source/otaf.optimization
-   source/otaf.plotting
-   source/otaf.sampling
-   source/otaf.sensitivity
-   source/otaf.surrogate
-   source/otaf.tolerances
-   source/otaf.uncertainty
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Examples:
+
+   notebooks/Ex1_2D_4dof_Analytical_Ref.ipynb
+   notebooks/Ex1_2D_4dof_Opti_Manual.ipynb
+   notebooks/Ex1_2D_4dof_Opti_Auto_Surrogate.ipynb

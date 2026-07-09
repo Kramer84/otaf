@@ -221,7 +221,7 @@ def main():
     print("Loading surrogate model and distributions...")
     model_sur = otaf.surrogate.NeuralRegressorNetwork.from_checkpoint(args.surrogate_path)
     
-    jointDist, symbols, max_std_vect, mu_vect = model1.getDistributionParams()
+    jointDist, symbols, max_std_vect, mu_vect = model1.get_distribution_params()
     sample_gld = np.array(jointDist.getSample(args.mc_size))
     
     model_eval_fn = get_model_evaluator(sample_gld, mu_vect, model_sur)

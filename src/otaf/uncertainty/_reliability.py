@@ -10,8 +10,6 @@ __all__ = [
     "milp_batch_sequential",
     "compute_gap_optimizations_on_sample_batch",
 ]
-import numbers
-from time import time
 
 import numpy as np
 import openturns as ot
@@ -39,32 +37,35 @@ def compute_failure_probability_FORM(
     verbose: bool = False,
     solver: Optional[ot.OptimizationAlgorithm] = None,
 ) -> tuple[float, ot.FORMResult]:
-    """Compute the probability of failure using the First-Order Reliability Method (FORM).
+    """Compute failure probability using FORM.
 
-    Calculate the failure probability for an event defined by a threshold violation
-    by finding the design point in the standard normal space and applying a
-    first-order approximation.
+    Calculate the failure probability for an event defined by a
+    threshold violation by finding the design point in the standard
+    normal space and applying a first-order approximation.
 
     Parameters
     ----------
     ot_function : ot.Function
         The performance function of the system.
     composed_distribution : JointDistribution
-        The joint probability distribution of the input random variables.
+        The joint probability distribution of the input random
+        variables.
     threshold : float, optional
-        The limit state threshold, by default 0.0.
+        The limit state threshold. Default is 0.0.
     start_point : ot.Point, optional
-        Initial starting point for the optimization algorithm in physical space.
+        Initial starting point for the optimization algorithm in
+        physical space. Default is None.
     verbose : bool, optional
-        If True, print reliability diagnostics, by default False.
+        If True, print reliability diagnostics. Default is False.
     solver : ot.OptimizationAlgorithm, optional
-        The optimization algorithm to find the design point. Uses COBYLA
-        with strict convergence tolerances if None.
+        The optimization algorithm to find the design point. Uses
+        ``ot.Cobyla()`` with strict convergence tolerances if None.
 
     Returns
     -------
     tuple[float, ot.FORMResult]
-        The calculated failure probability and the full FORM result object.
+        The calculated failure probability and the full FORM result
+        object.
     """
     comp_rand_vect = ot.CompositeRandomVector(
         ot_function, ot.RandomVector(composed_distribution)
@@ -100,19 +101,27 @@ def compute_failure_probability_NAIS(
     quantile_level: float = 0.001,
     verbose: bool = False,
 ) -> tuple[float, ot.SimulationResult]:
-    """Compute the failure probability using the NAIS algorithm.
+    """Compute failure probability using the NAIS algorithm.
 
     Parameters
     ----------
-    - ot_python_function: The function g(X)
-    - distribution: The input random vector distribution
-    - threshold: The threshold value (default=0.0)
-    - verbose: Print additional information (default=False)
+    ot_python_function : ot.PythonFunction
+        The performance function ``g(X)``.
+    distribution : JointDistribution
+        The input random vector distribution.
+    threshold : float, optional
+        The threshold value. Default is 0.0.
+    quantile_level : float, optional
+        The quantile level for the NAIS algorithm. Default is 0.001.
+    verbose : bool, optional
+        If True, print additional information. Default is False.
 
     Returns
     -------
-    - proba: The estimated failure probability
-    - result: Additional NAIS algorithm results (see docstring)
+    proba : float
+        The estimated failure probability.
+    result : ot.SimulationResult
+        Additional NAIS algorithm results object.
     """
     output_random_vector = ot.CompositeRandomVector(
         ot_python_function, ot.RandomVector(distribution)
@@ -142,20 +151,34 @@ def compute_failure_probability_SUBSET(
     proposal_range=2,
     target_probability=0.1,
 ) -> tuple[float, ot.SimulationResult, Any]:
-    """
-    Compute the failure probability using the NAIS algorithm.
+    """Compute failure probability using subset sampling.
 
     Parameters
     ----------
-    - ot_python_function: The function g(X)
-    - distribution: The input random vector distribution
-    - threshold: The threshold value (default=0.0)
-    - verbose: Print additional information (default=False)
+    ot_python_function : ot.PythonFunction
+        The performance function ``g(X)``.
+    distribution : JointDistribution
+        The input random vector distribution.
+    threshold : float, optional
+        The threshold value. Default is 0.0.
+    verbose : bool, optional
+        If True, print additional information. Default is False.
+    proposal_range : float, optional
+        The proposal range for the Markov chain Monte Carlo steps.
+        Default is 2.0.
+    target_probability : float, optional
+        The target probability for each conditional step. Default
+        is 0.1.
 
     Returns
     -------
-    - proba: The estimated failure probability
-    - result: Additional NAIS algorithm results (see docstring)
+    proba : float
+        The estimated failure probability.
+    result : ot.SimulationResult
+        Additional subset sampling algorithm results object.
+    algo : ot.SubsetSampling
+        The subset sampling algorithm instance used for the
+        simulation.
     """
     output_random_vector = ot.CompositeRandomVector(
         ot_python_function, ot.RandomVector(distribution)
@@ -190,20 +213,24 @@ def compute_failure_probability_subset_sampling(
 
     Parameters
     ----------
-        constraint_matrix_generator (Callable): Class for fixing deviations and defining constraints.
-        deviation_array (np.ndarray): Array of random deviations for each variable.
-        C (np.ndarray, optional): Coefficient matrix for the linear objective function. Defaults to None.
-        bounds (List, optional): Bounds for gap variables. Defaults to None.
-        method (str, optional): Algorithm for the optimization problem. Defaults to 'highs'.
-        n_cpu (int, optional): Number of CPUs to use for parallel execution. Defaults to 1.
+    constraint_matrix_generator : Callable
+        Class or callable for fixing deviations and defining
+        constraints.
+    defect_distribition_vector : ot.RandomVector
+        The random vector representing the defect distribution.
+    C : np.ndarray, optional
+        Coefficient matrix for the linear objective function.
+        Default is None.
+    bounds : list of list of float or np.ndarray, optional
+        Bounds for gap variables. Default is None.
+    n_cpu : int, optional
+        Number of CPUs to use for parallel execution. Default is 1.
 
     Returns
     -------
-        float: Failure probability for the fixed deviations.
-
-    Raises
-    ------
-        TypeError: If constraint_matrix_generator is not callable.
+    ot.SimulationResult
+        The simulation result object containing the estimated failure
+        probability and simulation diagnostics.
     """
 
     def defect_func(X):
@@ -237,30 +264,32 @@ def compute_gap_optimizations_on_sample(
 ) -> List[OptimizeResult]:
     """Compute gap optimizations for a set of samples using MILP.
 
-    Solve a sequence of Mixed-Integer Linear Programming (MILP) problems derived
-    from a system of constraints to determine the optimal gap for each sample.
+    Solve a sequence of Mixed-Integer Linear Programming (MILP)
+    problems derived from a system of constraints to determine the
+    optimal gap for each sample.
 
     Parameters
     ----------
     constraint_matrix_generator : SystemOfConstraintsAssemblyModel
-        Generator object that produces the constraint matrices and bounds.
+        Generator object that produces the constraint matrices and
+        bounds.
     deviation_array : np.ndarray
         Array representing deviations to be processed.
     C : np.ndarray, optional
-        Coefficient matrix for the linear objective function.
-    bounds : Union[List[List[float]], np.ndarray], optional
-        Bounds for the optimization variables.
+        Coefficient matrix for the linear objective function. Default
+        is None.
+    bounds : list of list of float or np.ndarray, optional
+        Bounds for the optimization variables. Default is None.
     n_cpu : int, optional
-        Number of CPUs to use for parallel processing, by default 1.
+        Number of CPUs to use for parallel processing. Default is 1.
     progress_bar : bool, optional
-        Whether to display a progress bar, by default False.
-    verbose : int, optional
-        Verbosity level for debugging, by default 0.
+        Whether to display a progress bar. Default is False.
 
     Returns
     -------
-    List[OptimizeResult]
-        A list of optimization result objects for each sample in the input array.
+    list of OptimizeResult
+        A list of optimization result objects for each sample in the
+        input array.
     """
     c, a_ub, b_ub, a_eq, b_eq, bounds = constraint_matrix_generator(
         deviation_array, bounds=bounds, C=C
@@ -309,22 +338,25 @@ def milp_batch_sequential(
     a_eq: np.ndarray,
     b_eq: np.ndarray,
 ) -> np.ndarray:
-    """Optimize a batch of linear problems iteratively using MILP.
+    """Optimize a batch of linear programming problems sequentially.
 
-    Solve a sequence of Mixed-Integer Linear Programming (MILP) problems
-    sharing common objective coefficients and constraint matrices, but
-    varying constraint bounds.
+    Solve a sequence of Mixed-Integer Linear Programming (MILP)
+    problems sharing common objective coefficients and constraint
+    matrices, but varying constraint bounds.
 
     Parameters
     ----------
     c : np.ndarray
-        Coefficients of the linear objective function to be minimized.
+        Coefficients of the linear objective function to be
+        minimized.
     bounds : np.ndarray
-        An (n, 2) array defining the lower and upper bounds of variables.
+        An (n, 2) array defining the lower and upper bounds of
+        variables.
     a_ub : np.ndarray
         2D array for the upper-bound inequality constraints.
     b_ub : np.ndarray
-        2D array of upper-bound values for each inequality constraint per problem.
+        2D array of upper-bound values for each inequality
+        constraint per problem.
     a_eq : np.ndarray
         2D array for the equality constraints.
     b_eq : np.ndarray
@@ -333,13 +365,16 @@ def milp_batch_sequential(
     Returns
     -------
     np.ndarray
-        2D array of optimized decision variables for each problem in the batch.
+        2D array of optimized decision variables for each problem in
+        the batch.
 
     Notes
     -----
-    - This function solves MILP problems using `scipy.optimize.milp`.
-    - Solver options are set to `disp=False` and `presolve=True` for efficiency.
-    - Problems share `c`, `a_ub`, and `a_eq`, while `b_ub` and `b_eq` vary per batch element.
+    This function solves MILP problems using
+    ``scipy.optimize.milp``. Solver options are set to
+    ``disp=False`` and ``presolve=True`` for efficiency. Problems
+    share `c`, `a_ub`, and `a_eq`, while `b_ub` and `b_eq` vary per
+    batch element.
     """
     bounds = Bounds(bounds[:, 0], bounds[:, 1], keep_feasible=False)
     optimizations = [
@@ -368,11 +403,11 @@ def compute_gap_optimizations_on_sample_batch(
     verbose: int = 0,
     dtype: str = "float32",
 ) -> np.ndarray:
-    """Compute gap optimizations on a sample using batch processing and MILP.
+    """Compute gap optimizations using batch processing and MILP.
 
-    Perform parallel batch optimization for a system of constraints, grouping
-    samples into batches to improve computational throughput and reduce parallelization
-    overhead.
+    Perform parallel batch optimization for a system of
+    constraints, grouping samples into batches to improve
+    computational throughput and reduce parallelization overhead.
 
     Parameters
     ----------
@@ -381,25 +416,28 @@ def compute_gap_optimizations_on_sample_batch(
     deviation_array : np.ndarray
         Array of deviations to process.
     C : np.ndarray, optional
-        Coefficient matrix for the linear objective function.
-    bounds : Union[List[List[float]], np.ndarray], optional
-        Bounds for the optimization variables.
+        Coefficient matrix for the linear objective function. Default
+        is None.
+    bounds : list of list of float or np.ndarray, optional
+        Bounds for the optimization variables. Default is None.
     n_cpu : int, optional
-        Number of CPUs for parallel processing. Negative values are relative
-        to total available CPUs, by default 1.
+        Number of CPUs for parallel processing. Negative values are
+        relative to total available CPUs. Default is 1.
     batch_size : int, optional
-        Number of points per parallel batch, by default 1000.
+        Number of points per parallel batch. Default is 1000.
     progress_bar : bool, optional
-        Whether to display a progress bar, by default False.
+        Whether to display a progress bar. Default is False.
     verbose : int, optional
-        Verbosity level for debugging, by default 0.
+        Verbosity level for debugging. Default is 0.
     dtype : str, optional
-        Data type for the resulting optimized decision variable array, by default "float32".
+        Data type for the resulting optimized decision variable array.
+        Default is ``'float32'``.
 
     Returns
     -------
     np.ndarray
-        Optimized decision variables for all samples stacked into a single array.
+        Optimized decision variables for all samples stacked into a
+        single array.
     """
     c, a_ub, b_ub, a_eq, b_eq, bounds = constraint_matrix_generator(
         deviation_array, bounds=bounds, C=C

@@ -15,13 +15,19 @@ from .assemblyModelingBaseObjects import DeviationMatrix, GapMatrix, Transformat
 
 @beartype
 class FirstOrderMatrixExpansion:
-    """
-    Initialize the FirstOrderMatrixExpansion class.
+    """First-order Taylor expansion of a matrix product.
 
     Parameters
     ----------
-    matrix_list : List[Union[otaf.DeviationMatrix, otaf.GapMatrix, otaf.TransformationMatrix, otaf.I4, otaf.J4]]
-        List of matrices to be used in the first-order Taylor expansion.
+    matrix_list : list of objects
+        List of matrices (``DeviationMatrix``, ``GapMatrix``,
+        ``TransformationMatrix``, ``I4``, or ``J4``) to be used in the
+        first-order Taylor expansion.
+
+    Attributes
+    ----------
+    matrix_list : list of objects
+        List of matrices used in the expansion.
     """
 
     def __init__(
@@ -29,28 +35,33 @@ class FirstOrderMatrixExpansion:
         matrix_list: List[
             Union[DeviationMatrix, GapMatrix, TransformationMatrix, I4, J4]
         ],
-    ):
+    ) -> None:
+        """Initialize a FirstOrderMatrixExpansion instance."""
         logging.info(
             "[Type: FirstOrderMatrixExpansion] Initializing with provided matrix list."
         )
         self.matrix_list = matrix_list
 
-    def compute_first_order_expansion(self, tolerance: float = 1e-8) -> sp.MatrixBase:
-        """
-        Construct the first-order Taylor expansion of a matrix product.
+    def compute_first_order_expansion(
+        self, tolerance: float = 1e-8
+    ) -> sp.MatrixBase:
+        """Construct the first-order Taylor expansion of a matrix product.
 
-        This method computes the expansion by iterating through the provided list of matrices,
-        identifying constant terms and first-order variable-dependent terms.
+        This method computes the expansion by iterating through the
+        provided list of matrices, identifying constant terms and
+        first-order variable-dependent terms.
 
         Parameters
         ----------
         tolerance : float, optional
-            Tolerance value for symbolic simplification (default is 1e-8).
+            Tolerance value for symbolic simplification (the default is
+            1e-8).
 
         Returns
         -------
-        sp.MatrixBase
-            A symbolic matrix representing the simplified first-order Taylor expansion.
+        sympy.MatrixBase
+            A symbolic matrix representing the simplified first-order
+            Taylor expansion.
         """
         logging.info(
             "[Type: FirstOrderMatrixExpansion] Constructing first-order matrix expansion."
@@ -76,15 +87,15 @@ class FirstOrderMatrixExpansion:
         return sp.nsimplify(polynomial_sum, rational=False, full=True, tolerance=tolerance)
 
     def _compute_constant_term(self) -> sp.MatrixBase:
-        """
-        Compute the constant term in the Taylor expansion.
+        """Compute the constant term in the Taylor expansion.
 
-        The constant term, often denoted as K0, is derived from the product of matrices
-        that are categorized as constant types (e.g., T, J4, I4).
+        The constant term, often denoted as ``K0``, is derived from
+        the product of matrices that are categorized as constant
+        types (e.g., ``T``, ``J4``, ``I4``).
 
         Returns
         -------
-        sp.MatrixBase
+        sympy.MatrixBase
             The constant term matrix.
         """
         logging.info("[Type: FirstOrderMatrixExpansion] Computing constant term (K0).")
@@ -97,31 +108,36 @@ class FirstOrderMatrixExpansion:
     def _compute_first_order_element(
         self, mat_idx: int, typ: str, var_mat: sp.MatrixBase
     ) -> sp.MatrixBase:
-        """
-        Compute a first-order term in the Taylor expansion.
+        """Compute a first-order term in the Taylor expansion.
 
-        This method calculates the first-order contribution of a specific matrix with
-        blocked variables by combining the variable-dependent matrix with other constant
-        matrices in the list.
+        This method calculates the first-order contribution of a
+        specific matrix with blocked variables by combining the
+        variable-dependent matrix with other constant matrices in
+        the list.
 
         Parameters
         ----------
         mat_idx : int
-            Index of the matrix in the list that contains blocked variables.
+            Index of the matrix in the list that contains blocked
+            variables.
         typ : str
-            The type of the matrix ('D' or 'G') indicating it contains blocked variables.
-        var_mat : sp.MatrixBase
-            The matrix representing the blocked variable's contribution.
+            The type of the matrix (``"D"`` or ``"G"``) indicating it
+            contains blocked variables.
+        var_mat : sympy.MatrixBase
+            The matrix representing the blocked variable's
+            contribution.
 
         Returns
         -------
-        sp.MatrixBase
-            A symbolic matrix representing the first-order term of the expansion.
+        sympy.MatrixBase
+            A symbolic matrix representing the first-order term of the
+            expansion.
 
         Raises
         ------
         ValueError
-            If the type is not 'D' or 'G', or the index does not correspond to a matrix of the expected type.
+            If `typ` is not ``"D"`` or ``"G"``, or `mat_idx` does not
+            correspond to a matrix of the expected type.
         """
         logging.debug(
             f"[Type: FirstOrderMatrixExpansion] Computing first-order element for index: {mat_idx} and type: {typ}."

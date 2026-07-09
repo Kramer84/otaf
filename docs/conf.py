@@ -16,11 +16,15 @@ release = '0.1'
 extensions = [
     'sphinx.ext.autodoc',             # Automatically documents docstrings
     'sphinx.ext.napoleon',            # Supports Google and NumPy-style docstrings
-    'sphinx_autodoc_typehints',       # Adds type hints to documentation
+    #'sphinx_autodoc_typehints',       # Adds type hints to documentation
     'sphinx.ext.viewcode',            # Adds links to source code
     'myst_parser',
     'nbsphinx',
 ]
+
+# List of patterns, relative to source directory, that match files and
+# directories to ignore when looking for source files.
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '**.ipynb_checkpoints']
 
 # HTML Theme
 html_theme = 'sphinx_rtd_theme'  # Replace 'sphinx_rtd_theme' with 'furo'
@@ -72,3 +76,13 @@ source_suffix = {
     '.rst': 'restructuredtext',
     '.md': 'markdown',
 }
+
+# Silence benign duplicate object warnings caused by typehint parsing across lazy namespaces
+suppress_warnings = [
+    'autodoc',
+    'ref.python',
+    ]
+
+html_static_path = ['_static', 'logo']
+
+html_logo = "logo/logo.png"
