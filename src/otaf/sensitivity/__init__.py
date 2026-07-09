@@ -1,11 +1,11 @@
 """Tools for constructing Sobol sensitivity analysis experiments and plotting results."""
+
 from __future__ import annotations
-# -*- coding: utf-8 -*-
 
 __author__ = "Kramer84"
+from ._sensitivity_plotting import plotSobolIndicesWithErr
+from ._sobol_experiment_construction import (
+    SobolIndicesExperimentWithComposedDistribution,
+)
 
-from ._sobol_experiment_construction import *
-from ._sensitivity_plotting import *
-
-__all__ = (_sobol_experiment_construction.__all__
-    + _sensitivity_plotting.__all__)
+__all__ = ["SobolIndicesExperimentWithComposedDistribution", "plotSobolIndicesWithErr"]

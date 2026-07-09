@@ -1,15 +1,14 @@
 __author__ = "Kramer84"
 __version__ = "0.1"
 __date__ = "21.05.24"
-
 __all__ = ["SobolIndicesExperimentWithComposedDistribution"]
-
 import openturns as ot
+
 
 class SobolIndicesExperimentWithComposedDistribution(ot.SobolIndicesExperiment):
     """Sobol indices experiment wrapper using an OpenTURNS ComposedDistribution.
 
-    Generates the specialized experimental design matrix (mixture matrix) required 
+    Generates the specialized experimental design matrix (mixture matrix) required
     for estimating first, second, and total-order Sobol sensitivity indices.
 
     Parameters
@@ -19,24 +18,21 @@ class SobolIndicesExperimentWithComposedDistribution(ot.SobolIndicesExperiment):
     size : int, optional
         The size $N$ of the base samples $A$ and $B$. Default is None.
     second_order : bool, optional
-        If True, structures the experimental design to allow estimation of 
+        If True, structures the experimental design to allow estimation of
         second-order Sobol indices. Default is False.
     """
 
     def __init__(self, composedDistribution=None, size=None, second_order=False):
         self.composedDistribution = composedDistribution
         self.size = None
-
         self.__visibility__ = True
         self.__name__ = "Unnamed"
         self.__shadowedId__ = None
         self.__computeSecondOrder__ = second_order
-
         if size is not None:
             self.setSize(size)
         if composedDistribution is not None:
             self.setComposedDistribution(composedDistribution)
-
         self._sample_A = None
         self._sample_B = None
         self._experimentSample = None
@@ -64,13 +60,14 @@ class SobolIndicesExperimentWithComposedDistribution(ot.SobolIndicesExperiment):
         AssertionError
             If either `size` or `composedDistribution` have not been initialized.
         """
-        assert (self.composedDistribution is not None) and (
-            self.size is not None
-        ), "Please intialize sample size and composed distribution"
+        assert self.composedDistribution is not None and self.size is not None, (
+            "Please intialize sample size and composed distribution"
+        )
         self._generateSample(**kwargs)
-
         self._mixSamples()
-        self._experimentSample.setDescription(self.composedDistribution.getDescription())
+        self._experimentSample.setDescription(
+            self.composedDistribution.getDescription()
+        )
         return self._experimentSample
 
     def generateWithWeights(self, **kwargs):
@@ -123,7 +120,7 @@ class SobolIndicesExperimentWithComposedDistribution(ot.SobolIndicesExperiment):
         Returns
         -------
         int
-            The row count of the generated design matrix, or 0 if it has 
+            The row count of the generated design matrix, or 0 if it has
             not yet been generated.
         """
         if self._experimentSample is None:
@@ -232,7 +229,7 @@ class SobolIndicesExperimentWithComposedDistribution(ot.SobolIndicesExperiment):
     def _mixSamples(self):
         """Construct the design matrix from base matrices A and B.
 
-        Interleaves matrix slices based on the problem dimension and whether 
+        Interleaves matrix slices based on the problem dimension and whether
         second-order indices are required.
         """
         n_vars = self.composedDistribution.getDimension()
@@ -243,25 +240,24 @@ class SobolIndicesExperimentWithComposedDistribution(ot.SobolIndicesExperiment):
             self._experimentSample[:N, :] = self._sample_A[:, :]
             self._experimentSample[N : 2 * N, :] = self._sample_B[:, :]
             for i in range(n_vars):
-                self._experimentSample[2 * N + N * i : 2 * N + N * (i + 1), :] = self._sample_A[
-                    :, :
-                ]
-                self._experimentSample[2 * N + N * i : 2 * N + N * (i + 1), i] = self._sample_B[
-                    :, i
-                ]
-
+                self._experimentSample[2 * N + N * i : 2 * N + N * (i + 1), :] = (
+                    self._sample_A[:, :]
+                )
+                self._experimentSample[2 * N + N * i : 2 * N + N * (i + 1), i] = (
+                    self._sample_B[:, i]
+                )
         else:
             N_tot = int(N * (2 + 2 * n_vars))
             self._experimentSample = ot.Sample(N_tot, n_vars)
             self._experimentSample[:N, :] = self._sample_A[:, :]
             self._experimentSample[N : 2 * N, :] = self._sample_B[:, :]
             for i in range(n_vars):
-                self._experimentSample[2 * N + N * i : 2 * N + N * (i + 1), :] = self._sample_A[
-                    :, :
-                ]
-                self._experimentSample[2 * N + N * i : 2 * N + N * (i + 1), i] = self._sample_B[
-                    :, i
-                ]
+                self._experimentSample[2 * N + N * i : 2 * N + N * (i + 1), :] = (
+                    self._sample_A[:, :]
+                )
+                self._experimentSample[2 * N + N * i : 2 * N + N * (i + 1), i] = (
+                    self._sample_B[:, i]
+                )
             for i in range(n_vars):
                 self._experimentSample[
                     2 * N + N * (n_vars + i) : 2 * N + N * (n_vars + i + 1), :
@@ -313,7 +309,9 @@ class SobolIndicesExperimentWithComposedDistribution(ot.SobolIndicesExperiment):
                 else:
                     raise ValueError("Unknown sequence type")
             else:
-                print("sequence undefined for low discrepancy experiment, default: SobolSequence")
+                print(
+                    "sequence undefined for low discrepancy experiment, default: SobolSequence"
+                )
                 seq = ot.SobolSequence()
             LDExperiment = ot.LowDiscrepancyExperiment(seq, distribution, N2, True)
             LDExperiment.setRandomize(False)

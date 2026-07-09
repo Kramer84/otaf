@@ -1,5 +1,4 @@
 from __future__ import annotations
-# -*- coding: utf-8 -*-
 
 __author__ = "Kramer84"
 __all__ = [
@@ -11,22 +10,20 @@ __all__ = [
     "compute_sup_inf_distributions",
     "get_prob_below_threshold",
 ]
-
 import copy
 import logging
-import numpy as np
-import sympy as sp
-import openturns as ot
-from beartype import beartype
-from beartype.typing import Dict, List, Union, Optional
 
-# Robust check for version compatibility
-if hasattr(ot, 'JointDistribution'):
-    # New versions (v1.24+)
+import numpy as np
+import openturns as ot
+import sympy as sp
+from beartype import beartype
+from beartype.typing import Dict, List, Optional, Union
+
+if hasattr(ot, "JointDistribution"):
     JointDistribution = ot.JointDistribution
 else:
-    # Older versions
     JointDistribution = ot.ComposedDistribution
+
 
 @beartype
 def get_composed_normal_defect_distribution(
@@ -63,7 +60,6 @@ def get_composed_normal_defect_distribution(
     """
     ND = len(defect_names)
     distributions = []
-
     if [mu_list, sigma_list, mu_dict, sigma_dict] == [None] * 4:
         logging.warning(
             "No argument for composed distribution have been passed, returning centered unit standard distribution"
@@ -74,16 +70,17 @@ def get_composed_normal_defect_distribution(
             distributions.append(dist)
         composed_distribution = JointDistribution(distributions)
         logging.debug(f"Composed unit distribution created: {composed_distribution}")
-
     elif mu_list is not None or sigma_list is not None:
         logging.info("Using mu or sigma list of parameters.")
         if mu_list is None:
             logging.warning("mu_list not provided, defaulting all means to 0.0")
             mu_list = [0.0] * ND
         if sigma_list is None:
-            logging.warning("sigma_list not provided, defaulting all standard deviations to 1.0")
+            logging.warning(
+                "sigma_list not provided, defaulting all standard deviations to 1.0"
+            )
             sigma_list = [1.0] * ND
-        if not (len(mu_list) == len(sigma_list) == ND):
+        if not len(mu_list) == len(sigma_list) == ND:
             raise ValueError(
                 f"The passed list of means and standard deviations have the wrong number of elements. N_means: {len(mu_list)} | N_stds: {len(sigma_list)} | N_defects: {ND} "
             )
@@ -93,27 +90,23 @@ def get_composed_normal_defect_distribution(
             distributions.append(dist)
         composed_distribution = JointDistribution(distributions)
         logging.debug(f"Composed distribution created: {composed_distribution}")
-
     elif mu_dict is not None or sigma_dict is not None:
         logging.info("Using mu or sigma dictionary of parameters.")
-
-        # Handle cases where one dict is passed but not the other
         if mu_dict is None:
-            logging.warning("No mu_dict passed, initializing all unspecified means to 0.0")
+            logging.warning(
+                "No mu_dict passed, initializing all unspecified means to 0.0"
+            )
             mu_dict = {}
         if sigma_dict is None:
-            logging.warning("No sigma_dict passed, initializing all unspecified standard deviations to 1.0")
+            logging.warning(
+                "No sigma_dict passed, initializing all unspecified standard deviations to 1.0"
+            )
             sigma_dict = {}
-
         mu_keys = list(mu_dict.keys())
         sigma_keys = list(sigma_dict.keys())
-
         for i, defect_name in enumerate(defect_names):
-            # Reset defaults for EACH iteration to prevent previous values carrying over
-            mu, sigma = 0.0, 1.0
+            mu, sigma = (0.0, 1.0)
             defect_str = str(defect_name)
-
-            # Find matching key for mean
             mu_match = next((key for key in mu_keys if key in defect_str), None)
             if mu_match:
                 mu = mu_dict[mu_match]
@@ -121,8 +114,6 @@ def get_composed_normal_defect_distribution(
                 logging.info(
                     f"No mean value for defect {defect_str} in mu_dict, setting mean to 0.0"
                 )
-
-            # Find matching key for standard deviation
             sigma_match = next((key for key in sigma_keys if key in defect_str), None)
             if sigma_match:
                 sigma = sigma_dict[sigma_match]
@@ -130,14 +121,11 @@ def get_composed_normal_defect_distribution(
                 logging.warning(
                     f"No standard deviation value for defect {defect_str} in sigma_dict, setting standard deviation to 1.0"
                 )
-
             dist = ot.Normal(mu, sigma)
             dist.setDescription([defect_str])
             distributions.append(dist)
-
         composed_distribution = JointDistribution(distributions)
         logging.debug(f"Composed distribution created: {composed_distribution}")
-
     return composed_distribution
 
 
@@ -165,7 +153,9 @@ def multiply_composed_distribution_with_constant(composed_distribution, constant
     return composed_distribution
 
 
-def multiply_composed_distribution_standard_with_constants(composed_distribution, constants):
+def multiply_composed_distribution_standard_with_constants(
+    composed_distribution, constants
+):
     """
     Multiply the standard deviations of each sub-distribution by corresponding constants.
 
@@ -207,18 +197,13 @@ def get_means_standards_composed_distribution(composed_distribution):
         means: A list of the means of the distributions.
         stds: A list of the standard deviations of the distributions.
     """
-    # Get the parameters of the composed distribution (assumes mean/std for normal distributions)
     parameters = composed_distribution.getParameter()
-
     means = []
     stds = []
-
-    # Iterate over the parameters and extract means and standard deviations
-    for i in range(len(parameters) // 2):  # Assuming every distribution has a mean and std
-        means.append(parameters[2 * i])  # The mean is at index 2*i
-        stds.append(parameters[2 * i + 1])  # The std is at index 2*i + 1
-
-    return means, stds
+    for i in range(len(parameters) // 2):
+        means.append(parameters[2 * i])
+        stds.append(parameters[2 * i + 1])
+    return (means, stds)
 
 
 def generate_correlated_samples(mu1=0, mu2=0, sigma1=1, sigma2=1, corr=0, N=1):
@@ -228,7 +213,9 @@ def generate_correlated_samples(mu1=0, mu2=0, sigma1=1, sigma2=1, corr=0, N=1):
     return sample
 
 
-def compute_sup_inf_distributions(distributions, x_min=-10, x_max=10, n_points=int(1e4)):
+def compute_sup_inf_distributions(
+    distributions, x_min=-10, x_max=10, n_points=int(10000.0)
+):
     """
     Compute the supremum (sup) and infimum (inf) CDFs for a list of distributions.
 
@@ -262,16 +249,13 @@ def compute_sup_inf_distributions(distributions, x_min=-10, x_max=10, n_points=i
     x_arr = np.linspace(x_min, x_max, n_points)
     sup_points = np.zeros(n_points)
     inf_points = np.zeros(n_points)
-
     for i, x in enumerate(x_arr):
         cdfs = [d.computeCDF(x) for d in distributions]
         sup_points[i] = max(cdfs)
         inf_points[i] = min(cdfs)
-
     sup_data = np.column_stack([x_arr, sup_points])
     inf_data = np.column_stack([x_arr, inf_points])
-
-    return sup_data, inf_data
+    return (sup_data, inf_data)
 
 
 def get_prob_below_threshold(data_inf_sup, threshold=0):
@@ -294,8 +278,5 @@ def get_prob_below_threshold(data_inf_sup, threshold=0):
     float
         The probability corresponding to the gap closest to the threshold.
     """
-    # Find the index where the gap is closest to the threshold
     min_index = np.argmin(np.abs(data_inf_sup[:, 0] - threshold))
-
-    # Return the corresponding probability in the second column
     return data_inf_sup[min_index, 1]

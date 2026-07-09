@@ -13,24 +13,14 @@ __all__ = [
     "arrange_axes_in_grid",
 ]
 import math
-import os
-import re
-from itertools import product
 
 import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
-import numpy as np
-import sympy as sp
 from beartype import beartype
-from beartype.typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
-from matplotlib.patches import Polygon, Rectangle
+from beartype.typing import TYPE_CHECKING, Any, List, Tuple, Union
 
 if TYPE_CHECKING:
     import trimesh
 import otaf.exceptions as otaf_exceptions
-from otaf.geometry import are_points_on_2d_plane, rotation_matrix_from_vectors
-
-from ._color_palettes import color_palette_2
 
 DEFAULT_FIG_STYLE = {
     "figsize_cm": (16, 9),

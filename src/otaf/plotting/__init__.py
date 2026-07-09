@@ -8,14 +8,13 @@ from ._core import (
     DEFAULT_FIG_STYLE,
     arrange_axes_in_grid,
     hex_to_rgba,
-    trimesh_scene_as_notebook_scene, # Note: Strongly advise moving this to _meshes.py
+    trimesh_scene_as_notebook_scene,
 )
 from ._deviation_domain import plot_deviation_domain
 from ._part_visualizations import plot_deviated_surfs, plot_rect_part
 from ._topology_plots import generate_topological_tikz
 from ._uncertainty_plots import plot_ensemble_gld_pbox_cdf, plot_gld_pbox_cdf
 
-# Define the explicit public namespace
 __all__ = [
     "DEFAULT_FIG_STYLE",
     "arrange_axes_in_grid",

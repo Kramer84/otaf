@@ -2,8 +2,6 @@ from __future__ import annotations
 
 __author__ = "Kramer84"
 __all__ = ["color_palette_1", "color_palette_2", "color_palette_3"]
-
-
 color_palette_1 = ["#fff400", "#001eff", "#ff4d00", "#15ff00", "#ff0000"]
 color_palette_2 = [
     "#023fa5",

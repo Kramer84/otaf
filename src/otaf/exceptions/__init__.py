@@ -1,10 +1,64 @@
 """Custom exception classes for the OTAF project."""
+
 from __future__ import annotations
-# -*- coding: utf-8 -*-
 
 __author__ = "Kramer84"
+from ._exceptions import (
+    ConflictingSurfaceDirectionsException,
+    CylindricalInterferenceGeometricException,
+    DuplicatePointError,
+    GeometricConditionError,
+    InvalidAffineTransformException,
+    InvalidGlobalConstraintError,
+    InvalidInteractionFormatError,
+    InvalidPartLabelError,
+    InvalidSurfaceDirectionError,
+    InvalidSurfaceLabelError,
+    LabelPatternError,
+    LabelPrefixError,
+    MissingKeyError,
+    MissingOriginPointError,
+    MissingSurfaceTypeKeyError,
+    NoAxialOverlapException,
+    NonConcentricCylindersException,
+    NonUniqueCoordinatesError,
+    NonUniqueLabelError,
+    PartNotFoundError,
+    PointDictionaryError,
+    PointsNotOnPlaneError,
+    SurfaceNotFoundError,
+    UniqueLabelSuffixError,
+    UnsupportedSurfaceTypeError,
+    _raise_missing_dependency,
+)
+from ._timeout import timeout
 
-from ._exceptions import *
-from ._timeout import *
-
-__all__ = _exceptions.__all__ + _timeout.__all__
+__all__ = [
+    "ConflictingSurfaceDirectionsException",
+    "CylindricalInterferenceGeometricException",
+    "DuplicatePointError",
+    "GeometricConditionError",
+    "InvalidAffineTransformException",
+    "InvalidGlobalConstraintError",
+    "InvalidInteractionFormatError",
+    "InvalidPartLabelError",
+    "InvalidSurfaceDirectionError",
+    "InvalidSurfaceLabelError",
+    "LabelPatternError",
+    "LabelPrefixError",
+    "MissingKeyError",
+    "MissingOriginPointError",
+    "MissingSurfaceTypeKeyError",
+    "NoAxialOverlapException",
+    "NonConcentricCylindersException",
+    "NonUniqueCoordinatesError",
+    "NonUniqueLabelError",
+    "PartNotFoundError",
+    "PointDictionaryError",
+    "PointsNotOnPlaneError",
+    "SurfaceNotFoundError",
+    "UniqueLabelSuffixError",
+    "UnsupportedSurfaceTypeError",
+    "_raise_missing_dependency",
+    "timeout",
+]

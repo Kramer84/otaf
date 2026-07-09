@@ -1,4 +1,3 @@
-# -*- coding: utf-8
 __author__ = "Kramer84"
 __all__ = [
     "get_variable_size_sequential_linear_model",
@@ -7,9 +6,8 @@ __all__ = [
     "get_custom_mlp_layers",
     "add_gaussian_noise",
 ]
+from typing import Any, Callable, Dict, List, Optional, Type, Union
 
-
-from typing import Any, List, Optional, Type, Callable, Dict, Union
 import torch
 import torch.nn as nn
 
@@ -25,8 +23,8 @@ def get_variable_size_sequential_linear_model(
     """
     Construct a variable-sized sequential linear neural network model.
 
-    The network size, depth, and layer sizing profile scale dynamically based on 
-    the provided input dimensions, forming a bottleneck or expansion pyramid 
+    The network size, depth, and layer sizing profile scale dynamically based on
+    the provided input dimensions, forming a bottleneck or expansion pyramid
     that peaks at a designated intermediate layer depth before scaling down.
 
     Parameters
@@ -52,41 +50,28 @@ def get_variable_size_sequential_linear_model(
     """
     if activation is None:
         activation = nn.ReLU
-
-    ir = lambda x: int(round(x))  # Simplify rounding function
+    ir = lambda x: int(round(x))
     d = input_dim
-
-    n_layers = max(
-        ir(d * relative_layer_number) + 1, min_layer_number + 1
-    )  # In the sense of different layer sizes.
+    n_layers = max(ir(d * relative_layer_number) + 1, min_layer_number + 1)
     m_layer_id = max(ir(n_layers * relative_max_layer_depth), 1)
     m_layer_id = min(m_layer_id, n_layers - 2)
     m_layer_size = ir(d * relative_max_layer_size)
-
-    coef_lin_up = (m_layer_size - d) / (
-        m_layer_id + 1
-    )  # How much the size of model rises from input to max layer
-    coef_lin_down = (d - m_layer_size) / (
-        n_layers - m_layer_id
-    )  # How much the size of model goes down from max layer to output
-
-    # Calculate layer sizes
+    coef_lin_up = (m_layer_size - d) / (m_layer_id + 1)
+    coef_lin_down = (d - m_layer_size) / (n_layers - m_layer_id)
     lin_size_l = [d]
     for i in range(1, n_layers):
         if i < m_layer_id:
-            size = ir(d + ((m_layer_size - d) / m_layer_id) * i)
-
+            size = ir(d + (m_layer_size - d) / m_layer_id * i)
         elif i > m_layer_id:
             size = ir(
-                m_layer_size - (m_layer_size - 1) * (i - m_layer_id) / (n_layers - m_layer_id - 1)
+                m_layer_size
+                - (m_layer_size - 1) * (i - m_layer_id) / (n_layers - m_layer_id - 1)
             )
         else:
             size = m_layer_size
         lin_size_l.append(size)
     print(f"Linear layer sizes  : {lin_size_l}")
-
-    # Create layers
-    seq_args = []  # list of arguments for nn.Sequential
+    seq_args = []
     for i in range(1, n_layers):
         seq_args.append(nn.Linear(lin_size_l[i - 1], lin_size_l[i]))
         if i < n_layers - 1:
@@ -95,9 +80,7 @@ def get_variable_size_sequential_linear_model(
 
 
 def get_base_relu_mlp_model(
-    input_dim: int, 
-    output_dim: int, 
-    compile_model: bool = False
+    input_dim: int, output_dim: int, compile_model: bool = False
 ) -> Union[nn.Sequential, Any]:
     """
     Construct a baseline multi-layer perceptron with specialized progressive sizing.
@@ -133,7 +116,6 @@ def get_base_relu_mlp_model(
     )
     print(layer_sizes)
     layers = get_custom_mlp_layers(layer_sizes, activation_class=nn.ReLU)
-
     model = nn.Sequential(*layers)
     if compile_model:
         return torch.compile(model)
@@ -142,14 +124,12 @@ def get_base_relu_mlp_model(
 
 
 def get_base_tanh_mlp_model(
-    input_dim: int, 
-    output_dim: int, 
-    compile_model: bool = False
+    input_dim: int, output_dim: int, compile_model: bool = False
 ) -> Union[nn.Sequential, Any]:
     """
     Construct a baseline multi-layer perceptron utilizing Tanh activation functions.
 
-    Calculate specific intermediate hidden layer sizes via heavily expanded linear 
+    Calculate specific intermediate hidden layer sizes via heavily expanded linear
     interpolations between input and output boundaries, building a smooth bottleneck topology.
 
     Parameters
@@ -179,7 +159,6 @@ def get_base_tanh_mlp_model(
         )
     )
     layers = get_custom_mlp_layers(layer_sizes, activation_class=nn.Tanh)
-
     model = nn.Sequential(*layers)
     if compile_model:
         return torch.compile(model)
@@ -199,13 +178,13 @@ def get_custom_mlp_layers(
     """
     Create a list of structural layers for building a multi-layer perceptron.
 
-    Iterate through the specified size sequence to instantiate and chain the hidden 
+    Iterate through the specified size sequence to instantiate and chain the hidden
     layers, activation functions, and optional regularization tracking components.
 
     Parameters
     ----------
     layer_sizes : List[int]
-        Sequence of layer dimensions defining the structural boundaries 
+        Sequence of layer dimensions defining the structural boundaries
         [input_dim, hidden_1, ..., hidden_n, output_dim].
     layer_class : Callable[..., nn.Module], default=nn.Linear
         The constructor or class template used to instantiate transformation blocks.
@@ -232,15 +211,13 @@ def get_custom_mlp_layers(
         activation_kwargs = {}
     if dropout_kwargs is None:
         dropout_kwargs = {}
-
     layers = []
     for i in range(len(layer_sizes) - 1):
         layers.append(layer_class(layer_sizes[i], layer_sizes[i + 1], **layer_kwargs))
-        if i < len(layer_sizes) - 2:  # No activation after the last layer
+        if i < len(layer_sizes) - 2:
             layers.append(activation_class(**activation_kwargs))
             if dropout_class is not None:
                 layers.append(dropout_class(**dropout_kwargs))
-
     return layers
 
 
@@ -248,8 +225,8 @@ def add_gaussian_noise(tensor: torch.Tensor, alpha: float) -> torch.Tensor:
     """
     Add feature-wise Gaussian noise to an input tensor.
 
-    Calculate the standard deviation across the feature dimension (axis 1) for 
-    each sample, scale it by a distortion factor, and inject zero-mean normal 
+    Calculate the standard deviation across the feature dimension (axis 1) for
+    each sample, scale it by a distortion factor, and inject zero-mean normal
     distribution perturbations into the original matrix.
 
     Parameters
@@ -264,13 +241,7 @@ def add_gaussian_noise(tensor: torch.Tensor, alpha: float) -> torch.Tensor:
     torch.Tensor
         The corrupted tensor containing the injected Gaussian perturbations.
     """
-    # Calculate the standard deviation along axis 1
     std_dev = tensor.std(dim=1, keepdim=True)
-
-    # Generate Gaussian noise
     noise = torch.randn_like(tensor) * std_dev * alpha
-
-    # Add noise to the original tensor
     noisy_tensor = tensor + noise
-
     return noisy_tensor

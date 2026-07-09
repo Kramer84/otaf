@@ -1,5 +1,4 @@
 from __future__ import annotations
-# -*- coding: utf-8 -*-
 
 __author__ = "Kramer84"
 __all__ = [
@@ -11,34 +10,25 @@ __all__ = [
     "milp_batch_sequential",
     "compute_gap_optimizations_on_sample_batch",
 ]
-
 import numbers
-
 from time import time
 
 import numpy as np
-
-from scipy.optimize import milp, OptimizeResult, LinearConstraint, Bounds
-
 import openturns as ot
-
-from joblib import Parallel, delayed, cpu_count
-
 from beartype import beartype
-from beartype.typing import List, Union, Callable, Optional, Any, TYPE_CHECKING
+from beartype.typing import TYPE_CHECKING, Any, Callable, List, Optional, Union
+from joblib import Parallel, cpu_count, delayed
+from scipy.optimize import Bounds, LinearConstraint, OptimizeResult, milp
 
 from otaf.common import get_tqdm_range
 
-# Robust check for version compatibility
-if hasattr(ot, 'JointDistribution'):
-    # New versions (v1.24+)
+if hasattr(ot, "JointDistribution"):
     JointDistribution = ot.JointDistribution
 else:
-    # Older versions
     JointDistribution = ot.ComposedDistribution
-
 if TYPE_CHECKING:
     from otaf import SystemOfConstraintsAssemblyModel
+
 
 @beartype
 def compute_failure_probability_FORM(
@@ -47,7 +37,7 @@ def compute_failure_probability_FORM(
     threshold: float = 0.0,
     start_point: Optional[ot.Point] = None,
     verbose: bool = False,
-    solver: Optional[ot.OptimizationAlgorithm] = None
+    solver: Optional[ot.OptimizationAlgorithm] = None,
 ) -> tuple[float, ot.FORMResult]:
     """Compute the probability of failure using the First-Order Reliability Method (FORM).
 
@@ -68,7 +58,7 @@ def compute_failure_probability_FORM(
     verbose : bool, optional
         If True, print reliability diagnostics, by default False.
     solver : ot.OptimizationAlgorithm, optional
-        The optimization algorithm to find the design point. Uses COBYLA 
+        The optimization algorithm to find the design point. Uses COBYLA
         with strict convergence tolerances if None.
 
     Returns
@@ -76,25 +66,31 @@ def compute_failure_probability_FORM(
     tuple[float, ot.FORMResult]
         The calculated failure probability and the full FORM result object.
     """
-    comp_rand_vect = ot.CompositeRandomVector(ot_function, ot.RandomVector(composed_distribution))
+    comp_rand_vect = ot.CompositeRandomVector(
+        ot_function, ot.RandomVector(composed_distribution)
+    )
     event = ot.ThresholdEvent(comp_rand_vect, ot.Less(), threshold)
     if not solver:
         solver = ot.Cobyla()
         solver.setMaximumIterationNumber(10000)
-        solver.setMaximumAbsoluteError(1.0e-3)
-        solver.setMaximumRelativeError(1.0e-3)
-        solver.setMaximumResidualError(1.0e-3)
-        solver.setMaximumConstraintError(1.0e-3)
+        solver.setMaximumAbsoluteError(0.001)
+        solver.setMaximumRelativeError(0.001)
+        solver.setMaximumResidualError(0.001)
+        solver.setMaximumConstraintError(0.001)
     algoFORM = ot.FORM(solver, event, start_point)
     algoFORM.run()
     result = algoFORM.getResult()
     pf = result.getEventProbability()
     if verbose:
-        print(f"Design point in physical space : {result.getPhysicalSpaceDesignPoint()}")
-        print(f"Design point in standard space : {result.getStandardSpaceDesignPoint()}")
+        print(
+            f"Design point in physical space : {result.getPhysicalSpaceDesignPoint()}"
+        )
+        print(
+            f"Design point in standard space : {result.getStandardSpaceDesignPoint()}"
+        )
         print(f"Hasofer index : {result.getHasoferReliabilityIndex()}")
         print(f"Probability of failure (FORM) Pf = {pf:.16f}")
-    return pf, result
+    return (pf, result)
 
 
 def compute_failure_probability_NAIS(
@@ -118,15 +114,12 @@ def compute_failure_probability_NAIS(
     - proba: The estimated failure probability
     - result: Additional NAIS algorithm results (see docstring)
     """
-    # Create the output random vector Y = g(X)
-    output_random_vector = ot.CompositeRandomVector(ot_python_function, ot.RandomVector(distribution))
-    # Create the event { Y = g(X) <= threshold }
+    output_random_vector = ot.CompositeRandomVector(
+        ot_python_function, ot.RandomVector(distribution)
+    )
     failure_event = ot.ThresholdEvent(output_random_vector, ot.LessOrEqual(), threshold)
-
-    # Set up the NAIS algorithm & run
     algo = ot.NAIS(failure_event, quantile_level)
     algo.run()
-    # Retrieve results
     result = algo.getResult()
     proba = result.getProbabilityEstimate()
     if verbose:
@@ -134,8 +127,11 @@ def compute_failure_probability_NAIS(
         print("Current coefficient of variation =", result.getCoefficientOfVariation())
         length_95 = result.getConfidenceLength()
         print("Confidence length (0.95) =", length_95)
-        print("Confidence interval (0.95) =", [proba - length_95 / 2, proba + length_95 / 2])
-    return proba, result
+        print(
+            "Confidence interval (0.95) =",
+            [proba - length_95 / 2, proba + length_95 / 2],
+        )
+    return (proba, result)
 
 
 def compute_failure_probability_SUBSET(
@@ -161,16 +157,13 @@ def compute_failure_probability_SUBSET(
     - proba: The estimated failure probability
     - result: Additional NAIS algorithm results (see docstring)
     """
-    # Create the output random vector Y = g(X)
-    output_random_vector = ot.CompositeRandomVector(ot_python_function, ot.RandomVector(distribution))
-    # Create the event { Y = g(X) <= threshold }
+    output_random_vector = ot.CompositeRandomVector(
+        ot_python_function, ot.RandomVector(distribution)
+    )
     failure_event = ot.ThresholdEvent(output_random_vector, ot.LessOrEqual(), threshold)
-
-    # Set up the NAIS algorithm & run
     algo = ot.SubsetSampling(failure_event, proposal_range, target_probability)
     algo.setKeepSample(True)
     algo.run()
-    # Retrieve results
     result = algo.getResult()
     proba = result.getProbabilityEstimate()
     if verbose:
@@ -178,8 +171,11 @@ def compute_failure_probability_SUBSET(
         print("Current coefficient of variation =", result.getCoefficientOfVariation())
         length_95 = result.getConfidenceLength()
         print("Confidence length (0.95) =", length_95)
-        print("Confidence interval (0.95) =", [proba - length_95 / 2, proba + length_95 / 2])
-    return proba, result, algo
+        print(
+            "Confidence interval (0.95) =",
+            [proba - length_95 / 2, proba + length_95 / 2],
+        )
+    return (proba, result, algo)
 
 
 @beartype
@@ -215,11 +211,14 @@ def compute_failure_probability_subset_sampling(
         optimizations = compute_gap_optimizations_on_sample(
             constraint_matrix_generator, X, C, bounds, n_cpu
         )
-        opt_var_values = ot.Point(np.array([opt.fun for opt in optimizations], dtype=float))
+        opt_var_values = ot.Point(
+            np.array([opt.fun for opt in optimizations], dtype=float)
+        )
         return opt_var_values
 
-    defect_func_ot = ot.PythonFunction(defect_distribition_vector.getDimension(), 1, defect_func)
-
+    defect_func_ot = ot.PythonFunction(
+        defect_distribition_vector.getDimension(), 1, defect_func
+    )
     Y = ot.CompositeRandomVector(defect_func_ot, defect_distribition_vector)
     failureEvent = ot.ThresholdEvent(Y, ot.LessOrEqual(), 0.0)
     algo = ot.SubsetSampling(failureEvent)
@@ -238,7 +237,7 @@ def compute_gap_optimizations_on_sample(
 ) -> List[OptimizeResult]:
     """Compute gap optimizations for a set of samples using MILP.
 
-    Solve a sequence of Mixed-Integer Linear Programming (MILP) problems derived 
+    Solve a sequence of Mixed-Integer Linear Programming (MILP) problems derived
     from a system of constraints to determine the optimal gap for each sample.
 
     Parameters
@@ -266,14 +265,11 @@ def compute_gap_optimizations_on_sample(
     c, a_ub, b_ub, a_eq, b_eq, bounds = constraint_matrix_generator(
         deviation_array, bounds=bounds, C=C
     )
-
-    # Linprog is being depreciated on scipys side, so we switch to milp
-
     if progress_bar:
         _range = get_tqdm_range()
     else:
         _range = range
-    optimizations=[]
+    optimizations = []
     if 0 <= n_cpu <= 1:
         optimizations = [
             milp(
@@ -289,16 +285,18 @@ def compute_gap_optimizations_on_sample(
         ]
     elif n_cpu < 0 or n_cpu > 1:
         optimizations = Parallel(n_jobs=n_cpu)(
-            delayed(milp)(
-                c=c,
-                bounds=Bounds(bounds[:, 0], bounds[:, 1], keep_feasible=False),
-                constraints=(
-                    LinearConstraint(a_ub, -np.inf, b_ub[:, k]),
-                    LinearConstraint(a_eq, b_eq[:, k], b_eq[:, k]),
-                ),
-                options={"disp": False, "presolve": True},
+            (
+                delayed(milp)(
+                    c=c,
+                    bounds=Bounds(bounds[:, 0], bounds[:, 1], keep_feasible=False),
+                    constraints=(
+                        LinearConstraint(a_ub, -np.inf, b_ub[:, k]),
+                        LinearConstraint(a_eq, b_eq[:, k], b_eq[:, k]),
+                    ),
+                    options={"disp": False, "presolve": True},
+                )
+                for k in _range(b_ub.shape[1])
             )
-            for k in _range(b_ub.shape[1])
         )
     return optimizations
 
@@ -309,12 +307,12 @@ def milp_batch_sequential(
     a_ub: np.ndarray,
     b_ub: np.ndarray,
     a_eq: np.ndarray,
-    b_eq: np.ndarray
+    b_eq: np.ndarray,
 ) -> np.ndarray:
     """Optimize a batch of linear problems iteratively using MILP.
 
-    Solve a sequence of Mixed-Integer Linear Programming (MILP) problems 
-    sharing common objective coefficients and constraint matrices, but 
+    Solve a sequence of Mixed-Integer Linear Programming (MILP) problems
+    sharing common objective coefficients and constraint matrices, but
     varying constraint bounds.
 
     Parameters
@@ -368,12 +366,12 @@ def compute_gap_optimizations_on_sample_batch(
     batch_size: int = 1000,
     progress_bar: bool = False,
     verbose: int = 0,
-    dtype: str = "float32"
+    dtype: str = "float32",
 ) -> np.ndarray:
     """Compute gap optimizations on a sample using batch processing and MILP.
 
-    Perform parallel batch optimization for a system of constraints, grouping 
-    samples into batches to improve computational throughput and reduce parallelization 
+    Perform parallel batch optimization for a system of constraints, grouping
+    samples into batches to improve computational throughput and reduce parallelization
     overhead.
 
     Parameters
@@ -387,7 +385,7 @@ def compute_gap_optimizations_on_sample_batch(
     bounds : Union[List[List[float]], np.ndarray], optional
         Bounds for the optimization variables.
     n_cpu : int, optional
-        Number of CPUs for parallel processing. Negative values are relative 
+        Number of CPUs for parallel processing. Negative values are relative
         to total available CPUs, by default 1.
     batch_size : int, optional
         Number of points per parallel batch, by default 1000.
@@ -406,29 +404,28 @@ def compute_gap_optimizations_on_sample_batch(
     c, a_ub, b_ub, a_eq, b_eq, bounds = constraint_matrix_generator(
         deviation_array, bounds=bounds, C=C
     )
-
     N_cpu_avail = cpu_count()
     N_cpu_reque = n_cpu if n_cpu >= 0 else N_cpu_avail + n_cpu
-
     N_points = b_ub.shape[1]
-
     if N_points > batch_size:
-        if (
-            N_points // batch_size < N_cpu_reque
-        ):  # We reduce the amount of workers to reduce overhead. (hopefully)
+        if N_points // batch_size < N_cpu_reque:
             N_cpu_reque = N_points // batch_size
-
         if progress_bar:
             _range = get_tqdm_range()(0, N_points, batch_size, unit_scale=batch_size)
         else:
             _range = range(0, N_points, batch_size)
-
-        # Use joblib Parallel to handle batches in parallel
         optimizations = Parallel(n_jobs=N_cpu_reque)(
-            delayed(milp_batch_sequential)(
-                c, bounds, a_ub, b_ub[:, i : i + batch_size], a_eq, b_eq[:, i : i + batch_size]
+            (
+                delayed(milp_batch_sequential)(
+                    c,
+                    bounds,
+                    a_ub,
+                    b_ub[:, i : i + batch_size],
+                    a_eq,
+                    b_eq[:, i : i + batch_size],
+                )
+                for i in _range
             )
-            for i in _range
         )
         return np.vstack(optimizations, dtype=dtype)
     else:

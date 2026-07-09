@@ -32,11 +32,9 @@ import re
 import numpy as np
 
 """
-_constants.py
-
 Defines constants, regex patterns, and utility dictionaries for surface and gap modeling.
 
-This file includes the following:
+Includes:
 - Definitions of base surface types, directions, and contact types.
 - Regular expressions for validating naming patterns of surfaces, parts, and transformations.
 - Mappings for constraints, degrees of freedom (DOFs), and nullified components.

@@ -7,6 +7,7 @@ from beartype.typing import Any, Optional
 
 from ._core import _merge_style
 
+
 def plot_rect_part(
     ax: Any, scale_factor: float = 100, style: Optional[dict] = None, **style_kwargs
 ) -> Any:

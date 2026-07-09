@@ -1,13 +1,13 @@
 from __future__ import annotations
-# -*- coding: utf-8 -*-
 
 __author__ = "Kramer84"
-__all__ = [
-    "process_capability",
-]
+__all__ = ["process_capability"]
 
-def process_capability(usl:float, lsl:float, mean:float, std_dev:float) -> dict[str, float]:
-    r"""Calculate the process capability indices Cp, CPU, CPL, Cpk, and k.
+
+def process_capability(
+    usl: float, lsl: float, mean: float, std_dev: float
+) -> dict[str, float]:
+    """Calculate the process capability indices Cp, CPU, CPL, Cpk, and k.
 
     Parameters
     ----------
@@ -16,9 +16,9 @@ def process_capability(usl:float, lsl:float, mean:float, std_dev:float) -> dict[
     lsl : float
         Lower Specification Limit.
     mean : float
-        Mean of the process ($\bar{x}$).
+        Mean of the process ($\\bar{x}$).
     std_dev : float
-        Standard deviation of the process ($\sigma$).
+        Standard deviation of the process ($\\sigma$).
 
     Returns
     -------
@@ -36,48 +36,30 @@ def process_capability(usl:float, lsl:float, mean:float, std_dev:float) -> dict[
 
     .. math::
 
-       C_p = \frac{usl - lsl}{6\sigma}
+       C_p = \\frac{usl - lsl}{6\\sigma}
 
-       CPU = \frac{usl - \mu}{3\sigma}
+       CPU = \\frac{usl - \\mu}{3\\sigma}
 
-       CPL = \frac{\mu - lsl}{3\sigma}
+       CPL = \\frac{\\mu - lsl}{3\\sigma}
 
-       C_{pk} = \min(CPU, CPL)
+       C_{pk} = \\min(CPU, CPL)
 
-       k = \frac{|\mu - m|}{\frac{usl - lsl}{2}}
+       k = \\frac{|\\mu - m|}{\\frac{usl - lsl}{2}}
 
-    Where $m = \frac{usl + lsl}{2}$ is the specification midpoint.
+    Where $m = \\frac{usl + lsl}{2}$ is the specification midpoint.
 
     Raises
     ------
     ZeroDivisionError
         If `std_dev` is 0, resulting in a division by zero during indices calculation.
     ValueError
-        If `usl` is less than `lsl`, resulting in an invalid specification range, 
+        If `usl` is less than `lsl`, resulting in an invalid specification range,
         or if `std_dev` is negative.
     """
-    # Calculate Cp (Process potential)
     Cp = (usl - lsl) / (6 * std_dev)
-
-    # Calculate CPU (Upper capability)
     CPU = (usl - mean) / (3 * std_dev)
-
-    # Calculate CPL (Lower capability)
     CPL = (mean - lsl) / (3 * std_dev)
-
-    # Calculate Cpk (Process capability)
     Cpk = min(CPU, CPL)
-
-    # Calculate midpoint (m)
     m = (usl + lsl) / 2
-
-    # Calculate k (Deviation from center)
     k = abs(mean - m) / ((usl - lsl) / 2)
-
-    return {
-        'Cp': Cp,
-        'CPU': CPU,
-        'CPL': CPL,
-        'Cpk': Cpk,
-        'k': k
-    }
+    return {"Cp": Cp, "CPU": CPU, "CPL": CPL, "Cpk": Cpk, "k": k}

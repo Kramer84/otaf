@@ -1,5 +1,4 @@
 from __future__ import annotations
-# -*- coding: utf-8 -*-
 
 __author__ = "Kramer84"
 __all__ = [
@@ -18,20 +17,27 @@ __all__ = [
     "threshold_for_percentile_positive_values_below",
     "bidirectional_string_to_array_conversion",
     "arrays_close_enough",
-    "scaling"
+    "scaling",
 ]
-
-import re
 import itertools
+import re
 import string
 
-import sympy as sp
 import numpy as np
-
+import sympy as sp
 from beartype import beartype
-from beartype.typing import List, Union, Dict, Tuple, Optional
+from beartype.typing import Dict, List, Optional, Tuple, Union
 
-from otaf.constants import T_MATRIX_PATTERN, G_MATRIX_MSTRING_PATTERN, BASIS_DICT, D_MATRIX_PATTERN1, D_MATRIX_PATTERN2, D_MATRIX_PATTERN3, G_MATRIX_PATTERN1, G_MATRIX_PATTERN2
+from otaf.constants import (
+    BASIS_DICT,
+    D_MATRIX_PATTERN1,
+    D_MATRIX_PATTERN2,
+    D_MATRIX_PATTERN3,
+    G_MATRIX_MSTRING_PATTERN,
+    G_MATRIX_PATTERN1,
+    G_MATRIX_PATTERN2,
+    T_MATRIX_PATTERN,
+)
 from otaf.exceptions import MissingKeyError
 
 
@@ -75,21 +81,20 @@ def inverse_mstring(matrix_str: str) -> str:
     """
     if matrix_str:
         matrix_type = matrix_str[0]
-
         if matrix_type == "T":
             match = T_MATRIX_PATTERN.fullmatch(matrix_str)
             if not match:
-                raise ValueError(f"Invalid format for Transformation matrix: {matrix_str}")
+                raise ValueError(
+                    f"Invalid format for Transformation matrix: {matrix_str}"
+                )
             part, surface1, point1, surface2, point2 = match.groups()
             return f"TP{part}{surface2}{point2}{surface1}{point1}"
-
         elif matrix_type == "G":
             match = G_MATRIX_MSTRING_PATTERN.fullmatch(matrix_str)
             if not match:
                 raise ValueError(f"Invalid format for Gap matrix: {matrix_str}")
             part1, surface1, point1, part2, surface2, point2 = match.groups()
             return f"GP{part2}{surface2}{point2}P{part1}{surface1}{point1}"
-
         else:
             raise ValueError(f"Unsupported matrix type: {matrix_type}")
     else:
@@ -151,10 +156,10 @@ def parse_matrix_string(matrix_str: str) -> Dict[str, Union[str, bool]]:
     """
     Parse a matrix string into its components.
 
-    This function processes a string representation of a matrix, identifying its type
-    (Transformation, Deviation, or Gap) based on the first character. It extracts and returns
-    the relevant components in a structured dictionary format. The function also handles
-    specific rules and patterns associated with each type.
+    This function processes a string representation of a matrix,
+    identifying its type (Transformation, Deviation, or Gap) based on
+    the first character. It extracts and returns the relevant components
+    in a structured dictionary format.
 
     Parameters
     ----------
@@ -163,20 +168,16 @@ def parse_matrix_string(matrix_str: str) -> Dict[str, Union[str, bool]]:
 
     Returns
     -------
-    Dict[str, Union[str, bool]]
-        A dictionary containing the parsed components of the matrix. The keys depend on the
-        type of matrix but typically include:
-        - 'type': The matrix type ('T', 'D', or 'G').
-        - 'part', 'surface1', 'point1', 'surface2', 'point2': Components specific to
-          Transformation or Gap matrices.
-        - 'inverse': Boolean indicating if the matrix is an inverse (for Deviation and Gap types).
-        - 'mstring': The reconstructed matrix string based on parsed components.
+    dict
+        A dictionary containing the parsed components of the matrix. 
+        Keys include ``type``, ``part``, ``surface1``, ``point1``, 
+        ``surface2``, ``point2``, ``inverse``, and ``mstring``.
 
     Raises
     ------
     ValueError
-        If the matrix string does not conform to the expected pattern for its type or
-        if an unsupported matrix type is encountered.
+        If the matrix string does not conform to the expected pattern 
+        for its type or if an unsupported matrix type is encountered.
 
     Examples
     --------
@@ -189,14 +190,13 @@ def parse_matrix_string(matrix_str: str) -> Dict[str, Union[str, bool]]:
      'point': 'K0', 'mstring': 'D1k'}
 
     >>> parse_matrix_string('GP1kK0P2aA0')
-    {'type': 'G', 'inverse': False, 'part1': '1', 'surface1': 'k', 'point1': 'K0',
-     'part2': '2', 'surface2': 'a', 'point2': 'A0', 'mstring': 'GP1kK0P2aA0'}
+    {'type': 'G', 'inverse': False, 'part1': '1', 'surface1': 'k',
+     'point1': 'K0', 'part2': '2', 'surface2': 'a', 'point2': 'A0',
+     'mstring': 'GP1kK0P2aA0'}
     """
     result = {"type": matrix_str[0]}
-
     if result["type"] not in ["D", "T", "G"]:
         raise ValueError(f"Wrong type for matrix string {matrix_str}")
-
     if result["type"] == "T":
         match = T_MATRIX_PATTERN.fullmatch(matrix_str)
         if not match:
@@ -213,7 +213,6 @@ def parse_matrix_string(matrix_str: str) -> Dict[str, Union[str, bool]]:
                 "mstring": f"TP{part}{surface1}{point1}{surface2}{point2}",
             }
         )
-
     elif result["type"] == "D":
         match1 = D_MATRIX_PATTERN1.fullmatch(matrix_str)
         match2 = D_MATRIX_PATTERN2.fullmatch(matrix_str)
@@ -227,7 +226,9 @@ def parse_matrix_string(matrix_str: str) -> Dict[str, Union[str, bool]]:
             is_inverse, part, surface, point = match2.groups()
         elif match3:
             is_inverse, part, surface, partbis, surfacebis = match3.groups()
-            assert part == partbis and surface == surfacebis, f"Check definition of {matrix_str}"
+            assert part == partbis and surface == surfacebis, (
+                f"Check definition of {matrix_str}"
+            )
             point = surface[0].upper() + "0"
         result.update(
             {
@@ -238,17 +239,18 @@ def parse_matrix_string(matrix_str: str) -> Dict[str, Union[str, bool]]:
                 "mstring": f"D{part}{surface}",
             }
         )
-
     elif result["type"] == "G":
         match1 = G_MATRIX_PATTERN1.fullmatch(matrix_str)
         match2 = G_MATRIX_PATTERN2.fullmatch(matrix_str)
         if not any([match1, match2]):
             raise ValueError(f"Invalid format for Gap matrix: {matrix_str}")
         if match1:
-            (is_inverse, part1, surface1, point1, part2, surface2, point2) = match1.groups()
+            is_inverse, part1, surface1, point1, part2, surface2, point2 = (
+                match1.groups()
+            )
         elif match2:
             is_inverse, part1, surface1, part2, surface2 = match2.groups()
-            point1, point2 = surface1[0].upper() + "0", surface2[0].upper() + "0"
+            point1, point2 = (surface1[0].upper() + "0", surface2[0].upper() + "0")
         result.update(
             {
                 "inverse": bool(is_inverse),
@@ -265,7 +267,9 @@ def parse_matrix_string(matrix_str: str) -> Dict[str, Union[str, bool]]:
 
 
 @beartype
-def get_symbols_in_expressions(expr_list: List[sp.Expr]) -> Tuple[List[sp.Symbol], List[sp.Symbol]]:
+def get_symbols_in_expressions(
+    expr_list: List[sp.Expr],
+) -> Tuple[List[sp.Symbol], List[sp.Symbol]]:
     """Extract and sort unique symbols from a list of sympy expressions.
 
     This function processes a list of sympy expressions, extracts the free symbols, and
@@ -304,25 +308,23 @@ def get_symbols_in_expressions(expr_list: List[sp.Expr]) -> Tuple[List[sp.Symbol
     ([u_d_1, w_d_3], [v_g_2])
     """
     sort_order = ["u_", "v_", "w_", "alpha_", "beta_", "gamma_"]
+
     def sort_key(x):
-        id_var = int(re.search(r"(\d+)$", x.name).group(1))
+        id_var = int(re.search("(\\d+)$", x.name).group(1))
         idx_s = [x.name.startswith(prefix) for prefix in sort_order].index(True)
         return (id_var, idx_s)
 
     free_symbols = {symb for expr in expr_list for symb in expr.free_symbols}
-    try :
+    try:
         deviation_symbols = sorted(
-            (symb for symb in free_symbols if "_d_" in str(symb)),
-            key=sort_key,
+            (symb for symb in free_symbols if "_d_" in str(symb)), key=sort_key
         )
         gap_symbols = sorted(
-            (symb for symb in free_symbols if "_g_" in str(symb)),
-            key=sort_key,
+            (symb for symb in free_symbols if "_g_" in str(symb)), key=sort_key
         )
     except ValueError as exc:
         raise ValueError("Symbols must follow naming guidelines") from exc
-
-    return deviation_symbols, gap_symbols
+    return (deviation_symbols, gap_symbols)
 
 
 @beartype
@@ -350,6 +352,7 @@ def extract_expressions_with_variables(m: sp.MatrixBase) -> List[sp.Expr]:
     """
     indices = [(0, 1), (0, 2), (1, 2), (0, 3), (1, 3), (2, 3)]
     return [m[i, j] for i, j in indices if len(m[i, j].free_symbols) > 0]
+
 
 @beartype
 def get_symbol_coef_map(expr: sp.Expr, rnd: int = 8) -> Dict[str, float]:
@@ -473,7 +476,6 @@ def validate_dict_keys(
     for key in keys:
         if key not in dictionary:
             raise MissingKeyError(key, dictionary_name)
-
         if value_checks and key in value_checks:
             validator = value_checks[key]
             if not validator(dictionary[key]):
@@ -504,13 +506,13 @@ def is_running_in_notebook() -> bool:
     try:
         shell = get_ipython().__class__.__name__
         if shell == "ZMQInteractiveShell":
-            return True  # Jupyter notebook or qtconsole
+            return True
         elif shell == "TerminalInteractiveShell":
-            return False  # Terminal running IPython
+            return False
         else:
-            return False  # Other type (?)
+            return False
     except NameError:
-        return False  # Probably standard Python interpreter
+        return False
 
 
 def get_tqdm_range():
@@ -529,6 +531,7 @@ def get_tqdm_range():
     """
     from tqdm import trange
     from tqdm.notebook import trange as trange_notebook
+
     return trange_notebook if is_running_in_notebook() else trange
 
 
@@ -550,14 +553,10 @@ def alphabet_generator():
       with multi-letter combinations (e.g., 'aa', 'ab', ..., 'zz', 'aaa', etc.).
     - It produces strings indefinitely, making it suitable for cases where infinite sequences are needed.
     """
-    n = 1  # Start with single-letter combinations
-    # Infinite loop to keep generating sequences
+    n = 1
     while True:
-        # Generate all combinations for the current length `n`
         for s in itertools.product(string.ascii_lowercase, repeat=n):
-            # Join tuple into a string and yield
             yield "".join(s)
-        # Increment to generate sequences of increased length
         n += 1
 
 
@@ -605,29 +604,30 @@ def threshold_for_percentile_positive_values_below(
     None
     """
     arr = np.squeeze(np.asarray(arr))
-
     if arr.ndim != 1:
-        raise ValueError("Input must be one-dimensional or squeezable to one-dimensional.")
+        raise ValueError(
+            "Input must be one-dimensional or squeezable to one-dimensional."
+        )
     if not 0 <= percentile <= 100:
         raise ValueError("Percentile must be between 0 and 100.")
     if arr.size == 0:
         raise ValueError("Input array is empty.")
-
     positive_values = arr[arr > 0]
     if positive_values.size == 0:
-        return None  # No positive values in the array
-
+        return None
     threshold_value = np.percentile(positive_values, percentile)
     return threshold_value
 
 
 def arr_to_str(x):
     """Convert a numeric array to a formatted string representation."""
-    return "[" + " ".join(f"{num:.6f}" for num in x) + "]"
+    return "[" + " ".join((f"{num:.6f}" for num in x)) + "]"
+
 
 def str_to_arr(s):
     """Convert a formatted string representation back to a list of floats."""
     return [float(_) for _ in s[1:-1].split()]
+
 
 def bidirectional_string_to_array_conversion(x):
     """Convert input between a numeric array and its string representation."""
@@ -636,9 +636,11 @@ def bidirectional_string_to_array_conversion(x):
     else:
         return arr_to_str(x)
 
-def arrays_close_enough(arr1, arr2, tolerance=1e-6):
+
+def arrays_close_enough(arr1, arr2, tolerance=1e-06):
     """Check if two arrays are element-wise equal within a specified tolerance."""
     return np.allclose(arr1, arr2, atol=tolerance)
+
 
 def scaling(scale_factor):
     """
@@ -654,14 +656,16 @@ def scaling(scale_factor):
     function
         A decorator that applies the scaling to the output of the wrapped function.
     """
+
     def decorator(func):
+
         def wrapper(*args, **kwargs):
             result = func(*args, **kwargs)
             if isinstance(result, tuple):
-                # Scale both objective and Jacobian if it's a tuple (result and Jacobian)
-                return tuple(r * scale_factor for r in result)
+                return tuple((r * scale_factor for r in result))
             else:
-                # Scale only the result
                 return result * scale_factor
+
         return wrapper
+
     return decorator

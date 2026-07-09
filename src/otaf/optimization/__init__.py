@@ -4,6 +4,8 @@ from __future__ import annotations
 
 __author__ = "Kramer84"
 
-from ._optimization_storage import *
+from ._optimization_storage import OptimizationTracker
 
-__all__ = _optimization_storage.__all__
+__all__ = [
+    "OptimizationTracker",
+]

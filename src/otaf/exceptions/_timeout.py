@@ -1,18 +1,8 @@
 from __future__ import annotations
-# -*- coding: utf-8 -*-
 
 __author__ = "Kramer84"
-__all__ = [
-    "TimeoutError",
-    "timeout",
-]
-
+__all__ = ["timeout"]
 import signal
-
-
-class TimeoutError(Exception):
-    """Custom exception to be raised when a timeout occurs."""
-
 
 
 def timeout(seconds=10, error_message="Function call timed out"):
@@ -27,18 +17,16 @@ def timeout(seconds=10, error_message="Function call timed out"):
     """
 
     def decorator(func):
+
         def _handle_timeout(signum, frame):
             raise TimeoutError(error_message)
 
         def wrapper(*args, **kwargs):
-            # Set the signal handler for SIGALRM to our custom handler
             signal.signal(signal.SIGALRM, _handle_timeout)
-            # Schedule the SIGALRM signal to be sent after `seconds` seconds
             signal.alarm(seconds)
             try:
                 result = func(*args, **kwargs)
             finally:
-                # Disable the alarm
                 signal.alarm(0)
             return result
 
