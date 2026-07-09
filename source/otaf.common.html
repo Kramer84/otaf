@@ -160,13 +160,41 @@ with multi-letter combinations (e.g., ‘aa’, ‘ab’, …, ‘zz’, ‘aaa�
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.common.arrays_close_enough">
 <span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">arrays_close_enough</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arr2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#arrays_close_enough"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.arrays_close_enough" title="Link to this definition"></a></dt>
-<dd><p>Check if two arrays are element-wise equal within a specified tolerance.</p>
+<dd><p>Check if two arrays are element-wise equal within a tolerance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arr1</strong> (<em>array_like</em>) – The input arrays to compare.</p></li>
+<li><p><strong>arr2</strong> (<em>array_like</em>) – The input arrays to compare.</p></li>
+<li><p><strong>tolerance</strong> (<em>float</em><em>, </em><em>optional</em>) – The absolute tolerance threshold for comparison. Default is 1e-06.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the arrays are equal within the given tolerance,
+False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.common.bidirectional_string_to_array_conversion">
 <span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">bidirectional_string_to_array_conversion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#bidirectional_string_to_array_conversion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.bidirectional_string_to_array_conversion" title="Link to this definition"></a></dt>
 <dd><p>Convert input between a numeric array and its string representation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>str</em><em> or </em><em>array_like</em>) – The input to transform. If a string is provided, it is parsed
+into a list of floats. Otherwise, it is formatted into a string.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The converted representation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str or list of str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -217,24 +245,26 @@ and returns only those expressions that contain free variables (i.e., symbols).<
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.common.get_SE3_matrices_from_indices">
 <span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">get_SE3_matrices_from_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">se3_indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiplier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#get_SE3_matrices_from_indices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.get_SE3_matrices_from_indices" title="Link to this definition"></a></dt>
-<dd><p>Retrieve SE(3) matrices corresponding to a list of indices, optionally scaled by a multiplier.</p>
+<dd><p>Retrieve SE(3) matrices corresponding to a list of indices.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>se3_indices</strong> (<em>List</em><em>[</em><em>Union</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em><em>]</em>) – List of indices representing SE(3) base matrices.</p></li>
-<li><p><strong>multiplier</strong> (<em>Union</em><em>[</em><em>float</em><em>, </em><em>int</em><em>]</em><em>, </em><em>optional</em>) – A scalar multiplier applied to each matrix (default is 1.0).</p></li>
+<li><p><strong>se3_indices</strong> (<em>list</em><em> of </em><em>str</em><em> or </em><em>int</em>) – List of indices representing SE(3) base matrices.</p></li>
+<li><p><strong>multiplier</strong> (<em>float</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – A scalar multiplier applied to each matrix. Default is 1.0.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of SE(3) base matrices, each scaled by the specified multiplier.</p>
+<dd class="field-even"><p>A list of SE(3) base matrices, each scaled by the specified
+multiplier.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List[sympy.MatrixBase]</p>
+<dd class="field-odd"><p>list of sympy.MatrixBase</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>The indices are converted to strings and used to retrieve the corresponding SE(3) base matrices
-from the predefined <cite>BASIS_DICT</cite> in the <cite>otaf.constants</cite> module.</p>
+<p>The indices are converted to strings and used to retrieve the
+corresponding SE(3) base matrices from the predefined <code class="docutils literal notranslate"><span class="pre">BASIS_DICT</span></code>
+in the <code class="docutils literal notranslate"><span class="pre">otaf.constants</span></code> module.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -308,20 +338,20 @@ The symbols in each category are sorted according to a predefined order.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.common.get_tqdm_range">
 <span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">get_tqdm_range</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#get_tqdm_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.get_tqdm_range" title="Link to this definition"></a></dt>
-<dd><p>Retrieve the appropriate tqdm range function based on the execution environment.</p>
+<dd><p>Retrieve the appropriate tqdm range function based on environment.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><cite>trange_notebook</cite> if running in a Jupyter notebook, otherwise <cite>trange</cite>.</p>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">trange_notebook</span></code> if running in a Jupyter notebook,
+otherwise <code class="docutils literal notranslate"><span class="pre">trange</span></code>.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>function</p>
+<dd class="field-even"><p>callable</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<ul class="simple">
-<li><p>This function checks the execution environment using <cite>is_running_in_notebook</cite>.</p></li>
-<li><p><cite>trange_notebook</cite> is used for better rendering in notebook environments.</p></li>
-</ul>
+<p>This function checks the execution environment using the utility
+<code class="docutils literal notranslate"><span class="pre">is_running_in_notebook</span></code>. The <code class="docutils literal notranslate"><span class="pre">trange_notebook</span></code> variant is
+selected for cleaner HTML progress bar rendering inside notebooks.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -367,23 +397,22 @@ if <cite>matrix_str</cite> is empty.</p>
 <dt class="sig sig-object py" id="otaf.common.is_running_in_notebook">
 <span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">is_running_in_notebook</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#is_running_in_notebook"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.is_running_in_notebook" title="Link to this definition"></a></dt>
 <dd><p>Check if the current code is running in a Jupyter notebook environment.</p>
-<p>This function detects the type of IPython shell to determine whether the code is
-executed in a Jupyter notebook, a terminal, or a standard Python interpreter.</p>
+<p>This function detects the type of IPython shell to determine whether
+the code is executed in a Jupyter notebook, a terminal, or a standard
+Python interpreter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the code is running in a Jupyter notebook or qtconsole, False otherwise.</p>
+<dd class="field-odd"><p>True if running in a Jupyter notebook or qtconsole, False otherwise.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>bool</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<ul class="simple">
-<li><p>If the IPython shell cannot be detected, it is assumed the code is running
-in a standard Python interpreter.</p></li>
-<li><p>This function relies on the <cite>get_ipython()</cite> function, which is available
-only in IPython environments.</p></li>
-</ul>
+<p>If the IPython shell cannot be detected, it is assumed the code is
+running in a standard Python interpreter.</p>
+<p>This function relies on the built-in <code class="docutils literal notranslate"><span class="pre">get_ipython()</span></code> function,
+which is available exclusively within IPython environments.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -473,16 +502,17 @@ Keys include <code class="docutils literal notranslate"><span class="pre">type</
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.common.scaling">
 <span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">scaling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scale_factor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#scaling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.scaling" title="Link to this definition"></a></dt>
-<dd><p>Decorator to scale the output of a function by a specified scaling factor.</p>
+<dd><p>Decorator to scale the output of a function by a factor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>scale_factor</strong> (<em>float</em>) – The factor by which to scale the output of the wrapped function.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A decorator that applies the scaling to the output of the wrapped function.</p>
+<dd class="field-even"><p>A decorator that applies the <cite>scale_factor</cite> to the output of
+the wrapped function.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>function</p>
+<dd class="field-odd"><p>callable</p>
 </dd>
 </dl>
 </dd></dl>
@@ -544,33 +574,45 @@ None</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.common.validate_dict_keys">
 <span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">validate_dict_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dictionary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dictionary_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_checks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#validate_dict_keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.validate_dict_keys" title="Link to this definition"></a></dt>
-<dd><p>Validate the presence of specific keys in a dictionary and optionally check their values.</p>
+<dd><p>Validate presence of specific keys and optionally check their values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dictionary</strong> (<em>dict</em>) – The dictionary to validate.</p></li>
-<li><p><strong>keys</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – A list of keys that must be present in the dictionary.</p></li>
-<li><p><strong>dictionary_name</strong> (<em>str</em>) – The name of the dictionary (used in error messages for clarity).</p></li>
-<li><p><strong>value_checks</strong> (<em>dict</em><em>, </em><em>optional</em>) – A dictionary where keys are the dictionary keys to validate and values are functions
-that take the dictionary’s value as input and return a boolean indicating whether the value is valid.
-If None, value validation is skipped (default is None).</p></li>
+<li><p><strong>keys</strong> (<em>list</em><em> of </em><em>str</em>) – A list of keys that must be present in the dictionary.</p></li>
+<li><p><strong>dictionary_name</strong> (<em>str</em>) – The name of the dictionary used in error messages for clarity.</p></li>
+<li><p><strong>value_checks</strong> (<em>dict</em><em>, </em><em>optional</em>) – A dictionary where keys map to validation functions. Each
+function takes a value as input and returns a boolean indicating
+validity. Default is {}.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.MissingKeyError" title="otaf.exceptions.MissingKeyError"><strong>MissingKeyError</strong></a> – If a required key is missing from the dictionary.</p></li>
-<li><p><strong>ValueError</strong> – If a value associated with a key fails the validation function provided in <cite>value_checks</cite>.</p></li>
+<li><p><strong>ValueError</strong> – If a value associated with a key fails the validation function
+    provided in <cite>value_checks</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<ul class="simple">
-<li><p><cite>value_checks</cite> is an optional mechanism to enforce additional constraints on dictionary values.</p></li>
-<li><p>This function is designed for use cases where strict key and value validation is required.</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>dictionary</strong> (<em>dict</em>)</p></li>
+<li><p><strong>keys</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>)</p></li>
+<li><p><strong>dictionary_name</strong> (<em>str</em>)</p></li>
+<li><p><strong>value_checks</strong> (<em>dict</em>)</p></li>
 </ul>
+</dd>
+</dl>
+<p>The <cite>value_checks</cite> parameter acts as an optional mechanism to
+enforce additional constraints on nested dictionary values.</p>
 </dd></dl>
 
 </section>

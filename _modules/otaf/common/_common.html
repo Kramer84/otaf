@@ -527,27 +527,29 @@
 <div class="viewcode-block" id="get_SE3_matrices_from_indices">
 <a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.get_SE3_matrices_from_indices">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_SE3_matrices_from_indices</span><span class="p">(</span>
-    <span class="n">se3_indices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="n">multiplier</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">]:</span>
+    <span class="n">se3_indices</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">],</span> <span class="n">multiplier</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Retrieve SE(3) matrices corresponding to a list of indices, optionally scaled by a multiplier.</span>
+<span class="sd">    Retrieve SE(3) matrices corresponding to a list of indices.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    se3_indices : List[Union[str, int]]</span>
+<span class="sd">    se3_indices : list of str or int</span>
 <span class="sd">        List of indices representing SE(3) base matrices.</span>
-<span class="sd">    multiplier : Union[float, int], optional</span>
-<span class="sd">        A scalar multiplier applied to each matrix (default is 1.0).</span>
+<span class="sd">    multiplier : float or int, optional</span>
+<span class="sd">        A scalar multiplier applied to each matrix. Default is 1.0.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    List[sympy.MatrixBase]</span>
-<span class="sd">        A list of SE(3) base matrices, each scaled by the specified multiplier.</span>
+<span class="sd">    list of sympy.MatrixBase</span>
+<span class="sd">        A list of SE(3) base matrices, each scaled by the specified </span>
+<span class="sd">        multiplier.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    The indices are converted to strings and used to retrieve the corresponding SE(3) base matrices</span>
-<span class="sd">    from the predefined `BASIS_DICT` in the `otaf.constants` module.</span>
+<span class="sd">    The indices are converted to strings and used to retrieve the </span>
+<span class="sd">    corresponding SE(3) base matrices from the predefined ``BASIS_DICT`` </span>
+<span class="sd">    in the ``otaf.constants`` module.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">multiplier</span> <span class="o">*</span> <span class="n">get_SE3_base</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">se3_indices</span><span class="p">]</span></div>
 
@@ -556,35 +558,36 @@
 <div class="viewcode-block" id="validate_dict_keys">
 <a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.validate_dict_keys">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">validate_dict_keys</span><span class="p">(</span>
-    <span class="n">dictionary</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">dictionary_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value_checks</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">dictionary</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">dictionary_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value_checks</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Validate the presence of specific keys in a dictionary and optionally check their values.</span>
+<span class="sd">    Validate presence of specific keys and optionally check their values.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    dictionary : dict</span>
 <span class="sd">        The dictionary to validate.</span>
-<span class="sd">    keys : List[str]</span>
+<span class="sd">    keys : list of str</span>
 <span class="sd">        A list of keys that must be present in the dictionary.</span>
 <span class="sd">    dictionary_name : str</span>
-<span class="sd">        The name of the dictionary (used in error messages for clarity).</span>
+<span class="sd">        The name of the dictionary used in error messages for clarity.</span>
 <span class="sd">    value_checks : dict, optional</span>
-<span class="sd">        A dictionary where keys are the dictionary keys to validate and values are functions</span>
-<span class="sd">        that take the dictionary&#39;s value as input and return a boolean indicating whether the value is valid.</span>
-<span class="sd">        If None, value validation is skipped (default is None).</span>
+<span class="sd">        A dictionary where keys map to validation functions. Each </span>
+<span class="sd">        function takes a value as input and returns a boolean indicating </span>
+<span class="sd">        validity. Default is {}.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    MissingKeyError</span>
 <span class="sd">        If a required key is missing from the dictionary.</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        If a value associated with a key fails the validation function provided in `value_checks`.</span>
+<span class="sd">        If a value associated with a key fails the validation function </span>
+<span class="sd">        provided in `value_checks`.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    - `value_checks` is an optional mechanism to enforce additional constraints on dictionary values.</span>
-<span class="sd">    - This function is designed for use cases where strict key and value validation is required.</span>
+<span class="sd">    The `value_checks` parameter acts as an optional mechanism to </span>
+<span class="sd">    enforce additional constraints on nested dictionary values.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="p">:</span>
@@ -604,20 +607,22 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check if the current code is running in a Jupyter notebook environment.</span>
 
-<span class="sd">    This function detects the type of IPython shell to determine whether the code is</span>
-<span class="sd">    executed in a Jupyter notebook, a terminal, or a standard Python interpreter.</span>
+<span class="sd">    This function detects the type of IPython shell to determine whether </span>
+<span class="sd">    the code is executed in a Jupyter notebook, a terminal, or a standard </span>
+<span class="sd">    Python interpreter.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    bool</span>
-<span class="sd">        True if the code is running in a Jupyter notebook or qtconsole, False otherwise.</span>
+<span class="sd">        True if running in a Jupyter notebook or qtconsole, False otherwise.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    - If the IPython shell cannot be detected, it is assumed the code is running</span>
-<span class="sd">      in a standard Python interpreter.</span>
-<span class="sd">    - This function relies on the `get_ipython()` function, which is available</span>
-<span class="sd">      only in IPython environments.</span>
+<span class="sd">    If the IPython shell cannot be detected, it is assumed the code is </span>
+<span class="sd">    running in a standard Python interpreter.</span>
+
+<span class="sd">    This function relies on the built-in ``get_ipython()`` function, </span>
+<span class="sd">    which is available exclusively within IPython environments.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">shell</span> <span class="o">=</span> <span class="n">get_ipython</span><span class="p">()</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
@@ -634,19 +639,21 @@
 
 <div class="viewcode-block" id="get_tqdm_range">
 <a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.get_tqdm_range">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_tqdm_range</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_tqdm_range</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">callable</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Retrieve the appropriate tqdm range function based on the execution environment.</span>
+<span class="sd">    Retrieve the appropriate tqdm range function based on environment.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    function</span>
-<span class="sd">        `trange_notebook` if running in a Jupyter notebook, otherwise `trange`.</span>
+<span class="sd">    callable</span>
+<span class="sd">        ``trange_notebook`` if running in a Jupyter notebook, </span>
+<span class="sd">        otherwise ``trange``.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    - This function checks the execution environment using `is_running_in_notebook`.</span>
-<span class="sd">    - `trange_notebook` is used for better rendering in notebook environments.</span>
+<span class="sd">    This function checks the execution environment using the utility</span>
+<span class="sd">    ``is_running_in_notebook``. The ``trange_notebook`` variant is </span>
+<span class="sd">    selected for cleaner HTML progress bar rendering inside notebooks.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">trange</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.notebook</span><span class="w"> </span><span class="kn">import</span> <span class="n">trange</span> <span class="k">as</span> <span class="n">trange_notebook</span>
@@ -745,20 +752,60 @@
 
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">arr_to_str</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a numeric array to a formatted string representation.&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">arr_to_str</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a numeric array to a formatted string representation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : array_like</span>
+<span class="sd">        The input numeric array or sequence to format.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        The string representation of the array with 6 decimal places.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="s2">&quot;[&quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">num</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">x</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;]&quot;</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">str_to_arr</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a formatted string representation back to a list of floats.&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">str_to_arr</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a formatted string representation back to a list of floats.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    s : str</span>
+<span class="sd">        The string representation of the numeric array, bounded by</span>
+<span class="sd">        brackets.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list of str</span>
+<span class="sd">        The parsed floats extracted from the string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">_</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
 
 
 <div class="viewcode-block" id="bidirectional_string_to_array_conversion">
 <a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.bidirectional_string_to_array_conversion">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">bidirectional_string_to_array_conversion</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert input between a numeric array and its string representation.&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">bidirectional_string_to_array_conversion</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert input between a numeric array and its string representation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : str or array_like</span>
+<span class="sd">        The input to transform. If a string is provided, it is parsed</span>
+<span class="sd">        into a list of floats. Otherwise, it is formatted into a string.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str or list of str</span>
+<span class="sd">        The converted representation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">str_to_arr</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -768,17 +815,34 @@
 
 <div class="viewcode-block" id="arrays_close_enough">
 <a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.arrays_close_enough">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">arrays_close_enough</span><span class="p">(</span><span class="n">arr1</span><span class="p">,</span> <span class="n">arr2</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mf">1e-06</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if two arrays are element-wise equal within a specified tolerance.&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">arrays_close_enough</span><span class="p">(</span>
+    <span class="n">arr1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">arr2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-06</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if two arrays are element-wise equal within a tolerance.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    arr1, arr2 : array_like</span>
+<span class="sd">        The input arrays to compare.</span>
+<span class="sd">    tolerance : float, optional</span>
+<span class="sd">        The absolute tolerance threshold for comparison. Default is 1e-06.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        True if the arrays are equal within the given tolerance, </span>
+<span class="sd">        False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">arr1</span><span class="p">,</span> <span class="n">arr2</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="n">tolerance</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="scaling">
 <a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.scaling">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">scaling</span><span class="p">(</span><span class="n">scale_factor</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">scaling</span><span class="p">(</span><span class="n">scale_factor</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">callable</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Decorator to scale the output of a function by a specified scaling factor.</span>
+<span class="sd">    Decorator to scale the output of a function by a factor.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -787,8 +851,9 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    function</span>
-<span class="sd">        A decorator that applies the scaling to the output of the wrapped function.</span>
+<span class="sd">    callable</span>
+<span class="sd">        A decorator that applies the `scale_factor` to the output of </span>
+<span class="sd">        the wrapped function.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
