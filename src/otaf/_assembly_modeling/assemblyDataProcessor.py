@@ -19,8 +19,9 @@ import otaf.exceptions as otaf_exceptions
 import otaf.constants as  otaf_constants
 
 from otaf.common import validate_dict_keys
-from otaf.geometry import point_dict_to_arrays, are_points_on_2d_plane
-from otaf.plotting import color_palette_3, hex_to_rgba, spheres_from_point_cloud, create_surface_from_planar_contour, trimesh_scene_as_notebook_scene, create_open_cylinder_mesh
+from otaf.geometry import point_dict_to_arrays, are_points_on_2d_plane, spheres_from_point_cloud, surface_from_planar_contour, open_cylinder_mesh
+from otaf.plotting import color_palette_3, hex_to_rgba, trimesh_scene_as_notebook_scene
+from ._assembly_topology import calculate_graph_layout
 
 @beartype
 class AssemblyDataProcessor:
@@ -848,7 +849,7 @@ class AssemblyDataProcessor:
                     final_matrix = matrix @ local_transform
 
                     # 3. Create and Open the Cylinder
-                    cyl = create_open_cylinder_mesh(
+                    cyl = open_cylinder_mesh(
                         radius=radius,
                         height=height,
                         transform=final_matrix,
@@ -905,7 +906,7 @@ class AssemblyDataProcessor:
                     vertices = np.array(list(surface_data["POINTS"].values()))
                     color_rgba = self._get_feature_color(part_id, surf_id)
 
-                    planar_mesh = create_surface_from_planar_contour(vertices)
+                    planar_mesh = surface_from_planar_contour(vertices)
                     planar_mesh.visual.vertex_colors[:,:]=color_rgba
                     #We add the same planar mesh twice but with inverted normals so that it is visible above and below
                     pmc = planar_mesh.copy()
@@ -946,3 +947,6 @@ class AssemblyDataProcessor:
         plane_list = self.generate_functional_planes()
         scene = trimesh.Scene([*sphere_list, *plane_list])
         return trimesh_scene_as_notebook_scene(scene, background_hex_color)
+
+    def get_topological_graph(self, R_part: float = 15, r_feat: float = 2, d_feat: float = 1.5, margin: float = 1.5, part_spacing: float = 45, seed: int = 42,):
+        return calculate_graph_layout(self.system_data, R_part, r_feat, d_feat, margin, part_spacing, seed)

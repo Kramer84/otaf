@@ -14,6 +14,7 @@ __all__ = [
     "generate_and_transform_sequence",
     "compose_defects_with_lambdas",
     "scale_sample_with_params",
+    "calculate_sample_in_deviation_domain"
 ]
 
 import itertools
@@ -45,8 +46,8 @@ def condition_lambda_sample(sample: ot.Sample, squared_sum: bool = False) -> ot.
 
     Note
     ----
-    This function can only be used if all the features are plane./ If thezy are cylindrical
-    the constraints are aboluetly different. To use both u need to make a comlpex function
+    This function can only be used if all the features are planar. If they are cylindrical
+    the constraints are aboluetly different. To use both you need to make a complex function
     that checks the feature type for each variable and uses the right constraint.
     """
     logging.info("[condition_lambda_sample] Started. Checking input sample.")
@@ -530,3 +531,35 @@ def scale_sample_with_params(
         raise ValueError(f"All standard deviations must be positive : {stds}")
     scaled_sample = sample * stds + means
     return scaled_sample
+
+
+def calculate_sample_in_deviation_domain(
+    pos_u: np.ndarray, theta: np.ndarray, lambda_pos: float, lambda_theta: float
+) -> np.ndarray:
+    """
+    Scale and stack position and theta arrays into a 2D coordinate array.
+
+    Applies independent scaling factors to both the positional and angular 
+    input vectors, then reshapes them into a paired (N, 2) array.
+
+    Parameters
+    ----------
+    pos_u : array_like
+        An array or sequence of raw positional coordinates.
+    theta : array_like
+        An array or sequence of raw angular coordinates.
+    lambda_pos : float
+        The scalar multiplier applied to scale the position data.
+    lambda_theta : float
+        The scalar multiplier applied to scale the theta data.
+
+    Returns
+    -------
+    array_like
+        An (N, 2) NumPy array where each row represents a paired 
+        (scaled_pos, scaled_theta) coordinate.
+    """
+    scaled_pos = lambda_pos * pos_u
+    scaled_theta = lambda_theta * theta
+    sample = np.vstack((scaled_pos, scaled_theta)).T
+    return sample
