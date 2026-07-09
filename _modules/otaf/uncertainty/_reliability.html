@@ -85,7 +85,6 @@
              
   <h1>Source code for otaf.uncertainty._reliability</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
-<span class="c1"># -*- coding: utf-8 -*-</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
@@ -97,34 +96,25 @@
     <span class="s2">&quot;milp_batch_sequential&quot;</span><span class="p">,</span>
     <span class="s2">&quot;compute_gap_optimizations_on_sample_batch&quot;</span><span class="p">,</span>
 <span class="p">]</span>
-
 <span class="kn">import</span><span class="w"> </span><span class="nn">numbers</span>
-
 <span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">milp</span><span class="p">,</span> <span class="n">OptimizeResult</span><span class="p">,</span> <span class="n">LinearConstraint</span><span class="p">,</span> <span class="n">Bounds</span>
-
 <span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">joblib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span><span class="p">,</span> <span class="n">cpu_count</span>
-
 <span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">joblib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">cpu_count</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bounds</span><span class="p">,</span> <span class="n">LinearConstraint</span><span class="p">,</span> <span class="n">OptimizeResult</span><span class="p">,</span> <span class="n">milp</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">otaf.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_tqdm_range</span>
 
-<span class="c1"># Robust check for version compatibility</span>
-<span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ot</span><span class="p">,</span> <span class="s1">&#39;JointDistribution&#39;</span><span class="p">):</span>
-    <span class="c1"># New versions (v1.24+)</span>
+<span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ot</span><span class="p">,</span> <span class="s2">&quot;JointDistribution&quot;</span><span class="p">):</span>
     <span class="n">JointDistribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">JointDistribution</span>
 <span class="k">else</span><span class="p">:</span>
-    <span class="c1"># Older versions</span>
     <span class="n">JointDistribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span>
-
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">otaf</span><span class="w"> </span><span class="kn">import</span> <span class="n">SystemOfConstraintsAssemblyModel</span>
+
 
 <div class="viewcode-block" id="compute_failure_probability_FORM">
 <a class="viewcode-back" href="../../../source/otaf.uncertainty.html#otaf.uncertainty.compute_failure_probability_FORM">[docs]</a>
@@ -135,7 +125,7 @@
     <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">start_point</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">solver</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ot</span><span class="o">.</span><span class="n">OptimizationAlgorithm</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">solver</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ot</span><span class="o">.</span><span class="n">OptimizationAlgorithm</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">FORMResult</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the probability of failure using the First-Order Reliability Method (FORM).</span>
 
@@ -156,7 +146,7 @@
 <span class="sd">    verbose : bool, optional</span>
 <span class="sd">        If True, print reliability diagnostics, by default False.</span>
 <span class="sd">    solver : ot.OptimizationAlgorithm, optional</span>
-<span class="sd">        The optimization algorithm to find the design point. Uses COBYLA </span>
+<span class="sd">        The optimization algorithm to find the design point. Uses COBYLA</span>
 <span class="sd">        with strict convergence tolerances if None.</span>
 
 <span class="sd">    Returns</span>
@@ -164,25 +154,31 @@
 <span class="sd">    tuple[float, ot.FORMResult]</span>
 <span class="sd">        The calculated failure probability and the full FORM result object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">comp_rand_vect</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span><span class="n">ot_function</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">composed_distribution</span><span class="p">))</span>
+    <span class="n">comp_rand_vect</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span>
+        <span class="n">ot_function</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">composed_distribution</span><span class="p">)</span>
+    <span class="p">)</span>
     <span class="n">event</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ThresholdEvent</span><span class="p">(</span><span class="n">comp_rand_vect</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">Less</span><span class="p">(),</span> <span class="n">threshold</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">solver</span><span class="p">:</span>
         <span class="n">solver</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cobyla</span><span class="p">()</span>
         <span class="n">solver</span><span class="o">.</span><span class="n">setMaximumIterationNumber</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
-        <span class="n">solver</span><span class="o">.</span><span class="n">setMaximumAbsoluteError</span><span class="p">(</span><span class="mf">1.0e-3</span><span class="p">)</span>
-        <span class="n">solver</span><span class="o">.</span><span class="n">setMaximumRelativeError</span><span class="p">(</span><span class="mf">1.0e-3</span><span class="p">)</span>
-        <span class="n">solver</span><span class="o">.</span><span class="n">setMaximumResidualError</span><span class="p">(</span><span class="mf">1.0e-3</span><span class="p">)</span>
-        <span class="n">solver</span><span class="o">.</span><span class="n">setMaximumConstraintError</span><span class="p">(</span><span class="mf">1.0e-3</span><span class="p">)</span>
+        <span class="n">solver</span><span class="o">.</span><span class="n">setMaximumAbsoluteError</span><span class="p">(</span><span class="mf">0.001</span><span class="p">)</span>
+        <span class="n">solver</span><span class="o">.</span><span class="n">setMaximumRelativeError</span><span class="p">(</span><span class="mf">0.001</span><span class="p">)</span>
+        <span class="n">solver</span><span class="o">.</span><span class="n">setMaximumResidualError</span><span class="p">(</span><span class="mf">0.001</span><span class="p">)</span>
+        <span class="n">solver</span><span class="o">.</span><span class="n">setMaximumConstraintError</span><span class="p">(</span><span class="mf">0.001</span><span class="p">)</span>
     <span class="n">algoFORM</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FORM</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">start_point</span><span class="p">)</span>
     <span class="n">algoFORM</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">algoFORM</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
     <span class="n">pf</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getEventProbability</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Design point in physical space : </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">getPhysicalSpaceDesignPoint</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Design point in standard space : </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">getStandardSpaceDesignPoint</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Design point in physical space : </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">getPhysicalSpaceDesignPoint</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Design point in standard space : </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">getStandardSpaceDesignPoint</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hasofer index : </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">getHasoferReliabilityIndex</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Probability of failure (FORM) Pf = </span><span class="si">{</span><span class="n">pf</span><span class="si">:</span><span class="s2">.16f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">pf</span><span class="p">,</span> <span class="n">result</span></div>
+    <span class="k">return</span> <span class="p">(</span><span class="n">pf</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span></div>
 
 
 
@@ -209,15 +205,12 @@
 <span class="sd">    - proba: The estimated failure probability</span>
 <span class="sd">    - result: Additional NAIS algorithm results (see docstring)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Create the output random vector Y = g(X)</span>
-    <span class="n">output_random_vector</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span><span class="n">ot_python_function</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">distribution</span><span class="p">))</span>
-    <span class="c1"># Create the event { Y = g(X) &lt;= threshold }</span>
+    <span class="n">output_random_vector</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span>
+        <span class="n">ot_python_function</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">distribution</span><span class="p">)</span>
+    <span class="p">)</span>
     <span class="n">failure_event</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ThresholdEvent</span><span class="p">(</span><span class="n">output_random_vector</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">LessOrEqual</span><span class="p">(),</span> <span class="n">threshold</span><span class="p">)</span>
-
-    <span class="c1"># Set up the NAIS algorithm &amp; run</span>
     <span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">NAIS</span><span class="p">(</span><span class="n">failure_event</span><span class="p">,</span> <span class="n">quantile_level</span><span class="p">)</span>
     <span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-    <span class="c1"># Retrieve results</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
     <span class="n">proba</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getProbabilityEstimate</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
@@ -225,8 +218,11 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Current coefficient of variation =&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getCoefficientOfVariation</span><span class="p">())</span>
         <span class="n">length_95</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getConfidenceLength</span><span class="p">()</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Confidence length (0.95) =&quot;</span><span class="p">,</span> <span class="n">length_95</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Confidence interval (0.95) =&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">proba</span> <span class="o">-</span> <span class="n">length_95</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">proba</span> <span class="o">+</span> <span class="n">length_95</span> <span class="o">/</span> <span class="mi">2</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">proba</span><span class="p">,</span> <span class="n">result</span></div>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;Confidence interval (0.95) =&quot;</span><span class="p">,</span>
+            <span class="p">[</span><span class="n">proba</span> <span class="o">-</span> <span class="n">length_95</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">proba</span> <span class="o">+</span> <span class="n">length_95</span> <span class="o">/</span> <span class="mi">2</span><span class="p">],</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">proba</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span></div>
 
 
 
@@ -255,16 +251,13 @@
 <span class="sd">    - proba: The estimated failure probability</span>
 <span class="sd">    - result: Additional NAIS algorithm results (see docstring)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Create the output random vector Y = g(X)</span>
-    <span class="n">output_random_vector</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span><span class="n">ot_python_function</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">distribution</span><span class="p">))</span>
-    <span class="c1"># Create the event { Y = g(X) &lt;= threshold }</span>
+    <span class="n">output_random_vector</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span>
+        <span class="n">ot_python_function</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">distribution</span><span class="p">)</span>
+    <span class="p">)</span>
     <span class="n">failure_event</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ThresholdEvent</span><span class="p">(</span><span class="n">output_random_vector</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">LessOrEqual</span><span class="p">(),</span> <span class="n">threshold</span><span class="p">)</span>
-
-    <span class="c1"># Set up the NAIS algorithm &amp; run</span>
     <span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SubsetSampling</span><span class="p">(</span><span class="n">failure_event</span><span class="p">,</span> <span class="n">proposal_range</span><span class="p">,</span> <span class="n">target_probability</span><span class="p">)</span>
     <span class="n">algo</span><span class="o">.</span><span class="n">setKeepSample</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-    <span class="c1"># Retrieve results</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
     <span class="n">proba</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getProbabilityEstimate</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
@@ -272,8 +265,11 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Current coefficient of variation =&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getCoefficientOfVariation</span><span class="p">())</span>
         <span class="n">length_95</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getConfidenceLength</span><span class="p">()</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Confidence length (0.95) =&quot;</span><span class="p">,</span> <span class="n">length_95</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Confidence interval (0.95) =&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">proba</span> <span class="o">-</span> <span class="n">length_95</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">proba</span> <span class="o">+</span> <span class="n">length_95</span> <span class="o">/</span> <span class="mi">2</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">proba</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">algo</span></div>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;Confidence interval (0.95) =&quot;</span><span class="p">,</span>
+            <span class="p">[</span><span class="n">proba</span> <span class="o">-</span> <span class="n">length_95</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">proba</span> <span class="o">+</span> <span class="n">length_95</span> <span class="o">/</span> <span class="mi">2</span><span class="p">],</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">proba</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">algo</span><span class="p">)</span></div>
 
 
 
@@ -312,11 +308,14 @@
         <span class="n">optimizations</span> <span class="o">=</span> <span class="n">compute_gap_optimizations_on_sample</span><span class="p">(</span>
             <span class="n">constraint_matrix_generator</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">n_cpu</span>
         <span class="p">)</span>
-        <span class="n">opt_var_values</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">opt</span><span class="o">.</span><span class="n">fun</span> <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="n">optimizations</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))</span>
+        <span class="n">opt_var_values</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">opt</span><span class="o">.</span><span class="n">fun</span> <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="n">optimizations</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">opt_var_values</span>
 
-    <span class="n">defect_func_ot</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span><span class="p">(</span><span class="n">defect_distribition_vector</span><span class="o">.</span><span class="n">getDimension</span><span class="p">(),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">defect_func</span><span class="p">)</span>
-
+    <span class="n">defect_func_ot</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span><span class="p">(</span>
+        <span class="n">defect_distribition_vector</span><span class="o">.</span><span class="n">getDimension</span><span class="p">(),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">defect_func</span>
+    <span class="p">)</span>
     <span class="n">Y</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span><span class="n">defect_func_ot</span><span class="p">,</span> <span class="n">defect_distribition_vector</span><span class="p">)</span>
     <span class="n">failureEvent</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ThresholdEvent</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">LessOrEqual</span><span class="p">(),</span> <span class="mf">0.0</span><span class="p">)</span>
     <span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SubsetSampling</span><span class="p">(</span><span class="n">failureEvent</span><span class="p">)</span>
@@ -338,7 +337,7 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">OptimizeResult</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute gap optimizations for a set of samples using MILP.</span>
 
-<span class="sd">    Solve a sequence of Mixed-Integer Linear Programming (MILP) problems derived </span>
+<span class="sd">    Solve a sequence of Mixed-Integer Linear Programming (MILP) problems derived</span>
 <span class="sd">    from a system of constraints to determine the optimal gap for each sample.</span>
 
 <span class="sd">    Parameters</span>
@@ -366,14 +365,11 @@
     <span class="n">c</span><span class="p">,</span> <span class="n">a_ub</span><span class="p">,</span> <span class="n">b_ub</span><span class="p">,</span> <span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="n">constraint_matrix_generator</span><span class="p">(</span>
         <span class="n">deviation_array</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C</span>
     <span class="p">)</span>
-
-    <span class="c1"># Linprog is being depreciated on scipys side, so we switch to milp</span>
-
     <span class="k">if</span> <span class="n">progress_bar</span><span class="p">:</span>
         <span class="n">_range</span> <span class="o">=</span> <span class="n">get_tqdm_range</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">_range</span> <span class="o">=</span> <span class="nb">range</span>
-    <span class="n">optimizations</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">optimizations</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">n_cpu</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">optimizations</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">milp</span><span class="p">(</span>
@@ -389,16 +385,18 @@
         <span class="p">]</span>
     <span class="k">elif</span> <span class="n">n_cpu</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">n_cpu</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">optimizations</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">n_cpu</span><span class="p">)(</span>
-            <span class="n">delayed</span><span class="p">(</span><span class="n">milp</span><span class="p">)(</span>
-                <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span>
-                <span class="n">bounds</span><span class="o">=</span><span class="n">Bounds</span><span class="p">(</span><span class="n">bounds</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">keep_feasible</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
-                <span class="n">constraints</span><span class="o">=</span><span class="p">(</span>
-                    <span class="n">LinearConstraint</span><span class="p">(</span><span class="n">a_ub</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">b_ub</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]),</span>
-                    <span class="n">LinearConstraint</span><span class="p">(</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="p">[:,</span> <span class="n">k</span><span class="p">],</span> <span class="n">b_eq</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]),</span>
-                <span class="p">),</span>
-                <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;disp&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;presolve&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+            <span class="p">(</span>
+                <span class="n">delayed</span><span class="p">(</span><span class="n">milp</span><span class="p">)(</span>
+                    <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span>
+                    <span class="n">bounds</span><span class="o">=</span><span class="n">Bounds</span><span class="p">(</span><span class="n">bounds</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">keep_feasible</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+                    <span class="n">constraints</span><span class="o">=</span><span class="p">(</span>
+                        <span class="n">LinearConstraint</span><span class="p">(</span><span class="n">a_ub</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">b_ub</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]),</span>
+                        <span class="n">LinearConstraint</span><span class="p">(</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="p">[:,</span> <span class="n">k</span><span class="p">],</span> <span class="n">b_eq</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]),</span>
+                    <span class="p">),</span>
+                    <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;disp&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;presolve&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">_range</span><span class="p">(</span><span class="n">b_ub</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
             <span class="p">)</span>
-            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">_range</span><span class="p">(</span><span class="n">b_ub</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">optimizations</span></div>
 
@@ -412,12 +410,12 @@
     <span class="n">a_ub</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">b_ub</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">a_eq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-    <span class="n">b_eq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">b_eq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Optimize a batch of linear problems iteratively using MILP.</span>
 
-<span class="sd">    Solve a sequence of Mixed-Integer Linear Programming (MILP) problems </span>
-<span class="sd">    sharing common objective coefficients and constraint matrices, but </span>
+<span class="sd">    Solve a sequence of Mixed-Integer Linear Programming (MILP) problems</span>
+<span class="sd">    sharing common objective coefficients and constraint matrices, but</span>
 <span class="sd">    varying constraint bounds.</span>
 
 <span class="sd">    Parameters</span>
@@ -474,12 +472,12 @@
     <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
     <span class="n">progress_bar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">dtype</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;float32&quot;</span>
+    <span class="n">dtype</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;float32&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute gap optimizations on a sample using batch processing and MILP.</span>
 
-<span class="sd">    Perform parallel batch optimization for a system of constraints, grouping </span>
-<span class="sd">    samples into batches to improve computational throughput and reduce parallelization </span>
+<span class="sd">    Perform parallel batch optimization for a system of constraints, grouping</span>
+<span class="sd">    samples into batches to improve computational throughput and reduce parallelization</span>
 <span class="sd">    overhead.</span>
 
 <span class="sd">    Parameters</span>
@@ -493,7 +491,7 @@
 <span class="sd">    bounds : Union[List[List[float]], np.ndarray], optional</span>
 <span class="sd">        Bounds for the optimization variables.</span>
 <span class="sd">    n_cpu : int, optional</span>
-<span class="sd">        Number of CPUs for parallel processing. Negative values are relative </span>
+<span class="sd">        Number of CPUs for parallel processing. Negative values are relative</span>
 <span class="sd">        to total available CPUs, by default 1.</span>
 <span class="sd">    batch_size : int, optional</span>
 <span class="sd">        Number of points per parallel batch, by default 1000.</span>
@@ -512,29 +510,28 @@
     <span class="n">c</span><span class="p">,</span> <span class="n">a_ub</span><span class="p">,</span> <span class="n">b_ub</span><span class="p">,</span> <span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="n">constraint_matrix_generator</span><span class="p">(</span>
         <span class="n">deviation_array</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C</span>
     <span class="p">)</span>
-
     <span class="n">N_cpu_avail</span> <span class="o">=</span> <span class="n">cpu_count</span><span class="p">()</span>
     <span class="n">N_cpu_reque</span> <span class="o">=</span> <span class="n">n_cpu</span> <span class="k">if</span> <span class="n">n_cpu</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">N_cpu_avail</span> <span class="o">+</span> <span class="n">n_cpu</span>
-
     <span class="n">N_points</span> <span class="o">=</span> <span class="n">b_ub</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-
     <span class="k">if</span> <span class="n">N_points</span> <span class="o">&gt;</span> <span class="n">batch_size</span><span class="p">:</span>
-        <span class="k">if</span> <span class="p">(</span>
-            <span class="n">N_points</span> <span class="o">//</span> <span class="n">batch_size</span> <span class="o">&lt;</span> <span class="n">N_cpu_reque</span>
-        <span class="p">):</span>  <span class="c1"># We reduce the amount of workers to reduce overhead. (hopefully)</span>
+        <span class="k">if</span> <span class="n">N_points</span> <span class="o">//</span> <span class="n">batch_size</span> <span class="o">&lt;</span> <span class="n">N_cpu_reque</span><span class="p">:</span>
             <span class="n">N_cpu_reque</span> <span class="o">=</span> <span class="n">N_points</span> <span class="o">//</span> <span class="n">batch_size</span>
-
         <span class="k">if</span> <span class="n">progress_bar</span><span class="p">:</span>
             <span class="n">_range</span> <span class="o">=</span> <span class="n">get_tqdm_range</span><span class="p">()(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N_points</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">unit_scale</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N_points</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
-
-        <span class="c1"># Use joblib Parallel to handle batches in parallel</span>
         <span class="n">optimizations</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">N_cpu_reque</span><span class="p">)(</span>
-            <span class="n">delayed</span><span class="p">(</span><span class="n">milp_batch_sequential</span><span class="p">)(</span>
-                <span class="n">c</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">a_ub</span><span class="p">,</span> <span class="n">b_ub</span><span class="p">[:,</span> <span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">],</span> <span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="p">[:,</span> <span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">]</span>
+            <span class="p">(</span>
+                <span class="n">delayed</span><span class="p">(</span><span class="n">milp_batch_sequential</span><span class="p">)(</span>
+                    <span class="n">c</span><span class="p">,</span>
+                    <span class="n">bounds</span><span class="p">,</span>
+                    <span class="n">a_ub</span><span class="p">,</span>
+                    <span class="n">b_ub</span><span class="p">[:,</span> <span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">],</span>
+                    <span class="n">a_eq</span><span class="p">,</span>
+                    <span class="n">b_eq</span><span class="p">[:,</span> <span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">],</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">_range</span>
             <span class="p">)</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">_range</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">optimizations</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>

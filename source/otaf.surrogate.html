@@ -81,7 +81,31 @@
 <li class="toctree-l1"><a class="reference internal" href="otaf.sampling.html">otaf.sampling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.sensitivity.html">otaf.sensitivity package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">otaf.surrogate package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-otaf.surrogate">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.evaluate_model_non_standard_space"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.evaluate_model_non_standard_space()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.forward"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.forward()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.from_checkpoint"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.from_checkpoint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.get_model_as_openturns_function"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.get_model_as_openturns_function()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.get_train_test_data"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.get_train_test_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.gradient"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.gradient()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.hessian"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.hessian()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.load_model"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.load_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.pf_monte_carlo_bruteforce"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.pf_monte_carlo_bruteforce()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.plot_results"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.plot_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.save_model"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.save_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.train_model"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.train_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork.training_stopping_criterion"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.training_stopping_criterion()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.surrogate.add_gaussian_noise"><code class="docutils literal notranslate"><span class="pre">add_gaussian_noise()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.surrogate.get_base_relu_mlp_model"><code class="docutils literal notranslate"><span class="pre">get_base_relu_mlp_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.surrogate.get_base_tanh_mlp_model"><code class="docutils literal notranslate"><span class="pre">get_base_tanh_mlp_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.surrogate.get_custom_mlp_layers"><code class="docutils literal notranslate"><span class="pre">get_custom_mlp_layers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.surrogate.get_variable_size_sequential_linear_model"><code class="docutils literal notranslate"><span class="pre">get_variable_size_sequential_linear_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.surrogate.initialize_model_weights"><code class="docutils literal notranslate"><span class="pre">initialize_model_weights()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.tolerances.html">otaf.tolerances package</a></li>
@@ -116,8 +140,414 @@
              
   <section id="otaf-surrogate-package">
 <h1>otaf.surrogate package<a class="headerlink" href="#otaf-surrogate-package" title="Link to this heading"></a></h1>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="module-otaf.surrogate">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-otaf.surrogate" title="Link to this heading"></a></h2>
+<p>Tools for the construction of neural network surrogate models, including base architectures and utility functions.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.surrogate.</span></span><span class="sig-name descname"><span class="pre">NeuralRegressorNetwork</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clamping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finish_critertion_epoch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_finish</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_finish</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.999</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compile_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">display_progress_disable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_normalization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_normalization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_dims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Construct a regression neural network with built-in data pipeline scaling.</p>
+<p>Orchestrate forward prediction transitions, data standardization buffers,
+on-the-fly regularization noise injection, training execution monitors,
+and multi-backend integrations (such as OpenTURNS wrappers).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dim</strong> (<em>int</em>) – The number of expected input features.</p></li>
+<li><p><strong>output_dim</strong> (<em>int</em>) – The number of target regression prediction properties.</p></li>
+<li><p><strong>X</strong> (<em>Any</em>) – Training input source matrix used to initialize normalization stats.</p></li>
+<li><p><strong>y</strong> (<em>Any</em>) – Training target labels matrix used to initialize normalization stats.</p></li>
+<li><p><strong>clamping</strong> (<em>bool</em><em>, </em><em>default=False</em>) – Flag forcing network parameter weights to bound inside <cite>[-1.0, 1.0]</cite>.</p></li>
+<li><p><strong>finish_critertion_epoch</strong> (<em>int</em><em>, </em><em>default=20</em>) – The evaluation epoch count threshold required before evaluating early stopping.</p></li>
+<li><p><strong>loss_finish</strong> (<em>float</em><em>, </em><em>default=1e-16</em>) – The absolute loss evaluation target minimum defining a perfect optimization termination.</p></li>
+<li><p><strong>metric_finish</strong> (<em>float</em><em>, </em><em>default=0.999</em>) – The target validation R2 score metric triggering an optimized performance cutoff.</p></li>
+<li><p><strong>max_epochs</strong> (<em>int</em><em>, </em><em>default=100</em>) – The upper restriction limit tracking total validation epoch runs.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>default=100</em>) – The structural size constraints partitioning batch iteration runs.</p></li>
+<li><p><strong>compile_model</strong> (<em>bool</em><em>, </em><em>default=True</em>) – Flag enabling structural compilation graphs optimization wrappers.</p></li>
+<li><p><strong>train_size</strong> (<em>float</em><em>, </em><em>default=0.7</em>) – The linear fraction determining the initial dataset splits partition layout.</p></li>
+<li><p><strong>save_path</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>default=None</em>) – Target operational file path pointing to tracking parameter serialization destinations.</p></li>
+<li><p><strong>input_description</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>default=None</em>) – Descriptive string documentation defining features label elements properties.</p></li>
+<li><p><strong>display_progress_disable</strong> (<em>bool</em><em>, </em><em>default=True</em>) – Flag disabling internal console progress indicator displays.</p></li>
+<li><p><strong>input_normalization</strong> (<em>bool</em><em>, </em><em>default=True</em>) – Flag determining if input vectors undergo standard scale transformations.</p></li>
+<li><p><strong>output_normalization</strong> (<em>bool</em><em>, </em><em>default=True</em>) – Flag determining if targets undergo standardization during optimization updates.</p></li>
+<li><p><strong>noise_dims</strong> (<em>List</em><em>[</em><em>int</em><em>]</em><em>, </em><em>default=</em><em>[</em><em>]</em>) – Target dimensions collection selected to receive Gaussian noise augmentation.</p></li>
+<li><p><strong>noise_level</strong> (<em>float</em><em>, </em><em>default=0.1</em>) – The structural coefficient multiplier applied to standard deviation noise scaling.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork.evaluate_model_non_standard_space">
+<span class="sig-name descname"><span class="pre">evaluate_model_non_standard_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_on_gpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork.evaluate_model_non_standard_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork.evaluate_model_non_standard_space" title="Link to this definition"></a></dt>
+<dd><p>Evaluate the model in non-standard space, processing the input in batches.</p>
+<p>Apply input preprocessing standardization steps, stream vectors through network layers via memory-safe
+batch windows, restore structural target scaling properties, and gather predictions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>Any</em>) – The input coordinates collection requiring evaluation inference.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>default=50000</em>) – The linear size constraints bounding separate batch passes.</p></li>
+<li><p><strong>return_on_gpu</strong> (<em>bool</em><em>, </em><em>default=False</em>) – Flag forcing the final aggregated matrix allocations to remain tracking on active device pools.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The consolidated prediction outputs translated back into original target scaling.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork.forward" title="Link to this definition"></a></dt>
+<dd><p>Execute forward propagation transitions mapping inputs through standard hidden processing layers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – The normalized feature tensor block submitted for predictive transformation.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The direct unscaled target linear prediction layers response.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork.from_checkpoint">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork.from_checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork.from_checkpoint" title="Link to this definition"></a></dt>
+<dd><p>Instantiate the network directly from a saved checkpoint, bypassing the need for training data.</p>
+<p>Extract normalization statistics, tracking buffers metadata, and architectural state dictionaries
+to rebuild the complete operational execution module instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filepath</strong> (<em>str</em>) – The path pointing to the serialized target checkpoint storage dictionary.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The fully restored, evaluation-ready model instance context.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#otaf.surrogate.NeuralRegressorNetwork" title="otaf.surrogate.NeuralRegressorNetwork">NeuralRegressorNetwork</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork.get_model_as_openturns_function">
+<span class="sig-name descname"><span class="pre">get_model_as_openturns_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork.get_model_as_openturns_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork.get_model_as_openturns_function" title="Link to this definition"></a></dt>
+<dd><p>Wrap the localized surrogate network instance inside an OpenTURNS Python compatibility module container.</p>
+<p>Expose functional evaluation wrappers, gradients tracking pipelines, and structural second-order partial
+derivative Hessian interfaces matching backend data tracking requirements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>default=50000</em>) – The block streaming partition limits tracking data evaluations.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The instantiated OpenTURNS functional interface object tracking the neural surrogate model mappings.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ot.PythonFunction</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork.get_train_test_data">
+<span class="sig-name descname"><span class="pre">get_train_test_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork.get_train_test_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork.get_train_test_data" title="Link to this definition"></a></dt>
+<dd><p>Partition structural data sources into distinct localized training and validation slices.</p>
+<p>Utilize proportional tracking division configurations to build randomized test boundaries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork.gradient">
+<span class="sig-name descname"><span class="pre">gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inP</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork.gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork.gradient" title="Link to this definition"></a></dt>
+<dd><p>Calculate first-order partial derivative Jacobian values targeting input tracking vectors configurations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inP</strong> (<em>Any</em>) – The coordinate input array profile subjected to differentiation tracking.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The converted array tracking structural gradient slopes.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork.hessian">
+<span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inP</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork.hessian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork.hessian" title="Link to this definition"></a></dt>
+<dd><p>Calculate second-order partial derivative Hessian values targeting input tracking vectors configurations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inP</strong> (<em>Any</em>) – The coordinate input array profile subjected to second-order differentiation tracking.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The converted array matrix tracking structural curvature parameters components.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork.load_model">
+<span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork.load_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork.load_model" title="Link to this definition"></a></dt>
+<dd><p>Restore structural model attributes configurations from target destination parameters storage paths.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork.pf_monte_carlo_bruteforce">
+<span class="sig-name descname"><span class="pre">pf_monte_carlo_bruteforce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">composed_distribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_MC_MAX</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_GEN_MAX</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PF_STAB</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork.pf_monte_carlo_bruteforce"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork.pf_monte_carlo_bruteforce" title="Link to this definition"></a></dt>
+<dd><p>Estimate failure probabilities via highly optimized brute force Monte Carlo random sampling loops.</p>
+<p>Sample sequentially from the provided statistical distribution boundary configurations, map features
+into standard normalization metrics spaces, pass elements through evaluation layers, and monitor
+convergence variances against tracking limits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>composed_distribution</strong> (<em>Any</em>) – Statistical multivariate distribution template generating coordinate variations.</p></li>
+<li><p><strong>N_MC_MAX</strong> (<em>int</em><em>, </em><em>default=1000000000</em>) – The ultimate absolute sampling ceiling threshold bounding execution parameters.</p></li>
+<li><p><strong>N_GEN_MAX</strong> (<em>int</em><em>, </em><em>default=10000000</em>) – The generation buffer block size managing separate structural sampling intervals.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>default=500000</em>) – The structural segmentation sizes parsing inference tensor blocks.</p></li>
+<li><p><strong>PF_STAB</strong> (<em>float</em><em>, </em><em>default=1e-6</em>) – The target stability variance checking boundary delta used to confirm optimization stability.</p></li>
+<li><p><strong>threshold</strong> (<em>float</em><em>, </em><em>default=0.0</em>) – The objective scalar valuation defining the transition boundary into failure conditions.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The final calculated empirical probability of failure score indicator.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork.plot_results">
+<span class="sig-name descname"><span class="pre">plot_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork.plot_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork.plot_results" title="Link to this definition"></a></dt>
+<dd><p>Visualize multi-axis training history performance tracking diagrams.</p>
+<p>Render historical evaluation sequences contrasting training loss declines against tracked target
+performance metrics development pathways across execution cycles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork.save_model">
+<span class="sig-name descname"><span class="pre">save_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork.save_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork.save_model" title="Link to this definition"></a></dt>
+<dd><p>Serialize current weight attributes and parameters properties targeting the configured destination path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork.train_model">
+<span class="sig-name descname"><span class="pre">train_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork.train_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork.train_model" title="Link to this definition"></a></dt>
+<dd><p>Execute the structural multi-epoch optimization training routine sequence loops.</p>
+<p>Manage batch data streams distributions, coordinate backward auto-differentiation passes, track loss
+and validation metric states histories, evaluate convergence metrics, and cache optimized parameter profiles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.surrogate.NeuralRegressorNetwork.training_stopping_criterion">
+<span class="sig-name descname"><span class="pre">training_stopping_criterion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epoch</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#NeuralRegressorNetwork.training_stopping_criterion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.NeuralRegressorNetwork.training_stopping_criterion" title="Link to this definition"></a></dt>
+<dd><p>Determine whether training should stop based on various criteria.</p>
+<p>Assess performance indicators including minimum loss tolerances achievement thresholds
+and validation performance requirements completion targets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>epoch</strong> (<em>int</em>) – The identifier integer index tracking the active model optimization cycle.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if any termination threshold evaluates as fulfilled, directing operations to close.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.surrogate.add_gaussian_noise">
+<span class="sig-prename descclassname"><span class="pre">otaf.surrogate.</span></span><span class="sig-name descname"><span class="pre">add_gaussian_noise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_base_models.html#add_gaussian_noise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.add_gaussian_noise" title="Link to this definition"></a></dt>
+<dd><p>Add feature-wise Gaussian noise to an input tensor.</p>
+<p>Calculate the standard deviation across the feature dimension (axis 1) for
+each sample, scale it by a distortion factor, and inject zero-mean normal
+distribution perturbations into the original matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tensor</strong> (<em>torch.Tensor</em>) – Input tensor of shape (N, M) to be corrupted with noise.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Scaling coefficient applied to the calculated standard deviation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The corrupted tensor containing the injected Gaussian perturbations.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.surrogate.get_base_relu_mlp_model">
+<span class="sig-prename descclassname"><span class="pre">otaf.surrogate.</span></span><span class="sig-name descname"><span class="pre">get_base_relu_mlp_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compile_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_base_models.html#get_base_relu_mlp_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.get_base_relu_mlp_model" title="Link to this definition"></a></dt>
+<dd><p>Construct a baseline multi-layer perceptron with specialized progressive sizing.</p>
+<p>Calculate hidden layer dimensions using linear interpolations heavily biased toward
+width expansions in the initial sections before tapering down to the target dimension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dim</strong> (<em>int</em>) – The number of input features entering the network.</p></li>
+<li><p><strong>output_dim</strong> (<em>int</em>) – The number of output channels leaving the final linear projection.</p></li>
+<li><p><strong>compile_model</strong> (<em>bool</em><em>, </em><em>default=False</em>) – Flag determining whether to apply JIT compilation optimizations via <cite>torch.compile</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The constructed sequential neural network container, wrapped via compilation if requested.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Union[nn.Sequential, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.surrogate.get_base_tanh_mlp_model">
+<span class="sig-prename descclassname"><span class="pre">otaf.surrogate.</span></span><span class="sig-name descname"><span class="pre">get_base_tanh_mlp_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compile_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_base_models.html#get_base_tanh_mlp_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.get_base_tanh_mlp_model" title="Link to this definition"></a></dt>
+<dd><p>Construct a baseline multi-layer perceptron utilizing Tanh activation functions.</p>
+<p>Calculate specific intermediate hidden layer sizes via heavily expanded linear
+interpolations between input and output boundaries, building a smooth bottleneck topology.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dim</strong> (<em>int</em>) – The number of input dimensions entering the network.</p></li>
+<li><p><strong>output_dim</strong> (<em>int</em>) – The number of output channels leaving the final linear projection.</p></li>
+<li><p><strong>compile_model</strong> (<em>bool</em><em>, </em><em>default=False</em>) – Flag determining whether to apply JIT compilation optimizations via <cite>torch.compile</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The constructed sequential neural network container, wrapped via compilation if requested.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Union[nn.Sequential, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.surrogate.get_custom_mlp_layers">
+<span class="sig-prename descclassname"><span class="pre">otaf.surrogate.</span></span><span class="sig-name descname"><span class="pre">get_custom_mlp_layers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layer_sizes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_class=&lt;class</span> <span class="pre">'torch.nn.modules.linear.Linear'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation_class=&lt;class</span> <span class="pre">'torch.nn.modules.activation.ReLU'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_kwargs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation_kwargs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_class=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_kwargs=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_base_models.html#get_custom_mlp_layers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.get_custom_mlp_layers" title="Link to this definition"></a></dt>
+<dd><p>Create a list of structural layers for building a multi-layer perceptron.</p>
+<p>Iterate through the specified size sequence to instantiate and chain the hidden
+layers, activation functions, and optional regularization tracking components.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>layer_sizes</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – Sequence of layer dimensions defining the structural boundaries
+[input_dim, hidden_1, …, hidden_n, output_dim].</p></li>
+<li><p><strong>layer_class</strong> (<em>Callable</em><em>[</em><em>...</em><em>, </em><em>nn.Module</em><em>]</em><em>, </em><em>default=nn.Linear</em>) – The constructor or class template used to instantiate transformation blocks.</p></li>
+<li><p><strong>activation_class</strong> (<em>Optional</em><em>[</em><em>Type</em><em>[</em><em>nn.Module</em><em>]</em><em>]</em><em>, </em><em>default=nn.ReLU</em>) – The class type of the chosen non-linear activation unit. If None, drops
+activation layers from hidden transitions.</p></li>
+<li><p><strong>layer_kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em><em>, </em><em>default=None</em>) – Additional keyword configurations passed directly to the <cite>layer_class</cite>.</p></li>
+<li><p><strong>activation_kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em><em>, </em><em>default=None</em>) – Additional keyword configurations passed directly to the <cite>activation_class</cite>.</p></li>
+<li><p><strong>dropout_class</strong> (<em>Optional</em><em>[</em><em>Type</em><em>[</em><em>nn.Module</em><em>]</em><em>]</em><em>, </em><em>default=None</em>) – The class type of a dropout or regularization layer (e.g., <cite>nn.Dropout</cite>).</p></li>
+<li><p><strong>dropout_kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em><em>, </em><em>default=None</em>) – Additional keyword configurations passed directly to the <cite>dropout_class</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An ordered collection of structural network components ready for execution.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[nn.Module]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.surrogate.get_variable_size_sequential_linear_model">
+<span class="sig-prename descclassname"><span class="pre">otaf.surrogate.</span></span><span class="sig-name descname"><span class="pre">get_variable_size_sequential_linear_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relative_max_layer_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relative_max_layer_depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relative_layer_number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_layer_number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_base_models.html#get_variable_size_sequential_linear_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.get_variable_size_sequential_linear_model" title="Link to this definition"></a></dt>
+<dd><p>Construct a variable-sized sequential linear neural network model.</p>
+<p>The network size, depth, and layer sizing profile scale dynamically based on
+the provided input dimensions, forming a bottleneck or expansion pyramid
+that peaks at a designated intermediate layer depth before scaling down.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dim</strong> (<em>int</em>) – The number of input features for the initial linear layer.</p></li>
+<li><p><strong>activation</strong> (<em>Optional</em><em>[</em><em>Type</em><em>[</em><em>nn.Module</em><em>]</em><em>]</em><em>, </em><em>default=None</em>) – The PyTorch activation function class to instantiate between hidden layers.
+Defaults to <cite>nn.ReLU</cite> if not specified.</p></li>
+<li><p><strong>relative_max_layer_size</strong> (<em>float</em><em>, </em><em>default=3.0</em>) – Multiplier determining the maximum hidden layer size relative to <cite>input_dim</cite>.</p></li>
+<li><p><strong>relative_max_layer_depth</strong> (<em>float</em><em>, </em><em>default=0.25</em>) – Fraction of the total layers at which the maximum layer size occurs.</p></li>
+<li><p><strong>relative_layer_number</strong> (<em>float</em><em>, </em><em>default=0.5</em>) – Multiplier used to scale the total number of layers relative to <cite>input_dim</cite>.</p></li>
+<li><p><strong>min_layer_number</strong> (<em>int</em><em>, </em><em>default=4</em>) – The absolute minimum number of layer sizing transitions allowed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A sequential container containing the constructed linear and activation layers.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>nn.Sequential</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.surrogate.initialize_model_weights">
+<span class="sig-prename descclassname"><span class="pre">otaf.surrogate.</span></span><span class="sig-name descname"><span class="pre">initialize_model_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xavier_uniform'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_gain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.02</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/surrogate/_neural_surrogate.html#initialize_model_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.surrogate.initialize_model_weights" title="Link to this definition"></a></dt>
+<dd><p>Initialize structural weights and biases across all compatible sub-modules.</p>
+<p>Apply a designated initialization distribution algorithm to parameterized
+convolutional, linear, and batch normalization layers found within the network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>nn.Module</em>) – The PyTorch neural network model instance to undergo weight initialization.</p></li>
+<li><p><strong>init_type</strong> (<em>str</em><em>, </em><em>default=&quot;xavier_uniform&quot;</em>) – The identification name of the initialization technique. Must be one of:
+‘normal’, ‘xavier_uniform’, ‘xavier_normal’, ‘kaiming_uniform’,
+‘kaiming_normal’, ‘orthogonal’, ‘uniform’.</p></li>
+<li><p><strong>init_gain</strong> (<em>float</em><em>, </em><em>default=0.02</em>) – Scaling multiplier configuration applied to normal, xavier, orthogonal,
+and uniform distributions.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – If the provided <cite>init_type</cite> string does not match any known initialization routine.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 

@@ -85,7 +85,6 @@
              
   <h1>Source code for otaf.distribution._distribution</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
-<span class="c1"># -*- coding: utf-8 -*-</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
@@ -97,22 +96,20 @@
     <span class="s2">&quot;compute_sup_inf_distributions&quot;</span><span class="p">,</span>
     <span class="s2">&quot;get_prob_below_threshold&quot;</span><span class="p">,</span>
 <span class="p">]</span>
-
 <span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="c1"># Robust check for version compatibility</span>
-<span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ot</span><span class="p">,</span> <span class="s1">&#39;JointDistribution&#39;</span><span class="p">):</span>
-    <span class="c1"># New versions (v1.24+)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ot</span><span class="p">,</span> <span class="s2">&quot;JointDistribution&quot;</span><span class="p">):</span>
     <span class="n">JointDistribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">JointDistribution</span>
 <span class="k">else</span><span class="p">:</span>
-    <span class="c1"># Older versions</span>
     <span class="n">JointDistribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span>
+
 
 <div class="viewcode-block" id="get_composed_normal_defect_distribution">
 <a class="viewcode-back" href="../../../source/otaf.distribution.html#otaf.distribution.get_composed_normal_defect_distribution">[docs]</a>
@@ -151,7 +148,6 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ND</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">defect_names</span><span class="p">)</span>
     <span class="n">distributions</span> <span class="o">=</span> <span class="p">[]</span>
-
     <span class="k">if</span> <span class="p">[</span><span class="n">mu_list</span><span class="p">,</span> <span class="n">sigma_list</span><span class="p">,</span> <span class="n">mu_dict</span><span class="p">,</span> <span class="n">sigma_dict</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
             <span class="s2">&quot;No argument for composed distribution have been passed, returning centered unit standard distribution&quot;</span>
@@ -162,16 +158,17 @@
             <span class="n">distributions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
         <span class="n">composed_distribution</span> <span class="o">=</span> <span class="n">JointDistribution</span><span class="p">(</span><span class="n">distributions</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Composed unit distribution created: </span><span class="si">{</span><span class="n">composed_distribution</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
     <span class="k">elif</span> <span class="n">mu_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">sigma_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using mu or sigma list of parameters.&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">mu_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;mu_list not provided, defaulting all means to 0.0&quot;</span><span class="p">)</span>
             <span class="n">mu_list</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">ND</span>
         <span class="k">if</span> <span class="n">sigma_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;sigma_list not provided, defaulting all standard deviations to 1.0&quot;</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;sigma_list not provided, defaulting all standard deviations to 1.0&quot;</span>
+            <span class="p">)</span>
             <span class="n">sigma_list</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">ND</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mu_list</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">sigma_list</span><span class="p">)</span> <span class="o">==</span> <span class="n">ND</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">mu_list</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">sigma_list</span><span class="p">)</span> <span class="o">==</span> <span class="n">ND</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;The passed list of means and standard deviations have the wrong number of elements. N_means: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">mu_list</span><span class="p">)</span><span class="si">}</span><span class="s2"> | N_stds: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">sigma_list</span><span class="p">)</span><span class="si">}</span><span class="s2"> | N_defects: </span><span class="si">{</span><span class="n">ND</span><span class="si">}</span><span class="s2"> &quot;</span>
             <span class="p">)</span>
@@ -181,27 +178,23 @@
             <span class="n">distributions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
         <span class="n">composed_distribution</span> <span class="o">=</span> <span class="n">JointDistribution</span><span class="p">(</span><span class="n">distributions</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Composed distribution created: </span><span class="si">{</span><span class="n">composed_distribution</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
     <span class="k">elif</span> <span class="n">mu_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">sigma_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using mu or sigma dictionary of parameters.&quot;</span><span class="p">)</span>
-
-        <span class="c1"># Handle cases where one dict is passed but not the other</span>
         <span class="k">if</span> <span class="n">mu_dict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No mu_dict passed, initializing all unspecified means to 0.0&quot;</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;No mu_dict passed, initializing all unspecified means to 0.0&quot;</span>
+            <span class="p">)</span>
             <span class="n">mu_dict</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">sigma_dict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No sigma_dict passed, initializing all unspecified standard deviations to 1.0&quot;</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;No sigma_dict passed, initializing all unspecified standard deviations to 1.0&quot;</span>
+            <span class="p">)</span>
             <span class="n">sigma_dict</span> <span class="o">=</span> <span class="p">{}</span>
-
         <span class="n">mu_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mu_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
         <span class="n">sigma_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sigma_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">defect_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">defect_names</span><span class="p">):</span>
-            <span class="c1"># Reset defaults for EACH iteration to prevent previous values carrying over</span>
-            <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span>
+            <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
             <span class="n">defect_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">defect_name</span><span class="p">)</span>
-
-            <span class="c1"># Find matching key for mean</span>
             <span class="n">mu_match</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">mu_keys</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">defect_str</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">mu_match</span><span class="p">:</span>
                 <span class="n">mu</span> <span class="o">=</span> <span class="n">mu_dict</span><span class="p">[</span><span class="n">mu_match</span><span class="p">]</span>
@@ -209,8 +202,6 @@
                 <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;No mean value for defect </span><span class="si">{</span><span class="n">defect_str</span><span class="si">}</span><span class="s2"> in mu_dict, setting mean to 0.0&quot;</span>
                 <span class="p">)</span>
-
-            <span class="c1"># Find matching key for standard deviation</span>
             <span class="n">sigma_match</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">sigma_keys</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">defect_str</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">sigma_match</span><span class="p">:</span>
                 <span class="n">sigma</span> <span class="o">=</span> <span class="n">sigma_dict</span><span class="p">[</span><span class="n">sigma_match</span><span class="p">]</span>
@@ -218,14 +209,11 @@
                 <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;No standard deviation value for defect </span><span class="si">{</span><span class="n">defect_str</span><span class="si">}</span><span class="s2"> in sigma_dict, setting standard deviation to 1.0&quot;</span>
                 <span class="p">)</span>
-
             <span class="n">dist</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
             <span class="n">dist</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="n">defect_str</span><span class="p">])</span>
             <span class="n">distributions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
-
         <span class="n">composed_distribution</span> <span class="o">=</span> <span class="n">JointDistribution</span><span class="p">(</span><span class="n">distributions</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Composed distribution created: </span><span class="si">{</span><span class="n">composed_distribution</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
     <span class="k">return</span> <span class="n">composed_distribution</span></div>
 
 
@@ -259,7 +247,9 @@
 
 <div class="viewcode-block" id="multiply_composed_distribution_standard_with_constants">
 <a class="viewcode-back" href="../../../source/otaf.distribution.html#otaf.distribution.multiply_composed_distribution_standard_with_constants">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">multiply_composed_distribution_standard_with_constants</span><span class="p">(</span><span class="n">composed_distribution</span><span class="p">,</span> <span class="n">constants</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">multiply_composed_distribution_standard_with_constants</span><span class="p">(</span>
+    <span class="n">composed_distribution</span><span class="p">,</span> <span class="n">constants</span>
+<span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Multiply the standard deviations of each sub-distribution by corresponding constants.</span>
 
@@ -304,18 +294,13 @@
 <span class="sd">        means: A list of the means of the distributions.</span>
 <span class="sd">        stds: A list of the standard deviations of the distributions.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Get the parameters of the composed distribution (assumes mean/std for normal distributions)</span>
     <span class="n">parameters</span> <span class="o">=</span> <span class="n">composed_distribution</span><span class="o">.</span><span class="n">getParameter</span><span class="p">()</span>
-
     <span class="n">means</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">stds</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="c1"># Iterate over the parameters and extract means and standard deviations</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">):</span>  <span class="c1"># Assuming every distribution has a mean and std</span>
-        <span class="n">means</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">i</span><span class="p">])</span>  <span class="c1"># The mean is at index 2*i</span>
-        <span class="n">stds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>  <span class="c1"># The std is at index 2*i + 1</span>
-
-    <span class="k">return</span> <span class="n">means</span><span class="p">,</span> <span class="n">stds</span></div>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="n">means</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">i</span><span class="p">])</span>
+        <span class="n">stds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">means</span><span class="p">,</span> <span class="n">stds</span><span class="p">)</span></div>
 
 
 
@@ -331,7 +316,9 @@
 
 <div class="viewcode-block" id="compute_sup_inf_distributions">
 <a class="viewcode-back" href="../../../source/otaf.distribution.html#otaf.distribution.compute_sup_inf_distributions">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">compute_sup_inf_distributions</span><span class="p">(</span><span class="n">distributions</span><span class="p">,</span> <span class="n">x_min</span><span class="o">=-</span><span class="mi">10</span><span class="p">,</span> <span class="n">x_max</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">1e4</span><span class="p">)):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_sup_inf_distributions</span><span class="p">(</span>
+    <span class="n">distributions</span><span class="p">,</span> <span class="n">x_min</span><span class="o">=-</span><span class="mi">10</span><span class="p">,</span> <span class="n">x_max</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">10000.0</span><span class="p">)</span>
+<span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the supremum (sup) and infimum (inf) CDFs for a list of distributions.</span>
 
@@ -365,16 +352,13 @@
     <span class="n">x_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="n">n_points</span><span class="p">)</span>
     <span class="n">sup_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_points</span><span class="p">)</span>
     <span class="n">inf_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_points</span><span class="p">)</span>
-
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x_arr</span><span class="p">):</span>
         <span class="n">cdfs</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">computeCDF</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">distributions</span><span class="p">]</span>
         <span class="n">sup_points</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">cdfs</span><span class="p">)</span>
         <span class="n">inf_points</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">cdfs</span><span class="p">)</span>
-
     <span class="n">sup_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">x_arr</span><span class="p">,</span> <span class="n">sup_points</span><span class="p">])</span>
     <span class="n">inf_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">x_arr</span><span class="p">,</span> <span class="n">inf_points</span><span class="p">])</span>
-
-    <span class="k">return</span> <span class="n">sup_data</span><span class="p">,</span> <span class="n">inf_data</span></div>
+    <span class="k">return</span> <span class="p">(</span><span class="n">sup_data</span><span class="p">,</span> <span class="n">inf_data</span><span class="p">)</span></div>
 
 
 
@@ -400,10 +384,7 @@
 <span class="sd">    float</span>
 <span class="sd">        The probability corresponding to the gap closest to the threshold.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Find the index where the gap is closest to the threshold</span>
     <span class="n">min_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">data_inf_sup</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">threshold</span><span class="p">))</span>
-
-    <span class="c1"># Return the corresponding probability in the second column</span>
     <span class="k">return</span> <span class="n">data_inf_sup</span><span class="p">[</span><span class="n">min_index</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span></div>
 
 </pre></div>

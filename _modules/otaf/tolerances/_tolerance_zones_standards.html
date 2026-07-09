@@ -85,26 +85,26 @@
              
   <h1>Source code for otaf.tolerances._tolerance_zones_standards</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
-<span class="c1"># -*- coding: utf-8 -*-</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;sigma_delta_circular_feature&quot;</span><span class="p">,</span>
     <span class="s2">&quot;sigma_delta_3D_plane&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;sigma_delta_cylindrical_feature&quot;</span>
+    <span class="s2">&quot;sigma_delta_cylindrical_feature&quot;</span><span class="p">,</span>
 <span class="p">]</span>
-
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
 
 <div class="viewcode-block" id="sigma_delta_circular_feature">
 <a class="viewcode-back" href="../../../source/otaf.tolerances.html#otaf.tolerances.sigma_delta_circular_feature">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">sigma_delta_circular_feature</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">sr</span><span class="p">,</span> <span class="n">su</span><span class="p">,</span> <span class="n">sv</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the standard deviation of the defect for a circular feature.</span>
 
-<span class="sd">    This result can be used as a basis for a constraint function to maintain </span>
+<span class="sd">    This result can be used as a basis for a constraint function to maintain</span>
 <span class="sd">    a constant maximum standard deviation over the circular feature.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sr</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">su</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sv</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sr</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">su</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">sv</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="sigma_delta_3D_plane">
@@ -117,6 +117,7 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sw</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sa</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sb</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></div>
 
 
+
 <div class="viewcode-block" id="sigma_delta_cylindrical_feature">
 <a class="viewcode-back" href="../../../source/otaf.tolerances.html#otaf.tolerances.sigma_delta_cylindrical_feature">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">sigma_delta_cylindrical_feature</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">sr</span><span class="p">,</span> <span class="n">su</span><span class="p">,</span> <span class="n">salpha</span><span class="p">,</span> <span class="n">sv</span><span class="p">,</span> <span class="n">sbeta</span><span class="p">):</span>
@@ -125,7 +126,11 @@
 <span class="sd">    Accounts for variations in radial, axial, and angular parameters along the</span>
 <span class="sd">    cylinder&#39;s height and circumference.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sr</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">su</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="p">(</span><span class="n">sbeta</span><span class="o">*</span><span class="n">z</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">sv</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="p">(</span><span class="n">salpha</span><span class="o">*</span><span class="n">z</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+        <span class="n">sr</span><span class="o">**</span><span class="mi">2</span>
+        <span class="o">+</span> <span class="p">(</span><span class="n">su</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">sbeta</span> <span class="o">*</span> <span class="n">z</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="o">+</span> <span class="p">(</span><span class="n">sv</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">salpha</span> <span class="o">*</span> <span class="n">z</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+    <span class="p">)</span></div>
 
 </pre></div>
 

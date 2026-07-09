@@ -87,6 +87,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#otaf.common.parse_matrix_string"><code class="docutils literal notranslate"><span class="pre">parse_matrix_string()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.common.scaling"><code class="docutils literal notranslate"><span class="pre">scaling()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.common.threshold_for_percentile_positive_values_below"><code class="docutils literal notranslate"><span class="pre">threshold_for_percentile_positive_values_below()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otaf.common.tree"><code class="docutils literal notranslate"><span class="pre">tree()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.common.validate_dict_keys"><code class="docutils literal notranslate"><span class="pre">validate_dict_keys()</span></code></a></li>
 </ul>
 </li>
@@ -429,34 +430,25 @@ Keys are typically strings, and values are numeric arrays or similar types.</p><
 <dt class="sig sig-object py" id="otaf.common.parse_matrix_string">
 <span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">parse_matrix_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#parse_matrix_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.parse_matrix_string" title="Link to this definition"></a></dt>
 <dd><p>Parse a matrix string into its components.</p>
-<p>This function processes a string representation of a matrix, identifying its type
-(Transformation, Deviation, or Gap) based on the first character. It extracts and returns
-the relevant components in a structured dictionary format. The function also handles
-specific rules and patterns associated with each type.</p>
+<p>This function processes a string representation of a matrix,
+identifying its type (Transformation, Deviation, or Gap) based on
+the first character. It extracts and returns the relevant components
+in a structured dictionary format.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>matrix_str</strong> (<em>str</em>) – The string representation of the matrix to be parsed.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p>A dictionary containing the parsed components of the matrix. The keys depend on the
-type of matrix but typically include:
-- ‘type’: The matrix type (‘T’, ‘D’, or ‘G’).
-- ‘part’, ‘surface1’, ‘point1’, ‘surface2’, ‘point2’: Components specific to</p>
-<blockquote>
-<div><p>Transformation or Gap matrices.</p>
-</div></blockquote>
-<ul class="simple">
-<li><p>’inverse’: Boolean indicating if the matrix is an inverse (for Deviation and Gap types).</p></li>
-<li><p>’mstring’: The reconstructed matrix string based on parsed components.</p></li>
-</ul>
-</p>
+<dd class="field-even"><p>A dictionary containing the parsed components of the matrix.
+Keys include <code class="docutils literal notranslate"><span class="pre">type</span></code>, <code class="docutils literal notranslate"><span class="pre">part</span></code>, <code class="docutils literal notranslate"><span class="pre">surface1</span></code>, <code class="docutils literal notranslate"><span class="pre">point1</span></code>,
+<code class="docutils literal notranslate"><span class="pre">surface2</span></code>, <code class="docutils literal notranslate"><span class="pre">point2</span></code>, <code class="docutils literal notranslate"><span class="pre">inverse</span></code>, and <code class="docutils literal notranslate"><span class="pre">mstring</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[str, Union[str, bool]]</p>
+<dd class="field-odd"><p>dict</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If the matrix string does not conform to the expected pattern for its type or
-    if an unsupported matrix type is encountered.</p>
+<dd class="field-even"><p><strong>ValueError</strong> – If the matrix string does not conform to the expected pattern
+    for its type or if an unsupported matrix type is encountered.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -471,8 +463,9 @@ type of matrix but typically include:
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_matrix_string</span><span class="p">(</span><span class="s1">&#39;GP1kK0P2aA0&#39;</span><span class="p">)</span>
-<span class="go">{&#39;type&#39;: &#39;G&#39;, &#39;inverse&#39;: False, &#39;part1&#39;: &#39;1&#39;, &#39;surface1&#39;: &#39;k&#39;, &#39;point1&#39;: &#39;K0&#39;,</span>
-<span class="go"> &#39;part2&#39;: &#39;2&#39;, &#39;surface2&#39;: &#39;a&#39;, &#39;point2&#39;: &#39;A0&#39;, &#39;mstring&#39;: &#39;GP1kK0P2aA0&#39;}</span>
+<span class="go">{&#39;type&#39;: &#39;G&#39;, &#39;inverse&#39;: False, &#39;part1&#39;: &#39;1&#39;, &#39;surface1&#39;: &#39;k&#39;,</span>
+<span class="go"> &#39;point1&#39;: &#39;K0&#39;, &#39;part2&#39;: &#39;2&#39;, &#39;surface2&#39;: &#39;a&#39;, &#39;point2&#39;: &#39;A0&#39;,</span>
+<span class="go"> &#39;mstring&#39;: &#39;GP1kK0P2aA0&#39;}</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -532,6 +525,20 @@ be reduced to one dimension.</p></li>
 <p># Handle arrays with no positive values
 &gt;&gt;&gt; threshold_for_percentile_positive_values_below([-1, -2, -3], 50)
 None</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.common.tree">
+<span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">tree</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common.html#tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.tree" title="Link to this definition"></a></dt>
+<dd><p>Create a recursive defaultdict that automatically creates nested dictionaries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A defaultdict that creates nested dictionaries on-the-fly.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>defaultdict</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

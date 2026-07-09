@@ -154,6 +154,7 @@
 <li class="toctree-l3"><a class="reference internal" href="otaf.common.html#otaf.common.parse_matrix_string"><code class="docutils literal notranslate"><span class="pre">parse_matrix_string()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.common.html#otaf.common.scaling"><code class="docutils literal notranslate"><span class="pre">scaling()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.common.html#otaf.common.threshold_for_percentile_positive_values_below"><code class="docutils literal notranslate"><span class="pre">threshold_for_percentile_positive_values_below()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.common.html#otaf.common.tree"><code class="docutils literal notranslate"><span class="pre">tree()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.common.html#otaf.common.validate_dict_keys"><code class="docutils literal notranslate"><span class="pre">validate_dict_keys()</span></code></a></li>
 </ul>
 </li>
@@ -220,7 +221,6 @@
 <li class="toctree-l3"><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.PointDictionaryError"><code class="docutils literal notranslate"><span class="pre">PointDictionaryError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.PointsNotOnPlaneError"><code class="docutils literal notranslate"><span class="pre">PointsNotOnPlaneError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.SurfaceNotFoundError"><code class="docutils literal notranslate"><span class="pre">SurfaceNotFoundError</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.TimeoutError"><code class="docutils literal notranslate"><span class="pre">TimeoutError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.UniqueLabelSuffixError"><code class="docutils literal notranslate"><span class="pre">UniqueLabelSuffixError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.UnsupportedSurfaceTypeError"><code class="docutils literal notranslate"><span class="pre">UnsupportedSurfaceTypeError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.timeout"><code class="docutils literal notranslate"><span class="pre">timeout()</span></code></a></li>
@@ -369,7 +369,31 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.surrogate.html">otaf.surrogate package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="otaf.surrogate.html#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="otaf.surrogate.html#module-otaf.surrogate">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.evaluate_model_non_standard_space"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.evaluate_model_non_standard_space()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.forward"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.forward()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.from_checkpoint"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.from_checkpoint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.get_model_as_openturns_function"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.get_model_as_openturns_function()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.get_train_test_data"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.get_train_test_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.gradient"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.gradient()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.hessian"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.hessian()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.load_model"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.load_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.pf_monte_carlo_bruteforce"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.pf_monte_carlo_bruteforce()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.plot_results"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.plot_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.save_model"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.save_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.train_model"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.train_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.training_stopping_criterion"><code class="docutils literal notranslate"><span class="pre">NeuralRegressorNetwork.training_stopping_criterion()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.surrogate.html#otaf.surrogate.add_gaussian_noise"><code class="docutils literal notranslate"><span class="pre">add_gaussian_noise()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.surrogate.html#otaf.surrogate.get_base_relu_mlp_model"><code class="docutils literal notranslate"><span class="pre">get_base_relu_mlp_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.surrogate.html#otaf.surrogate.get_base_tanh_mlp_model"><code class="docutils literal notranslate"><span class="pre">get_base_tanh_mlp_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.surrogate.html#otaf.surrogate.get_custom_mlp_layers"><code class="docutils literal notranslate"><span class="pre">get_custom_mlp_layers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.surrogate.html#otaf.surrogate.get_variable_size_sequential_linear_model"><code class="docutils literal notranslate"><span class="pre">get_variable_size_sequential_linear_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.surrogate.html#otaf.surrogate.initialize_model_weights"><code class="docutils literal notranslate"><span class="pre">initialize_model_weights()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.tolerances.html">otaf.tolerances package</a><ul>

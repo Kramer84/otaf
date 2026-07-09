@@ -1,0 +1,177 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>otaf.common &mdash; otaf 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            otaf
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../source/modules.html">otaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/otaf.capabilities.html">otaf.capabilities package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/otaf.common.html">otaf.common package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/otaf.constants.html">otaf.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/otaf.distribution.html">otaf.distribution package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/otaf.example_models.html">otaf.example_models package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/otaf.exceptions.html">otaf.exceptions package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/otaf.geometry.html">otaf.geometry package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/otaf.optimization.html">otaf.optimization package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/otaf.plotting.html">otaf.plotting package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/otaf.sampling.html">otaf.sampling package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/otaf.sensitivity.html">otaf.sensitivity package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/otaf.surrogate.html">otaf.surrogate package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/otaf.tolerances.html">otaf.tolerances package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/otaf.uncertainty.html">otaf.uncertainty package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">otaf</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">otaf.common</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for otaf.common</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Common utility functions and helpers for OTAF.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">._common</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">alphabet_generator</span><span class="p">,</span>
+    <span class="n">arrays_close_enough</span><span class="p">,</span>
+    <span class="n">bidirectional_string_to_array_conversion</span><span class="p">,</span>
+    <span class="n">extract_expressions_with_variables</span><span class="p">,</span>
+    <span class="n">get_SE3_base</span><span class="p">,</span>
+    <span class="n">get_SE3_matrices_from_indices</span><span class="p">,</span>
+    <span class="n">get_symbol_coef_map</span><span class="p">,</span>
+    <span class="n">get_symbols_in_expressions</span><span class="p">,</span>
+    <span class="n">get_tqdm_range</span><span class="p">,</span>
+    <span class="n">inverse_mstring</span><span class="p">,</span>
+    <span class="n">is_running_in_notebook</span><span class="p">,</span>
+    <span class="n">merge_with_checks</span><span class="p">,</span>
+    <span class="n">parse_matrix_string</span><span class="p">,</span>
+    <span class="n">scaling</span><span class="p">,</span>
+    <span class="n">threshold_for_percentile_positive_values_below</span><span class="p">,</span>
+    <span class="n">validate_dict_keys</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="tree">
+<a class="viewcode-back" href="../../source/otaf.common.html#otaf.common.tree">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">tree</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">defaultdict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a recursive defaultdict that automatically creates nested dictionaries.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    defaultdict</span>
+<span class="sd">        A defaultdict that creates nested dictionaries on-the-fly.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">defaultdict</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span></div>
+
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;alphabet_generator&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;arrays_close_enough&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bidirectional_string_to_array_conversion&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;extract_expressions_with_variables&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;get_SE3_base&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;get_SE3_matrices_from_indices&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;get_symbol_coef_map&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;get_symbols_in_expressions&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;get_tqdm_range&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;inverse_mstring&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;is_running_in_notebook&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;merge_with_checks&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;parse_matrix_string&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;scaling&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;threshold_for_percentile_positive_values_below&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tree&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;validate_dict_keys&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kramer84.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
