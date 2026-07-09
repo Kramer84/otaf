@@ -1,0 +1,333 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>otaf.geometry._meshes &mdash; otaf 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            otaf
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/modules.html">otaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.capabilities.html">otaf.capabilities package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.common.html">otaf.common package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.constants.html">otaf.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.distribution.html">otaf.distribution package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.example_models.html">otaf.example_models package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.exceptions.html">otaf.exceptions package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.geometry.html">otaf.geometry package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.optimization.html">otaf.optimization package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.plotting.html">otaf.plotting package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.sampling.html">otaf.sampling package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.sensitivity.html">otaf.sensitivity package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.surrogate.html">otaf.surrogate package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.tolerances.html">otaf.tolerances package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.uncertainty.html">otaf.uncertainty package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">otaf</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">otaf.geometry._meshes</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for otaf.geometry._meshes</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;spheres_from_point_cloud&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;open_cylinder_mesh&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;surface_from_planar_contour&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">trimesh</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">otaf.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">are_points_on_2d_plane</span><span class="p">,</span> <span class="n">rotation_matrix_from_vectors</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">otaf.exceptions</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">otaf_exceptions</span>
+
+
+<div class="viewcode-block" id="spheres_from_point_cloud">
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.spheres_from_point_cloud">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">spheres_from_point_cloud</span><span class="p">(</span>
+    <span class="n">pc</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">color</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="mi">100</span><span class="p">,</span>
+        <span class="mi">100</span><span class="p">,</span>
+        <span class="mi">100</span><span class="p">,</span>
+        <span class="mi">255</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">global_translation</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">trimesh</span><span class="o">.</span><span class="n">Trimesh</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a list of Trimesh icospheres centered at each point in a point cloud.</span>
+
+<span class="sd">    Instantiates a sphere mesh for every coordinate position, applies a uniform </span>
+<span class="sd">    color, and shifts each position by an optional global translation vector.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pc : np.ndarray</span>
+<span class="sd">        An (N, 3) array containing the coordinates of the point cloud.</span>
+<span class="sd">    radius : float, default=1.0</span>
+<span class="sd">        The radius of each generated sphere.</span>
+<span class="sd">    color : Union[Tuple[int, int, int, int], List[Union[float, int]], np.ndarray], default=[100, 100, 100, 255]</span>
+<span class="sd">        The RGBA color applied to the vertices of the spheres.</span>
+<span class="sd">    global_translation : Union[List[Union[float, int]], np.ndarray], default=np.array([0, 0, 0])</span>
+<span class="sd">        A 3D offset vector added to every point&#39;s position.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    List[trimesh.Trimesh]</span>
+<span class="sd">        A list of individual Trimesh icosphere objects.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ImportError</span>
+<span class="sd">        If the trimesh library is not installed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span> <span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">trimesh</span>
+    <span class="k">except</span> <span class="ne">ImportError</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">_raise_missing_dependency</span><span class="p">(</span><span class="s2">&quot;trimesh&quot;</span><span class="p">,</span> <span class="s2">&quot;spheres_from_point_cloud&quot;</span><span class="p">)</span>
+
+    <span class="n">spheres</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">pc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">sph</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">creation</span><span class="o">.</span><span class="n">icosphere</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">)</span>
+        <span class="n">sph</span><span class="o">.</span><span class="n">visual</span><span class="o">.</span><span class="n">vertex_colors</span> <span class="o">=</span> <span class="n">color</span>
+        <span class="n">sph</span><span class="o">.</span><span class="n">apply_translation</span><span class="p">(</span><span class="n">pc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">global_translation</span><span class="p">)</span>
+        <span class="n">spheres</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sph</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">spheres</span></div>
+
+
+
+
+<div class="viewcode-block" id="open_cylinder_mesh">
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.open_cylinder_mesh">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">open_cylinder_mesh</span><span class="p">(</span>
+    <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
+    <span class="n">height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
+    <span class="n">transform</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
+    <span class="n">sections</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">Trimesh</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a Trimesh cylinder that is open on both ends and apply a transformation matrix.</span>
+
+<span class="sd">    Generates a standard cylinder, removes the cap faces connected to the top and </span>
+<span class="sd">    bottom center vertices, and applies a 4x4 spatial transformation matrix.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    radius : float</span>
+<span class="sd">        The radius of the cylinder.</span>
+<span class="sd">    height : float</span>
+<span class="sd">        The height of the cylinder along its local Z-axis.</span>
+<span class="sd">    transform : np.ndarray</span>
+<span class="sd">        A 4x4 homogeneous transformation matrix to position and rotate the mesh.</span>
+<span class="sd">    sections : int, default=64</span>
+<span class="sd">        The number of radial facets used to approximate the circular cross-section.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    trimesh.Trimesh</span>
+<span class="sd">        The open-ended cylindrical mesh.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ImportError</span>
+<span class="sd">        If the trimesh library is not installed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span> <span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">trimesh</span>
+    <span class="k">except</span> <span class="ne">ImportError</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">_raise_missing_dependency</span><span class="p">(</span><span class="s2">&quot;trimesh&quot;</span><span class="p">,</span> <span class="s2">&quot;open_cylinder_mesh&quot;</span><span class="p">)</span>
+    <span class="n">temp_cyl</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">creation</span><span class="o">.</span><span class="n">cylinder</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">sections</span><span class="o">=</span><span class="n">sections</span><span class="p">)</span>
+    <span class="c1"># Identify cap center vertices (local Z is +/- height/2)</span>
+    <span class="n">z_limit</span> <span class="o">=</span> <span class="n">height</span> <span class="o">/</span> <span class="mf">2.0</span>
+    <span class="n">center_v_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">temp_cyl</span><span class="o">.</span><span class="n">vertices</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">1e-5</span><span class="p">)</span> <span class="o">&amp;</span>
+        <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">temp_cyl</span><span class="o">.</span><span class="n">vertices</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">1e-5</span><span class="p">)</span> <span class="o">&amp;</span>
+        <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">temp_cyl</span><span class="o">.</span><span class="n">vertices</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">-</span> <span class="n">z_limit</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-5</span><span class="p">)</span>
+    <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># Filter faces: keep only those that DON&#39;T use a cap center vertex</span>
+    <span class="n">face_mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">temp_cyl</span><span class="o">.</span><span class="n">faces</span><span class="p">,</span> <span class="n">center_v_indices</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># Process=False prevents trimesh from trying to &quot;fix&quot; the open ends</span>
+    <span class="n">cyl</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">Trimesh</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="n">temp_cyl</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="n">temp_cyl</span><span class="o">.</span><span class="n">faces</span><span class="p">[</span><span class="n">face_mask</span><span class="p">],</span> <span class="n">process</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">cyl</span><span class="o">.</span><span class="n">remove_unreferenced_vertices</span><span class="p">()</span>
+    <span class="c1"># Apply global transform</span>
+    <span class="n">cyl</span><span class="o">.</span><span class="n">apply_transform</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cyl</span></div>
+
+
+<div class="viewcode-block" id="surface_from_planar_contour">
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.surface_from_planar_contour">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">surface_from_planar_contour</span><span class="p">(</span>
+    <span class="n">vertices</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">segments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">Trimesh</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Triangulate a 3D planar point contour to generate a flat 2D surface mesh.</span>
+
+<span class="sd">    Projects the 3D coordinates onto a local 2D plane, performs a Constrained </span>
+<span class="sd">    Delaunay Triangulation using the `triangle` library, and then transforms the </span>
+<span class="sd">    resulting mesh vertices back to their original 3D orientation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    vertices : Union[List[Union[List[float], np.ndarray]], np.ndarray]</span>
+<span class="sd">        An (N, 3) array of 3D coordinates representing the boundary of the contour.</span>
+<span class="sd">    segments : Optional[Union[List[Union[List[int], np.ndarray]], np.ndarray]], default=None</span>
+<span class="sd">        An optional (M, 2) array of vertex indices defining fixed boundary lines </span>
+<span class="sd">        or holes that must be respected during triangulation.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    trimesh.Trimesh</span>
+<span class="sd">        The generated flat surface mesh.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ImportError</span>
+<span class="sd">        If either the `triangle` or `trimesh` libraries are not installed.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the input segments do not have a shape ending in 2, or if the input </span>
+<span class="sd">        vertices do not all lie on the same 2D plane.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span> <span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">triangle</span>
+    <span class="k">except</span> <span class="ne">ImportError</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">_raise_missing_dependency</span><span class="p">(</span><span class="s2">&quot;triangle&quot;</span><span class="p">,</span> <span class="s2">&quot;surface_from_planar_contour&quot;</span><span class="p">)</span>
+
+    <span class="k">try</span> <span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">trimesh</span>
+    <span class="k">except</span> <span class="ne">ImportError</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">_raise_missing_dependency</span><span class="p">(</span><span class="s2">&quot;trimesh&quot;</span><span class="p">,</span> <span class="s2">&quot;surface_from_planar_contour&quot;</span><span class="p">)</span>
+
+    <span class="n">vertices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">segments</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">segments</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">segments</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">segments</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The segment array has to be of shape (Mx2), not </span><span class="si">{</span><span class="n">segments</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">on_plane</span><span class="p">,</span> <span class="n">normal</span> <span class="o">=</span> <span class="n">are_points_on_2d_plane</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">return_normal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">on_plane</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;The provided vertices are not on the same 2D plane. Triangulation not possible.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># RotationMatrixLocalPlaneToGlobal</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="n">rotation_matrix_from_vectors</span><span class="p">(</span><span class="n">normal</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+    <span class="n">vertices_proj</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span> <span class="o">@</span> <span class="n">vertices</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">vertices_proj</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span>
+        <span class="n">are_points_on_2d_plane</span><span class="p">(</span><span class="n">vertices_proj</span><span class="p">,</span><span class="kc">True</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="p">),</span> <span class="s2">&quot;Some problem&quot;</span>
+    <span class="n">vertices_proj_2d</span> <span class="o">=</span> <span class="n">vertices_proj</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
+
+    <span class="n">tri</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="n">vertices_proj_2d</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">segments</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">tri</span><span class="p">[</span><span class="s2">&quot;segments&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">segments</span>
+
+    <span class="n">triangulation</span> <span class="o">=</span> <span class="n">triangle</span><span class="o">.</span><span class="n">triangulate</span><span class="p">(</span><span class="n">tri</span><span class="p">,</span> <span class="n">opts</span><span class="o">=</span><span class="s2">&quot;C&quot;</span><span class="p">)</span>
+    <span class="n">vertices_tri_2d_proj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">triangulation</span><span class="p">[</span><span class="s2">&quot;vertices&quot;</span><span class="p">])</span>
+    <span class="c1"># Back in 3D with extra dimension for inverse transormation</span>
+    <span class="n">vertices_tri_3d_proj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">vertices_tri_2d_proj</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">vertices_tri_2d_proj</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],))]</span>
+    <span class="p">)</span>
+    <span class="n">vertices_tri_3D</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">vertices_tri_3d_proj</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">triangles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">triangulation</span><span class="p">[</span><span class="s2">&quot;triangles&quot;</span><span class="p">])</span>
+
+    <span class="n">planar_mesh</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">Trimesh</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="n">vertices_tri_3D</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="n">triangles</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">planar_mesh</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kramer84.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

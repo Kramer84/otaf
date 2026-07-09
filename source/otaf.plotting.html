@@ -83,8 +83,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.calculate_graph_layout"><code class="docutils literal notranslate"><span class="pre">calculate_graph_layout()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.calculate_sample_in_deviation_domain"><code class="docutils literal notranslate"><span class="pre">calculate_sample_in_deviation_domain()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.compare_jacobians"><code class="docutils literal notranslate"><span class="pre">compare_jacobians()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.create_open_cylinder_mesh"><code class="docutils literal notranslate"><span class="pre">create_open_cylinder_mesh()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.create_surface_from_planar_contour"><code class="docutils literal notranslate"><span class="pre">create_surface_from_planar_contour()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.generate_topological_tikz"><code class="docutils literal notranslate"><span class="pre">generate_topological_tikz()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.hex_to_rgba"><code class="docutils literal notranslate"><span class="pre">hex_to_rgba()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.pair_plot"><code class="docutils literal notranslate"><span class="pre">pair_plot()</span></code></a></li>
@@ -100,7 +98,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.print_sample_in_deviation_domain"><code class="docutils literal notranslate"><span class="pre">print_sample_in_deviation_domain()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.save_plot"><code class="docutils literal notranslate"><span class="pre">save_plot()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.set_graph_legends"><code class="docutils literal notranslate"><span class="pre">set_graph_legends()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.spheres_from_point_cloud"><code class="docutils literal notranslate"><span class="pre">spheres_from_point_cloud()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#otaf.plotting.trimesh_scene_as_notebook_scene"><code class="docutils literal notranslate"><span class="pre">trimesh_scene_as_notebook_scene()</span></code></a></li>
 </ul>
 </li>
@@ -246,64 +243,6 @@ background coloring behind the bars.</p></li>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>ValueError</strong> – If the input arrays do not match in shape, are not exactly of length 32,
     if class labels length mismatches, or if an invalid <cite>plot_type</cite> is specified.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="otaf.plotting.create_open_cylinder_mesh">
-<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">create_open_cylinder_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sections</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#create_open_cylinder_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.create_open_cylinder_mesh" title="Link to this definition"></a></dt>
-<dd><p>Create a Trimesh cylinder that is open on both ends and apply a transformation matrix.</p>
-<p>Generates a standard cylinder, removes the cap faces connected to the top and
-bottom center vertices, and applies a 4x4 spatial transformation matrix.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>radius</strong> (<em>float</em>) – The radius of the cylinder.</p></li>
-<li><p><strong>height</strong> (<em>float</em>) – The height of the cylinder along its local Z-axis.</p></li>
-<li><p><strong>transform</strong> (<em>np.ndarray</em>) – A 4x4 homogeneous transformation matrix to position and rotate the mesh.</p></li>
-<li><p><strong>sections</strong> (<em>int</em><em>, </em><em>default=64</em>) – The number of radial facets used to approximate the circular cross-section.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The open-ended cylindrical mesh.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>trimesh.Trimesh</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ImportError</strong> – If the trimesh library is not installed.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="otaf.plotting.create_surface_from_planar_contour">
-<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">create_surface_from_planar_contour</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#create_surface_from_planar_contour"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.create_surface_from_planar_contour" title="Link to this definition"></a></dt>
-<dd><p>Triangulate a 3D planar point contour to generate a flat 2D surface mesh.</p>
-<p>Projects the 3D coordinates onto a local 2D plane, performs a Constrained
-Delaunay Triangulation using the <cite>triangle</cite> library, and then transforms the
-resulting mesh vertices back to their original 3D orientation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>vertices</strong> (<em>Union</em><em>[</em><em>List</em><em>[</em><em>Union</em><em>[</em><em>List</em><em>[</em><em>float</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em>) – An (N, 3) array of 3D coordinates representing the boundary of the contour.</p></li>
-<li><p><strong>segments</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><em>List</em><em>[</em><em>Union</em><em>[</em><em>List</em><em>[</em><em>int</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>]</em><em>, </em><em>default=None</em>) – An optional (M, 2) array of vertex indices defining fixed boundary lines
-or holes that must be respected during triangulation.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The generated flat surface mesh.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>trimesh.Trimesh</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>ImportError</strong> – If either the <cite>triangle</cite> or <cite>trimesh</cite> libraries are not installed.</p></li>
-<li><p><strong>ValueError</strong> – If the input segments do not have a shape ending in 2, or if the input
-    vertices do not all lie on the same 2D plane.</p></li>
-</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -730,33 +669,6 @@ and styling configurations only if they are explicitly provided.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Any</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="otaf.plotting.spheres_from_point_cloud">
-<span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">spheres_from_point_cloud</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[100,</span> <span class="pre">100,</span> <span class="pre">100,</span> <span class="pre">255]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">global_translation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([0,</span> <span class="pre">0,</span> <span class="pre">0])</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_plotting.html#spheres_from_point_cloud"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.spheres_from_point_cloud" title="Link to this definition"></a></dt>
-<dd><p>Generate a list of Trimesh icospheres centered at each point in a point cloud.</p>
-<p>Instantiates a sphere mesh for every coordinate position, applies a uniform
-color, and shifts each position by an optional global translation vector.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pc</strong> (<em>np.ndarray</em>) – An (N, 3) array containing the coordinates of the point cloud.</p></li>
-<li><p><strong>radius</strong> (<em>float</em><em>, </em><em>default=1.0</em>) – The radius of each generated sphere.</p></li>
-<li><p><strong>color</strong> (<em>Union</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>List</em><em>[</em><em>Union</em><em>[</em><em>float</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>default=</em><em>[</em><em>100</em><em>, </em><em>100</em><em>, </em><em>100</em><em>, </em><em>255</em><em>]</em>) – The RGBA color applied to the vertices of the spheres.</p></li>
-<li><p><strong>global_translation</strong> (<em>Union</em><em>[</em><em>List</em><em>[</em><em>Union</em><em>[</em><em>float</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>default=np.array</em><em>(</em><em>[</em><em>0</em><em>, </em><em>0</em><em>, </em><em>0</em><em>]</em><em>)</em>) – A 3D offset vector added to every point’s position.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of individual Trimesh icosphere objects.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List[trimesh.Trimesh]</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ImportError</strong> – If the trimesh library is not installed.</p>
 </dd>
 </dl>
 </dd></dl>
