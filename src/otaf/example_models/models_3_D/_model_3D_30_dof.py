@@ -19,9 +19,9 @@ class LinearizationStrategy(Enum):
 MatrixBundle = Tuple[
     np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray
 ]
-NX = 30
-NG = 17
-NC = 14
+NX = 30 # Number of defect variables
+NG = 17 # Number of clearance variables
+NC = 14 # Number of compatibility equations
 
 
 def build_constraint_matrices(
