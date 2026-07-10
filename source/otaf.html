@@ -2010,15 +2010,28 @@ is the same rotation, this method returns the same matrix.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">SystemOfConstraintsAssemblyModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compatibility_eqs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface_eqs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/systemOfConstraintsAssemblyModel.html#SystemOfConstraintsAssemblyModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.SystemOfConstraintsAssemblyModel" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Prepare matrices for tolerance analysis involving deviations and gaps.</p>
-<p>This class processes compatibility and interface equations to generate a matrix representation
-suitable for linear programming solvers like <cite>scipy.optimize.linprog</cite>.</p>
+<p>This class processes compatibility and interface equations to generate a
+matrix representation suitable for linear programming solvers like
+<code class="docutils literal notranslate"><span class="pre">scipy.optimize.linprog</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>compatibility_eqs</strong> (<em>list</em><em> of </em><em>sympy.Expr</em><em>, </em><em>optional</em>) – List of compatibility equations (equality constraints).</p></li>
+<li><p><strong>interface_eqs</strong> (<em>list</em><em> of </em><em>sympy.Expr</em><em>, </em><em>optional</em>) – List of interface equations (inequality constraints).</p></li>
+<li><p><strong>matrices</strong> (<em>tuple</em><em> of </em><em>numpy.ndarray</em><em>, </em><em>optional</em>) – Pre-computed constraint matrices unpacked as a sequence of six
+arrays (<code class="docutils literal notranslate"><span class="pre">A_eq_Def</span></code>, <code class="docutils literal notranslate"><span class="pre">A_eq_Gap</span></code>, <code class="docutils literal notranslate"><span class="pre">K_eq</span></code>, <code class="docutils literal notranslate"><span class="pre">A_ub_Def</span></code>,
+<code class="docutils literal notranslate"><span class="pre">A_ub_Gap</span></code>, <code class="docutils literal notranslate"><span class="pre">K_ub</span></code>).</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Verbosity level for logging (the default is 0).</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="otaf.SystemOfConstraintsAssemblyModel.deviation_symbols">
 <span class="sig-name descname"><span class="pre">deviation_symbols</span></span><a class="headerlink" href="#otaf.SystemOfConstraintsAssemblyModel.deviation_symbols" title="Link to this definition"></a></dt>
 <dd><p>List of deviation variables.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list</p>
+<dd class="field-odd"><p>list of sympy.Symbol</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2029,7 +2042,7 @@ suitable for linear programming solvers like <cite>scipy.optimize.linprog</cite>
 <dd><p>List of gap variables.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list</p>
+<dd class="field-odd"><p>list of sympy.Symbol</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2037,7 +2050,8 @@ suitable for linear programming solvers like <cite>scipy.optimize.linprog</cite>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="otaf.SystemOfConstraintsAssemblyModel.A_eq_Def">
 <span class="sig-name descname"><span class="pre">A_eq_Def</span></span><a class="headerlink" href="#otaf.SystemOfConstraintsAssemblyModel.A_eq_Def" title="Link to this definition"></a></dt>
-<dd><p>Coefficient matrix for deviation variables in compatibility equations.</p>
+<dd><p>Coefficient matrix for deviation variables in compatibility
+equations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>numpy.ndarray</p>
@@ -2144,101 +2158,82 @@ suitable for linear programming solvers like <cite>scipy.optimize.linprog</cite>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="otaf.SystemOfConstraintsAssemblyModel.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compatibility_eqs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface_eqs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/systemOfConstraintsAssemblyModel.html#SystemOfConstraintsAssemblyModel.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.SystemOfConstraintsAssemblyModel.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initialize the matrix preparer with compatibility and interface equations.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.SystemOfConstraintsAssemblyModel.verbose">
+<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#otaf.SystemOfConstraintsAssemblyModel.verbose" title="Link to this definition"></a></dt>
+<dd><p>Verbosity level for logging.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.SystemOfConstraintsAssemblyModel.compatibility_eqs">
+<span class="sig-name descname"><span class="pre">compatibility_eqs</span></span><a class="headerlink" href="#otaf.SystemOfConstraintsAssemblyModel.compatibility_eqs" title="Link to this definition"></a></dt>
+<dd><p>Stored compatibility equations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of sympy.Expr or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.SystemOfConstraintsAssemblyModel.interface_eqs">
+<span class="sig-name descname"><span class="pre">interface_eqs</span></span><a class="headerlink" href="#otaf.SystemOfConstraintsAssemblyModel.interface_eqs" title="Link to this definition"></a></dt>
+<dd><p>Stored interface equations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of sympy.Expr or None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.SystemOfConstraintsAssemblyModel.__call__">
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deviation_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/systemOfConstraintsAssemblyModel.html#SystemOfConstraintsAssemblyModel.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.SystemOfConstraintsAssemblyModel.__call__" title="Link to this definition"></a></dt>
-<dd><p>Generate input matrices and bounds for linear programming optimization.</p>
+<dd><p>Generate input matrices and bounds for optimization.</p>
+<p>This method prepares inputs for <code class="docutils literal notranslate"><span class="pre">scipy.optimize.linprog</span></code> using the
+deviation variables and optionally provided bounds and objective
+coefficients.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>deviation_array</strong> (<em>ndarray</em><em> | </em><em>Iterable</em>)</p></li>
-<li><p><strong>bounds</strong> (<em>list</em><em>[</em><em>list</em><em>[</em><em>float</em><em>]</em><em>] </em><em>| </em><em>ndarray</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>C</strong> (<em>ndarray</em><em> | </em><em>list</em><em>[</em><em>int</em><em> | </em><em>float</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>deviation_array</strong> (<em>numpy.ndarray</em>) – Array of shape <code class="docutils literal notranslate"><span class="pre">(nDOE,</span> <span class="pre">nD)</span></code> representing deviation variables.</p></li>
+<li><p><strong>bounds</strong> (<em>numpy.ndarray</em><em>, </em><em>optional</em>) – Bounds for gap variables (the default is automatically
+determined).</p></li>
+<li><p><strong>C</strong> (<em>numpy.ndarray</em><em>, </em><em>optional</em>) – Coefficients of the linear objective function to be minimized
+(the default is inferred).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>tuple[<em>ndarray</em>, <em>ndarray</em>, <em>ndarray</em>, <em>ndarray</em>, <em>ndarray</em>, <em>ndarray</em>]</p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span></p>
 </dd>
-</dl>
-</dd></dl>
-
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>compatibility_eqs</strong> (<em>list</em><em> of </em><em>sympy.Expr</em>) – List of compatibility equations (equality constraints).</p></li>
-<li><p><strong>interface_eqs</strong> (<em>list</em><em> of </em><em>sympy.Expr</em>) – List of interface equations (inequality constraints).</p></li>
-<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Verbosity level for logging (default is 0).</p></li>
-<li><p><strong>matrices</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>np.ndarray</em><em>]</em><em>]</em>)</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="id11">
-<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deviation_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/systemOfConstraintsAssemblyModel.html#SystemOfConstraintsAssemblyModel.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id11" title="Link to this definition"></a></dt>
-<dd><p>Generate input matrices and bounds for linear programming optimization.</p>
-<p>This method prepares inputs for <cite>scipy.optimize.linprog</cite> using the deviation variables
-and optionally provided bounds and objective coefficients.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>deviation_array</strong> (<em>numpy.ndarray</em><em> or </em><em>Iterable</em>) – Array of shape (nDOE, nD) representing deviation variables.</p></li>
-<li><p><strong>bounds</strong> (<em>list</em><em> of </em><em>list</em><em> of </em><em>float</em><em> or </em><em>numpy.ndarray</em><em>, </em><em>optional</em>) – Bounds for gap variables (default is automatically determined).</p></li>
-<li><p><strong>C</strong> (<em>numpy.ndarray</em><em> or </em><em>list</em><em> of </em><em>float</em><em>, </em><em>optional</em>) – Coefficients of the linear objective function to be minimized (default is inferred).</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p>Contains the following elements:
-- C : numpy.ndarray</p>
-<blockquote>
-<div><p>Coefficients of the linear objective function.</p>
-</div></blockquote>
-<ul class="simple">
-<li><dl class="simple">
-<dt>A_ub<span class="classifier">numpy.ndarray</span></dt><dd><p>Matrix representing inequality constraints.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>B_ub<span class="classifier">numpy.ndarray</span></dt><dd><p>Right-hand side of inequality constraints.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>A_eq<span class="classifier">numpy.ndarray</span></dt><dd><p>Matrix representing equality constraints.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>B_eq<span class="classifier">numpy.ndarray</span></dt><dd><p>Right-hand side of equality constraints.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>bounds<span class="classifier">numpy.ndarray</span></dt><dd><p>Variable bounds.</p>
-</dd>
-</dl>
-</li>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>C</strong> (<em>numpy.ndarray</em>) – Coefficients of the linear objective function.</p></li>
+<li><p><strong>A_ub</strong> (<em>numpy.ndarray</em>) – Matrix representing inequality constraints.</p></li>
+<li><p><strong>B_ub</strong> (<em>numpy.ndarray</em>) – Right-hand side of inequality constraints.</p></li>
+<li><p><strong>A_eq</strong> (<em>numpy.ndarray</em>) – Matrix representing equality constraints.</p></li>
+<li><p><strong>B_eq</strong> (<em>numpy.ndarray</em>) – Right-hand side of equality constraints.</p></li>
+<li><p><strong>bounds</strong> (<em>numpy.ndarray</em>) – Variable bounds.</p></li>
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple</p>
-</dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If the number of deviation variables in <cite>deviation_array</cite> does not match <cite>self.deviation_symbols</cite>.</p>
+<dd class="field-even"><p><strong>ValueError</strong> – If the number of deviation variables in <cite>deviation_array</cite> does
+    not match <code class="docutils literal notranslate"><span class="pre">deviation_symbols</span></code>.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>Deviation variables must be in the same order as <cite>self.deviation_symbols</cite>.</p></li>
-<li><p>Gap variables must be in the same order as <cite>self.gap_symbols</cite>.</p></li>
-<li><p>Default bounds are generated if <cite>bounds</cite> is not provided or improperly formatted.</p></li>
+<li><p>Deviation variables must be in the same order as
+<code class="docutils literal notranslate"><span class="pre">deviation_symbols</span></code>.</p></li>
+<li><p>Gap variables must be in the same order as <code class="docutils literal notranslate"><span class="pre">gap_symbols</span></code>.</p></li>
+<li><p>Default bounds are generated if <cite>bounds</cite> is not provided or
+improperly formatted.</p></li>
 </ul>
 </dd></dl>
 
@@ -2257,51 +2252,56 @@ and optionally provided bounds and objective coefficients.</p>
 <dt class="sig sig-object py" id="otaf.SystemOfConstraintsAssemblyModel.embedOptimizationVariable">
 <span class="sig-name descname"><span class="pre">embedOptimizationVariable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/systemOfConstraintsAssemblyModel.html#SystemOfConstraintsAssemblyModel.embedOptimizationVariable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.SystemOfConstraintsAssemblyModel.embedOptimizationVariable" title="Link to this definition"></a></dt>
 <dd><p>Embed an auxiliary optimization variable for feasibility.</p>
-<p>This method adds an auxiliary variable, <cite>s</cite>, to the gap variables. The variable <cite>s</cite> ensures
-that a feasible solution can be found, even in cases where the optimization problem would
-otherwise have no solution. The sign of <cite>s</cite> indicates whether the parts can be assembled,
-and the variable can be used in meta-model construction.</p>
+<p>This method adds an auxiliary variable, <code class="docutils literal notranslate"><span class="pre">s</span></code>, to the gap
+variables. The variable <code class="docutils literal notranslate"><span class="pre">s</span></code> ensures that a feasible solution
+can be found, even in cases where the optimization problem would
+otherwise have no solution. The sign of <code class="docutils literal notranslate"><span class="pre">s</span></code> indicates whether
+the parts can be assembled, and the variable can be used in
+meta-model construction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>The variable <cite>s</cite> is appended to the list of gap variables (<cite>self.gap_symbols</cite>).</p></li>
-<li><p>The <cite>A_ub_Gap</cite> and <cite>A_eq_Gap</cite> matrices are updated to include the new variable:
-- <cite>A_ub_Gap</cite> is augmented with a column of -1.
-- <cite>A_eq_Gap</cite> is augmented with a column of zeros.</p></li>
+<li><p>The variable <code class="docutils literal notranslate"><span class="pre">s</span></code> is appended to the list of gap variables
+(<code class="docutils literal notranslate"><span class="pre">gap_symbols</span></code>).</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">A_ub_Gap</span></code> and <code class="docutils literal notranslate"><span class="pre">A_eq_Gap</span></code> matrices are updated to include
+the new variable:
+- <code class="docutils literal notranslate"><span class="pre">A_ub_Gap</span></code> is augmented with a column of -1.
+- <code class="docutils literal notranslate"><span class="pre">A_eq_Gap</span></code> is augmented with a column of zeros.</p></li>
 </ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.SystemOfConstraintsAssemblyModel.extractFreeGapAndDeviationVariables">
 <span class="sig-name descname"><span class="pre">extractFreeGapAndDeviationVariables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/systemOfConstraintsAssemblyModel.html#SystemOfConstraintsAssemblyModel.extractFreeGapAndDeviationVariables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.SystemOfConstraintsAssemblyModel.extractFreeGapAndDeviationVariables" title="Link to this definition"></a></dt>
-<dd><p>Extract sets of deviation and gap variables present in compatibility equations.</p>
-<p>This method identifies the free variables used in the compatibility equations and
-verifies that all variables appearing in the interface equations are included.</p>
+<dd><p>Extract sets of deviation and gap variables from equations.</p>
+<p>This method identifies the free variables used in the compatibility
+equations and verifies that all variables appearing in the
+interface equations are included.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><p>A tuple containing:
-- deviation_symbols : list of sympy.Symbol</p>
-<blockquote>
-<div><p>List of deviation variables present in the compatibility equations.</p>
-</div></blockquote>
-<ul class="simple">
-<li><dl class="simple">
-<dt>gap_symbols<span class="classifier">list of sympy.Symbol</span></dt><dd><p>List of gap variables present in the compatibility equations.</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Symbol</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Symbol</span></code>]]</span></p>
 </dd>
-</dl>
-</li>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>deviation_symbols</strong> (<em>list of sympy.Symbol</em>) – List of deviation variables present in the compatibility
+equations.</p></li>
+<li><p><strong>gap_symbols</strong> (<em>list of sympy.Symbol</em>) – List of gap variables present in the compatibility equations.</p></li>
 </ul>
 </p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>tuple</p>
-</dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>AssertionError</strong> – If any variable in the interface equations is not included in the compatibility equations.</p>
+<dd class="field-odd"><p><strong>AssertionError</strong> – If any variable in the interface equations is not included in
+    the compatibility equations.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>Deviation and gap variables are extracted separately from both compatibility and interface equations.</p></li>
+<li><p>Deviation and gap variables are extracted separately from both
+compatibility and interface equations.</p></li>
 <li><p>This ensures consistency between the two sets of equations.</p></li>
 </ul>
 </dd></dl>
@@ -2309,112 +2309,88 @@ verifies that all variables appearing in the interface equations are included.</
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.SystemOfConstraintsAssemblyModel.generateConstraintMatrices">
 <span class="sig-name descname"><span class="pre">generateConstraintMatrices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rnd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/systemOfConstraintsAssemblyModel.html#SystemOfConstraintsAssemblyModel.generateConstraintMatrices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.SystemOfConstraintsAssemblyModel.generateConstraintMatrices" title="Link to this definition"></a></dt>
-<dd><p>Decompose equations into matrix representations for compatibility and interface constraints.</p>
-<p>This method converts the equations into matrix forms suitable for linear programming:
-- Compatibility equations (equality constraints) are represented as:</p>
-<blockquote>
-<div><p><cite>A_eq_Def * X + A_eq_Gap * Y + K_eq = 0</cite>.</p>
-</div></blockquote>
+<dd><p>Decompose equations into matrix representations for constraints.</p>
+<p>This method converts the equations into matrix forms suitable for
+linear programming:</p>
 <ul class="simple">
-<li><p>Interface equations (inequality constraints) are represented as:
-<cite>A_ub_Def * X + A_ub_Gap * Y + K_ub &gt;= 0</cite>.</p></li>
+<li><p>Compatibility equations (equality constraints) are represented
+as: <code class="docutils literal notranslate"><span class="pre">A_eq_Def</span> <span class="pre">*</span> <span class="pre">X</span> <span class="pre">+</span> <span class="pre">A_eq_Gap</span> <span class="pre">*</span> <span class="pre">Y</span> <span class="pre">+</span> <span class="pre">K_eq</span> <span class="pre">=</span> <span class="pre">0</span></code>.</p></li>
+<li><p>Interface equations (inequality constraints) are represented
+as: <code class="docutils literal notranslate"><span class="pre">A_ub_Def</span> <span class="pre">*</span> <span class="pre">X</span> <span class="pre">+</span> <span class="pre">A_ub_Gap</span> <span class="pre">*</span> <span class="pre">Y</span> <span class="pre">+</span> <span class="pre">K_ub</span> <span class="pre">&gt;=</span> <span class="pre">0</span></code>.</p></li>
 </ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>rnd</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of decimal places to round the matrix elements (default is 9).</p>
+<dd class="field-odd"><p><strong>rnd</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of decimal places to round the matrix elements (the
+default is 9).</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p>A tuple containing the following matrices:
-- A_eq_Def : numpy.ndarray</p>
-<blockquote>
-<div><p>Coefficient matrix for deviation variables in compatibility equations.</p>
-</div></blockquote>
-<ul class="simple">
-<li><dl class="simple">
-<dt>A_eq_Gap<span class="classifier">numpy.ndarray</span></dt><dd><p>Coefficient matrix for gap variables in compatibility equations.</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span></p>
 </dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>K_eq<span class="classifier">numpy.ndarray</span></dt><dd><p>Constants in compatibility equations.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>A_ub_Def<span class="classifier">numpy.ndarray</span></dt><dd><p>Coefficient matrix for deviation variables in interface equations.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>A_ub_Gap<span class="classifier">numpy.ndarray</span></dt><dd><p>Coefficient matrix for gap variables in interface equations.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>K_ub<span class="classifier">numpy.ndarray</span></dt><dd><p>Constants in interface equations.</p>
-</dd>
-</dl>
-</li>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>A_eq_Def</strong> (<em>numpy.ndarray</em>) – Coefficient matrix for deviation variables in compatibility
+equations.</p></li>
+<li><p><strong>A_eq_Gap</strong> (<em>numpy.ndarray</em>) – Coefficient matrix for gap variables in compatibility
+equations.</p></li>
+<li><p><strong>K_eq</strong> (<em>numpy.ndarray</em>) – Constants in compatibility equations.</p></li>
+<li><p><strong>A_ub_Def</strong> (<em>numpy.ndarray</em>) – Coefficient matrix for deviation variables in interface
+equations.</p></li>
+<li><p><strong>A_ub_Gap</strong> (<em>numpy.ndarray</em>) – Coefficient matrix for gap variables in interface equations.</p></li>
+<li><p><strong>K_ub</strong> (<em>numpy.ndarray</em>) – Constants in interface equations.</p></li>
 </ul>
 </p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>The method iterates through each compatibility and interface equation to extract coefficients
-for deviation and gap variables.</p></li>
-<li><p>Variables not explicitly included in the equations are assigned zero coefficients in the matrices.</p></li>
+<li><p>The method iterates through each compatibility and interface
+equation to extract coefficients for deviation and gap
+variables.</p></li>
+<li><p>Variables not explicitly included in the equations are assigned
+zero coefficients in the matrices.</p></li>
 </ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.SystemOfConstraintsAssemblyModel.get_feature_indices_and_dimensions">
 <span class="sig-name descname"><span class="pre">get_feature_indices_and_dimensions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/systemOfConstraintsAssemblyModel.html#SystemOfConstraintsAssemblyModel.get_feature_indices_and_dimensions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.SystemOfConstraintsAssemblyModel.get_feature_indices_and_dimensions" title="Link to this definition"></a></dt>
-<dd><p>Extract unique feature indices (classes) and their corresponding sizes from deviation symbols.</p>
-<p>This method processes the <cite>self.deviation_symbols</cite> list to identify unique class indices
-based on the pattern <cite>_d_X</cite> (where <cite>X</cite> is the numeric class identifier). It counts the number
-of variables associated with each class index and returns two lists:
-- A sorted list of unique class indices.
-- A list of corresponding sizes, representing the number of variables per class.</p>
+<dd><p>Extract unique feature indices and sizes from deviation symbols.</p>
+<p>This method processes the <code class="docutils literal notranslate"><span class="pre">deviation_symbols</span></code> list to identify
+unique class indices based on the pattern <code class="docutils literal notranslate"><span class="pre">_d_X</span></code> (where <code class="docutils literal notranslate"><span class="pre">X</span></code>
+is the numeric class identifier). It counts the number of
+variables associated with each class index and returns two lists.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><ul class="simple">
-<li><dl class="simple">
-<dt>list of int</dt><dd><p>Sorted list of unique class indices.</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]]</span></p>
 </dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>list of int</dt><dd><p>List of sizes, where each size corresponds to the number of variables for a class index.</p>
-</dd>
-</dl>
-</li>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>unique_classes</strong> (<em>list of int</em>) – Sorted list of unique class indices.</p></li>
+<li><p><strong>sizes</strong> (<em>list of int</em>) – List of sizes, where each size corresponds to the number of
+variables for a class index.</p></li>
 </ul>
 </p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>tuple</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>Each deviation symbol is assumed to contain the class identifier in the format <cite>_d_X</cite>.</p></li>
-<li><p>The method uses a regular expression to extract the class identifier and counts occurrences for each class.</p></li>
+<li><p>Each deviation symbol is assumed to contain the class identifier
+in the format <code class="docutils literal notranslate"><span class="pre">_d_X</span></code>.</p></li>
+<li><p>The method uses a regular expression to extract the class
+identifier and counts occurrences for each class.</p></li>
 </ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.SystemOfConstraintsAssemblyModel.test_zero_deviation_feasibility">
 <span class="sig-name descname"><span class="pre">test_zero_deviation_feasibility</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/systemOfConstraintsAssemblyModel.html#SystemOfConstraintsAssemblyModel.test_zero_deviation_feasibility"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.SystemOfConstraintsAssemblyModel.test_zero_deviation_feasibility" title="Link to this definition"></a></dt>
-<dd><p>Test if the assembly is feasible with zero manufacturing deviations.</p>
-<p>Uses scipy.optimize.milp to solve the system where X (deviations) = 0.</p>
+<dd><p>Test if the assembly is feasible with zero deviations.</p>
+<p>Uses <code class="docutils literal notranslate"><span class="pre">scipy.optimize.milp</span></code> to solve the system where the
+deviations equal 0.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A dictionary containing the ‘success’ status, the ‘status’ code,
-and the resulting ‘gap_values’ (x).</p>
+<dd class="field-odd"><p>A dictionary containing the <code class="docutils literal notranslate"><span class="pre">success</span></code> status, the <code class="docutils literal notranslate"><span class="pre">status</span></code>
+code, and the resulting <code class="docutils literal notranslate"><span class="pre">gap_values</span></code>.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>dict</p>
@@ -2426,32 +2402,37 @@ and the resulting ‘gap_values’ (x).</p>
 <dt class="sig sig-object py" id="otaf.SystemOfConstraintsAssemblyModel.validateOptimizationResults">
 <span class="sig-name descname"><span class="pre">validateOptimizationResults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gap_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deviation_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rnd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/systemOfConstraintsAssemblyModel.html#SystemOfConstraintsAssemblyModel.validateOptimizationResults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.SystemOfConstraintsAssemblyModel.validateOptimizationResults" title="Link to this definition"></a></dt>
 <dd><p>Validate optimization results using original equations.</p>
-<p>This method evaluates the original compatibility and interface equations with given values
-for the gap and deviation variables, returning the computed results for validation.</p>
+<p>This method evaluates the original compatibility and interface
+equations with given values for the gap and deviation variables,
+returning the computed results for validation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>gap_array</strong> (<em>numpy.ndarray</em>) – Array of gap variables.</p></li>
 <li><p><strong>deviation_array</strong> (<em>numpy.ndarray</em>) – Array of deviation variables.</p></li>
-<li><p><strong>rnd</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of decimal places to round the results (default is 9).</p></li>
+<li><p><strong>rnd</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of decimal places to round the results (the default
+is 9).</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p>List[float]: Results of evaluating the compatibility equations.</p></li>
-<li><p>List[float]: Results of evaluating the interface equations.</p></li>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>compatibility_result</strong> (<em>list of float</em>) – Results of evaluating the compatibility equations.</p></li>
+<li><p><strong>interface_results</strong> (<em>list of float</em>) – Results of evaluating the interface equations.</p></li>
 </ul>
 </p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>The method substitutes the provided gap and deviation values into the original equations.</p></li>
-<li><p>Compatibility results close to zero indicate a valid solution, while larger values suggest potential issues.</p></li>
-<li><p>Interface results show the satisfaction level of inequality constraints.</p></li>
+<li><p>The method substitutes the provided gap and deviation values
+into the original equations.</p></li>
+<li><p>Compatibility results close to zero indicate a valid solution,
+while larger values suggest potential issues.</p></li>
+<li><p>Interface results show the satisfaction level of inequality
+constraints.</p></li>
 </ul>
 </dd></dl>
 

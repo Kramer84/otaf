@@ -110,20 +110,34 @@
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.SystemOfConstraintsAssemblyModel">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SystemOfConstraintsAssemblyModel</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Prepare matrices for tolerance analysis involving deviations and gaps.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prepare matrices for tolerance analysis involving deviations and gaps.</span>
 
-<span class="sd">    This class processes compatibility and interface equations to generate a matrix representation</span>
-<span class="sd">    suitable for linear programming solvers like `scipy.optimize.linprog`.</span>
+<span class="sd">    This class processes compatibility and interface equations to generate a</span>
+<span class="sd">    matrix representation suitable for linear programming solvers like</span>
+<span class="sd">    ``scipy.optimize.linprog``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    compatibility_eqs : list of sympy.Expr, optional</span>
+<span class="sd">        List of compatibility equations (equality constraints).</span>
+<span class="sd">    interface_eqs : list of sympy.Expr, optional</span>
+<span class="sd">        List of interface equations (inequality constraints).</span>
+<span class="sd">    matrices : tuple of numpy.ndarray, optional</span>
+<span class="sd">        Pre-computed constraint matrices unpacked as a sequence of six</span>
+<span class="sd">        arrays (``A_eq_Def``, ``A_eq_Gap``, ``K_eq``, ``A_ub_Def``,</span>
+<span class="sd">        ``A_ub_Gap``, ``K_ub``).</span>
+<span class="sd">    verbose : int, optional</span>
+<span class="sd">        Verbosity level for logging (the default is 0).</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    deviation_symbols : list</span>
+<span class="sd">    deviation_symbols : list of sympy.Symbol</span>
 <span class="sd">        List of deviation variables.</span>
-<span class="sd">    gap_symbols : list</span>
+<span class="sd">    gap_symbols : list of sympy.Symbol</span>
 <span class="sd">        List of gap variables.</span>
 <span class="sd">    A_eq_Def : numpy.ndarray</span>
-<span class="sd">        Coefficient matrix for deviation variables in compatibility equations.</span>
+<span class="sd">        Coefficient matrix for deviation variables in compatibility</span>
+<span class="sd">        equations.</span>
 <span class="sd">    A_eq_Gap : numpy.ndarray</span>
 <span class="sd">        Coefficient matrix for gap variables in compatibility equations.</span>
 <span class="sd">    K_eq : numpy.ndarray</span>
@@ -142,56 +156,40 @@
 <span class="sd">        Number of compatibility equations.</span>
 <span class="sd">    nI : int</span>
 <span class="sd">        Number of interface equations.</span>
-
-<span class="sd">    Methods</span>
-<span class="sd">    -------</span>
-<span class="sd">    __init__(compatibility_eqs, interface_eqs, verbose=0)</span>
-<span class="sd">        Initialize the matrix preparer with compatibility and interface equations.</span>
-<span class="sd">    __call__(deviation_array, bounds=None, C=None)</span>
-<span class="sd">        Generate input matrices and bounds for linear programming optimization.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    compatibility_eqs : list of sympy.Expr</span>
-<span class="sd">        List of compatibility equations (equality constraints).</span>
-<span class="sd">    interface_eqs : list of sympy.Expr</span>
-<span class="sd">        List of interface equations (inequality constraints).</span>
-<span class="sd">    verbose : int, optional</span>
-<span class="sd">        Verbosity level for logging (default is 0).</span>
+<span class="sd">    verbose : int</span>
+<span class="sd">        Verbosity level for logging.</span>
+<span class="sd">    compatibility_eqs : list of sympy.Expr or None</span>
+<span class="sd">        Stored compatibility equations.</span>
+<span class="sd">    interface_eqs : list of sympy.Expr or None</span>
+<span class="sd">        Stored interface equations.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="SystemOfConstraintsAssemblyModel.__init__">
-<a class="viewcode-back" href="../../../source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">compatibility_eqs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">interface_eqs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">matrices</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">matrices</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span>
+            <span class="n">Tuple</span><span class="p">[</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize the SystemOfConstraintsAssemblyModel.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the assembly model.</span>
 
-<span class="sd">        Processes the provided compatibility and interface equations to extract variables</span>
-<span class="sd">        and prepare the matrix representation for optimization.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        compatibility_eqs : list of sympy.Expr</span>
-<span class="sd">            List of compatibility equations (equality constraints).</span>
-<span class="sd">        interface_eqs : list of sympy.Expr</span>
-<span class="sd">            List of interface equations (inequality constraints).</span>
-<span class="sd">        verbose : int, optional</span>
-<span class="sd">            Verbosity level for logging (default is 0).</span>
+<span class="sd">        Processes the provided compatibility and interface equations or</span>
+<span class="sd">        direct matrices to extract variables and prepare the matrix</span>
+<span class="sd">        representation for optimization.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
-<span class="sd">            If the equations are improperly formatted or the variables cannot be extracted.</span>
-
-<span class="sd">        Notes</span>
-<span class="sd">        -----</span>
-<span class="sd">        - The number of compatibility and interface equations are determined during initialization.</span>
-<span class="sd">        - Variables are extracted and classified as deviation or gap variables.</span>
+<span class="sd">            If the equations are improperly formatted or variables cannot</span>
+<span class="sd">            be extracted.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">compatibility_eqs</span> <span class="o">=</span> <span class="n">compatibility_eqs</span>
@@ -250,8 +248,7 @@
         <span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Number of gap symbols (nG): </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nG</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="p">)</span></div>
-
+        <span class="p">)</span>
 
 
 <div class="viewcode-block" id="SystemOfConstraintsAssemblyModel.__repr__">
@@ -287,52 +284,57 @@
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.__call__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">deviation_array</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">],</span>
-        <span class="n">bounds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">C</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate input matrices and bounds for linear programming optimization.</span>
+        <span class="n">deviation_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">bounds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">C</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate input matrices and bounds for optimization.</span>
 
-<span class="sd">        This method prepares inputs for `scipy.optimize.linprog` using the deviation variables</span>
-<span class="sd">        and optionally provided bounds and objective coefficients.</span>
+<span class="sd">        This method prepares inputs for ``scipy.optimize.linprog`` using the</span>
+<span class="sd">        deviation variables and optionally provided bounds and objective</span>
+<span class="sd">        coefficients.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        deviation_array : numpy.ndarray or Iterable</span>
-<span class="sd">            Array of shape (nDOE, nD) representing deviation variables.</span>
-<span class="sd">        bounds : list of list of float or numpy.ndarray, optional</span>
-<span class="sd">            Bounds for gap variables (default is automatically determined).</span>
-<span class="sd">        C : numpy.ndarray or list of float, optional</span>
-<span class="sd">            Coefficients of the linear objective function to be minimized (default is inferred).</span>
+<span class="sd">        deviation_array : numpy.ndarray</span>
+<span class="sd">            Array of shape ``(nDOE, nD)`` representing deviation variables.</span>
+<span class="sd">        bounds : numpy.ndarray, optional</span>
+<span class="sd">            Bounds for gap variables (the default is automatically</span>
+<span class="sd">            determined).</span>
+<span class="sd">        C : numpy.ndarray, optional</span>
+<span class="sd">            Coefficients of the linear objective function to be minimized</span>
+<span class="sd">            (the default is inferred).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        tuple</span>
-<span class="sd">            Contains the following elements:</span>
-<span class="sd">            - C : numpy.ndarray</span>
-<span class="sd">                Coefficients of the linear objective function.</span>
-<span class="sd">            - A_ub : numpy.ndarray</span>
-<span class="sd">                Matrix representing inequality constraints.</span>
-<span class="sd">            - B_ub : numpy.ndarray</span>
-<span class="sd">                Right-hand side of inequality constraints.</span>
-<span class="sd">            - A_eq : numpy.ndarray</span>
-<span class="sd">                Matrix representing equality constraints.</span>
-<span class="sd">            - B_eq : numpy.ndarray</span>
-<span class="sd">                Right-hand side of equality constraints.</span>
-<span class="sd">            - bounds : numpy.ndarray</span>
-<span class="sd">                Variable bounds.</span>
+<span class="sd">        C : numpy.ndarray</span>
+<span class="sd">            Coefficients of the linear objective function.</span>
+<span class="sd">        A_ub : numpy.ndarray</span>
+<span class="sd">            Matrix representing inequality constraints.</span>
+<span class="sd">        B_ub : numpy.ndarray</span>
+<span class="sd">            Right-hand side of inequality constraints.</span>
+<span class="sd">        A_eq : numpy.ndarray</span>
+<span class="sd">            Matrix representing equality constraints.</span>
+<span class="sd">        B_eq : numpy.ndarray</span>
+<span class="sd">            Right-hand side of equality constraints.</span>
+<span class="sd">        bounds : numpy.ndarray</span>
+<span class="sd">            Variable bounds.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
-<span class="sd">            If the number of deviation variables in `deviation_array` does not match `self.deviation_symbols`.</span>
+<span class="sd">            If the number of deviation variables in `deviation_array` does</span>
+<span class="sd">            not match ``deviation_symbols``.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        - Deviation variables must be in the same order as `self.deviation_symbols`.</span>
-<span class="sd">        - Gap variables must be in the same order as `self.gap_symbols`.</span>
-<span class="sd">        - Default bounds are generated if `bounds` is not provided or improperly formatted.</span>
+<span class="sd">        - Deviation variables must be in the same order as</span>
+<span class="sd">          ``deviation_symbols``.</span>
+<span class="sd">        - Gap variables must be in the same order as ``gap_symbols``.</span>
+<span class="sd">        - Default bounds are generated if `bounds` is not provided or</span>
+<span class="sd">          improperly formatted.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Invoking the __call__ method.&quot;</span><span class="p">)</span>
         <span class="n">deviation_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">deviation_array</span><span class="p">)</span>  <span class="c1"># If there is only one deviation array</span>
@@ -397,43 +399,50 @@
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.generateConstraintMatrices">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generateConstraintMatrices</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">rnd</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Decompose equations into matrix representations for compatibility and interface constraints.</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Decompose equations into matrix representations for constraints.</span>
 
-<span class="sd">        This method converts the equations into matrix forms suitable for linear programming:</span>
-<span class="sd">        - Compatibility equations (equality constraints) are represented as:</span>
-<span class="sd">          `A_eq_Def * X + A_eq_Gap * Y + K_eq = 0`.</span>
-<span class="sd">        - Interface equations (inequality constraints) are represented as:</span>
-<span class="sd">          `A_ub_Def * X + A_ub_Gap * Y + K_ub &gt;= 0`.</span>
+<span class="sd">        This method converts the equations into matrix forms suitable for</span>
+<span class="sd">        linear programming:</span>
+
+<span class="sd">        - Compatibility equations (equality constraints) are represented</span>
+<span class="sd">          as: ``A_eq_Def * X + A_eq_Gap * Y + K_eq = 0``.</span>
+<span class="sd">        - Interface equations (inequality constraints) are represented</span>
+<span class="sd">          as: ``A_ub_Def * X + A_ub_Gap * Y + K_ub &gt;= 0``.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        rnd : int, optional</span>
-<span class="sd">            Number of decimal places to round the matrix elements (default is 9).</span>
+<span class="sd">            Number of decimal places to round the matrix elements (the</span>
+<span class="sd">            default is 9).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        tuple</span>
-<span class="sd">            A tuple containing the following matrices:</span>
-<span class="sd">            - A_eq_Def : numpy.ndarray</span>
-<span class="sd">                Coefficient matrix for deviation variables in compatibility equations.</span>
-<span class="sd">            - A_eq_Gap : numpy.ndarray</span>
-<span class="sd">                Coefficient matrix for gap variables in compatibility equations.</span>
-<span class="sd">            - K_eq : numpy.ndarray</span>
-<span class="sd">                Constants in compatibility equations.</span>
-<span class="sd">            - A_ub_Def : numpy.ndarray</span>
-<span class="sd">                Coefficient matrix for deviation variables in interface equations.</span>
-<span class="sd">            - A_ub_Gap : numpy.ndarray</span>
-<span class="sd">                Coefficient matrix for gap variables in interface equations.</span>
-<span class="sd">            - K_ub : numpy.ndarray</span>
-<span class="sd">                Constants in interface equations.</span>
+<span class="sd">        A_eq_Def : numpy.ndarray</span>
+<span class="sd">            Coefficient matrix for deviation variables in compatibility</span>
+<span class="sd">            equations.</span>
+<span class="sd">        A_eq_Gap : numpy.ndarray</span>
+<span class="sd">            Coefficient matrix for gap variables in compatibility</span>
+<span class="sd">            equations.</span>
+<span class="sd">        K_eq : numpy.ndarray</span>
+<span class="sd">            Constants in compatibility equations.</span>
+<span class="sd">        A_ub_Def : numpy.ndarray</span>
+<span class="sd">            Coefficient matrix for deviation variables in interface</span>
+<span class="sd">            equations.</span>
+<span class="sd">        A_ub_Gap : numpy.ndarray</span>
+<span class="sd">            Coefficient matrix for gap variables in interface equations.</span>
+<span class="sd">        K_ub : numpy.ndarray</span>
+<span class="sd">            Constants in interface equations.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        - The method iterates through each compatibility and interface equation to extract coefficients</span>
-<span class="sd">          for deviation and gap variables.</span>
-<span class="sd">        - Variables not explicitly included in the equations are assigned zero coefficients in the matrices.</span>
+<span class="sd">        - The method iterates through each compatibility and interface</span>
+<span class="sd">          equation to extract coefficients for deviation and gap</span>
+<span class="sd">          variables.</span>
+<span class="sd">        - Variables not explicitly included in the equations are assigned</span>
+<span class="sd">          zero coefficients in the matrices.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Generating matrix representation for constraints.&quot;</span>
@@ -481,30 +490,33 @@
 
 <div class="viewcode-block" id="SystemOfConstraintsAssemblyModel.extractFreeGapAndDeviationVariables">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.extractFreeGapAndDeviationVariables">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">extractFreeGapAndDeviationVariables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Extract sets of deviation and gap variables present in compatibility equations.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extractFreeGapAndDeviationVariables</span><span class="p">(</span>
+        <span class="bp">self</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract sets of deviation and gap variables from equations.</span>
 
-<span class="sd">        This method identifies the free variables used in the compatibility equations and</span>
-<span class="sd">        verifies that all variables appearing in the interface equations are included.</span>
+<span class="sd">        This method identifies the free variables used in the compatibility</span>
+<span class="sd">        equations and verifies that all variables appearing in the</span>
+<span class="sd">        interface equations are included.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        tuple</span>
-<span class="sd">            A tuple containing:</span>
-<span class="sd">            - deviation_symbols : list of sympy.Symbol</span>
-<span class="sd">                List of deviation variables present in the compatibility equations.</span>
-<span class="sd">            - gap_symbols : list of sympy.Symbol</span>
-<span class="sd">                List of gap variables present in the compatibility equations.</span>
+<span class="sd">        deviation_symbols : list of sympy.Symbol</span>
+<span class="sd">            List of deviation variables present in the compatibility</span>
+<span class="sd">            equations.</span>
+<span class="sd">        gap_symbols : list of sympy.Symbol</span>
+<span class="sd">            List of gap variables present in the compatibility equations.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        AssertionError</span>
-<span class="sd">            If any variable in the interface equations is not included in the compatibility equations.</span>
+<span class="sd">            If any variable in the interface equations is not included in</span>
+<span class="sd">            the compatibility equations.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        - Deviation and gap variables are extracted separately from both compatibility and interface equations.</span>
+<span class="sd">        - Deviation and gap variables are extracted separately from both</span>
+<span class="sd">          compatibility and interface equations.</span>
 <span class="sd">        - This ensures consistency between the two sets of equations.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
@@ -533,14 +545,12 @@
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.validateOptimizationResults">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">validateOptimizationResults</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">gap_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">deviation_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">rnd</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span>
-        <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">sp</span><span class="o">.</span><span class="n">Float</span><span class="p">,</span> <span class="n">sp</span><span class="o">.</span><span class="n">Integer</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">sp</span><span class="o">.</span><span class="n">Float</span><span class="p">,</span> <span class="n">sp</span><span class="o">.</span><span class="n">Integer</span><span class="p">]]</span>
-    <span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Validate optimization results using original equations.</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate optimization results using original equations.</span>
 
-<span class="sd">        This method evaluates the original compatibility and interface equations with given values</span>
-<span class="sd">        for the gap and deviation variables, returning the computed results for validation.</span>
+<span class="sd">        This method evaluates the original compatibility and interface</span>
+<span class="sd">        equations with given values for the gap and deviation variables,</span>
+<span class="sd">        returning the computed results for validation.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -549,19 +559,24 @@
 <span class="sd">        deviation_array : numpy.ndarray</span>
 <span class="sd">            Array of deviation variables.</span>
 <span class="sd">        rnd : int, optional</span>
-<span class="sd">            Number of decimal places to round the results (default is 9).</span>
+<span class="sd">            Number of decimal places to round the results (the default</span>
+<span class="sd">            is 9).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        tuple</span>
-<span class="sd">            - List[float]: Results of evaluating the compatibility equations.</span>
-<span class="sd">            - List[float]: Results of evaluating the interface equations.</span>
+<span class="sd">        compatibility_result : list of float</span>
+<span class="sd">            Results of evaluating the compatibility equations.</span>
+<span class="sd">        interface_results : list of float</span>
+<span class="sd">            Results of evaluating the interface equations.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        - The method substitutes the provided gap and deviation values into the original equations.</span>
-<span class="sd">        - Compatibility results close to zero indicate a valid solution, while larger values suggest potential issues.</span>
-<span class="sd">        - Interface results show the satisfaction level of inequality constraints.</span>
+<span class="sd">        - The method substitutes the provided gap and deviation values</span>
+<span class="sd">          into the original equations.</span>
+<span class="sd">        - Compatibility results close to zero indicate a valid solution,</span>
+<span class="sd">          while larger values suggest potential issues.</span>
+<span class="sd">        - Interface results show the satisfaction level of inequality</span>
+<span class="sd">          constraints.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Validating optimization using original equations.&quot;</span>
@@ -591,21 +606,24 @@
 
 <div class="viewcode-block" id="SystemOfConstraintsAssemblyModel.embedOptimizationVariable">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.embedOptimizationVariable">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">embedOptimizationVariable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Embed an auxiliary optimization variable for feasibility.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">embedOptimizationVariable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Embed an auxiliary optimization variable for feasibility.</span>
 
-<span class="sd">        This method adds an auxiliary variable, `s`, to the gap variables. The variable `s` ensures</span>
-<span class="sd">        that a feasible solution can be found, even in cases where the optimization problem would</span>
-<span class="sd">        otherwise have no solution. The sign of `s` indicates whether the parts can be assembled,</span>
-<span class="sd">        and the variable can be used in meta-model construction.</span>
+<span class="sd">        This method adds an auxiliary variable, ``s``, to the gap</span>
+<span class="sd">        variables. The variable ``s`` ensures that a feasible solution</span>
+<span class="sd">        can be found, even in cases where the optimization problem would</span>
+<span class="sd">        otherwise have no solution. The sign of ``s`` indicates whether</span>
+<span class="sd">        the parts can be assembled, and the variable can be used in</span>
+<span class="sd">        meta-model construction.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        - The variable `s` is appended to the list of gap variables (`self.gap_symbols`).</span>
-<span class="sd">        - The `A_ub_Gap` and `A_eq_Gap` matrices are updated to include the new variable:</span>
-<span class="sd">          - `A_ub_Gap` is augmented with a column of -1.</span>
-<span class="sd">          - `A_eq_Gap` is augmented with a column of zeros.</span>
+<span class="sd">        - The variable ``s`` is appended to the list of gap variables</span>
+<span class="sd">          (``gap_symbols``).</span>
+<span class="sd">        - The ``A_ub_Gap`` and ``A_eq_Gap`` matrices are updated to include</span>
+<span class="sd">          the new variable:</span>
+<span class="sd">          - ``A_ub_Gap`` is augmented with a column of -1.</span>
+<span class="sd">          - ``A_eq_Gap`` is augmented with a column of zeros.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">(</span><span class="s2">&quot;s&quot;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nG</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -615,28 +633,28 @@
 
 <div class="viewcode-block" id="SystemOfConstraintsAssemblyModel.get_feature_indices_and_dimensions">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.get_feature_indices_and_dimensions">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_feature_indices_and_dimensions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Extract unique feature indices (classes) and their corresponding sizes from deviation symbols.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feature_indices_and_dimensions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract unique feature indices and sizes from deviation symbols.</span>
 
-<span class="sd">        This method processes the `self.deviation_symbols` list to identify unique class indices</span>
-<span class="sd">        based on the pattern `_d_X` (where `X` is the numeric class identifier). It counts the number</span>
-<span class="sd">        of variables associated with each class index and returns two lists:</span>
-<span class="sd">        - A sorted list of unique class indices.</span>
-<span class="sd">        - A list of corresponding sizes, representing the number of variables per class.</span>
+<span class="sd">        This method processes the ``deviation_symbols`` list to identify</span>
+<span class="sd">        unique class indices based on the pattern ``_d_X`` (where ``X``</span>
+<span class="sd">        is the numeric class identifier). It counts the number of</span>
+<span class="sd">        variables associated with each class index and returns two lists.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        tuple</span>
-<span class="sd">            - list of int</span>
-<span class="sd">                Sorted list of unique class indices.</span>
-<span class="sd">            - list of int</span>
-<span class="sd">                List of sizes, where each size corresponds to the number of variables for a class index.</span>
+<span class="sd">        unique_classes : list of int</span>
+<span class="sd">            Sorted list of unique class indices.</span>
+<span class="sd">        sizes : list of int</span>
+<span class="sd">            List of sizes, where each size corresponds to the number of</span>
+<span class="sd">            variables for a class index.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        - Each deviation symbol is assumed to contain the class identifier in the format `_d_X`.</span>
-<span class="sd">        - The method uses a regular expression to extract the class identifier and counts occurrences for each class.</span>
+<span class="sd">        - Each deviation symbol is assumed to contain the class identifier</span>
+<span class="sd">          in the format ``_d_X``.</span>
+<span class="sd">        - The method uses a regular expression to extract the class</span>
+<span class="sd">          identifier and counts occurrences for each class.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">class_size_map</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
@@ -663,16 +681,16 @@
 <div class="viewcode-block" id="SystemOfConstraintsAssemblyModel.test_zero_deviation_feasibility">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.test_zero_deviation_feasibility">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">test_zero_deviation_feasibility</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Test if the assembly is feasible with zero manufacturing deviations.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test if the assembly is feasible with zero deviations.</span>
 
-<span class="sd">        Uses scipy.optimize.milp to solve the system where X (deviations) = 0.</span>
+<span class="sd">        Uses ``scipy.optimize.milp`` to solve the system where the</span>
+<span class="sd">        deviations equal 0.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        dict</span>
-<span class="sd">            A dictionary containing the &#39;success&#39; status, the &#39;status&#39; code,</span>
-<span class="sd">            and the resulting &#39;gap_values&#39; (x).</span>
+<span class="sd">            A dictionary containing the ``success`` status, the ``status``</span>
+<span class="sd">            code, and the resulting ``gap_values``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">milp</span><span class="p">,</span> <span class="n">LinearConstraint</span>
         <span class="c1"># 1. Create a zero deviation array for 1 sample: shape (1, nD)</span>
@@ -711,11 +729,11 @@
 
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_gap_symbol_bounds</span><span class="p">(</span><span class="n">gap_symbols</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Get bounds for a list of gap symbols.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get bounds for a list of gap symbols.</span>
 
-<span class="sd">    This function assigns bounds to gap variables based on their naming convention. Bounds</span>
-<span class="sd">    are determined in millimeters for translational variables and in radians for rotational variables.</span>
+<span class="sd">    This function assigns bounds to gap variables based on their naming</span>
+<span class="sd">    convention. Bounds are determined in millimeters for translational</span>
+<span class="sd">    variables and in radians for rotational variables.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -725,16 +743,19 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    numpy.ndarray</span>
-<span class="sd">        A 2D NumPy array of shape (N, 2), where each row contains the [min, max] bounds</span>
-<span class="sd">        for a corresponding gap symbol.</span>
+<span class="sd">        A 2D NumPy array of shape ``(N, 2)``, where each row contains the</span>
+<span class="sd">        ``[min, max]`` bounds for a corresponding gap symbol.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    - Translational gap symbols:</span>
-<span class="sd">      - Variables starting with &#39;u_g&#39;, &#39;v_g&#39;, or &#39;w_g&#39; have bounds of [-3, 3] millimeters.</span>
+<span class="sd">      - Variables starting with ``u_g``, ``v_g``, or ``w_g`` have bounds</span>
+<span class="sd">        of ``[-3, 3]`` millimeters.</span>
 <span class="sd">    - Rotational gap symbols:</span>
-<span class="sd">      - Variables starting with &#39;alpha_g&#39;, &#39;beta_g&#39;, or &#39;gamma_g&#39; have bounds of [-π/4, π/4] radians.</span>
-<span class="sd">    - The auxiliary variable `s` (if present) is unbounded and has bounds of [-∞, ∞].</span>
+<span class="sd">      - Variables starting with ``alpha_g``, ``beta_g``, or ``gamma_g``</span>
+<span class="sd">        have bounds of ``[-π/4, π/4]`` radians.</span>
+<span class="sd">    - The auxiliary variable ``s`` (if present) is unbounded and has</span>
+<span class="sd">      bounds of ``[-∞, ∞]``.</span>
 <span class="sd">    - If a symbol does not match any known prefix, a warning is logged.</span>
 
 <span class="sd">    Examples</span>
