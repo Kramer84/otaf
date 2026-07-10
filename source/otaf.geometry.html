@@ -783,16 +783,19 @@ the maximum values of <cite>bbox2</cite>.</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.geometry.open_cylinder_mesh">
 <span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">open_cylinder_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sections</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_meshes.html#open_cylinder_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.open_cylinder_mesh" title="Link to this definition"></a></dt>
-<dd><p>Create a Trimesh cylinder that is open on both ends and apply a transformation matrix.</p>
-<p>Generates a standard cylinder, removes the cap faces connected to the top and
-bottom center vertices, and applies a 4x4 spatial transformation matrix.</p>
+<dd><p>Create an open-ended cylinder mesh with a transformation.</p>
+<p>Generates a standard cylinder, removes the cap faces connected
+to the top and bottom center vertices, and applies a 4x4 spatial
+transformation matrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>radius</strong> (<em>float</em>) – The radius of the cylinder.</p></li>
 <li><p><strong>height</strong> (<em>float</em>) – The height of the cylinder along its local Z-axis.</p></li>
-<li><p><strong>transform</strong> (<em>np.ndarray</em>) – A 4x4 homogeneous transformation matrix to position and rotate the mesh.</p></li>
-<li><p><strong>sections</strong> (<em>int</em><em>, </em><em>default=64</em>) – The number of radial facets used to approximate the circular cross-section.</p></li>
+<li><p><strong>transform</strong> (<em>array_like</em>) – A 4x4 homogeneous transformation matrix to position and
+rotate the mesh.</p></li>
+<li><p><strong>sections</strong> (<em>int</em><em>, </em><em>default 64</em>) – The number of radial facets used to approximate the circular
+cross-section.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -802,7 +805,7 @@ bottom center vertices, and applies a 4x4 spatial transformation matrix.</p>
 <dd class="field-odd"><p>trimesh.Trimesh</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ImportError</strong> – If the trimesh library is not installed.</p>
+<dd class="field-even"><p><strong>ImportError</strong> – If the <code class="docutils literal notranslate"><span class="pre">trimesh</span></code> library is not installed.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1054,26 +1057,27 @@ It handles edge cases where the vectors are already aligned or opposite.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.geometry.spheres_from_point_cloud">
 <span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">spheres_from_point_cloud</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[100,</span> <span class="pre">100,</span> <span class="pre">100,</span> <span class="pre">255]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">global_translation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([0,</span> <span class="pre">0,</span> <span class="pre">0])</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_meshes.html#spheres_from_point_cloud"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.spheres_from_point_cloud" title="Link to this definition"></a></dt>
-<dd><p>Generate a list of Trimesh icospheres centered at each point in a point cloud.</p>
-<p>Instantiates a sphere mesh for every coordinate position, applies a uniform
-color, and shifts each position by an optional global translation vector.</p>
+<dd><p>Generate Trimesh icospheres at each point in a point cloud.</p>
+<p>Instantiates a sphere mesh for each coordinate position, applies
+a uniform color, and shifts each position by an optional global
+translation vector.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pc</strong> (<em>np.ndarray</em>) – An (N, 3) array containing the coordinates of the point cloud.</p></li>
-<li><p><strong>radius</strong> (<em>float</em><em>, </em><em>default=1.0</em>) – The radius of each generated sphere.</p></li>
-<li><p><strong>color</strong> (<em>Union</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>List</em><em>[</em><em>Union</em><em>[</em><em>float</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>default=</em><em>[</em><em>100</em><em>, </em><em>100</em><em>, </em><em>100</em><em>, </em><em>255</em><em>]</em>) – The RGBA color applied to the vertices of the spheres.</p></li>
-<li><p><strong>global_translation</strong> (<em>Union</em><em>[</em><em>List</em><em>[</em><em>Union</em><em>[</em><em>float</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>default=np.array</em><em>(</em><em>[</em><em>0</em><em>, </em><em>0</em><em>, </em><em>0</em><em>]</em><em>)</em>) – A 3D offset vector added to every point’s position.</p></li>
+<li><p><strong>pc</strong> (<em>array_like</em>) – An (N, 3) array containing the coordinates of the point cloud.</p></li>
+<li><p><strong>radius</strong> (<em>float</em><em>, </em><em>default 1.0</em>) – The radius of each generated sphere.</p></li>
+<li><p><strong>color</strong> (<em>array_like</em><em>, </em><em>default</em><em> [</em><em>100</em><em>, </em><em>100</em><em>, </em><em>100</em><em>, </em><em>255</em><em>]</em>) – The RGBA color applied to the vertices of the spheres.</p></li>
+<li><p><strong>global_translation</strong> (<em>array_like</em><em>, </em><em>default</em><em> [</em><em>0</em><em>, </em><em>0</em><em>, </em><em>0</em><em>]</em>) – A 3D offset vector added to every point’s position.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A list of individual Trimesh icosphere objects.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List[trimesh.Trimesh]</p>
+<dd class="field-odd"><p>list of trimesh.Trimesh</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ImportError</strong> – If the trimesh library is not installed.</p>
+<dd class="field-even"><p><strong>ImportError</strong> – If the <code class="docutils literal notranslate"><span class="pre">trimesh</span></code> library is not installed.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1081,16 +1085,19 @@ color, and shifts each position by an optional global translation vector.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.geometry.surface_from_planar_contour">
 <span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">surface_from_planar_contour</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_meshes.html#surface_from_planar_contour"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.surface_from_planar_contour" title="Link to this definition"></a></dt>
-<dd><p>Triangulate a 3D planar point contour to generate a flat 2D surface mesh.</p>
-<p>Projects the 3D coordinates onto a local 2D plane, performs a Constrained
-Delaunay Triangulation using the <cite>triangle</cite> library, and then transforms the
-resulting mesh vertices back to their original 3D orientation.</p>
+<dd><p>Triangulate a 3D planar point contour to generate a surface mesh.</p>
+<p>Projects the 3D coordinates onto a local 2D plane, performs a
+Constrained Delaunay Triangulation using the <code class="docutils literal notranslate"><span class="pre">triangle</span></code> library,
+and then transforms the resulting mesh vertices back to their
+original 3D orientation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>vertices</strong> (<em>Union</em><em>[</em><em>List</em><em>[</em><em>Union</em><em>[</em><em>List</em><em>[</em><em>float</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em>) – An (N, 3) array of 3D coordinates representing the boundary of the contour.</p></li>
-<li><p><strong>segments</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><em>List</em><em>[</em><em>Union</em><em>[</em><em>List</em><em>[</em><em>int</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>]</em><em>, </em><em>default=None</em>) – An optional (M, 2) array of vertex indices defining fixed boundary lines
-or holes that must be respected during triangulation.</p></li>
+<li><p><strong>vertices</strong> (<em>array_like</em>) – An (N, 3) array of 3D coordinates representing the boundary
+of the contour.</p></li>
+<li><p><strong>segments</strong> (<em>array_like</em><em>, </em><em>optional</em>) – An optional (M, 2) array of vertex indices defining fixed
+boundary lines or holes that must be respected during
+triangulation. Default is None.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1101,9 +1108,10 @@ or holes that must be respected during triangulation.</p></li>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>ImportError</strong> – If either the <cite>triangle</cite> or <cite>trimesh</cite> libraries are not installed.</p></li>
-<li><p><strong>ValueError</strong> – If the input segments do not have a shape ending in 2, or if the input
-    vertices do not all lie on the same 2D plane.</p></li>
+<li><p><strong>ImportError</strong> – If either the <code class="docutils literal notranslate"><span class="pre">triangle</span></code> or <code class="docutils literal notranslate"><span class="pre">trimesh</span></code> libraries are not
+    installed.</p></li>
+<li><p><strong>ValueError</strong> – If the input <cite>segments</cite> do not have a shape ending in 2, or
+    if the input <cite>vertices</cite> do not all lie on the same 2D plane.</p></li>
 </ul>
 </dd>
 </dl>

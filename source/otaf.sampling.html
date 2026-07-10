@@ -549,43 +549,47 @@ distribution space using iso-probabilistic transformations.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.sampling.generate_imprecise_probabilistic_samples">
 <span class="sig-prename descclassname"><span class="pre">otaf.sampling.</span></span><span class="sig-name descname"><span class="pre">generate_imprecise_probabilistic_samples</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subgroup_sizes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discretization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sampling/_sampling.html#generate_imprecise_probabilistic_samples"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sampling.generate_imprecise_probabilistic_samples" title="Link to this definition"></a></dt>
-<dd><p>Generate a random subset of valid permutations for imprecise probabilistic models.</p>
-<p>Each subgroup in <cite>subgroup_sizes</cite> represents a set of variables contributing to a
-probabilistic model, where the sum of elements within each subgroup is constrained to 1.
-This function samples random permutations from this constrained space.</p>
+<dd><p>Generate permutations for imprecise probabilistic models.</p>
+<p>Each subgroup in <cite>subgroup_sizes</cite> represents a set of variables
+contributing to a probabilistic model, where the sum of elements
+within each subgroup is constrained to 1. This function samples
+random permutations from this constrained space.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>subgroup_sizes</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – List where each entry corresponds to the size of a subgroup (number of variables).</p></li>
-<li><p><strong>num_samples</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of random samples to generate. If -1, all valid permutations are computed.</p></li>
-<li><p><strong>seed</strong> (<em>int</em><em>, </em><em>optional</em>) – Seed for the random number generator to ensure reproducibility.</p></li>
-<li><p><strong>discretization</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of steps to discretize the space between [0, 1]. Higher values provide
-finer granularity, by default 4.</p></li>
+<li><p><strong>subgroup_sizes</strong> (<em>list</em><em> of </em><em>int</em>) – List where each entry corresponds to the size of a subgroup
+(number of variables).</p></li>
+<li><p><strong>num_samples</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of random samples to generate. If -1, all valid
+permutations are computed. The default is -1.</p></li>
+<li><p><strong>seed</strong> (<em>int</em><em>, </em><em>optional</em>) – Seed for the random number generator to ensure
+reproducibility.</p></li>
+<li><p><strong>discretization</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of steps to discretize the space between [0, 1]. Finer
+granularity is provided by higher values. The default is 4.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A generator yielding valid samples of probabilistic contributions. Each sample is a
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>np.ndarray</em> – A valid sample of probabilistic contributions. Each sample is a
 1D array where the sum of elements in each subgroup is 1.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Generator[np.ndarray, None, None]</p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generator</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span></p>
 </dd>
 </dl>
-<p class="rubric">Example</p>
+<p class="rubric">Notes</p>
+<p>The generator produces samples lazily to reduce memory consumption.
+If <cite>num_samples</cite> is -1, the function generates all possible
+permutations lazily. The <cite>discretization</cite> parameter controls the
+precision of the [0, 1] interval; higher values increase precision
+but may significantly increase computation time.</p>
+<p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">subgroup_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">samples</span> <span class="o">=</span> <span class="n">generate_imprecise_probabilistic_samples</span><span class="p">(</span><span class="n">subgroup_sizes</span><span class="p">,</span> <span class="n">num_samples</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">samples</span> <span class="o">=</span> <span class="n">generate_imprecise_probabilistic_samples</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">subgroup_sizes</span><span class="p">,</span> <span class="n">num_samples</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span>
+<span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="rubric">Notes</p>
-<ul class="simple">
-<li><p>This function explores the space of imprecise probabilistic contributions.</p></li>
-<li><p>The generator produces samples lazily to reduce memory consumption.</p></li>
-<li><p>If <cite>num_samples</cite> is -1, the function generates all possible permutations lazily.</p></li>
-<li><p>The <cite>discretization</cite> parameter controls the precision of the [0, 1] interval;
-higher values increase precision but may significantly increase computation time.</p></li>
-</ul>
 </dd></dl>
 
 <dl class="py function">
@@ -720,31 +724,30 @@ dependent coordinate <code class="docutils literal notranslate"><span class="pre
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.sampling.scale_sample_with_params">
 <span class="sig-prename descclassname"><span class="pre">otaf.sampling.</span></span><span class="sig-name descname"><span class="pre">scale_sample_with_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sampling/_sampling.html#scale_sample_with_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sampling.scale_sample_with_params" title="Link to this definition"></a></dt>
-<dd><p>Scale a sample of shape (N, M) using mean and standard deviation parameters.</p>
-<p>Transform each column of the input sample, assuming it originates from a
-standard normal unit distribution, by applying the provided mean and
-standard deviation values.</p>
+<dd><p>Scale a sample using mean and variance parameters.</p>
+<p>Transform each column of the input sample, assuming it originates
+from a standard normal unit distribution, by applying the provided
+mean and standard deviation values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sample</strong> (<em>np.ndarray</em>) – A 2D array of shape (N, M), where each column represents a random vector
-component from a standard normal distribution.</p></li>
-<li><p><strong>parameters</strong> (<em>Union</em><em>[</em><em>np.ndarray</em><em>, </em><em>Sequence</em><em>[</em><em>float</em><em>]</em><em>]</em>) – A 1D array or sequence of size 2 * M, where elements alternate between
-mean and standard deviation ($mu_0, sigma_0, mu_1, sigma_1, dots$).</p></li>
+<li><p><strong>sample</strong> (<em>np.ndarray</em>) – A 2D array of shape (N, M), where each column represents a
+random vector component from a standard normal distribution.</p></li>
+<li><p><strong>parameters</strong> (<em>array_like</em>) – A 1D array or sequence of size 2 * M, where elements alternate
+between mean and standard deviation (mu_0, sigma_0, mu_1,
+sigma_1, …).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A 2D array of shape (N, M), with each column scaled using the parameters.</p>
+<dd class="field-even"><p>A 2D array of shape (N, M), with each column scaled using the
+parameters.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>np.ndarray</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – If the sample is not a 2D array.</p></li>
-<li><p><strong>ValueError</strong> – If the parameters size does not equal 2 * M.</p></li>
-<li><p><strong>ValueError</strong> – If any standard deviation is negative.</p></li>
-</ul>
+<dd class="field-even"><p><strong>ValueError</strong> – If <cite>sample</cite> is not a 2D array, if the size of <cite>parameters</cite> does
+    not equal `` 2 * M <a href="#id1"><span class="problematic" id="id2">``</span></a>, or if any standard deviation is negative.</p>
 </dd>
 </dl>
 </dd></dl>

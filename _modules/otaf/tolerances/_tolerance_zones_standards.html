@@ -92,16 +92,37 @@
     <span class="s2">&quot;sigma_delta_3D_plane&quot;</span><span class="p">,</span>
     <span class="s2">&quot;sigma_delta_cylindrical_feature&quot;</span><span class="p">,</span>
 <span class="p">]</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <div class="viewcode-block" id="sigma_delta_circular_feature">
 <a class="viewcode-back" href="../../../source/otaf.tolerances.html#otaf.tolerances.sigma_delta_circular_feature">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">sigma_delta_circular_feature</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">sr</span><span class="p">,</span> <span class="n">su</span><span class="p">,</span> <span class="n">sv</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the standard deviation of the defect for a circular feature.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sigma_delta_circular_feature</span><span class="p">(</span>
+    <span class="n">theta</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">sr</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">su</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">sv</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate defect standard deviation for a circular feature.</span>
 
-<span class="sd">    This result can be used as a basis for a constraint function to maintain</span>
-<span class="sd">    a constant maximum standard deviation over the circular feature.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    theta : float or np.ndarray</span>
+<span class="sd">        Angle or array of angles along the circular feature in</span>
+<span class="sd">        radians.</span>
+<span class="sd">    sr : float</span>
+<span class="sd">        Standard deviation of the radial defect.</span>
+<span class="sd">    su : float</span>
+<span class="sd">        Standard deviation of the U-axis translational defect.</span>
+<span class="sd">    sv : float</span>
+<span class="sd">        Standard deviation of the V-axis translational defect.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float or np.ndarray</span>
+<span class="sd">        The calculated standard deviation. If `theta` is an array,</span>
+<span class="sd">        the output shape matches the shape of `theta`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sr</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">su</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">sv</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></div>
 
@@ -109,10 +130,36 @@
 
 <div class="viewcode-block" id="sigma_delta_3D_plane">
 <a class="viewcode-back" href="../../../source/otaf.tolerances.html#otaf.tolerances.sigma_delta_3D_plane">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">sigma_delta_3D_plane</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sw</span><span class="p">,</span> <span class="n">sa</span><span class="p">,</span> <span class="n">sb</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the standard deviation of the defect for a 3D plane feature.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sigma_delta_3D_plane</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">sw</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">sa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">sb</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate defect standard deviation for a 3D plane feature.</span>
 
-<span class="sd">    This result can be used as a basis for a constraint function.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : float or np.ndarray</span>
+<span class="sd">        X-coordinate or array of coordinates on the plane.</span>
+<span class="sd">    y : float or np.ndarray</span>
+<span class="sd">        Y-coordinate or array of coordinates on the plane.</span>
+<span class="sd">    sw : float</span>
+<span class="sd">        Standard deviation of the translational defect normal to the</span>
+<span class="sd">        plane.</span>
+<span class="sd">    sa : float</span>
+<span class="sd">        Standard deviation of the angular defect variation around the</span>
+<span class="sd">        first axis.</span>
+<span class="sd">    sb : float</span>
+<span class="sd">        Standard deviation of the angular defect variation around the</span>
+<span class="sd">        second axis.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float or np.ndarray</span>
+<span class="sd">        The calculated standard deviation. If `x` or `y` are arrays,</span>
+<span class="sd">        the output shape matches their broadcasted shape.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sw</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sa</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sb</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></div>
 
@@ -120,11 +167,43 @@
 
 <div class="viewcode-block" id="sigma_delta_cylindrical_feature">
 <a class="viewcode-back" href="../../../source/otaf.tolerances.html#otaf.tolerances.sigma_delta_cylindrical_feature">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">sigma_delta_cylindrical_feature</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">sr</span><span class="p">,</span> <span class="n">su</span><span class="p">,</span> <span class="n">salpha</span><span class="p">,</span> <span class="n">sv</span><span class="p">,</span> <span class="n">sbeta</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the standard deviation of the defect for a cylindrical feature.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sigma_delta_cylindrical_feature</span><span class="p">(</span>
+    <span class="n">z</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">theta</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">sr</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">su</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">salpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">sv</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">sbeta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate defect standard deviation for a cylindrical feature.</span>
 
-<span class="sd">    Accounts for variations in radial, axial, and angular parameters along the</span>
-<span class="sd">    cylinder&#39;s height and circumference.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    z : float or np.ndarray</span>
+<span class="sd">        Axial position or array of positions along the cylinder</span>
+<span class="sd">        height.</span>
+<span class="sd">    theta : float or np.ndarray</span>
+<span class="sd">        Angular position or array of positions along the</span>
+<span class="sd">        circumference in radians.</span>
+<span class="sd">    sr : float</span>
+<span class="sd">        Standard deviation of the radial defect.</span>
+<span class="sd">    su : float</span>
+<span class="sd">        Standard deviation of the axial translation defect.</span>
+<span class="sd">    salpha : float</span>
+<span class="sd">        Standard deviation of the angular variation defect around</span>
+<span class="sd">        the alpha axis.</span>
+<span class="sd">    sv : float</span>
+<span class="sd">        Standard deviation of the transverse translation defect.</span>
+<span class="sd">    sbeta : float</span>
+<span class="sd">        Standard deviation of the angular variation defect around</span>
+<span class="sd">        the beta axis.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float or np.ndarray</span>
+<span class="sd">        The calculated standard deviation. If `z` or `theta` are</span>
+<span class="sd">        arrays, the output shape matches their broadcasted shape.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
         <span class="n">sr</span><span class="o">**</span><span class="mi">2</span>

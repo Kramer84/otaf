@@ -138,23 +138,44 @@
 <span class="p">}</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_cm_to_inch</span><span class="p">(</span><span class="n">cm</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a (width, height) tuple from centimeters to inches.&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_cm_to_inch</span><span class="p">(</span><span class="n">cm</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a (width, height) tuple from centimeters to inches.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cm : tuple of float, optional</span>
+<span class="sd">        A tuple containing the width and height values in centimeters. </span>
+<span class="sd">        If None, the function returns None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple of float or None</span>
+<span class="sd">        The corresponding width and height measurements converted into </span>
+<span class="sd">        inches, or None if the input was None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">cm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">c</span> <span class="o">/</span> <span class="mf">2.54</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cm</span><span class="p">))</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_merge_style</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">overrides</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_merge_style</span><span class="p">(</span><span class="n">style</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">overrides</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Merge DEFAULT_FIG_STYLE, a user style dict, and per-call overrides.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    style : dict or None</span>
-<span class="sd">        Base style dict shared across figures.</span>
+<span class="sd">    style : dict, optional</span>
+<span class="sd">        Base style dict shared across figures. Default is None.</span>
 <span class="sd">    **overrides</span>
-<span class="sd">        Per-call overrides like figsize_cm=..., dpi=..., legend=False, etc.</span>
+<span class="sd">        Per-call overrides like ``figsize_cm=...``, ``dpi=...``, </span>
+<span class="sd">        ``legend=False``, etc.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        A fully merged configuration dictionary containing updated </span>
+<span class="sd">        style configurations and color mappings.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">DEFAULT_FIG_STYLE</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;colors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_FIG_STYLE</span><span class="p">[</span><span class="s2">&quot;colors&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -173,10 +194,16 @@
     <span class="k">return</span> <span class="n">cfg</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_setup_mpl_from_style</span><span class="p">(</span><span class="n">cfg</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Apply global Matplotlib settings for fonts / LaTeX, using</span>
-<span class="sd">    pdfLaTeX + Libertinus (libertinus-type1 + libertinust1math).</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_setup_mpl_from_style</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configure global Matplotlib settings for typography and LaTeX.</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cfg : dict</span>
+<span class="sd">        Configuration dictionary containing plotting styles. Expected keys</span>
+<span class="sd">        include ``&#39;font_size&#39;`` (int), ``&#39;font_family&#39;`` (str), and</span>
+<span class="sd">        ``&#39;usetex&#39;`` (bool).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">rc</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;font.size&quot;</span><span class="p">:</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;font_size&quot;</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span>
@@ -192,16 +219,52 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">rc</span><span class="p">)</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_new_fig_ax</span><span class="p">(</span><span class="n">cfg</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a new (fig, ax) using the style config.&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_new_fig_ax</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a new figure and axes using the style configuration.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cfg : dict</span>
+<span class="sd">        Configuration dictionary containing plotting styles. Expected keys</span>
+<span class="sd">        include ``&#39;figsize_cm&#39;`` (tuple of float, optional).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig : matplotlib.figure.Figure</span>
+<span class="sd">        The newly created Matplotlib figure instance.</span>
+<span class="sd">    ax : matplotlib.axes.Axes</span>
+<span class="sd">        The newly created Matplotlib axes instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_setup_mpl_from_style</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
     <span class="n">figsize</span> <span class="o">=</span> <span class="n">_cm_to_inch</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;figsize_cm&quot;</span><span class="p">))</span> <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;figsize_cm&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_finalize_figure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply grid, x/y limits, saving and showing.&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_finalize_figure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">cfg</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply styling, configuration limits, save, and display the figure.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fig : matplotlib.figure.Figure</span>
+<span class="sd">        The Matplotlib figure instance to be finalized.</span>
+<span class="sd">    ax : matplotlib.axes.Axes</span>
+<span class="sd">        The Matplotlib axes instance to be finalized.</span>
+<span class="sd">    cfg : dict</span>
+<span class="sd">        Configuration dictionary containing plotting parameters. Expected</span>
+<span class="sd">        keys include ``&#39;grid&#39;`` (bool, default True), ``&#39;xlim&#39;`` (tuple,</span>
+<span class="sd">        optional), ``&#39;ylim&#39;`` (tuple, optional), ``&#39;tight_layout&#39;`` (bool,</span>
+<span class="sd">        default True), ``&#39;save&#39;`` (bool, default False), ``&#39;save_path&#39;``</span>
+<span class="sd">        (str, optional), ``&#39;dpi&#39;`` (int, default 300), ``&#39;transparent&#39;``</span>
+<span class="sd">        (bool, default True), and ``&#39;show&#39;`` (bool, default True).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig : matplotlib.figure.Figure</span>
+<span class="sd">        The configured Matplotlib figure instance.</span>
+<span class="sd">    ax : matplotlib.axes.Axes</span>
+<span class="sd">        The configured Matplotlib axes instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;grid&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;xlim&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -227,18 +290,18 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">trimesh_scene_as_notebook_scene</span><span class="p">(</span>
     <span class="n">scene</span><span class="p">:</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">Scene</span><span class="p">,</span> <span class="n">background_hex_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;e6e6e6&quot;</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert a Trimesh scene into an interactive widget for a Jupyter notebook.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a Trimesh scene into an interactive Jupyter notebook widget.</span>
 
-<span class="sd">    Generates the HTML/JS representation of the scene and modifies the underlying</span>
-<span class="sd">    Three.js canvas setup to apply a custom background color.</span>
+<span class="sd">    Generates the HTML/JS representation of the scene and modifies the</span>
+<span class="sd">    underlying Three.js canvas setup to apply a custom background color.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    scene : trimesh.Scene</span>
 <span class="sd">        The Trimesh scene object to be displayed.</span>
-<span class="sd">    background_hex_color : str, default=&quot;e6e6e6&quot;</span>
-<span class="sd">        The hexadecimal color code (without the &#39;#&#39; prefix) for the background.</span>
+<span class="sd">    background_hex_color : str, optional</span>
+<span class="sd">        The hexadecimal color code (without the ``&#39;#&#39;`` prefix) for the</span>
+<span class="sd">        background. Default is ``&#39;e6e6e6&#39;``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -270,27 +333,31 @@
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">hex_to_rgba</span><span class="p">(</span>
     <span class="n">hex_color</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">as_float</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert a hexadecimal color string to an RGBA tuple.</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a hexadecimal color string to an RGBA tuple.</span>
 
-<span class="sd">    Strips any leading &#39;#&#39; character, extracts the red, green, and blue components,</span>
-<span class="sd">    and optionally normalizes the RGB values to floats before appending the alpha channel.</span>
+<span class="sd">    Strips any leading ``&#39;#&#39;`` character, extracts the red, green, and</span>
+<span class="sd">    blue components, and optionally normalizes the RGB values to floats</span>
+<span class="sd">    before appending the alpha channel.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    hex_color : str</span>
-<span class="sd">        The hexadecimal color code string (e.g., &#39;#ffffff&#39; or &#39;e6e6e6&#39;).</span>
-<span class="sd">    alpha : float, default=1.0</span>
+<span class="sd">        The hexadecimal color code string (e.g., ``&#39;#ffffff&#39;`` or</span>
+<span class="sd">        ``&#39;e6e6e6&#39;``).</span>
+<span class="sd">    alpha : float, optional</span>
 <span class="sd">        The alpha (transparency) value, typically between 0.0 and 1.0.</span>
-<span class="sd">    as_float : bool, default=False</span>
-<span class="sd">        If True, returns RGB values as floats scaled between 0.0 and 1.0.</span>
-<span class="sd">        If False, returns them as integers between 0 and 255.</span>
+<span class="sd">        The default is 1.0.</span>
+<span class="sd">    as_float : bool, optional</span>
+<span class="sd">        If ``True``, returns RGB values as floats scaled between 0.0 and</span>
+<span class="sd">        1.0. If ``False``, returns them as integers between 0 and 255.</span>
+<span class="sd">        The default is ``False``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    Tuple[Union[float, int], Union[float, int], Union[float, int], float]</span>
-<span class="sd">        A tuple containing the Red, Green, Blue, and Alpha values in order.</span>
+<span class="sd">    tuple</span>
+<span class="sd">        A four-element tuple containing the red, green, blue, and</span>
+<span class="sd">        alpha values in order.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">hex_color</span> <span class="o">=</span> <span class="n">hex_color</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">)</span>
     <span class="n">r</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">hex_color</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
@@ -306,18 +373,18 @@
 
 <div class="viewcode-block" id="arrange_axes_in_grid">
 <a class="viewcode-back" href="../../../source/otaf.plotting.html#otaf.plotting.arrange_axes_in_grid">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">arrange_axes_in_grid</span><span class="p">(</span><span class="n">axes_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Arrange a list of existing Matplotlib axes into a new, compact 2D grid plot.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">arrange_axes_in_grid</span><span class="p">(</span><span class="n">axes_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Arrange a list of Matplotlib axes into a new, compact 2D grid plot.</span>
 
-<span class="sd">    Calculates the optimal number of rows and columns to form a near-square layout,</span>
-<span class="sd">    creates a new figure, copies lines and labels from the source axes into the</span>
-<span class="sd">    subplots, and deletes any unused grid positions.</span>
+<span class="sd">    Calculates the optimal number of rows and columns to form a near-square</span>
+<span class="sd">    layout, creates a new figure, copies lines and labels from the source</span>
+<span class="sd">    axes into the subplots, and deletes any unused grid positions.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    axes_list : List[Any]</span>
-<span class="sd">        A list of Matplotlib axis objects whose lines and metadata should be copied.</span>
+<span class="sd">    axes_list : list</span>
+<span class="sd">        A list of Matplotlib axis objects whose lines and metadata should</span>
+<span class="sd">        be copied.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">num_axes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">axes_list</span><span class="p">)</span>
     <span class="n">num_cols</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">num_axes</span><span class="p">))</span>

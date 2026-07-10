@@ -96,8 +96,6 @@
     <span class="s2">&quot;milp_batch_sequential&quot;</span><span class="p">,</span>
     <span class="s2">&quot;compute_gap_optimizations_on_sample_batch&quot;</span><span class="p">,</span>
 <span class="p">]</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numbers</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
@@ -127,32 +125,35 @@
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">solver</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ot</span><span class="o">.</span><span class="n">OptimizationAlgorithm</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">FORMResult</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the probability of failure using the First-Order Reliability Method (FORM).</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute failure probability using FORM.</span>
 
-<span class="sd">    Calculate the failure probability for an event defined by a threshold violation</span>
-<span class="sd">    by finding the design point in the standard normal space and applying a</span>
-<span class="sd">    first-order approximation.</span>
+<span class="sd">    Calculate the failure probability for an event defined by a</span>
+<span class="sd">    threshold violation by finding the design point in the standard</span>
+<span class="sd">    normal space and applying a first-order approximation.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    ot_function : ot.Function</span>
 <span class="sd">        The performance function of the system.</span>
 <span class="sd">    composed_distribution : JointDistribution</span>
-<span class="sd">        The joint probability distribution of the input random variables.</span>
+<span class="sd">        The joint probability distribution of the input random</span>
+<span class="sd">        variables.</span>
 <span class="sd">    threshold : float, optional</span>
-<span class="sd">        The limit state threshold, by default 0.0.</span>
+<span class="sd">        The limit state threshold. Default is 0.0.</span>
 <span class="sd">    start_point : ot.Point, optional</span>
-<span class="sd">        Initial starting point for the optimization algorithm in physical space.</span>
+<span class="sd">        Initial starting point for the optimization algorithm in</span>
+<span class="sd">        physical space. Default is None.</span>
 <span class="sd">    verbose : bool, optional</span>
-<span class="sd">        If True, print reliability diagnostics, by default False.</span>
+<span class="sd">        If True, print reliability diagnostics. Default is False.</span>
 <span class="sd">    solver : ot.OptimizationAlgorithm, optional</span>
-<span class="sd">        The optimization algorithm to find the design point. Uses COBYLA</span>
-<span class="sd">        with strict convergence tolerances if None.</span>
+<span class="sd">        The optimization algorithm to find the design point. Uses</span>
+<span class="sd">        ``ot.Cobyla()`` with strict convergence tolerances if None.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    tuple[float, ot.FORMResult]</span>
-<span class="sd">        The calculated failure probability and the full FORM result object.</span>
+<span class="sd">        The calculated failure probability and the full FORM result</span>
+<span class="sd">        object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">comp_rand_vect</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span>
         <span class="n">ot_function</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">composed_distribution</span><span class="p">)</span>
@@ -191,19 +192,27 @@
     <span class="n">quantile_level</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">,</span>
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">SimulationResult</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the failure probability using the NAIS algorithm.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute failure probability using the NAIS algorithm.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    - ot_python_function: The function g(X)</span>
-<span class="sd">    - distribution: The input random vector distribution</span>
-<span class="sd">    - threshold: The threshold value (default=0.0)</span>
-<span class="sd">    - verbose: Print additional information (default=False)</span>
+<span class="sd">    ot_python_function : ot.PythonFunction</span>
+<span class="sd">        The performance function ``g(X)``.</span>
+<span class="sd">    distribution : JointDistribution</span>
+<span class="sd">        The input random vector distribution.</span>
+<span class="sd">    threshold : float, optional</span>
+<span class="sd">        The threshold value. Default is 0.0.</span>
+<span class="sd">    quantile_level : float, optional</span>
+<span class="sd">        The quantile level for the NAIS algorithm. Default is 0.001.</span>
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        If True, print additional information. Default is False.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    - proba: The estimated failure probability</span>
-<span class="sd">    - result: Additional NAIS algorithm results (see docstring)</span>
+<span class="sd">    proba : float</span>
+<span class="sd">        The estimated failure probability.</span>
+<span class="sd">    result : ot.SimulationResult</span>
+<span class="sd">        Additional NAIS algorithm results object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">output_random_vector</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span>
         <span class="n">ot_python_function</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">distribution</span><span class="p">)</span>
@@ -236,20 +245,34 @@
     <span class="n">proposal_range</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="n">target_probability</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">SimulationResult</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute the failure probability using the NAIS algorithm.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute failure probability using subset sampling.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    - ot_python_function: The function g(X)</span>
-<span class="sd">    - distribution: The input random vector distribution</span>
-<span class="sd">    - threshold: The threshold value (default=0.0)</span>
-<span class="sd">    - verbose: Print additional information (default=False)</span>
+<span class="sd">    ot_python_function : ot.PythonFunction</span>
+<span class="sd">        The performance function ``g(X)``.</span>
+<span class="sd">    distribution : JointDistribution</span>
+<span class="sd">        The input random vector distribution.</span>
+<span class="sd">    threshold : float, optional</span>
+<span class="sd">        The threshold value. Default is 0.0.</span>
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        If True, print additional information. Default is False.</span>
+<span class="sd">    proposal_range : float, optional</span>
+<span class="sd">        The proposal range for the Markov chain Monte Carlo steps.</span>
+<span class="sd">        Default is 2.0.</span>
+<span class="sd">    target_probability : float, optional</span>
+<span class="sd">        The target probability for each conditional step. Default</span>
+<span class="sd">        is 0.1.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    - proba: The estimated failure probability</span>
-<span class="sd">    - result: Additional NAIS algorithm results (see docstring)</span>
+<span class="sd">    proba : float</span>
+<span class="sd">        The estimated failure probability.</span>
+<span class="sd">    result : ot.SimulationResult</span>
+<span class="sd">        Additional subset sampling algorithm results object.</span>
+<span class="sd">    algo : ot.SubsetSampling</span>
+<span class="sd">        The subset sampling algorithm instance used for the</span>
+<span class="sd">        simulation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">output_random_vector</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span>
         <span class="n">ot_python_function</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">distribution</span><span class="p">)</span>
@@ -287,20 +310,24 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        constraint_matrix_generator (Callable): Class for fixing deviations and defining constraints.</span>
-<span class="sd">        deviation_array (np.ndarray): Array of random deviations for each variable.</span>
-<span class="sd">        C (np.ndarray, optional): Coefficient matrix for the linear objective function. Defaults to None.</span>
-<span class="sd">        bounds (List, optional): Bounds for gap variables. Defaults to None.</span>
-<span class="sd">        method (str, optional): Algorithm for the optimization problem. Defaults to &#39;highs&#39;.</span>
-<span class="sd">        n_cpu (int, optional): Number of CPUs to use for parallel execution. Defaults to 1.</span>
+<span class="sd">    constraint_matrix_generator : Callable</span>
+<span class="sd">        Class or callable for fixing deviations and defining</span>
+<span class="sd">        constraints.</span>
+<span class="sd">    defect_distribition_vector : ot.RandomVector</span>
+<span class="sd">        The random vector representing the defect distribution.</span>
+<span class="sd">    C : np.ndarray, optional</span>
+<span class="sd">        Coefficient matrix for the linear objective function.</span>
+<span class="sd">        Default is None.</span>
+<span class="sd">    bounds : list of list of float or np.ndarray, optional</span>
+<span class="sd">        Bounds for gap variables. Default is None.</span>
+<span class="sd">    n_cpu : int, optional</span>
+<span class="sd">        Number of CPUs to use for parallel execution. Default is 1.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        float: Failure probability for the fixed deviations.</span>
-
-<span class="sd">    Raises</span>
-<span class="sd">    ------</span>
-<span class="sd">        TypeError: If constraint_matrix_generator is not callable.</span>
+<span class="sd">    ot.SimulationResult</span>
+<span class="sd">        The simulation result object containing the estimated failure</span>
+<span class="sd">        probability and simulation diagnostics.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">defect_func</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
@@ -337,30 +364,32 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">OptimizeResult</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute gap optimizations for a set of samples using MILP.</span>
 
-<span class="sd">    Solve a sequence of Mixed-Integer Linear Programming (MILP) problems derived</span>
-<span class="sd">    from a system of constraints to determine the optimal gap for each sample.</span>
+<span class="sd">    Solve a sequence of Mixed-Integer Linear Programming (MILP)</span>
+<span class="sd">    problems derived from a system of constraints to determine the</span>
+<span class="sd">    optimal gap for each sample.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    constraint_matrix_generator : SystemOfConstraintsAssemblyModel</span>
-<span class="sd">        Generator object that produces the constraint matrices and bounds.</span>
+<span class="sd">        Generator object that produces the constraint matrices and</span>
+<span class="sd">        bounds.</span>
 <span class="sd">    deviation_array : np.ndarray</span>
 <span class="sd">        Array representing deviations to be processed.</span>
 <span class="sd">    C : np.ndarray, optional</span>
-<span class="sd">        Coefficient matrix for the linear objective function.</span>
-<span class="sd">    bounds : Union[List[List[float]], np.ndarray], optional</span>
-<span class="sd">        Bounds for the optimization variables.</span>
+<span class="sd">        Coefficient matrix for the linear objective function. Default</span>
+<span class="sd">        is None.</span>
+<span class="sd">    bounds : list of list of float or np.ndarray, optional</span>
+<span class="sd">        Bounds for the optimization variables. Default is None.</span>
 <span class="sd">    n_cpu : int, optional</span>
-<span class="sd">        Number of CPUs to use for parallel processing, by default 1.</span>
+<span class="sd">        Number of CPUs to use for parallel processing. Default is 1.</span>
 <span class="sd">    progress_bar : bool, optional</span>
-<span class="sd">        Whether to display a progress bar, by default False.</span>
-<span class="sd">    verbose : int, optional</span>
-<span class="sd">        Verbosity level for debugging, by default 0.</span>
+<span class="sd">        Whether to display a progress bar. Default is False.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    List[OptimizeResult]</span>
-<span class="sd">        A list of optimization result objects for each sample in the input array.</span>
+<span class="sd">    list of OptimizeResult</span>
+<span class="sd">        A list of optimization result objects for each sample in the</span>
+<span class="sd">        input array.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">c</span><span class="p">,</span> <span class="n">a_ub</span><span class="p">,</span> <span class="n">b_ub</span><span class="p">,</span> <span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="n">constraint_matrix_generator</span><span class="p">(</span>
         <span class="n">deviation_array</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C</span>
@@ -412,22 +441,25 @@
     <span class="n">a_eq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">b_eq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Optimize a batch of linear problems iteratively using MILP.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Optimize a batch of linear programming problems sequentially.</span>
 
-<span class="sd">    Solve a sequence of Mixed-Integer Linear Programming (MILP) problems</span>
-<span class="sd">    sharing common objective coefficients and constraint matrices, but</span>
-<span class="sd">    varying constraint bounds.</span>
+<span class="sd">    Solve a sequence of Mixed-Integer Linear Programming (MILP)</span>
+<span class="sd">    problems sharing common objective coefficients and constraint</span>
+<span class="sd">    matrices, but varying constraint bounds.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    c : np.ndarray</span>
-<span class="sd">        Coefficients of the linear objective function to be minimized.</span>
+<span class="sd">        Coefficients of the linear objective function to be</span>
+<span class="sd">        minimized.</span>
 <span class="sd">    bounds : np.ndarray</span>
-<span class="sd">        An (n, 2) array defining the lower and upper bounds of variables.</span>
+<span class="sd">        An (n, 2) array defining the lower and upper bounds of</span>
+<span class="sd">        variables.</span>
 <span class="sd">    a_ub : np.ndarray</span>
 <span class="sd">        2D array for the upper-bound inequality constraints.</span>
 <span class="sd">    b_ub : np.ndarray</span>
-<span class="sd">        2D array of upper-bound values for each inequality constraint per problem.</span>
+<span class="sd">        2D array of upper-bound values for each inequality</span>
+<span class="sd">        constraint per problem.</span>
 <span class="sd">    a_eq : np.ndarray</span>
 <span class="sd">        2D array for the equality constraints.</span>
 <span class="sd">    b_eq : np.ndarray</span>
@@ -436,13 +468,16 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    np.ndarray</span>
-<span class="sd">        2D array of optimized decision variables for each problem in the batch.</span>
+<span class="sd">        2D array of optimized decision variables for each problem in</span>
+<span class="sd">        the batch.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    - This function solves MILP problems using `scipy.optimize.milp`.</span>
-<span class="sd">    - Solver options are set to `disp=False` and `presolve=True` for efficiency.</span>
-<span class="sd">    - Problems share `c`, `a_ub`, and `a_eq`, while `b_ub` and `b_eq` vary per batch element.</span>
+<span class="sd">    This function solves MILP problems using</span>
+<span class="sd">    ``scipy.optimize.milp``. Solver options are set to</span>
+<span class="sd">    ``disp=False`` and ``presolve=True`` for efficiency. Problems</span>
+<span class="sd">    share `c`, `a_ub`, and `a_eq`, while `b_ub` and `b_eq` vary per</span>
+<span class="sd">    batch element.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">bounds</span> <span class="o">=</span> <span class="n">Bounds</span><span class="p">(</span><span class="n">bounds</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">keep_feasible</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">optimizations</span> <span class="o">=</span> <span class="p">[</span>
@@ -474,11 +509,11 @@
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">dtype</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;float32&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute gap optimizations on a sample using batch processing and MILP.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute gap optimizations using batch processing and MILP.</span>
 
-<span class="sd">    Perform parallel batch optimization for a system of constraints, grouping</span>
-<span class="sd">    samples into batches to improve computational throughput and reduce parallelization</span>
-<span class="sd">    overhead.</span>
+<span class="sd">    Perform parallel batch optimization for a system of</span>
+<span class="sd">    constraints, grouping samples into batches to improve</span>
+<span class="sd">    computational throughput and reduce parallelization overhead.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -487,25 +522,28 @@
 <span class="sd">    deviation_array : np.ndarray</span>
 <span class="sd">        Array of deviations to process.</span>
 <span class="sd">    C : np.ndarray, optional</span>
-<span class="sd">        Coefficient matrix for the linear objective function.</span>
-<span class="sd">    bounds : Union[List[List[float]], np.ndarray], optional</span>
-<span class="sd">        Bounds for the optimization variables.</span>
+<span class="sd">        Coefficient matrix for the linear objective function. Default</span>
+<span class="sd">        is None.</span>
+<span class="sd">    bounds : list of list of float or np.ndarray, optional</span>
+<span class="sd">        Bounds for the optimization variables. Default is None.</span>
 <span class="sd">    n_cpu : int, optional</span>
-<span class="sd">        Number of CPUs for parallel processing. Negative values are relative</span>
-<span class="sd">        to total available CPUs, by default 1.</span>
+<span class="sd">        Number of CPUs for parallel processing. Negative values are</span>
+<span class="sd">        relative to total available CPUs. Default is 1.</span>
 <span class="sd">    batch_size : int, optional</span>
-<span class="sd">        Number of points per parallel batch, by default 1000.</span>
+<span class="sd">        Number of points per parallel batch. Default is 1000.</span>
 <span class="sd">    progress_bar : bool, optional</span>
-<span class="sd">        Whether to display a progress bar, by default False.</span>
+<span class="sd">        Whether to display a progress bar. Default is False.</span>
 <span class="sd">    verbose : int, optional</span>
-<span class="sd">        Verbosity level for debugging, by default 0.</span>
+<span class="sd">        Verbosity level for debugging. Default is 0.</span>
 <span class="sd">    dtype : str, optional</span>
-<span class="sd">        Data type for the resulting optimized decision variable array, by default &quot;float32&quot;.</span>
+<span class="sd">        Data type for the resulting optimized decision variable array.</span>
+<span class="sd">        Default is ``&#39;float32&#39;``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    np.ndarray</span>
-<span class="sd">        Optimized decision variables for all samples stacked into a single array.</span>
+<span class="sd">        Optimized decision variables for all samples stacked into a</span>
+<span class="sd">        single array.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">c</span><span class="p">,</span> <span class="n">a_ub</span><span class="p">,</span> <span class="n">b_ub</span><span class="p">,</span> <span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="n">constraint_matrix_generator</span><span class="p">(</span>
         <span class="n">deviation_array</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C</span>

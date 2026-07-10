@@ -133,13 +133,14 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.plotting.arrange_axes_in_grid">
 <span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">arrange_axes_in_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axes_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_core.html#arrange_axes_in_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.arrange_axes_in_grid" title="Link to this definition"></a></dt>
-<dd><p>Arrange a list of existing Matplotlib axes into a new, compact 2D grid plot.</p>
-<p>Calculates the optimal number of rows and columns to form a near-square layout,
-creates a new figure, copies lines and labels from the source axes into the
-subplots, and deletes any unused grid positions.</p>
+<dd><p>Arrange a list of Matplotlib axes into a new, compact 2D grid plot.</p>
+<p>Calculates the optimal number of rows and columns to form a near-square
+layout, creates a new figure, copies lines and labels from the source
+axes into the subplots, and deletes any unused grid positions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>axes_list</strong> (<em>List</em><em>[</em><em>Any</em><em>]</em>) – A list of Matplotlib axis objects whose lines and metadata should be copied.</p>
+<dd class="field-odd"><p><strong>axes_list</strong> (<em>list</em>) – A list of Matplotlib axis objects whose lines and metadata should
+be copied.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
@@ -183,22 +184,27 @@ geometric constraints between features.</p>
 <dt class="sig sig-object py" id="otaf.plotting.hex_to_rgba">
 <span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">hex_to_rgba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex_color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_float</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_core.html#hex_to_rgba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.hex_to_rgba" title="Link to this definition"></a></dt>
 <dd><p>Convert a hexadecimal color string to an RGBA tuple.</p>
-<p>Strips any leading ‘#’ character, extracts the red, green, and blue components,
-and optionally normalizes the RGB values to floats before appending the alpha channel.</p>
+<p>Strips any leading <code class="docutils literal notranslate"><span class="pre">'#'</span></code> character, extracts the red, green, and
+blue components, and optionally normalizes the RGB values to floats
+before appending the alpha channel.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>hex_color</strong> (<em>str</em>) – The hexadecimal color code string (e.g., ‘#ffffff’ or ‘e6e6e6’).</p></li>
-<li><p><strong>alpha</strong> (<em>float</em><em>, </em><em>default=1.0</em>) – The alpha (transparency) value, typically between 0.0 and 1.0.</p></li>
-<li><p><strong>as_float</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, returns RGB values as floats scaled between 0.0 and 1.0.
-If False, returns them as integers between 0 and 255.</p></li>
+<li><p><strong>hex_color</strong> (<em>str</em>) – The hexadecimal color code string (e.g., <code class="docutils literal notranslate"><span class="pre">'#ffffff'</span></code> or
+<code class="docutils literal notranslate"><span class="pre">'e6e6e6'</span></code>).</p></li>
+<li><p><strong>alpha</strong> (<em>float</em><em>, </em><em>optional</em>) – The alpha (transparency) value, typically between 0.0 and 1.0.
+The default is 1.0.</p></li>
+<li><p><strong>as_float</strong> (<em>bool</em><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, returns RGB values as floats scaled between 0.0 and
+1.0. If <code class="docutils literal notranslate"><span class="pre">False</span></code>, returns them as integers between 0 and 255.
+The default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A tuple containing the Red, Green, Blue, and Alpha values in order.</p>
+<dd class="field-even"><p>A four-element tuple containing the red, green, blue, and
+alpha values in order.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tuple[Union[float, int], Union[float, int], Union[float, int], float]</p>
+<dd class="field-odd"><p>tuple</p>
 </dd>
 </dl>
 </dd></dl>
@@ -344,14 +350,15 @@ arrows along with text annotations. Uses global styling for colors and fonts.</p
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.plotting.trimesh_scene_as_notebook_scene">
 <span class="sig-prename descclassname"><span class="pre">otaf.plotting.</span></span><span class="sig-name descname"><span class="pre">trimesh_scene_as_notebook_scene</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scene</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background_hex_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'e6e6e6'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/plotting/_core.html#trimesh_scene_as_notebook_scene"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.plotting.trimesh_scene_as_notebook_scene" title="Link to this definition"></a></dt>
-<dd><p>Convert a Trimesh scene into an interactive widget for a Jupyter notebook.</p>
-<p>Generates the HTML/JS representation of the scene and modifies the underlying
-Three.js canvas setup to apply a custom background color.</p>
+<dd><p>Convert a Trimesh scene into an interactive Jupyter notebook widget.</p>
+<p>Generates the HTML/JS representation of the scene and modifies the
+underlying Three.js canvas setup to apply a custom background color.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>scene</strong> (<em>trimesh.Scene</em>) – The Trimesh scene object to be displayed.</p></li>
-<li><p><strong>background_hex_color</strong> (<em>str</em><em>, </em><em>default=&quot;e6e6e6&quot;</em>) – The hexadecimal color code (without the ‘#’ prefix) for the background.</p></li>
+<li><p><strong>background_hex_color</strong> (<em>str</em><em>, </em><em>optional</em>) – The hexadecimal color code (without the <code class="docutils literal notranslate"><span class="pre">'#'</span></code> prefix) for the
+background. Default is <code class="docutils literal notranslate"><span class="pre">'e6e6e6'</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

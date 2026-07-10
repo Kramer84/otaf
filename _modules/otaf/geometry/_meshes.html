@@ -111,40 +111,40 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">spheres_from_point_cloud</span><span class="p">(</span>
     <span class="n">pc</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
-    <span class="n">color</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">color</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
         <span class="mi">100</span><span class="p">,</span>
         <span class="mi">100</span><span class="p">,</span>
         <span class="mi">100</span><span class="p">,</span>
         <span class="mi">255</span><span class="p">,</span>
     <span class="p">],</span>
-    <span class="n">global_translation</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">trimesh</span><span class="o">.</span><span class="n">Trimesh</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generate a list of Trimesh icospheres centered at each point in a point cloud.</span>
+    <span class="n">global_translation</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">trimesh</span><span class="o">.</span><span class="n">Trimesh</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate Trimesh icospheres at each point in a point cloud.</span>
 
-<span class="sd">    Instantiates a sphere mesh for every coordinate position, applies a uniform </span>
-<span class="sd">    color, and shifts each position by an optional global translation vector.</span>
+<span class="sd">    Instantiates a sphere mesh for each coordinate position, applies</span>
+<span class="sd">    a uniform color, and shifts each position by an optional global</span>
+<span class="sd">    translation vector.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    pc : np.ndarray</span>
+<span class="sd">    pc : array_like</span>
 <span class="sd">        An (N, 3) array containing the coordinates of the point cloud.</span>
-<span class="sd">    radius : float, default=1.0</span>
+<span class="sd">    radius : float, default 1.0</span>
 <span class="sd">        The radius of each generated sphere.</span>
-<span class="sd">    color : Union[Tuple[int, int, int, int], List[Union[float, int]], np.ndarray], default=[100, 100, 100, 255]</span>
+<span class="sd">    color : array_like, default [100, 100, 100, 255]</span>
 <span class="sd">        The RGBA color applied to the vertices of the spheres.</span>
-<span class="sd">    global_translation : Union[List[Union[float, int]], np.ndarray], default=np.array([0, 0, 0])</span>
+<span class="sd">    global_translation : array_like, default [0, 0, 0]</span>
 <span class="sd">        A 3D offset vector added to every point&#39;s position.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    List[trimesh.Trimesh]</span>
+<span class="sd">    list of trimesh.Trimesh</span>
 <span class="sd">        A list of individual Trimesh icosphere objects.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    ImportError</span>
-<span class="sd">        If the trimesh library is not installed.</span>
+<span class="sd">        If the ``trimesh`` library is not installed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span> <span class="p">:</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">trimesh</span>
@@ -170,11 +170,11 @@
     <span class="n">transform</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
     <span class="n">sections</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">Trimesh</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Create a Trimesh cylinder that is open on both ends and apply a transformation matrix.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create an open-ended cylinder mesh with a transformation.</span>
 
-<span class="sd">    Generates a standard cylinder, removes the cap faces connected to the top and </span>
-<span class="sd">    bottom center vertices, and applies a 4x4 spatial transformation matrix.</span>
+<span class="sd">    Generates a standard cylinder, removes the cap faces connected</span>
+<span class="sd">    to the top and bottom center vertices, and applies a 4x4 spatial</span>
+<span class="sd">    transformation matrix.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -182,10 +182,12 @@
 <span class="sd">        The radius of the cylinder.</span>
 <span class="sd">    height : float</span>
 <span class="sd">        The height of the cylinder along its local Z-axis.</span>
-<span class="sd">    transform : np.ndarray</span>
-<span class="sd">        A 4x4 homogeneous transformation matrix to position and rotate the mesh.</span>
-<span class="sd">    sections : int, default=64</span>
-<span class="sd">        The number of radial facets used to approximate the circular cross-section.</span>
+<span class="sd">    transform : array_like</span>
+<span class="sd">        A 4x4 homogeneous transformation matrix to position and</span>
+<span class="sd">        rotate the mesh.</span>
+<span class="sd">    sections : int, default 64</span>
+<span class="sd">        The number of radial facets used to approximate the circular</span>
+<span class="sd">        cross-section.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -195,7 +197,7 @@
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    ImportError</span>
-<span class="sd">        If the trimesh library is not installed.</span>
+<span class="sd">        If the ``trimesh`` library is not installed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span> <span class="p">:</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">trimesh</span>
@@ -222,23 +224,25 @@
 <div class="viewcode-block" id="surface_from_planar_contour">
 <a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.surface_from_planar_contour">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">surface_from_planar_contour</span><span class="p">(</span>
-    <span class="n">vertices</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
-    <span class="n">segments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">vertices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span><span class="p">,</span>
+    <span class="n">segments</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">Trimesh</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Triangulate a 3D planar point contour to generate a flat 2D surface mesh.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Triangulate a 3D planar point contour to generate a surface mesh.</span>
 
-<span class="sd">    Projects the 3D coordinates onto a local 2D plane, performs a Constrained </span>
-<span class="sd">    Delaunay Triangulation using the `triangle` library, and then transforms the </span>
-<span class="sd">    resulting mesh vertices back to their original 3D orientation.</span>
+<span class="sd">    Projects the 3D coordinates onto a local 2D plane, performs a</span>
+<span class="sd">    Constrained Delaunay Triangulation using the ``triangle`` library,</span>
+<span class="sd">    and then transforms the resulting mesh vertices back to their</span>
+<span class="sd">    original 3D orientation.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    vertices : Union[List[Union[List[float], np.ndarray]], np.ndarray]</span>
-<span class="sd">        An (N, 3) array of 3D coordinates representing the boundary of the contour.</span>
-<span class="sd">    segments : Optional[Union[List[Union[List[int], np.ndarray]], np.ndarray]], default=None</span>
-<span class="sd">        An optional (M, 2) array of vertex indices defining fixed boundary lines </span>
-<span class="sd">        or holes that must be respected during triangulation.</span>
+<span class="sd">    vertices : array_like</span>
+<span class="sd">        An (N, 3) array of 3D coordinates representing the boundary</span>
+<span class="sd">        of the contour.</span>
+<span class="sd">    segments : array_like, optional</span>
+<span class="sd">        An optional (M, 2) array of vertex indices defining fixed</span>
+<span class="sd">        boundary lines or holes that must be respected during</span>
+<span class="sd">        triangulation. Default is None.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -248,10 +252,11 @@
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    ImportError</span>
-<span class="sd">        If either the `triangle` or `trimesh` libraries are not installed.</span>
+<span class="sd">        If either the ``triangle`` or ``trimesh`` libraries are not</span>
+<span class="sd">        installed.</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        If the input segments do not have a shape ending in 2, or if the input </span>
-<span class="sd">        vertices do not all lie on the same 2D plane.</span>
+<span class="sd">        If the input `segments` do not have a shape ending in 2, or</span>
+<span class="sd">        if the input `vertices` do not all lie on the same 2D plane.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span> <span class="p">:</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">triangle</span>

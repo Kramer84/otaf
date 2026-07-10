@@ -127,24 +127,82 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.tolerances.sigma_delta_3D_plane">
 <span class="sig-prename descclassname"><span class="pre">otaf.tolerances.</span></span><span class="sig-name descname"><span class="pre">sigma_delta_3D_plane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sa</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sb</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/tolerances/_tolerance_zones_standards.html#sigma_delta_3D_plane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.tolerances.sigma_delta_3D_plane" title="Link to this definition"></a></dt>
-<dd><p>Calculate the standard deviation of the defect for a 3D plane feature.</p>
-<p>This result can be used as a basis for a constraint function.</p>
+<dd><p>Calculate defect standard deviation for a 3D plane feature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em><em> or </em><em>np.ndarray</em>) – X-coordinate or array of coordinates on the plane.</p></li>
+<li><p><strong>y</strong> (<em>float</em><em> or </em><em>np.ndarray</em>) – Y-coordinate or array of coordinates on the plane.</p></li>
+<li><p><strong>sw</strong> (<em>float</em>) – Standard deviation of the translational defect normal to the
+plane.</p></li>
+<li><p><strong>sa</strong> (<em>float</em>) – Standard deviation of the angular defect variation around the
+first axis.</p></li>
+<li><p><strong>sb</strong> (<em>float</em>) – Standard deviation of the angular defect variation around the
+second axis.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The calculated standard deviation. If <cite>x</cite> or <cite>y</cite> are arrays,
+the output shape matches their broadcasted shape.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float or np.ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.tolerances.sigma_delta_circular_feature">
 <span class="sig-prename descclassname"><span class="pre">otaf.tolerances.</span></span><span class="sig-name descname"><span class="pre">sigma_delta_circular_feature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">su</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sv</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/tolerances/_tolerance_zones_standards.html#sigma_delta_circular_feature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.tolerances.sigma_delta_circular_feature" title="Link to this definition"></a></dt>
-<dd><p>Calculate the standard deviation of the defect for a circular feature.</p>
-<p>This result can be used as a basis for a constraint function to maintain
-a constant maximum standard deviation over the circular feature.</p>
+<dd><p>Calculate defect standard deviation for a circular feature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theta</strong> (<em>float</em><em> or </em><em>np.ndarray</em>) – Angle or array of angles along the circular feature in
+radians.</p></li>
+<li><p><strong>sr</strong> (<em>float</em>) – Standard deviation of the radial defect.</p></li>
+<li><p><strong>su</strong> (<em>float</em>) – Standard deviation of the U-axis translational defect.</p></li>
+<li><p><strong>sv</strong> (<em>float</em>) – Standard deviation of the V-axis translational defect.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The calculated standard deviation. If <cite>theta</cite> is an array,
+the output shape matches the shape of <cite>theta</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float or np.ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.tolerances.sigma_delta_cylindrical_feature">
 <span class="sig-prename descclassname"><span class="pre">otaf.tolerances.</span></span><span class="sig-name descname"><span class="pre">sigma_delta_cylindrical_feature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">su</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">salpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sbeta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/tolerances/_tolerance_zones_standards.html#sigma_delta_cylindrical_feature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.tolerances.sigma_delta_cylindrical_feature" title="Link to this definition"></a></dt>
-<dd><p>Calculate the standard deviation of the defect for a cylindrical feature.</p>
-<p>Accounts for variations in radial, axial, and angular parameters along the
-cylinder’s height and circumference.</p>
+<dd><p>Calculate defect standard deviation for a cylindrical feature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z</strong> (<em>float</em><em> or </em><em>np.ndarray</em>) – Axial position or array of positions along the cylinder
+height.</p></li>
+<li><p><strong>theta</strong> (<em>float</em><em> or </em><em>np.ndarray</em>) – Angular position or array of positions along the
+circumference in radians.</p></li>
+<li><p><strong>sr</strong> (<em>float</em>) – Standard deviation of the radial defect.</p></li>
+<li><p><strong>su</strong> (<em>float</em>) – Standard deviation of the axial translation defect.</p></li>
+<li><p><strong>salpha</strong> (<em>float</em>) – Standard deviation of the angular variation defect around
+the alpha axis.</p></li>
+<li><p><strong>sv</strong> (<em>float</em>) – Standard deviation of the transverse translation defect.</p></li>
+<li><p><strong>sbeta</strong> (<em>float</em>) – Standard deviation of the angular variation defect around
+the beta axis.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The calculated standard deviation. If <cite>z</cite> or <cite>theta</cite> are
+arrays, the output shape matches their broadcasted shape.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float or np.ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

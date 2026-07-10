@@ -130,24 +130,27 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.uncertainty.compute_failure_probability_FORM">
 <span class="sig-prename descclassname"><span class="pre">otaf.uncertainty.</span></span><span class="sig-name descname"><span class="pre">compute_failure_probability_FORM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ot_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">composed_distribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_point</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/uncertainty/_reliability.html#compute_failure_probability_FORM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.uncertainty.compute_failure_probability_FORM" title="Link to this definition"></a></dt>
-<dd><p>Compute the probability of failure using the First-Order Reliability Method (FORM).</p>
-<p>Calculate the failure probability for an event defined by a threshold violation
-by finding the design point in the standard normal space and applying a
-first-order approximation.</p>
+<dd><p>Compute failure probability using FORM.</p>
+<p>Calculate the failure probability for an event defined by a
+threshold violation by finding the design point in the standard
+normal space and applying a first-order approximation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ot_function</strong> (<em>ot.Function</em>) – The performance function of the system.</p></li>
-<li><p><strong>composed_distribution</strong> (<em>JointDistribution</em>) – The joint probability distribution of the input random variables.</p></li>
-<li><p><strong>threshold</strong> (<em>float</em><em>, </em><em>optional</em>) – The limit state threshold, by default 0.0.</p></li>
-<li><p><strong>start_point</strong> (<em>ot.Point</em><em>, </em><em>optional</em>) – Initial starting point for the optimization algorithm in physical space.</p></li>
-<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, print reliability diagnostics, by default False.</p></li>
-<li><p><strong>solver</strong> (<em>ot.OptimizationAlgorithm</em><em>, </em><em>optional</em>) – The optimization algorithm to find the design point. Uses COBYLA
-with strict convergence tolerances if None.</p></li>
+<li><p><strong>composed_distribution</strong> (<em>JointDistribution</em>) – The joint probability distribution of the input random
+variables.</p></li>
+<li><p><strong>threshold</strong> (<em>float</em><em>, </em><em>optional</em>) – The limit state threshold. Default is 0.0.</p></li>
+<li><p><strong>start_point</strong> (<em>ot.Point</em><em>, </em><em>optional</em>) – Initial starting point for the optimization algorithm in
+physical space. Default is None.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, print reliability diagnostics. Default is False.</p></li>
+<li><p><strong>solver</strong> (<em>ot.OptimizationAlgorithm</em><em>, </em><em>optional</em>) – The optimization algorithm to find the design point. Uses
+<code class="docutils literal notranslate"><span class="pre">ot.Cobyla()</span></code> with strict convergence tolerances if None.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The calculated failure probability and the full FORM result object.</p>
+<dd class="field-even"><p>The calculated failure probability and the full FORM result
+object.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>tuple[float, ot.FORMResult]</p>
@@ -158,15 +161,15 @@ with strict convergence tolerances if None.</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.uncertainty.compute_failure_probability_NAIS">
 <span class="sig-prename descclassname"><span class="pre">otaf.uncertainty.</span></span><span class="sig-name descname"><span class="pre">compute_failure_probability_NAIS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ot_python_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantile_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/uncertainty/_reliability.html#compute_failure_probability_NAIS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.uncertainty.compute_failure_probability_NAIS" title="Link to this definition"></a></dt>
-<dd><p>Compute the failure probability using the NAIS algorithm.</p>
+<dd><p>Compute failure probability using the NAIS algorithm.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ot_python_function</strong> (<em>-</em>)</p></li>
-<li><p><strong>distribution</strong> (<em>-</em>)</p></li>
-<li><p><strong>threshold</strong> (<em>-</em>)</p></li>
-<li><p><strong>verbose</strong> (<em>-</em>)</p></li>
-<li><p><strong>quantile_level</strong> (<em>float</em>)</p></li>
+<li><p><strong>ot_python_function</strong> (<em>ot.PythonFunction</em>) – The performance function <code class="docutils literal notranslate"><span class="pre">g(X)</span></code>.</p></li>
+<li><p><strong>distribution</strong> (<em>JointDistribution</em>) – The input random vector distribution.</p></li>
+<li><p><strong>threshold</strong> (<em>float</em><em>, </em><em>optional</em>) – The threshold value. Default is 0.0.</p></li>
+<li><p><strong>quantile_level</strong> (<em>float</em><em>, </em><em>optional</em>) – The quantile level for the NAIS algorithm. Default is 0.001.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, print additional information. Default is False.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -174,8 +177,8 @@ with strict convergence tolerances if None.</p></li>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
-<li><p><strong>- proba</strong> (<em>The estimated failure probability</em>)</p></li>
-<li><p><strong>- result</strong> (<em>Additional NAIS algorithm results (see docstring)</em>)</p></li>
+<li><p><strong>proba</strong> (<em>float</em>) – The estimated failure probability.</p></li>
+<li><p><strong>result</strong> (<em>ot.SimulationResult</em>) – Additional NAIS algorithm results object.</p></li>
 </ul>
 </p>
 </dd>
@@ -185,14 +188,18 @@ with strict convergence tolerances if None.</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.uncertainty.compute_failure_probability_SUBSET">
 <span class="sig-prename descclassname"><span class="pre">otaf.uncertainty.</span></span><span class="sig-name descname"><span class="pre">compute_failure_probability_SUBSET</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ot_python_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proposal_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_probability</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/uncertainty/_reliability.html#compute_failure_probability_SUBSET"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.uncertainty.compute_failure_probability_SUBSET" title="Link to this definition"></a></dt>
-<dd><p>Compute the failure probability using the NAIS algorithm.</p>
+<dd><p>Compute failure probability using subset sampling.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ot_python_function</strong> (<em>-</em>)</p></li>
-<li><p><strong>distribution</strong> (<em>-</em>)</p></li>
-<li><p><strong>threshold</strong> (<em>-</em>)</p></li>
-<li><p><strong>verbose</strong> (<em>-</em>)</p></li>
+<li><p><strong>ot_python_function</strong> (<em>ot.PythonFunction</em>) – The performance function <code class="docutils literal notranslate"><span class="pre">g(X)</span></code>.</p></li>
+<li><p><strong>distribution</strong> (<em>JointDistribution</em>) – The input random vector distribution.</p></li>
+<li><p><strong>threshold</strong> (<em>float</em><em>, </em><em>optional</em>) – The threshold value. Default is 0.0.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, print additional information. Default is False.</p></li>
+<li><p><strong>proposal_range</strong> (<em>float</em><em>, </em><em>optional</em>) – The proposal range for the Markov chain Monte Carlo steps.
+Default is 2.0.</p></li>
+<li><p><strong>target_probability</strong> (<em>float</em><em>, </em><em>optional</em>) – The target probability for each conditional step. Default
+is 0.1.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -200,8 +207,10 @@ with strict convergence tolerances if None.</p></li>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
-<li><p><strong>- proba</strong> (<em>The estimated failure probability</em>)</p></li>
-<li><p><strong>- result</strong> (<em>Additional NAIS algorithm results (see docstring)</em>)</p></li>
+<li><p><strong>proba</strong> (<em>float</em>) – The estimated failure probability.</p></li>
+<li><p><strong>result</strong> (<em>ot.SimulationResult</em>) – Additional subset sampling algorithm results object.</p></li>
+<li><p><strong>algo</strong> (<em>ot.SubsetSampling</em>) – The subset sampling algorithm instance used for the
+simulation.</p></li>
 </ul>
 </p>
 </dd>
@@ -215,31 +224,21 @@ with strict convergence tolerances if None.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>Callable</strong><strong>)</strong> (<em>constraint_matrix_generator</em>)</p></li>
-<li><p><strong>(</strong><strong>np.ndarray</strong><strong>)</strong> (<em>deviation_array</em>)</p></li>
-<li><p><strong>(</strong><strong>np.ndarray</strong> (<em>C</em>)</p></li>
-<li><p><strong>optional</strong><strong>)</strong> (<em>Number</em><em> of </em><em>CPUs to use for parallel execution. Defaults to 1.</em>)</p></li>
-<li><p><strong>(</strong><strong>List</strong> (<em>bounds</em>)</p></li>
-<li><p><strong>optional</strong><strong>)</strong></p></li>
-<li><p><strong>(</strong><strong>str</strong> (<em>method</em>)</p></li>
-<li><p><strong>optional</strong><strong>)</strong></p></li>
-<li><p><strong>(</strong><strong>int</strong> (<em>n_cpu</em>)</p></li>
-<li><p><strong>optional</strong><strong>)</strong></p></li>
-<li><p><strong>constraint_matrix_generator</strong> (<em>Callable</em>)</p></li>
-<li><p><strong>defect_distribition_vector</strong> (<em>RandomVector</em>)</p></li>
-<li><p><strong>C</strong> (<em>ndarray</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>bounds</strong> (<em>list</em><em>[</em><em>list</em><em>[</em><em>float</em><em>]</em><em>] </em><em>| </em><em>ndarray</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>n_cpu</strong> (<em>int</em>)</p></li>
+<li><p><strong>constraint_matrix_generator</strong> (<em>Callable</em>) – Class or callable for fixing deviations and defining
+constraints.</p></li>
+<li><p><strong>defect_distribition_vector</strong> (<em>ot.RandomVector</em>) – The random vector representing the defect distribution.</p></li>
+<li><p><strong>C</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Coefficient matrix for the linear objective function.
+Default is None.</p></li>
+<li><p><strong>bounds</strong> (<em>list</em><em> of </em><em>list</em><em> of </em><em>float</em><em> or </em><em>np.ndarray</em><em>, </em><em>optional</em>) – Bounds for gap variables. Default is None.</p></li>
+<li><p><strong>n_cpu</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of CPUs to use for parallel execution. Default is 1.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProbabilitySimulationResult</span></code></span></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The simulation result object containing the estimated failure
+probability and simulation diagnostics.</p>
 </dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float: Failure probability for the fixed deviations.</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>TypeError</strong> – If constraint_matrix_generator is not callable.:</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ot.SimulationResult</p>
 </dd>
 </dl>
 </dd></dl>
@@ -248,25 +247,28 @@ with strict convergence tolerances if None.</p></li>
 <dt class="sig sig-object py" id="otaf.uncertainty.compute_gap_optimizations_on_sample">
 <span class="sig-prename descclassname"><span class="pre">otaf.uncertainty.</span></span><span class="sig-name descname"><span class="pre">compute_gap_optimizations_on_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">constraint_matrix_generator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deviation_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_cpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_bar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/uncertainty/_reliability.html#compute_gap_optimizations_on_sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.uncertainty.compute_gap_optimizations_on_sample" title="Link to this definition"></a></dt>
 <dd><p>Compute gap optimizations for a set of samples using MILP.</p>
-<p>Solve a sequence of Mixed-Integer Linear Programming (MILP) problems derived
-from a system of constraints to determine the optimal gap for each sample.</p>
+<p>Solve a sequence of Mixed-Integer Linear Programming (MILP)
+problems derived from a system of constraints to determine the
+optimal gap for each sample.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>constraint_matrix_generator</strong> (<a class="reference internal" href="otaf.html#otaf.SystemOfConstraintsAssemblyModel" title="otaf.SystemOfConstraintsAssemblyModel"><em>SystemOfConstraintsAssemblyModel</em></a>) – Generator object that produces the constraint matrices and bounds.</p></li>
+<li><p><strong>constraint_matrix_generator</strong> (<a class="reference internal" href="otaf.html#otaf.SystemOfConstraintsAssemblyModel" title="otaf.SystemOfConstraintsAssemblyModel"><em>SystemOfConstraintsAssemblyModel</em></a>) – Generator object that produces the constraint matrices and
+bounds.</p></li>
 <li><p><strong>deviation_array</strong> (<em>np.ndarray</em>) – Array representing deviations to be processed.</p></li>
-<li><p><strong>C</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Coefficient matrix for the linear objective function.</p></li>
-<li><p><strong>bounds</strong> (<em>Union</em><em>[</em><em>List</em><em>[</em><em>List</em><em>[</em><em>float</em><em>]</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – Bounds for the optimization variables.</p></li>
-<li><p><strong>n_cpu</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of CPUs to use for parallel processing, by default 1.</p></li>
-<li><p><strong>progress_bar</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to display a progress bar, by default False.</p></li>
-<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Verbosity level for debugging, by default 0.</p></li>
+<li><p><strong>C</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Coefficient matrix for the linear objective function. Default
+is None.</p></li>
+<li><p><strong>bounds</strong> (<em>list</em><em> of </em><em>list</em><em> of </em><em>float</em><em> or </em><em>np.ndarray</em><em>, </em><em>optional</em>) – Bounds for the optimization variables. Default is None.</p></li>
+<li><p><strong>n_cpu</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of CPUs to use for parallel processing. Default is 1.</p></li>
+<li><p><strong>progress_bar</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to display a progress bar. Default is False.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of optimization result objects for each sample in the input array.</p>
+<dd class="field-even"><p>A list of optimization result objects for each sample in the
+input array.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List[OptimizeResult]</p>
+<dd class="field-odd"><p>list of OptimizeResult</p>
 </dd>
 </dl>
 </dd></dl>
@@ -274,27 +276,30 @@ from a system of constraints to determine the optimal gap for each sample.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.uncertainty.compute_gap_optimizations_on_sample_batch">
 <span class="sig-prename descclassname"><span class="pre">otaf.uncertainty.</span></span><span class="sig-name descname"><span class="pre">compute_gap_optimizations_on_sample_batch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">constraint_matrix_generator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deviation_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_cpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_bar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'float32'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/uncertainty/_reliability.html#compute_gap_optimizations_on_sample_batch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.uncertainty.compute_gap_optimizations_on_sample_batch" title="Link to this definition"></a></dt>
-<dd><p>Compute gap optimizations on a sample using batch processing and MILP.</p>
-<p>Perform parallel batch optimization for a system of constraints, grouping
-samples into batches to improve computational throughput and reduce parallelization
-overhead.</p>
+<dd><p>Compute gap optimizations using batch processing and MILP.</p>
+<p>Perform parallel batch optimization for a system of
+constraints, grouping samples into batches to improve
+computational throughput and reduce parallelization overhead.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>constraint_matrix_generator</strong> (<a class="reference internal" href="otaf.html#otaf.SystemOfConstraintsAssemblyModel" title="otaf.SystemOfConstraintsAssemblyModel"><em>SystemOfConstraintsAssemblyModel</em></a>) – Generator object that produces constraint matrices.</p></li>
 <li><p><strong>deviation_array</strong> (<em>np.ndarray</em>) – Array of deviations to process.</p></li>
-<li><p><strong>C</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Coefficient matrix for the linear objective function.</p></li>
-<li><p><strong>bounds</strong> (<em>Union</em><em>[</em><em>List</em><em>[</em><em>List</em><em>[</em><em>float</em><em>]</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – Bounds for the optimization variables.</p></li>
-<li><p><strong>n_cpu</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of CPUs for parallel processing. Negative values are relative
-to total available CPUs, by default 1.</p></li>
-<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of points per parallel batch, by default 1000.</p></li>
-<li><p><strong>progress_bar</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to display a progress bar, by default False.</p></li>
-<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Verbosity level for debugging, by default 0.</p></li>
-<li><p><strong>dtype</strong> (<em>str</em><em>, </em><em>optional</em>) – Data type for the resulting optimized decision variable array, by default “float32”.</p></li>
+<li><p><strong>C</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Coefficient matrix for the linear objective function. Default
+is None.</p></li>
+<li><p><strong>bounds</strong> (<em>list</em><em> of </em><em>list</em><em> of </em><em>float</em><em> or </em><em>np.ndarray</em><em>, </em><em>optional</em>) – Bounds for the optimization variables. Default is None.</p></li>
+<li><p><strong>n_cpu</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of CPUs for parallel processing. Negative values are
+relative to total available CPUs. Default is 1.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of points per parallel batch. Default is 1000.</p></li>
+<li><p><strong>progress_bar</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to display a progress bar. Default is False.</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Verbosity level for debugging. Default is 0.</p></li>
+<li><p><strong>dtype</strong> (<em>str</em><em>, </em><em>optional</em>) – Data type for the resulting optimized decision variable array.
+Default is <code class="docutils literal notranslate"><span class="pre">'float32'</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Optimized decision variables for all samples stacked into a single array.</p>
+<dd class="field-even"><p>Optimized decision variables for all samples stacked into a
+single array.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>np.ndarray</p>
@@ -305,34 +310,38 @@ to total available CPUs, by default 1.</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.uncertainty.milp_batch_sequential">
 <span class="sig-prename descclassname"><span class="pre">otaf.uncertainty.</span></span><span class="sig-name descname"><span class="pre">milp_batch_sequential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_ub</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_ub</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_eq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_eq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/uncertainty/_reliability.html#milp_batch_sequential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.uncertainty.milp_batch_sequential" title="Link to this definition"></a></dt>
-<dd><p>Optimize a batch of linear problems iteratively using MILP.</p>
-<p>Solve a sequence of Mixed-Integer Linear Programming (MILP) problems
-sharing common objective coefficients and constraint matrices, but
-varying constraint bounds.</p>
+<dd><p>Optimize a batch of linear programming problems sequentially.</p>
+<p>Solve a sequence of Mixed-Integer Linear Programming (MILP)
+problems sharing common objective coefficients and constraint
+matrices, but varying constraint bounds.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>c</strong> (<em>np.ndarray</em>) – Coefficients of the linear objective function to be minimized.</p></li>
-<li><p><strong>bounds</strong> (<em>np.ndarray</em>) – An (n, 2) array defining the lower and upper bounds of variables.</p></li>
+<li><p><strong>c</strong> (<em>np.ndarray</em>) – Coefficients of the linear objective function to be
+minimized.</p></li>
+<li><p><strong>bounds</strong> (<em>np.ndarray</em>) – An (n, 2) array defining the lower and upper bounds of
+variables.</p></li>
 <li><p><strong>a_ub</strong> (<em>np.ndarray</em>) – 2D array for the upper-bound inequality constraints.</p></li>
-<li><p><strong>b_ub</strong> (<em>np.ndarray</em>) – 2D array of upper-bound values for each inequality constraint per problem.</p></li>
+<li><p><strong>b_ub</strong> (<em>np.ndarray</em>) – 2D array of upper-bound values for each inequality
+constraint per problem.</p></li>
 <li><p><strong>a_eq</strong> (<em>np.ndarray</em>) – 2D array for the equality constraints.</p></li>
 <li><p><strong>b_eq</strong> (<em>np.ndarray</em>) – 2D array of equality constraint values per problem.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>2D array of optimized decision variables for each problem in the batch.</p>
+<dd class="field-even"><p>2D array of optimized decision variables for each problem in
+the batch.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<ul class="simple">
-<li><p>This function solves MILP problems using <cite>scipy.optimize.milp</cite>.</p></li>
-<li><p>Solver options are set to <cite>disp=False</cite> and <cite>presolve=True</cite> for efficiency.</p></li>
-<li><p>Problems share <cite>c</cite>, <cite>a_ub</cite>, and <cite>a_eq</cite>, while <cite>b_ub</cite> and <cite>b_eq</cite> vary per batch element.</p></li>
-</ul>
+<p>This function solves MILP problems using
+<code class="docutils literal notranslate"><span class="pre">scipy.optimize.milp</span></code>. Solver options are set to
+<code class="docutils literal notranslate"><span class="pre">disp=False</span></code> and <code class="docutils literal notranslate"><span class="pre">presolve=True</span></code> for efficiency. Problems
+share <cite>c</cite>, <cite>a_ub</cite>, and <cite>a_eq</cite>, while <cite>b_ub</cite> and <cite>b_eq</cite> vary per
+batch element.</p>
 </dd></dl>
 
 </section>

@@ -496,44 +496,50 @@
     <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">discretization</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a random subset of valid permutations for imprecise probabilistic models.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate permutations for imprecise probabilistic models.</span>
 
-<span class="sd">    Each subgroup in `subgroup_sizes` represents a set of variables contributing to a</span>
-<span class="sd">    probabilistic model, where the sum of elements within each subgroup is constrained to 1.</span>
-<span class="sd">    This function samples random permutations from this constrained space.</span>
+<span class="sd">    Each subgroup in `subgroup_sizes` represents a set of variables</span>
+<span class="sd">    contributing to a probabilistic model, where the sum of elements</span>
+<span class="sd">    within each subgroup is constrained to 1. This function samples</span>
+<span class="sd">    random permutations from this constrained space.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    subgroup_sizes : list[int]</span>
-<span class="sd">        List where each entry corresponds to the size of a subgroup (number of variables).</span>
+<span class="sd">    subgroup_sizes : list of int</span>
+<span class="sd">        List where each entry corresponds to the size of a subgroup</span>
+<span class="sd">        (number of variables).</span>
 <span class="sd">    num_samples : int, optional</span>
-<span class="sd">        Number of random samples to generate. If -1, all valid permutations are computed.</span>
+<span class="sd">        Number of random samples to generate. If -1, all valid</span>
+<span class="sd">        permutations are computed. The default is -1.</span>
 <span class="sd">    seed : int, optional</span>
-<span class="sd">        Seed for the random number generator to ensure reproducibility.</span>
+<span class="sd">        Seed for the random number generator to ensure</span>
+<span class="sd">        reproducibility.</span>
 <span class="sd">    discretization : int, optional</span>
-<span class="sd">        Number of steps to discretize the space between [0, 1]. Higher values provide</span>
-<span class="sd">        finer granularity, by default 4.</span>
+<span class="sd">        Number of steps to discretize the space between [0, 1]. Finer</span>
+<span class="sd">        granularity is provided by higher values. The default is 4.</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    Generator[np.ndarray, None, None]</span>
-<span class="sd">        A generator yielding valid samples of probabilistic contributions. Each sample is a</span>
+<span class="sd">    Yields</span>
+<span class="sd">    ------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        A valid sample of probabilistic contributions. Each sample is a</span>
 <span class="sd">        1D array where the sum of elements in each subgroup is 1.</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; subgroup_sizes = [3, 4]</span>
-<span class="sd">    &gt;&gt;&gt; samples = generate_imprecise_probabilistic_samples(subgroup_sizes, num_samples=5, seed=42)</span>
-<span class="sd">    &gt;&gt;&gt; for sample in samples:</span>
-<span class="sd">    ...     print(sample)</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    - This function explores the space of imprecise probabilistic contributions.</span>
-<span class="sd">    - The generator produces samples lazily to reduce memory consumption.</span>
-<span class="sd">    - If `num_samples` is -1, the function generates all possible permutations lazily.</span>
-<span class="sd">    - The `discretization` parameter controls the precision of the [0, 1] interval;</span>
-<span class="sd">      higher values increase precision but may significantly increase computation time.</span>
+<span class="sd">    The generator produces samples lazily to reduce memory consumption.</span>
+<span class="sd">    If `num_samples` is -1, the function generates all possible</span>
+<span class="sd">    permutations lazily. The `discretization` parameter controls the</span>
+<span class="sd">    precision of the [0, 1] interval; higher values increase precision</span>
+<span class="sd">    but may significantly increase computation time.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; subgroup_sizes = [3, 4]</span>
+<span class="sd">    &gt;&gt;&gt; samples = generate_imprecise_probabilistic_samples(</span>
+<span class="sd">    ...     subgroup_sizes, num_samples=5, seed=42</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; for sample in samples:</span>
+<span class="sd">    ...     print(sample)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
@@ -679,34 +685,33 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">scale_sample_with_params</span><span class="p">(</span>
     <span class="n">sample</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scale a sample of shape (N, M) using mean and standard deviation parameters.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scale a sample using mean and variance parameters.</span>
 
-<span class="sd">    Transform each column of the input sample, assuming it originates from a</span>
-<span class="sd">    standard normal unit distribution, by applying the provided mean and</span>
-<span class="sd">    standard deviation values.</span>
+<span class="sd">    Transform each column of the input sample, assuming it originates</span>
+<span class="sd">    from a standard normal unit distribution, by applying the provided</span>
+<span class="sd">    mean and standard deviation values.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    sample : np.ndarray</span>
-<span class="sd">        A 2D array of shape (N, M), where each column represents a random vector</span>
-<span class="sd">        component from a standard normal distribution.</span>
-<span class="sd">    parameters : Union[np.ndarray, Sequence[float]]</span>
-<span class="sd">        A 1D array or sequence of size 2 * M, where elements alternate between</span>
-<span class="sd">        mean and standard deviation ($\\mu_0, \\sigma_0, \\mu_1, \\sigma_1, \\dots$).</span>
+<span class="sd">        A 2D array of shape (N, M), where each column represents a</span>
+<span class="sd">        random vector component from a standard normal distribution.</span>
+<span class="sd">    parameters : array_like</span>
+<span class="sd">        A 1D array or sequence of size 2 * M, where elements alternate</span>
+<span class="sd">        between mean and standard deviation (mu_0, sigma_0, mu_1,</span>
+<span class="sd">        sigma_1, ...).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    np.ndarray</span>
-<span class="sd">        A 2D array of shape (N, M), with each column scaled using the parameters.</span>
+<span class="sd">        A 2D array of shape (N, M), with each column scaled using the</span>
+<span class="sd">        parameters.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        If the sample is not a 2D array.</span>
-<span class="sd">    ValueError</span>
-<span class="sd">        If the parameters size does not equal 2 * M.</span>
-<span class="sd">    ValueError</span>
-<span class="sd">        If any standard deviation is negative.</span>
+<span class="sd">        If `sample` is not a 2D array, if the size of `parameters` does</span>
+<span class="sd">        not equal `` 2 * M ``, or if any standard deviation is negative.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">sample</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sample must be a 2D array, but got shape </span><span class="si">{</span><span class="n">sample</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
