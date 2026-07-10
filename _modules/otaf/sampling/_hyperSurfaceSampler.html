@@ -98,17 +98,29 @@
 <div class="viewcode-block" id="LagrangeConstraintSolver">
 <a class="viewcode-back" href="../../../source/otaf.sampling.html#otaf.sampling.LagrangeConstraintSolver">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">LagrangeConstraintSolver</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Solve for the subspace where the constraint function g(X) equals zero.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Solve for the subspace where the constraint function equals zero.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dim : int</span>
+<span class="sd">        Dimensionality of the space (number of variables).</span>
+<span class="sd">    g : callable</span>
+<span class="sd">        Constraint function ``g(X)`` such that ``g(X) = 0``.</span>
+<span class="sd">    bounds : list of tuple</span>
+<span class="sd">        List of (min, max) bounds for each variable.</span>
+<span class="sd">    starting_points : ndarray</span>
+<span class="sd">        Initial points for the optimization algorithm.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    dim : int</span>
 <span class="sd">        Dimensionality of the space (number of variables).</span>
-<span class="sd">    g : Callable[[np.ndarray], float]</span>
-<span class="sd">        Constraint function g(X) such that g(X) = 0.</span>
-<span class="sd">    bounds : list[tuple[float, float]]</span>
-<span class="sd">        List of (min, max) tuples for each variable.</span>
-<span class="sd">    starting_points : np.ndarray</span>
+<span class="sd">    g : callable</span>
+<span class="sd">        Constraint function ``g(X)`` such that ``g(X) = 0``.</span>
+<span class="sd">    bounds : list of tuple</span>
+<span class="sd">        List of (min, max) bounds for each variable.</span>
+<span class="sd">    starting_points : ndarray</span>
 <span class="sd">        Initial points for the optimization algorithm.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -120,19 +132,6 @@
         <span class="n">bounds</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
         <span class="n">starting_points</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the solver with dimensionality, constraint function, and bounds.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        dim : int</span>
-<span class="sd">            Dimensionality of the space.</span>
-<span class="sd">        g : Callable[[np.ndarray], float]</span>
-<span class="sd">            Constraint function g(X) representing g(X) = 0.</span>
-<span class="sd">        bounds : list[tuple[float, float]]</span>
-<span class="sd">            List of (min, max) bounds for each variable.</span>
-<span class="sd">        starting_points : np.ndarray</span>
-<span class="sd">            Initial points for the optimization.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="n">dim</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">g</span> <span class="o">=</span> <span class="n">g</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="n">bounds</span>
@@ -142,17 +141,18 @@
 <a class="viewcode-back" href="../../../source/otaf.sampling.html#otaf.sampling.LagrangeConstraintSolver.objective_function">[docs]</a>
     <span class="nd">@beartype</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">objective_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the objective value for the constraint minimization.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate the objective value for the constraint minimization.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : np.ndarray</span>
+<span class="sd">        X : ndarray</span>
 <span class="sd">            Current vector of variables.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        float</span>
-<span class="sd">            Absolute value of the constraint function g(X).</span>
+<span class="sd">            Absolute value of the constraint function evaluated at `X`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="p">(</span><span class="n">X</span><span class="p">))</span></div>
 
@@ -161,14 +161,16 @@
 <a class="viewcode-back" href="../../../source/otaf.sampling.html#otaf.sampling.LagrangeConstraintSolver.solve">[docs]</a>
     <span class="nd">@beartype</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OptimizeResult</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Solve the optimization problem using the SLSQP method.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Solve the optimization problem using the SLSQP method.</span>
 
-<span class="sd">        Finds the subspace satisfying g(X) = 0 subject to defined variable bounds.</span>
+<span class="sd">        Finds the subspace satisfying ``g(X) = 0`` subject to defined </span>
+<span class="sd">        variable bounds.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        OptimizeResult</span>
-<span class="sd">            The result of the optimization process.</span>
+<span class="sd">            The result object of the optimization process.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">constraints</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;eq&quot;</span><span class="p">,</span> <span class="s2">&quot;fun&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="p">}</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span>
@@ -187,17 +189,31 @@
 <div class="viewcode-block" id="UniformSurfaceSampler">
 <a class="viewcode-back" href="../../../source/otaf.sampling.html#otaf.sampling.UniformSurfaceSampler">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">UniformSurfaceSampler</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a uniform distribution of points on a surface defined by g(X) = 0.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a uniform distribution of points on a surface where g(X) = 0.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dim : int</span>
+<span class="sd">        Dimensionality of the space.</span>
+<span class="sd">    g : callable</span>
+<span class="sd">        Constraint function ``g(X)`` such that ``g(X) = 0``.</span>
+<span class="sd">    bounds : list of tuple</span>
+<span class="sd">        List of (min, max) bounds for each variable.</span>
+<span class="sd">    starting_points : ndarray</span>
+<span class="sd">        Initial points already satisfying the constraint.</span>
+<span class="sd">    step_size : float, optional</span>
+<span class="sd">        Step size for generating new points on the surface. Default is 0.1.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    dim : int</span>
 <span class="sd">        Dimensionality of the space.</span>
-<span class="sd">    g : Callable[[np.ndarray], float]</span>
-<span class="sd">        Constraint function g(X) such that g(X) = 0.</span>
-<span class="sd">    bounds : list[tuple[float, float]]</span>
+<span class="sd">    g : callable</span>
+<span class="sd">        Constraint function ``g(X)`` such that ``g(X) = 0``.</span>
+<span class="sd">    bounds : list of tuple</span>
 <span class="sd">        List of (min, max) bounds for each variable.</span>
-<span class="sd">    starting_points : np.ndarray</span>
+<span class="sd">    starting_points : ndarray</span>
 <span class="sd">        Initial points already satisfying the constraint.</span>
 <span class="sd">    step_size : float</span>
 <span class="sd">        Magnitude of the random step taken during sampling.</span>
@@ -212,21 +228,6 @@
         <span class="n">starting_points</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">step_size</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the sampler with constraint function and domain bounds.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        dim : int</span>
-<span class="sd">            Dimensionality of the space.</span>
-<span class="sd">        g : Callable[[np.ndarray], float]</span>
-<span class="sd">            Constraint function g(X) representing g(X) = 0.</span>
-<span class="sd">        bounds : list[tuple[float, float]]</span>
-<span class="sd">            List of (min, max) bounds for each variable.</span>
-<span class="sd">        starting_points : np.ndarray</span>
-<span class="sd">            Initial valid points on the surface.</span>
-<span class="sd">        step_size : float, optional</span>
-<span class="sd">            Step size for generating new points on the surface, by default 0.1.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="n">dim</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">g</span> <span class="o">=</span> <span class="n">g</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="n">bounds</span>
@@ -237,11 +238,12 @@
 <a class="viewcode-back" href="../../../source/otaf.sampling.html#otaf.sampling.UniformSurfaceSampler.objective_function">[docs]</a>
     <span class="nd">@beartype</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">objective_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the absolute value of the constraint function g(X).</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate the absolute value of the constraint function g(X).</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : np.ndarray</span>
+<span class="sd">        X : ndarray</span>
 <span class="sd">            Current vector of variables.</span>
 
 <span class="sd">        Returns</span>
@@ -256,19 +258,22 @@
 <a class="viewcode-back" href="../../../source/otaf.sampling.html#otaf.sampling.UniformSurfaceSampler.solve">[docs]</a>
     <span class="nd">@beartype</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Project an arbitrary point onto the surface g(X) = 0.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Project an arbitrary point onto the surface g(X) = 0.</span>
 
-<span class="sd">        Uses the SLSQP method to find the nearest point satisfying the constraint.</span>
+<span class="sd">        Uses the SLSQP method to find the nearest point satisfying the </span>
+<span class="sd">        constraint.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        x0 : np.ndarray</span>
+<span class="sd">        x0 : ndarray</span>
 <span class="sd">            Initial guess point for optimization.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        np.ndarray or None</span>
-<span class="sd">            The projected point on the surface, or None if optimization failed.</span>
+<span class="sd">        ndarray or None</span>
+<span class="sd">            The projected point on the surface, or ``None`` if </span>
+<span class="sd">            optimization failed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">constraints</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;eq&quot;</span><span class="p">,</span> <span class="s2">&quot;fun&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="p">}</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span>
@@ -285,7 +290,8 @@
 <a class="viewcode-back" href="../../../source/otaf.sampling.html#otaf.sampling.UniformSurfaceSampler.sample_surface">[docs]</a>
     <span class="nd">@beartype</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">sample_surface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate a uniform distribution of points on the surface.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate a uniform distribution of points on the surface.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -294,8 +300,8 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        np.ndarray</span>
-<span class="sd">            Array of points satisfying g(X) = 0.</span>
+<span class="sd">        ndarray</span>
+<span class="sd">            Array of points satisfying ``g(X) = 0``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">sampled_points</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">starting_points</span><span class="p">:</span>

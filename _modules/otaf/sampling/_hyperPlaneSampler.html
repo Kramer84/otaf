@@ -103,27 +103,34 @@
     <span class="n">samples</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">bounds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Project (N-1)-dimensional samples onto an N-dimensional hyperplane.</span>
-
-<span class="sd">    Solve the hyperplane equation $a_0 x_0 + a_1 x_1 + ... + a_{N-1} x_{N-1} = b$</span>
-<span class="sd">    to find the coordinate $x_0$, then reconstruct the full N-dimensional point.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Project (N-1)-dimensional samples onto an N-dimensional hyperplane.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    a : Union[list[float], np.ndarray]</span>
-<span class="sd">        Coefficients of the hyperplane equation.</span>
+<span class="sd">    a : array_like</span>
+<span class="sd">        Coefficients of the hyperplane linear equation.</span>
 <span class="sd">    b : float</span>
-<span class="sd">        Constant term in the hyperplane equation.</span>
-<span class="sd">    samples : np.ndarray</span>
+<span class="sd">        Constant term in the hyperplane linear equation.</span>
+<span class="sd">    samples : ndarray</span>
 <span class="sd">        Samples in (N-1)-dimensional space with shape (M, N-1).</span>
-<span class="sd">    bounds : list[tuple[float, float]], optional</span>
-<span class="sd">        Bounds for each dimension in the format [(min, max), ...].</span>
-<span class="sd">        Only samples whose projections fall within these bounds are returned.</span>
+<span class="sd">    bounds : list of tuple, optional</span>
+<span class="sd">        Bounds for each dimension in the format [(min, max), ...]. </span>
+<span class="sd">        Only samples whose projections fall within these bounds are </span>
+<span class="sd">        returned.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    np.ndarray</span>
-<span class="sd">        Projected samples in N-dimensional space that satisfy the hyperplane equation.</span>
+<span class="sd">    ndarray</span>
+<span class="sd">        Projected samples in N-dimensional space that satisfy the </span>
+<span class="sd">        hyperplane equation.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The function solves the hyperplane equation to calculate the </span>
+<span class="sd">    dependent coordinate ``x0`` before reconstructing the full vector:</span>
+
+<span class="sd">    .. math:: a_0 x_0 + a_1 x_1 + \dots + a_{N-1} x_{N-1} = b</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
     <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>

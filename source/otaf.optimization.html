@@ -138,24 +138,28 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.optimization.</span></span><span class="sig-name descname"><span class="pre">OptimizationTracker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraint_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision_decimals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationTracker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationTracker" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>High-performance storage for optimization loops.</p>
-<p>Uses byte-hashing for O(1) lookups during execution, and exports to Pandas
-for post-processing and filtering.</p>
+<p>Uses byte-hashing for <code class="docutils literal notranslate"><span class="pre">O(1)</span></code> lookups during execution, and exports to
+Pandas for post-processing and filtering.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>bounds</strong> (<em>Optional</em><em>[</em><em>Bounds</em><em>]</em><em>, </em><em>default=None</em>) – The optimization bounds object exposing a <cite>.residual(x)</cite> method.</p></li>
-<li><p><strong>constraint_tolerance</strong> (<em>float</em><em>, </em><em>default=1e-4</em>) – The maximum allowed tolerance for constraint violations.</p></li>
-<li><p><strong>precision_decimals</strong> (<em>int</em><em>, </em><em>default=8</em>) – The number of decimals to round <cite>x</cite> before byte-hashing.</p></li>
+<li><p><strong>bounds</strong> (<em>Bounds</em><em>, </em><em>optional</em>) – The optimization bounds object exposing a <code class="docutils literal notranslate"><span class="pre">.residual(x)</span></code> method.
+Default is None.</p></li>
+<li><p><strong>constraint_tolerance</strong> (<em>float</em><em>, </em><em>optional</em>) – The maximum allowed tolerance for constraint violations.
+Default is 1e-4.</p></li>
+<li><p><strong>precision_decimals</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of decimals to round coordinate values before
+byte-hashing. Default is 8.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="otaf.optimization.OptimizationTracker.history">
 <span class="sig-name descname"><span class="pre">history</span></span><a class="headerlink" href="#otaf.optimization.OptimizationTracker.history" title="Link to this definition"></a></dt>
-<dd><p>Nested dictionary tracking evaluation points by experiment key and point hash.</p>
+<dd><p>Nested dictionary tracking evaluation points by experiment key and
+point hash.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[Any, Dict[bytes, Dict[str, Any]]]</p>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -177,7 +181,7 @@ for post-processing and filtering.</p>
 <dd><p>Optimization bounds constraint definition.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Optional[Bounds]</p>
+<dd class="field-odd"><p>Bounds or None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -196,18 +200,23 @@ for post-processing and filtering.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.optimization.OptimizationTracker.filter_points">
 <span class="sig-name descname"><span class="pre">filter_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exp_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds_respected</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraints_respected</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationTracker.filter_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationTracker.filter_points" title="Link to this definition"></a></dt>
-<dd><p>Filter tracking records against targeted properties via Pandas DataFrame representation.</p>
+<dd><p>Filter tracking records against targeted properties via DataFrame.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>exp_key</strong> (<em>Optional</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>default=None</em>) – Filters historical points to a single tracked experiment key sequence.</p></li>
-<li><p><strong>source</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>default=None</em>) – Filters matching points by execution string label.</p></li>
-<li><p><strong>bounds_respected</strong> (<em>Optional</em><em>[</em><em>bool</em><em>]</em><em>, </em><em>default=None</em>) – Filters items based on validation boundary constraints compliance.</p></li>
-<li><p><strong>constraints_respected</strong> (<em>Optional</em><em>[</em><em>bool</em><em>]</em><em>, </em><em>default=None</em>) – Filters items based on tolerance limit boundary validation.</p></li>
+<li><p><strong>exp_key</strong> (<em>Any</em><em>, </em><em>optional</em>) – Filters historical points to a single tracked experiment key
+sequence. Default is None.</p></li>
+<li><p><strong>source</strong> (<em>str</em><em>, </em><em>optional</em>) – Filters matching points by execution string label. Default
+is None.</p></li>
+<li><p><strong>bounds_respected</strong> (<em>bool</em><em>, </em><em>optional</em>) – Filters items based on validation boundary constraints
+compliance. Default is None.</p></li>
+<li><p><strong>constraints_respected</strong> (<em>bool</em><em>, </em><em>optional</em>) – Filters items based on tolerance limit boundary validation.
+Default is None.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A targeted slice of history matching all provided validation conditions.</p>
+<dd class="field-even"><p>A targeted slice of history matching all provided validation
+conditions.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
@@ -223,14 +232,15 @@ for post-processing and filtering.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>exp_key</strong> (<em>Any</em>) – The identification key for the tracking sequence.</p></li>
-<li><p><strong>x</strong> (<em>Union</em><em>[</em><em>np.ndarray</em><em>, </em><em>List</em><em>[</em><em>float</em><em>]</em><em>, </em><em>float</em><em>]</em>) – The exact coordinate values to fetch.</p></li>
+<li><p><strong>x</strong> (<em>array_like</em>) – The exact coordinate values to fetch.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The dictionary of matching parameters, or None if the point cannot be found.</p>
+<dd class="field-even"><p>The dictionary of matching parameters, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if the
+point cannot be found.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Optional[Dict[str, Any]]</p>
+<dd class="field-odd"><p>dict or None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -239,14 +249,16 @@ for post-processing and filtering.</p>
 <dt class="sig sig-object py" id="otaf.optimization.OptimizationTracker.to_dataframe">
 <span class="sig-name descname"><span class="pre">to_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exp_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationTracker.to_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationTracker.to_dataframe" title="Link to this definition"></a></dt>
 <dd><p>Convert the internal dictionary to a Pandas DataFrame.</p>
-<p>Replaces the old ‘get_all_data’ and avoids loop bottleneck.</p>
+<p>Replaces the old <code class="docutils literal notranslate"><span class="pre">get_all_data</span></code> and avoids loop bottlenecks.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>exp_key</strong> (<em>Optional</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>default=None</em>) – The specific experiment key to extract. If None, flattens and extracts
-all stored items across tracking sequences.</p>
+<dd class="field-odd"><p><strong>exp_key</strong> (<em>Any</em><em>, </em><em>optional</em>) – The specific experiment key to extract. If None, flattens and
+extracts all stored items across tracking sequences.
+Default is None.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Flattened historical evaluation frame containing structural parameter rows.</p>
+<dd class="field-even"><p>Flattened historical evaluation frame containing structural
+parameter rows.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
@@ -262,8 +274,9 @@ all stored items across tracking sequences.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>exp_key</strong> (<em>Any</em>) – The identifier of the active experiment.</p></li>
-<li><p><strong>x</strong> (<em>Union</em><em>[</em><em>np.ndarray</em><em>, </em><em>List</em><em>[</em><em>float</em><em>]</em><em>, </em><em>float</em><em>]</em>) – The coordinates of the evaluated point.</p></li>
-<li><p><strong>constraints</strong> (<em>Union</em><em>[</em><em>np.ndarray</em><em>, </em><em>List</em><em>[</em><em>float</em><em>]</em><em>, </em><em>float</em><em>]</em>) – Array or values representing current constraint evaluation outputs.</p></li>
+<li><p><strong>x</strong> (<em>array_like</em>) – The coordinates of the evaluated point.</p></li>
+<li><p><strong>constraints</strong> (<em>array_like</em>) – Array or values representing current constraint evaluation
+outputs.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -275,18 +288,20 @@ all stored items across tracking sequences.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.optimization.OptimizationTracker.update_objective_data">
 <span class="sig-name descname"><span class="pre">update_objective_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exp_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp_gld</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp_slack</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gld_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">failure_slack</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'local'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationTracker.update_objective_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationTracker.update_objective_data" title="Link to this definition"></a></dt>
-<dd><p>Update objective function metrics and associated parameters for a specific point.</p>
+<dd><p>Update objective function metrics for a specific point.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>exp_key</strong> (<em>Any</em>) – The identifier of the active experiment.</p></li>
-<li><p><strong>x</strong> (<em>Union</em><em>[</em><em>np.ndarray</em><em>, </em><em>List</em><em>[</em><em>float</em><em>]</em><em>, </em><em>float</em><em>]</em>) – The coordinates of the evaluated point.</p></li>
-<li><p><strong>fp_gld</strong> (<em>float</em>) – Failure probability obtained from the GLD distribution approximation
-(converted to NaN if input is NaN).</p></li>
-<li><p><strong>fp_slack</strong> (<em>float</em>) – Failure probability obtained from number of failed points in sample.</p></li>
-<li><p><strong>gld_params</strong> (<em>Union</em><em>[</em><em>np.ndarray</em><em>, </em><em>List</em><em>[</em><em>float</em><em>]</em><em>]</em>) – Parameters of the GLD distribution.</p></li>
+<li><p><strong>x</strong> (<em>array_like</em>) – The coordinates of the evaluated point.</p></li>
+<li><p><strong>fp_gld</strong> (<em>float</em>) – Failure probability obtained from the GLD distribution
+approximation (converted to <code class="docutils literal notranslate"><span class="pre">NaN</span></code> if input is <code class="docutils literal notranslate"><span class="pre">NaN</span></code>).</p></li>
+<li><p><strong>fp_slack</strong> (<em>float</em>) – Failure probability obtained from number of failed points
+in sample.</p></li>
+<li><p><strong>gld_params</strong> (<em>array_like</em>) – Parameters of the GLD distribution.</p></li>
 <li><p><strong>failure_slack</strong> (<em>float</em>) – The slack value used to define failure.</p></li>
-<li><p><strong>source</strong> (<em>str</em><em>, </em><em>default=&quot;local&quot;</em>) – The metadata tracking origin string of the evaluation.</p></li>
+<li><p><strong>source</strong> (<em>str</em><em>, </em><em>optional</em>) – The metadata tracking origin string of the evaluation.
+Default is “local”.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>

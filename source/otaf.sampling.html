@@ -17,6 +17,8 @@
       <script src="../_static/doctools.js?v=9a2dae69"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -158,14 +160,14 @@
 <dt class="sig sig-object py" id="otaf.sampling.LagrangeConstraintSolver">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.sampling.</span></span><span class="sig-name descname"><span class="pre">LagrangeConstraintSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">starting_points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sampling/_hyperSurfaceSampler.html#LagrangeConstraintSolver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sampling.LagrangeConstraintSolver" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Solve for the subspace where the constraint function g(X) equals zero.</p>
+<p>Solve for the subspace where the constraint function equals zero.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dim</strong> (<em>int</em>)</p></li>
-<li><p><strong>g</strong> (<em>Callable</em><em>[</em><em>[</em><em>np.ndarray</em><em>]</em><em>, </em><em>float</em><em>]</em>)</p></li>
-<li><p><strong>bounds</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>)</p></li>
-<li><p><strong>starting_points</strong> (<em>np.ndarray</em>)</p></li>
+<li><p><strong>dim</strong> (<em>int</em>) – Dimensionality of the space (number of variables).</p></li>
+<li><p><strong>g</strong> (<em>callable</em>) – Constraint function <code class="docutils literal notranslate"><span class="pre">g(X)</span></code> such that <code class="docutils literal notranslate"><span class="pre">g(X)</span> <span class="pre">=</span> <span class="pre">0</span></code>.</p></li>
+<li><p><strong>bounds</strong> (<em>list</em><em> of </em><em>tuple</em>) – List of (min, max) bounds for each variable.</p></li>
+<li><p><strong>starting_points</strong> (<em>ndarray</em>) – Initial points for the optimization algorithm.</p></li>
 </ul>
 </dd>
 </dl>
@@ -183,10 +185,10 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="otaf.sampling.LagrangeConstraintSolver.g">
 <span class="sig-name descname"><span class="pre">g</span></span><a class="headerlink" href="#otaf.sampling.LagrangeConstraintSolver.g" title="Link to this definition"></a></dt>
-<dd><p>Constraint function g(X) such that g(X) = 0.</p>
+<dd><p>Constraint function <code class="docutils literal notranslate"><span class="pre">g(X)</span></code> such that <code class="docutils literal notranslate"><span class="pre">g(X)</span> <span class="pre">=</span> <span class="pre">0</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Callable[[np.ndarray], float]</p>
+<dd class="field-odd"><p>callable</p>
 </dd>
 </dl>
 </dd></dl>
@@ -194,10 +196,10 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="otaf.sampling.LagrangeConstraintSolver.bounds">
 <span class="sig-name descname"><span class="pre">bounds</span></span><a class="headerlink" href="#otaf.sampling.LagrangeConstraintSolver.bounds" title="Link to this definition"></a></dt>
-<dd><p>List of (min, max) tuples for each variable.</p>
+<dd><p>List of (min, max) bounds for each variable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[tuple[float, float]]</p>
+<dd class="field-odd"><p>list of tuple</p>
 </dd>
 </dl>
 </dd></dl>
@@ -208,7 +210,7 @@
 <dd><p>Initial points for the optimization algorithm.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -219,10 +221,10 @@
 <dd><p>Calculate the objective value for the constraint minimization.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em>) – Current vector of variables.</p>
+<dd class="field-odd"><p><strong>X</strong> (<em>ndarray</em>) – Current vector of variables.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Absolute value of the constraint function g(X).</p>
+<dd class="field-even"><p>Absolute value of the constraint function evaluated at <cite>X</cite>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
@@ -234,10 +236,11 @@
 <dt class="sig sig-object py" id="otaf.sampling.LagrangeConstraintSolver.solve">
 <span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sampling/_hyperSurfaceSampler.html#LagrangeConstraintSolver.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sampling.LagrangeConstraintSolver.solve" title="Link to this definition"></a></dt>
 <dd><p>Solve the optimization problem using the SLSQP method.</p>
-<p>Finds the subspace satisfying g(X) = 0 subject to defined variable bounds.</p>
+<p>Finds the subspace satisfying <code class="docutils literal notranslate"><span class="pre">g(X)</span> <span class="pre">=</span> <span class="pre">0</span></code> subject to defined
+variable bounds.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The result of the optimization process.</p>
+<dd class="field-odd"><p>The result object of the optimization process.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>OptimizeResult</p>
@@ -251,15 +254,15 @@
 <dt class="sig sig-object py" id="otaf.sampling.UniformSurfaceSampler">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.sampling.</span></span><span class="sig-name descname"><span class="pre">UniformSurfaceSampler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">starting_points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sampling/_hyperSurfaceSampler.html#UniformSurfaceSampler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sampling.UniformSurfaceSampler" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Generate a uniform distribution of points on a surface defined by g(X) = 0.</p>
+<p>Generate a uniform distribution of points on a surface where g(X) = 0.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dim</strong> (<em>int</em>)</p></li>
-<li><p><strong>g</strong> (<em>Callable</em><em>[</em><em>[</em><em>np.ndarray</em><em>]</em><em>, </em><em>float</em><em>]</em>)</p></li>
-<li><p><strong>bounds</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>)</p></li>
-<li><p><strong>starting_points</strong> (<em>np.ndarray</em>)</p></li>
-<li><p><strong>step_size</strong> (<em>float</em>)</p></li>
+<li><p><strong>dim</strong> (<em>int</em>) – Dimensionality of the space.</p></li>
+<li><p><strong>g</strong> (<em>callable</em>) – Constraint function <code class="docutils literal notranslate"><span class="pre">g(X)</span></code> such that <code class="docutils literal notranslate"><span class="pre">g(X)</span> <span class="pre">=</span> <span class="pre">0</span></code>.</p></li>
+<li><p><strong>bounds</strong> (<em>list</em><em> of </em><em>tuple</em>) – List of (min, max) bounds for each variable.</p></li>
+<li><p><strong>starting_points</strong> (<em>ndarray</em>) – Initial points already satisfying the constraint.</p></li>
+<li><p><strong>step_size</strong> (<em>float</em><em>, </em><em>optional</em>) – Step size for generating new points on the surface. Default is 0.1.</p></li>
 </ul>
 </dd>
 </dl>
@@ -277,10 +280,10 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="otaf.sampling.UniformSurfaceSampler.g">
 <span class="sig-name descname"><span class="pre">g</span></span><a class="headerlink" href="#otaf.sampling.UniformSurfaceSampler.g" title="Link to this definition"></a></dt>
-<dd><p>Constraint function g(X) such that g(X) = 0.</p>
+<dd><p>Constraint function <code class="docutils literal notranslate"><span class="pre">g(X)</span></code> such that <code class="docutils literal notranslate"><span class="pre">g(X)</span> <span class="pre">=</span> <span class="pre">0</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Callable[[np.ndarray], float]</p>
+<dd class="field-odd"><p>callable</p>
 </dd>
 </dl>
 </dd></dl>
@@ -291,7 +294,7 @@
 <dd><p>List of (min, max) bounds for each variable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[tuple[float, float]]</p>
+<dd class="field-odd"><p>list of tuple</p>
 </dd>
 </dl>
 </dd></dl>
@@ -302,7 +305,7 @@
 <dd><p>Initial points already satisfying the constraint.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -324,7 +327,7 @@
 <dd><p>Calculate the absolute value of the constraint function g(X).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em>) – Current vector of variables.</p>
+<dd class="field-odd"><p><strong>X</strong> (<em>ndarray</em>) – Current vector of variables.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The absolute constraint violation.</p>
@@ -344,10 +347,10 @@
 <dd class="field-odd"><p><strong>num_samples</strong> (<em>int</em>) – The number of points to generate.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Array of points satisfying g(X) = 0.</p>
+<dd class="field-even"><p>Array of points satisfying <code class="docutils literal notranslate"><span class="pre">g(X)</span> <span class="pre">=</span> <span class="pre">0</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -356,16 +359,18 @@
 <dt class="sig sig-object py" id="otaf.sampling.UniformSurfaceSampler.solve">
 <span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sampling/_hyperSurfaceSampler.html#UniformSurfaceSampler.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sampling.UniformSurfaceSampler.solve" title="Link to this definition"></a></dt>
 <dd><p>Project an arbitrary point onto the surface g(X) = 0.</p>
-<p>Uses the SLSQP method to find the nearest point satisfying the constraint.</p>
+<p>Uses the SLSQP method to find the nearest point satisfying the
+constraint.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>x0</strong> (<em>np.ndarray</em>) – Initial guess point for optimization.</p>
+<dd class="field-odd"><p><strong>x0</strong> (<em>ndarray</em>) – Initial guess point for optimization.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The projected point on the surface, or None if optimization failed.</p>
+<dd class="field-even"><p>The projected point on the surface, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if
+optimization failed.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray or None</p>
+<dd class="field-odd"><p>ndarray or None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -426,52 +431,62 @@ of size Nd.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.sampling.condition_lambda_sample">
 <span class="sig-prename descclassname"><span class="pre">otaf.sampling.</span></span><span class="sig-name descname"><span class="pre">condition_lambda_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">squared_sum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sampling/_sampling.html#condition_lambda_sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sampling.condition_lambda_sample" title="Link to this definition"></a></dt>
-<dd><p>Condition lambda parameters to sum to 1 for each feature.</p>
+<dd><p>Condition lambda parameters to sum to 1 for each feature group.</p>
+<p>This function extracts feature indices from the descriptions of the
+sample, normalizes the array representation using those indices,
+and returns a new sample. Note that if <cite>squared_sum</cite> is True, an
+element-wise square root transformation is applied.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>ot.Sample</strong><strong>)</strong> (<em>sample</em>)</p></li>
-<li><p><strong>(</strong><strong>bool</strong> (<em>squared_sum</em>)</p></li>
-<li><p><strong>optional</strong><strong>)</strong> (<em>Whether to square the resulting values. Defaults to False.</em>)</p></li>
-<li><p><strong>sample</strong> (<em>Sample</em>)</p></li>
-<li><p><strong>squared_sum</strong> (<em>bool</em>)</p></li>
+<li><p><strong>sample</strong> (<em>ot.Sample</em>) – Lambda parameters with each feature description ending in an
+integer sequence.</p></li>
+<li><p><strong>squared_sum</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to apply a square root transform to the normalized values.
+Default is False.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sample</span></code></span></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The conditioned lambda parameters sample sharing the original
+descriptions.</p>
 </dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ot.Sample: Conditioned lambda parameters.</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ot.Sample</p>
 </dd>
 </dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This function can only be used if all the features are planar. If they are cylindrical
-the constraints are aboluetly different. To use both you need to make a complex function
-that checks the feature type for each variable and uses the right constraint.</p>
-</div>
+<p class="rubric">Notes</p>
+<p>This function can only be used if all the features are planar. If
+they are cylindrical, the constraints are absolutely different.
+To support both types, a more complex function is required to
+inspect the structural type of each feature and apply the
+corresponding mathematical constraint.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.sampling.condition_sample_array">
 <span class="sig-prename descclassname"><span class="pre">otaf.sampling.</span></span><span class="sig-name descname"><span class="pre">condition_sample_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">squared_sum</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sampling/_sampling.html#condition_sample_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sampling.condition_sample_array" title="Link to this definition"></a></dt>
-<dd><p>Condition the sample array by normalizing the features.</p>
+<dd><p>Condition a sample array by normalizing specified feature slices.</p>
+<p>This function normalizes columns of an array grouped by identical feature
+identifiers, dividing each slice by the sum of all matching features.
+If requested, a square root transform is applied to the final result.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>np.ndarray</strong><strong>)</strong> (<em>sample_array</em>)</p></li>
-<li><p><strong>(</strong><strong>list</strong><strong>[</strong><strong>int</strong><strong>]</strong><strong>)</strong> (<em>feature_indices</em>)</p></li>
-<li><p><strong>(</strong><strong>bool</strong><strong>)</strong> (<em>squared_sum</em>)</p></li>
-<li><p><strong>sample_array</strong> (<em>ndarray</em>)</p></li>
-<li><p><strong>feature_indices</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>)</p></li>
-<li><p><strong>squared_sum</strong> (<em>bool</em>)</p></li>
+<li><p><strong>sample_array</strong> (<em>ndarray</em>) – The input data array containing features along its last axis.</p></li>
+<li><p><strong>feature_indices</strong> (<em>list</em><em> of </em><em>int</em>) – An ordered list of IDs mapping each column to its parent feature.</p></li>
+<li><p><strong>squared_sum</strong> (<em>bool</em>) – If True, applies an element-wise square root transformation to
+the normalized array.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The normalized (and optionally square-rooted) conditioned sample
+array.</p>
 </dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray: Conditioned sample array.</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Exception</strong> – If the dimension alignment fails or division by zero occurs during
+    normalization.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -479,26 +494,25 @@ that checks the feature type for each variable and uses the right constraint.</p
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.sampling.find_best_worst_quantile">
 <span class="sig-prename descclassname"><span class="pre">otaf.sampling.</span></span><span class="sig-name descname"><span class="pre">find_best_worst_quantile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantile</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sampling/_sampling.html#find_best_worst_quantile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sampling.find_best_worst_quantile" title="Link to this definition"></a></dt>
-<dd><p>Find the best and worst performing observations based on a given quantile.</p>
-<p>This function calculates the best and worst performing observations from a given set of parameters
-and corresponding results, based on the specified quantile.</p>
+<dd><p>Find best and worst observations based on a given quantile.</p>
+<p>This function calculates the best and worst performing observations
+from a given set of parameters and corresponding results, based on
+the specified quantile.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>numpy.ndarray</strong><strong>)</strong> (<em>results</em>)</p></li>
-<li><p><strong>(</strong><strong>numpy.ndarray</strong><strong>)</strong></p></li>
-<li><p><strong>(</strong><strong>float</strong><strong>)</strong> (<em>quantile</em>)</p></li>
+<li><p><strong>parameters</strong> (<em>ndarray</em>) – Array containing parameter values.</p></li>
+<li><p><strong>results</strong> (<em>ndarray</em>) – Array containing corresponding result values.</p></li>
+<li><p><strong>quantile</strong> (<em>float</em>) – Desired quantile value, must be in the range [0, 1].</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>tuple: A tuple containing two tuples:</dt><dd><ul class="simple">
-<li><p>The first tuple contains the parameters and results of the best performing observations.</p></li>
-<li><p>The second tuple contains the parameters and results of the worst performing observations.</p></li>
-</ul>
+<dd class="field-even"><p><strong>best, worst</strong> – A tuple containing two subsets:
+- <cite>best</cite>: Tuple of (best_params, best_res) up to the quantile.
+- <cite>worst</cite>: Tuple of (worst_params, worst_res) down to the quantile.</p>
 </dd>
-</dl>
-</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple of tuple</p>
 </dd>
 </dl>
 </dd></dl>
@@ -506,27 +520,28 @@ and corresponding results, based on the specified quantile.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.sampling.generate_and_transform_sequence">
 <span class="sig-prename descclassname"><span class="pre">otaf.sampling.</span></span><span class="sig-name descname"><span class="pre">generate_and_transform_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samplesize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_distribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sequence_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'halton'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sampling/_sampling.html#generate_and_transform_sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sampling.generate_and_transform_sequence" title="Link to this definition"></a></dt>
-<dd><p>Generate a low-discrepancy sequence and transform it to the target distribution.</p>
-<p>Map a low-discrepancy sequence from the unit hypercube to the target distribution
-space using iso-probabilistic transformations.</p>
+<dd><p>Generate a low-discrepancy sequence and transform it to target.</p>
+<p>Map a low-discrepancy sequence from the unit hypercube to the target
+distribution space using iso-probabilistic transformations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dim</strong> (<em>int</em>) – Number of dimensions.</p></li>
 <li><p><strong>samplesize</strong> (<em>int</em>) – Number of samples to generate.</p></li>
 <li><p><strong>target_distribution</strong> (<em>ot.Distribution</em>) – The target OpenTURNS distribution to transform the sequence into.</p></li>
-<li><p><strong>sequence_type</strong> (<em>str</em><em>, </em><em>optional</em>) – Type of low-discrepancy sequence, by default “halton”.
-Must be one of [‘sobol’, ‘halton’, ‘reverse_halton’, ‘faure’, ‘haselgrove’].</p></li>
+<li><p><strong>sequence_type</strong> (<em>str</em><em>, </em><em>optional</em>) – Type of low-discrepancy sequence. Choices are <code class="docutils literal notranslate"><span class="pre">&quot;sobol&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&quot;halton&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;reverse_halton&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;faure&quot;</span></code>, or
+<code class="docutils literal notranslate"><span class="pre">&quot;haselgrove&quot;</span></code>. Default is “halton”.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Transformed sample points in the target distribution space.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>ndarray</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If an unsupported sequence type is provided.</p>
+<dd class="field-even"><p><strong>ValueError</strong> – If an unsupported <cite>sequence_type</cite> is provided.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -577,18 +592,21 @@ higher values increase precision but may significantly increase computation time
 <dt class="sig sig-object py" id="otaf.sampling.generate_lhs_experiment">
 <span class="sig-prename descclassname"><span class="pre">otaf.sampling.</span></span><span class="sig-name descname"><span class="pre">generate_lhs_experiment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">composed_distribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SEED</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">999</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.95</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iMax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sampling/_sampling.html#generate_lhs_experiment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sampling.generate_lhs_experiment" title="Link to this definition"></a></dt>
 <dd><p>Generate an optimal Latin Hypercube Sample (LHS) design.</p>
-<p>Construct a space-filling design using the Simulated Annealing algorithm
-to minimize the C2 criterion, ensuring a high-quality distribution of samples
-within the input space.</p>
+<p>Construct a space-filling design using the Simulated Annealing
+algorithm to minimize the <code class="docutils literal notranslate"><span class="pre">C2</span></code> criterion, ensuring a high-quality
+distribution of samples within the input space.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>composed_distribution</strong> (<em>JointDistribution</em>) – The probability distribution from which to draw samples.</p></li>
 <li><p><strong>N</strong> (<em>int</em>) – The number of samples to generate in the design.</p></li>
-<li><p><strong>SEED</strong> (<em>int</em><em>, </em><em>optional</em>) – Seed for the random number generator, by default 999.</p></li>
-<li><p><strong>T0</strong> (<em>float</em><em>, </em><em>optional</em>) – Initial temperature for the simulated annealing process, by default 10.</p></li>
-<li><p><strong>c</strong> (<em>float</em><em>, </em><em>optional</em>) – Geometric cooling factor for the simulated annealing process, by default 0.95.</p></li>
-<li><p><strong>iMax</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of iterations for the optimization, by default 2000.</p></li>
+<li><p><strong>SEED</strong> (<em>int</em><em>, </em><em>optional</em>) – Seed for the random number generator. Default is 999.</p></li>
+<li><p><strong>T0</strong> (<em>float</em><em>, </em><em>optional</em>) – Initial temperature for the simulated annealing process.
+Default is 10.0.</p></li>
+<li><p><strong>c</strong> (<em>float</em><em>, </em><em>optional</em>) – Geometric cooling factor for the simulated annealing process.
+Default is 0.95.</p></li>
+<li><p><strong>iMax</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of iterations for the optimization. Default is
+2000.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -603,16 +621,18 @@ within the input space.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.sampling.generate_random_permutations_with_sampling">
 <span class="sig-prename descclassname"><span class="pre">otaf.sampling.</span></span><span class="sig-name descname"><span class="pre">generate_random_permutations_with_sampling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subgroup_sizes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sampling/_sampling.html#generate_random_permutations_with_sampling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sampling.generate_random_permutations_with_sampling" title="Link to this definition"></a></dt>
-<dd><p>Generate a random subset of signed permutations for structural configurations.</p>
-<p>Create a random subset of valid permutations for concatenated one-hot encoded
-subgroups, where each non-zero element is randomly assigned a +1 or -1 sign
-to mitigate the curse of dimensionality.</p>
+<dd><p>Generate a random subset of signed permutations for configurations.</p>
+<p>Create a random subset of valid permutations for concatenated one-hot
+encoded subgroups, where each non-zero element is randomly assigned
+a <code class="docutils literal notranslate"><span class="pre">+1</span></code> or <code class="docutils literal notranslate"><span class="pre">-1</span></code> sign to mitigate the curse of dimensionality.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>subgroup_sizes</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – List where each entry is the size of a subgroup (number of one-hot vectors).</p></li>
-<li><p><strong>num_samples</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of permutations to generate. If None or exceeding the total number
-of possible permutations, all possible permutations are generated.</p></li>
+<li><p><strong>subgroup_sizes</strong> (<em>list</em><em> of </em><em>int</em>) – List where each entry is the size of a subgroup (number of
+one-hot vectors).</p></li>
+<li><p><strong>num_samples</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of permutations to generate. If None or exceeding the
+total number of possible permutations, all possible permutations
+are generated.</p></li>
 <li><p><strong>seed</strong> (<em>int</em><em>, </em><em>optional</em>) – Seed for the random number generator to ensure reproducibility.</p></li>
 </ul>
 </dd>
@@ -621,46 +641,48 @@ of possible permutations, all possible permutations are generated.</p></li>
 randomized sign flips.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>ndarray</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<ul class="simple">
-<li><p>This function addresses the curse of dimensionality by limiting permutations
-to <cite>num_samples</cite>.</p></li>
-<li><p>If <cite>num_samples</cite> exceeds total possible permutations, all unique combinations
-are returned.</p></li>
-<li><p>Each subgroup is constrained to exactly one non-zero element per sample.</p></li>
-</ul>
+<p>This function addresses the curse of dimensionality by limiting
+permutations to <cite>num_samples</cite>.</p>
+<p>If <cite>num_samples</cite> exceeds total possible permutations, all unique
+combinations are returned.</p>
+<p>Each subgroup is constrained to exactly one non-zero element per
+sample.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.sampling.generate_scaled_permutations">
 <span class="sig-prename descclassname"><span class="pre">otaf.sampling.</span></span><span class="sig-name descname"><span class="pre">generate_scaled_permutations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subgroup_sizes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling_factors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sampling/_sampling.html#generate_scaled_permutations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sampling.generate_scaled_permutations" title="Link to this definition"></a></dt>
 <dd><p>Generate scaled random permutations with sign flips.</p>
-<p>Create a set of random permutations for concatenated one-hot encoded subgroups,
-applying random sign flips (+1 or -1) and scaling each element by the provided
-factors.</p>
+<p>Create a set of random permutations for concatenated one-hot encoded
+subgroups, applying random sign flips (<code class="docutils literal notranslate"><span class="pre">+1</span></code> or <code class="docutils literal notranslate"><span class="pre">-1</span></code>) and scaling
+each element by the provided factors.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>subgroup_sizes</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – Size of each subgroup, representing the number of possible one-hot vectors.</p></li>
-<li><p><strong>scaling_factors</strong> (<em>Union</em><em>[</em><em>list</em><em>[</em><em>float</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em>) – Scaling factors for each element in the permutation vector. Must match
-the total sum of <cite>subgroup_sizes</cite>.</p></li>
-<li><p><strong>num_samples</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of permutations to generate. If None or exceeding the total possible
-combinations, all combinations are generated.</p></li>
+<li><p><strong>subgroup_sizes</strong> (<em>list</em><em> of </em><em>int</em>) – Size of each subgroup, representing the number of possible
+one-hot vectors.</p></li>
+<li><p><strong>scaling_factors</strong> (<em>array_like</em>) – Scaling factors for each element in the permutation vector.
+Must match the total sum of <cite>subgroup_sizes</cite>.</p></li>
+<li><p><strong>num_samples</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of permutations to generate. If None or exceeding the
+total possible combinations, all combinations are generated.</p></li>
 <li><p><strong>seed</strong> (<em>int</em><em>, </em><em>optional</em>) – Random seed for reproducibility.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A 2D array where each row is a generated permutation, scaled and
-sign-flipped according to the logic defined in the underlying sampling.</p>
+sign-flipped according to the logic defined in the underlying
+sampling.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>ndarray</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If the length of <cite>scaling_factors</cite> does not match the sum of <cite>subgroup_sizes</cite>.</p>
+<dd class="field-even"><p><strong>ValueError</strong> – If the length of <cite>scaling_factors</cite> does not match the sum of
+    <cite>subgroup_sizes</cite>.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -669,25 +691,30 @@ sign-flipped according to the logic defined in the underlying sampling.</p>
 <dt class="sig sig-object py" id="otaf.sampling.project_samples_to_hyperplane">
 <span class="sig-prename descclassname"><span class="pre">otaf.sampling.</span></span><span class="sig-name descname"><span class="pre">project_samples_to_hyperplane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/sampling/_hyperPlaneSampler.html#project_samples_to_hyperplane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.sampling.project_samples_to_hyperplane" title="Link to this definition"></a></dt>
 <dd><p>Project (N-1)-dimensional samples onto an N-dimensional hyperplane.</p>
-<p>Solve the hyperplane equation $a_0 x_0 + a_1 x_1 + … + a_{N-1} x_{N-1} = b$
-to find the coordinate $x_0$, then reconstruct the full N-dimensional point.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>a</strong> (<em>Union</em><em>[</em><em>list</em><em>[</em><em>float</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em>) – Coefficients of the hyperplane equation.</p></li>
-<li><p><strong>b</strong> (<em>float</em>) – Constant term in the hyperplane equation.</p></li>
-<li><p><strong>samples</strong> (<em>np.ndarray</em>) – Samples in (N-1)-dimensional space with shape (M, N-1).</p></li>
-<li><p><strong>bounds</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Bounds for each dimension in the format [(min, max), …].
-Only samples whose projections fall within these bounds are returned.</p></li>
+<li><p><strong>a</strong> (<em>array_like</em>) – Coefficients of the hyperplane linear equation.</p></li>
+<li><p><strong>b</strong> (<em>float</em>) – Constant term in the hyperplane linear equation.</p></li>
+<li><p><strong>samples</strong> (<em>ndarray</em>) – Samples in (N-1)-dimensional space with shape (M, N-1).</p></li>
+<li><p><strong>bounds</strong> (<em>list</em><em> of </em><em>tuple</em><em>, </em><em>optional</em>) – Bounds for each dimension in the format [(min, max), …].
+Only samples whose projections fall within these bounds are
+returned.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Projected samples in N-dimensional space that satisfy the hyperplane equation.</p>
+<dd class="field-even"><p>Projected samples in N-dimensional space that satisfy the
+hyperplane equation.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>ndarray</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The function solves the hyperplane equation to calculate the
+dependent coordinate <code class="docutils literal notranslate"><span class="pre">x0</span></code> before reconstructing the full vector:</p>
+<div class="math notranslate nohighlight">
+\[a_0 x_0 + a_1 x_1 + \dots + a_{N-1} x_{N-1} = b\]</div>
 </dd></dl>
 
 <dl class="py function">
@@ -728,19 +755,19 @@ mean and standard deviation ($mu_0, sigma_0, mu_1, sigma_1, dots$).</p></li>
 <dd><p>Validate the feature descriptions and extract feature indices.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>list</strong><strong>[</strong><strong>str</strong><strong>]</strong><strong>)</strong> (<em>description</em>)</p></li>
-<li><p><strong>description</strong> (<em>list</em>)</p></li>
-</ul>
+<dd class="field-odd"><p><strong>description</strong> (<em>list</em><em> of </em><em>str</em>) – List of feature descriptions where each element represents a
+symbol or feature name.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Extracted feature indices parsed from the trailing characters
+of the descriptions.</p>
 </dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[int]: Extracted feature indices.</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of int</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If the description is missing or invalid.:</p>
+<dd class="field-even"><p><strong>ValueError</strong> – If the <cite>description</cite> is empty or if any individual feature name
+    fails to end with an integer suffix.</p>
 </dd>
 </dl>
 </dd></dl>

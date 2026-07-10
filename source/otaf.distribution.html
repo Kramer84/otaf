@@ -131,30 +131,33 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.distribution.compute_sup_inf_distributions">
 <span class="sig-prename descclassname"><span class="pre">otaf.distribution.</span></span><span class="sig-name descname"><span class="pre">compute_sup_inf_distributions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distributions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/distribution/_distribution.html#compute_sup_inf_distributions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.distribution.compute_sup_inf_distributions" title="Link to this definition"></a></dt>
-<dd><p>Compute the supremum (sup) and infimum (inf) CDFs for a list of distributions.</p>
-<p>This function evaluates the Cumulative Distribution Functions (CDFs) at <cite>n_points</cite>
-evenly spaced points between <cite>x_min</cite> and <cite>x_max</cite> for a given list of distributions.
-It then computes the pointwise supremum and infimum of the CDFs across the
-distributions at each of these points.</p>
+<dd><p>Compute the supremum and infimum CDFs for a list of distributions.</p>
+<p>This function evaluates the Cumulative Distribution Functions (CDFs)
+at <cite>n_points</cite> evenly spaced points between <cite>x_min</cite> and <cite>x_max</cite> for
+a given list of distributions. It then computes the pointwise
+supremum and infimum of the CDFs across the distributions at each
+of these points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>distributions</strong> (<em>list</em>) – A list of objects where each object has a <cite>computeCDF(x)</cite> method to evaluate
-the CDF at a point x.</p></li>
-<li><p><strong>x_min</strong> (<em>float</em>) – The lower bound of the x values over which the CDFs are evaluated.</p></li>
-<li><p><strong>x_max</strong> (<em>float</em>) – The upper bound of the x values over which the CDFs are evaluated.</p></li>
-<li><p><strong>n_points</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of points at which the CDFs are evaluated between <cite>x_min</cite> and <cite>x_max</cite>.
-Default is 10,000.</p></li>
+<li><p><strong>distributions</strong> (<em>list</em>) – A list of objects where each object has a <code class="docutils literal notranslate"><span class="pre">computeCDF(x)</span></code>
+method to evaluate the CDF at a point x.</p></li>
+<li><p><strong>x_min</strong> (<em>float</em><em>, </em><em>optional</em>) – The lower bound of the x values over which the CDFs are
+evaluated. Default is -10.</p></li>
+<li><p><strong>x_max</strong> (<em>float</em><em>, </em><em>optional</em>) – The upper bound of the x values over which the CDFs are
+evaluated. Default is 10.</p></li>
+<li><p><strong>n_points</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of points at which the CDFs are evaluated between
+<cite>x_min</cite> and <cite>x_max</cite>. Default is 10000.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>sup_data</strong> (<em>np.ndarray</em>) – A 2D array with shape (n_points, 2), where the first column is the x values
-and the second column contains the pointwise supremum of the CDFs at each x.</p></li>
-<li><p><strong>inf_data</strong> (<em>np.ndarray</em>) – A 2D array with shape (n_points, 2), where the first column is the x values
-and the second column contains the pointwise infimum of the CDFs at each x.</p></li>
-</ul>
-</p>
+<dd class="field-even"><p><strong>sup_data, inf_data</strong> – A tuple containing two 2D arrays, each with shape (n_points, 2).
+The first column corresponds to the x values. For <cite>sup_data</cite>,
+the second column contains the pointwise supremum of the CDFs.
+For <cite>inf_data</cite>, it contains the pointwise infimum.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple of ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -163,54 +166,64 @@ and the second column contains the pointwise infimum of the CDFs at each x.</p><
 <dt class="sig sig-object py" id="otaf.distribution.generate_correlated_samples">
 <span class="sig-prename descclassname"><span class="pre">otaf.distribution.</span></span><span class="sig-name descname"><span class="pre">generate_correlated_samples</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">corr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/distribution/_distribution.html#generate_correlated_samples"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.distribution.generate_correlated_samples" title="Link to this definition"></a></dt>
 <dd><p>Generate bivariate correlated samples.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mu1</strong> (<em>float</em><em>, </em><em>optional</em>) – Mean of the first marginal distribution. Default is 0.</p></li>
+<li><p><strong>mu2</strong> (<em>float</em><em>, </em><em>optional</em>) – Mean of the second marginal distribution. Default is 0.</p></li>
+<li><p><strong>sigma1</strong> (<em>float</em><em>, </em><em>optional</em>) – Standard deviation of the first marginal distribution. Default is 1.</p></li>
+<li><p><strong>sigma2</strong> (<em>float</em><em>, </em><em>optional</em>) – Standard deviation of the second marginal distribution. Default is 1.</p></li>
+<li><p><strong>corr</strong> (<em>float</em><em>, </em><em>optional</em>) – Correlation coefficient between the two marginals. Default is 0.</p></li>
+<li><p><strong>N</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of samples to generate. Default is 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An (N, 2) NumPy array containing the generated bivariate
+correlated samples.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array_like</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.distribution.get_composed_normal_defect_distribution">
 <span class="sig-prename descclassname"><span class="pre">otaf.distribution.</span></span><span class="sig-name descname"><span class="pre">get_composed_normal_defect_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">defect_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/distribution/_distribution.html#get_composed_normal_defect_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.distribution.get_composed_normal_defect_distribution" title="Link to this definition"></a></dt>
-<dd><p>Create a composed distribution of defects based on their names and associated standard deviations.</p>
+<dd><p>Create a composed distribution of defects from names and variances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>list</strong><strong>)</strong> (<em>defect_names</em>)</p></li>
-<li><p><strong>(</strong><strong>list</strong> (<em>sigma_list</em>)</p></li>
-<li><p><strong>optional</strong><strong>)</strong> (<em>Dictionary mapping defect names to their standard deviation values.</em>)</p></li>
-<li><p><strong>(</strong><strong>list</strong></p></li>
-<li><p><strong>optional</strong><strong>)</strong></p></li>
-<li><p><strong>(</strong><strong>dict</strong> (<em>sigma_dict</em>)</p></li>
-<li><p><strong>optional</strong><strong>)</strong></p></li>
-<li><p><strong>(</strong><strong>dict</strong></p></li>
-<li><p><strong>optional</strong><strong>)</strong></p></li>
-<li><p><strong>defect_names</strong> (<em>list</em><em>[</em><em>str</em><em> | </em><em>Symbol</em><em>]</em>)</p></li>
-<li><p><strong>mu_list</strong> (<em>list</em><em>[</em><em>int</em><em> | </em><em>float</em><em>] </em><em>| </em><em>None</em>)</p></li>
-<li><p><strong>sigma_list</strong> (<em>list</em><em>[</em><em>int</em><em> | </em><em>float</em><em>] </em><em>| </em><em>None</em>)</p></li>
-<li><p><strong>mu_dict</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>int</em><em> | </em><em>float</em><em>] </em><em>| </em><em>None</em>)</p></li>
-<li><p><strong>sigma_dict</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>int</em><em> | </em><em>float</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>defect_names</strong> (<em>list</em><em> of </em><em>str</em><em> or </em><em>sympy.Symbol</em>) – A list of defect variable names (symbols).</p></li>
+<li><p><strong>mu_list</strong> (<em>list</em><em> of </em><em>float</em><em>, </em><em>optional</em>) – List of means for each defect. If not provided, defaults to 0.0
+for all defects.</p></li>
+<li><p><strong>sigma_list</strong> (<em>list</em><em> of </em><em>float</em><em>, </em><em>optional</em>) – List of standard deviations for each defect. If not provided,
+defaults to 1.0 for all defects.</p></li>
+<li><p><strong>mu_dict</strong> (<em>dict</em><em>, </em><em>optional</em>) – Dictionary mapping defect names to their mean values.</p></li>
+<li><p><strong>sigma_dict</strong> (<em>dict</em><em>, </em><em>optional</em>) – Dictionary mapping defect names to their standard deviation
+values.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">JointDistribution</span></code></span></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A composed distribution object.</p>
 </dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>JointDistribution: A composed distribution object.</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>JointDistribution</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
+<p>The defect names are expected to have specific prefixes to identify
+their mechanical degrees of freedom:</p>
 <ul class="simple">
-<li><dl class="simple">
-<dt>The defect names are expected to have specific prefixes to identify their type:</dt><dd><ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">u_</span></code> for translation along the x-axis</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">v_</span></code> for translation along the y-axis</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">w_</span></code> for translation along the z-axis</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">alpha_</span></code> for rotation around the x-axis</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">beta_</span></code> for rotation around the y-axis</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">gamma_</span></code> for rotation around the z-axis</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">u_</span></code> : translation along the x-axis</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">v_</span></code> : translation along the y-axis</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">w_</span></code> : translation along the z-axis</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">alpha_</span></code> : rotation around the x-axis</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">beta_</span></code> : rotation around the y-axis</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gamma_</span></code> : rotation around the z-axis</p></li>
 </ul>
-</dd>
-</dl>
-</li>
-<li><p>This has to be reflected in the mu_dict/sigma_dict if provided, e.g., <code class="docutils literal notranslate"><span class="pre">sigma_dict</span> <span class="pre">=</span> <span class="pre">{'u':1.0}</span></code>.</p></li>
-</ul>
+<p>This prefix pattern must be matched in keys if <cite>mu_dict</cite> or
+<cite>sigma_dict</cite> are provided, e.g., <code class="docutils literal notranslate"><span class="pre">sigma_dict</span> <span class="pre">=</span> <span class="pre">{'u':</span> <span class="pre">1.0}</span></code>.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -220,11 +233,15 @@ and the second column contains the pointwise infimum of the CDFs at each x.</p><
 <p>Assumes all distributions are normal (mean/std).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>composed_distribution</strong> (<em>The composed distribution</em><em> of </em><em>normal distributions.</em>)</p>
+<dd class="field-odd"><p><strong>composed_distribution</strong> (<em>JointDistribution</em>) – The composed distribution of normal distributions.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>means: A list of the means of the distributions.
-stds: A list of the standard deviations of the distributions.</p>
+<dd class="field-even"><p><strong>means, stds</strong> – A tuple containing two lists: the first list holds the means
+of the distributions, and the second list holds the standard
+deviations.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple of list</p>
 </dd>
 </dl>
 </dd></dl>
@@ -232,19 +249,22 @@ stds: A list of the standard deviations of the distributions.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.distribution.get_prob_below_threshold">
 <span class="sig-prename descclassname"><span class="pre">otaf.distribution.</span></span><span class="sig-name descname"><span class="pre">get_prob_below_threshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_inf_sup</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/distribution/_distribution.html#get_prob_below_threshold"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.distribution.get_prob_below_threshold" title="Link to this definition"></a></dt>
-<dd><p>Get the probability of the gap statistic being below a specified threshold.</p>
-<p>This function finds the element in the array <cite>data_inf_sup</cite> where the
-absolute value of the difference between the first column and the threshold
-is the smallest, and then returns the corresponding value from the second column.</p>
+<dd><p>Get the probability of the gap being below a specified threshold.</p>
+<p>This function finds the element in the array <cite>data_inf_sup</cite> where
+the absolute value of the difference between the first column and
+the <cite>threshold</cite> is the smallest, and then returns the corresponding
+value from the second column.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>data_inf_sup</strong> (<em>numpy array</em>) – Array where the first column contains gap values and the second column contains probabilities.</p></li>
-<li><p><strong>threshold</strong> (<em>float</em><em>, </em><em>optional</em>) – The threshold to check against (default is 0).</p></li>
+<li><p><strong>data_inf_sup</strong> (<em>ndarray</em>) – Array where the first column contains gap values and the second
+column contains probabilities.</p></li>
+<li><p><strong>threshold</strong> (<em>float</em><em>, </em><em>optional</em>) – The threshold to check against. Default is 0.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The probability corresponding to the gap closest to the threshold.</p>
+<dd class="field-even"><p>The probability corresponding to the gap closest to the
+<cite>threshold</cite>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
@@ -255,23 +275,24 @@ is the smallest, and then returns the corresponding value from the second column
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.distribution.multiply_composed_distribution_standard_with_constants">
 <span class="sig-prename descclassname"><span class="pre">otaf.distribution.</span></span><span class="sig-name descname"><span class="pre">multiply_composed_distribution_standard_with_constants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">composed_distribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constants</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/distribution/_distribution.html#multiply_composed_distribution_standard_with_constants"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.distribution.multiply_composed_distribution_standard_with_constants" title="Link to this definition"></a></dt>
-<dd><p>Multiply the standard deviations of each sub-distribution by corresponding constants.</p>
+<dd><p>Multiply sub-distribution standard deviations by corresponding constants.</p>
 <p>This function assumes each sub-distribution is a Normal distribution,
-where each distribution’s parameters are in the form [mean, std, mean, std, …].</p>
+where each distribution’s parameters are in the form
+[mean, std, mean, std, …].</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>JointDistribution</strong><strong>)</strong> (<em>composed_distribution</em>) – The original composed distribution.</p></li>
-<li><p><strong>(</strong><strong>list</strong><strong>[</strong><strong>float</strong><strong>]</strong><strong>)</strong> (<em>constants</em>) – A list of constants to multiply each distribution’s standard deviation.</p></li>
+<li><p><strong>composed_distribution</strong> (<em>JointDistribution</em>) – The original composed distribution.</p></li>
+<li><p><strong>constants</strong> (<em>list</em><em> of </em><em>float</em>) – A list of constants to multiply each distribution’s standard
+deviation.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>JointDistribution:</dt><dd><p>A copy of the original composed distribution,
-with updated standard deviations.</p>
+<dd class="field-even"><p>A copy of the original composed distribution, with updated
+standard deviations scaled by <cite>constants</cite>.</p>
 </dd>
-</dl>
-</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>JointDistribution</p>
 </dd>
 </dl>
 </dd></dl>
@@ -283,17 +304,16 @@ with updated standard deviations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>JointDistribution</strong><strong>)</strong> (<em>composed_distribution</em>) – The original composed distribution.</p></li>
-<li><p><strong>(</strong><strong>float</strong><strong>)</strong> (<em>constant</em>) – The constant value by which to multiply all parameters.</p></li>
+<li><p><strong>composed_distribution</strong> (<em>JointDistribution</em>) – The original composed distribution.</p></li>
+<li><p><strong>constant</strong> (<em>float</em>) – The constant value by which to multiply all parameters.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>JointDistribution:</dt><dd><p>A copy of the original composed distribution,
-with its parameters scaled by the given constant.</p>
+<dd class="field-even"><p>A copy of the original composed distribution, with its
+parameters scaled by the given <cite>constant</cite>.</p>
 </dd>
-</dl>
-</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>JointDistribution</p>
 </dd>
 </dl>
 </dd></dl>
