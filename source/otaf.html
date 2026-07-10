@@ -406,14 +406,17 @@
 <dt class="sig sig-object py" id="otaf.AssemblyDataProcessor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">AssemblyDataProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyDataProcessor.html#AssemblyDataProcessor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.AssemblyDataProcessor" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Class to manage and validate mechanical system data for assembly representation.</p>
-<p>This class transforms a minimal representation of mechanical system data into a structured
-format usable by the rest of the code. It ensures data integrity and validates compatibility
-with defined requirements, including surfaces, points, interactions, and constraints.</p>
+<p>Manage and validate mechanical system data for assemblies.</p>
+<p>This class transforms a minimal representation of mechanical
+system data into a structured format usable by the rest of the
+code. It ensures data integrity and validates compatibility with
+defined requirements, including surfaces, points, interactions,
+and constraints.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>system_data</strong> (<em>dict</em><em>, </em><em>optional</em>) – A nested dictionary representing mechanical system data. If not provided,
-an empty structure is initialized.</p>
+<dd class="field-odd"><p><strong>system_data</strong> (<em>dict</em><em>, </em><em>optional</em>) – A nested dictionary representing mechanical system data. If
+not provided, an empty structure is initialized (the
+default is None).</p>
 </dd>
 </dl>
 <dl class="py attribute">
@@ -430,10 +433,11 @@ an empty structure is initialized.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="otaf.AssemblyDataProcessor.compatibility_loops_expanded">
 <span class="sig-name descname"><span class="pre">compatibility_loops_expanded</span></span><a class="headerlink" href="#otaf.AssemblyDataProcessor.compatibility_loops_expanded" title="Link to this definition"></a></dt>
-<dd><p>Placeholder for compatibility loop expansions, initialized as None.</p>
+<dd><p>Placeholder for compatibility loop expansions, initialized
+as None.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None or dict</p>
+<dd class="field-odd"><p>dict or None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -480,58 +484,75 @@ an empty structure is initialized.</p>
 <li><p><strong>val</strong> (<em>Any</em>) – The value to assign to the key in the system data.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.AssemblyDataProcessor.add_surface_points">
 <span class="sig-name descname"><span class="pre">add_surface_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surf_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_duplicates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyDataProcessor.html#AssemblyDataProcessor.add_surface_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.AssemblyDataProcessor.add_surface_points" title="Link to this definition"></a></dt>
-<dd><p>Add surface points to a specified part and surface, ensuring uniqueness and validating the input.</p>
+<dd><p>Add surface points to a specified part and surface.</p>
+<p>Ensures uniqueness and validates the input point dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>part_id</strong> (<em>str</em>) – The ID of the part to which the surface belongs.</p></li>
 <li><p><strong>surf_id</strong> (<em>str</em>) – The ID of the surface to which the points will be added.</p></li>
-<li><p><strong>point_dict</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Union</em><em>[</em><em>Tuple</em><em>, </em><em>numpy.ndarray</em><em>, </em><em>List</em><em>]</em><em>]</em>) – A dictionary where keys are point labels and values are their corresponding coordinates.</p></li>
-<li><p><strong>ignore_duplicates</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, ignore duplicate points that match exactly with existing points (default is False).</p></li>
+<li><p><strong>point_dict</strong> (<em>dict</em>) – A dictionary where keys are point labels and values are
+their corresponding coordinates.</p></li>
+<li><p><strong>ignore_duplicates</strong> (<em>bool</em><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, ignore duplicate points that match exactly
+with existing points (the default is False).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.PartNotFoundError" title="otaf.exceptions.PartNotFoundError"><strong>otaf.exceptions.PartNotFoundError</strong></a> – If the specified part ID is not found in the system data.</p></li>
-<li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.SurfaceNotFoundError" title="otaf.exceptions.SurfaceNotFoundError"><strong>otaf.exceptions.SurfaceNotFoundError</strong></a> – If the specified surface ID is not found in the given part.</p></li>
-<li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.DuplicatePointError" title="otaf.exceptions.DuplicatePointError"><strong>otaf.exceptions.DuplicatePointError</strong></a> – If a point with the same label or coordinates already exists and duplicates are not ignored.</p></li>
-<li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.LabelPatternError" title="otaf.exceptions.LabelPatternError"><strong>otaf.exceptions.LabelPatternError</strong></a> – If any labels in the point dictionary do not match the required pattern.</p></li>
+<li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.PartNotFoundError" title="otaf.exceptions.PartNotFoundError"><strong>otaf.exceptions.PartNotFoundError</strong></a> – If the specified <cite>part_id</cite> is not found in the system data.</p></li>
+<li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.SurfaceNotFoundError" title="otaf.exceptions.SurfaceNotFoundError"><strong>otaf.exceptions.SurfaceNotFoundError</strong></a> – If the specified <cite>surf_id</cite> is not found in the given part.</p></li>
+<li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.DuplicatePointError" title="otaf.exceptions.DuplicatePointError"><strong>otaf.exceptions.DuplicatePointError</strong></a> – If a point with the same label or coordinates already
+    exists and duplicates are not ignored.</p></li>
+<li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.LabelPatternError" title="otaf.exceptions.LabelPatternError"><strong>otaf.exceptions.LabelPatternError</strong></a> – If any labels in the point dictionary do not match the
+    required pattern.</p></li>
 <li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.LabelPrefixError" title="otaf.exceptions.LabelPrefixError"><strong>otaf.exceptions.LabelPrefixError</strong></a> – If label prefixes are inconsistent across the points.</p></li>
 <li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.UniqueLabelSuffixError" title="otaf.exceptions.UniqueLabelSuffixError"><strong>otaf.exceptions.UniqueLabelSuffixError</strong></a> – If label suffixes are not unique across the points.</p></li>
 <li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.NonUniqueCoordinatesError" title="otaf.exceptions.NonUniqueCoordinatesError"><strong>otaf.exceptions.NonUniqueCoordinatesError</strong></a> – If point coordinates are not unique.</p></li>
 </ul>
 </dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
 </dl>
 <p class="rubric">Notes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>part_id</strong> (<em>str</em>)</p></li>
+<li><p><strong>surf_id</strong> (<em>str</em>)</p></li>
+<li><p><strong>point_dict</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>tuple</em><em>[</em><em>float</em><em>, </em><em>...</em><em>] </em><em>| </em><em>ndarray</em><em> | </em><em>list</em><em>[</em><em>float</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>ignore_duplicates</strong> (<em>bool</em>)</p></li>
+</ul>
+</dd>
+</dl>
 <ul class="simple">
-<li><p>Surface points are stored under the “POINTS” key of the surface’s dictionary.</p></li>
-<li><p>If the label of a point matches the origin pattern (<cite>SURF_ORIGIN_PATTERN</cite>), the point is set as the surface’s origin.</p></li>
+<li><p>Surface points are stored under the <code class="docutils literal notranslate"><span class="pre">&quot;POINTS&quot;</span></code> key of the
+surface’s dictionary.</p></li>
+<li><p>If the label of a point matches the origin pattern
+(<code class="docutils literal notranslate"><span class="pre">SURF_ORIGIN_PATTERN</span></code>), the point is set as the
+surface’s origin.</p></li>
 </ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.AssemblyDataProcessor.generate_expanded_loops">
 <span class="sig-name descname"><span class="pre">generate_expanded_loops</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyDataProcessor.html#AssemblyDataProcessor.generate_expanded_loops"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.AssemblyDataProcessor.generate_expanded_loops" title="Link to this definition"></a></dt>
-<dd><p>Generate the full representation of compatibility loops and store them as an attribute.</p>
-<p>This method processes the compact descriptions of compatibility loops in the system data
-and expands them into their detailed forms.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">compatibility_loops_expanded</span></span><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
-<dd><p>A dictionary where keys are loop names and values are the fully expanded loop strings.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
+<dd><p>Generate full representation of compatibility loops.</p>
+<p>This method processes the compact descriptions of compatibility
+loops in the system data and expands them into their detailed
+forms, storing them in <cite>compatibility_loops_expanded</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
@@ -587,9 +608,10 @@ for each part and surface.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.AssemblyDataProcessor.generate_points_for_surface">
 <span class="sig-name descname"><span class="pre">generate_points_for_surface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surf_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyDataProcessor.html#AssemblyDataProcessor.generate_points_for_surface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.AssemblyDataProcessor.generate_points_for_surface" title="Link to this definition"></a></dt>
-<dd><p>Generate points for a surface based on its type and characteristics.</p>
-<p>This method determines the surface type and dispatches the task to the appropriate
-surface-specific point generation method.</p>
+<dd><p>Generate points for a surface based on its type.</p>
+<p>This method determines the surface type and dispatches the
+task to the appropriate surface-specific point generation
+method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -663,7 +685,7 @@ renders it as a scene compatible with Jupyter Notebook.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.AssemblyDataProcessor.get_surface_points">
 <span class="sig-name descname"><span class="pre">get_surface_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surf_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyDataProcessor.html#AssemblyDataProcessor.get_surface_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.AssemblyDataProcessor.get_surface_points" title="Link to this definition"></a></dt>
-<dd><p>Retrieve a copy of the points associated with a specific surface.</p>
+<dd><p>Retrieve a copy of points associated with a specific surface.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -678,7 +700,7 @@ renders it as a scene compatible with Jupyter Notebook.</p>
 <dd class="field-odd"><p>dict</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>KeyError</strong> – If the specified part or surface ID is not found.</p>
+<dd class="field-even"><p><strong>KeyError</strong> – If the specified <cite>part_id</cite> or <cite>surf_id</cite> is not found.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -703,24 +725,40 @@ renders it as a scene compatible with Jupyter Notebook.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.AssemblyDataProcessor.validate_point_dict">
 <span class="sig-name descname"><span class="pre">validate_point_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyDataProcessor.html#AssemblyDataProcessor.validate_point_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.AssemblyDataProcessor.validate_point_dict" title="Link to this definition"></a></dt>
-<dd><p>Validate a dictionary of points for compliance with labeling, formatting, and uniqueness rules.</p>
+<dd><p>Validate a dictionary of points for compliance with rules.</p>
+<p>Checks labeling, formatting, and uniqueness rules.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>point_dict</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Union</em><em>[</em><em>Tuple</em><em>, </em><em>numpy.ndarray</em><em>]</em><em>]</em>) – A dictionary where keys are point labels and values are their corresponding coordinates.</p>
+<dd class="field-odd"><p><strong>point_dict</strong> (<em>dict</em>) – A dictionary where keys are point labels and values are
+their corresponding coordinates.</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.LabelPatternError" title="otaf.exceptions.LabelPatternError"><strong>otaf.exceptions.LabelPatternError</strong></a> – If any labels do not match the required pattern.</p></li>
 <li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.LabelPrefixError" title="otaf.exceptions.LabelPrefixError"><strong>otaf.exceptions.LabelPrefixError</strong></a> – If label prefixes are inconsistent across the points.</p></li>
 <li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.UniqueLabelSuffixError" title="otaf.exceptions.UniqueLabelSuffixError"><strong>otaf.exceptions.UniqueLabelSuffixError</strong></a> – If label suffixes are not unique across the points.</p></li>
-<li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.NonUniqueCoordinatesError" title="otaf.exceptions.NonUniqueCoordinatesError"><strong>otaf.exceptions.NonUniqueCoordinatesError</strong></a> – If point coordinates are not unique. Includes information about duplicate points in the error message.</p></li>
+<li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.NonUniqueCoordinatesError" title="otaf.exceptions.NonUniqueCoordinatesError"><strong>otaf.exceptions.NonUniqueCoordinatesError</strong></a> – If point coordinates are not unique. Includes information
+    about duplicate points in the error message.</p></li>
 </ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>point_dict</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>tuple</em><em>[</em><em>float</em><em>, </em><em>...</em><em>] </em><em>| </em><em>ndarray</em><em>]</em>)</p>
+</dd>
+</dl>
 <ul class="simple">
-<li><p>Labels must conform to the <cite>SURF_POINT_PATTERN</cite> defined in the <cite>otaf.constants</cite> module.</p></li>
-<li><p>Labels must have consistent prefixes (e.g., “A”, “B”, etc.) and unique numeric suffixes.</p></li>
+<li><p>Labels must conform to the <code class="docutils literal notranslate"><span class="pre">SURF_POINT_PATTERN</span></code> defined in
+the <code class="docutils literal notranslate"><span class="pre">otaf.constants</span></code> module.</p></li>
+<li><p>Labels must have consistent prefixes (e.g., “A”, “B”, etc.)
+and unique numeric suffixes.</p></li>
 <li><p>The coordinates for all points must be unique.</p></li>
 </ul>
 </dd></dl>
@@ -729,8 +767,9 @@ renders it as a scene compatible with Jupyter Notebook.</p>
 <dt class="sig sig-object py" id="otaf.AssemblyDataProcessor.validate_system_data_structure">
 <span class="sig-name descname"><span class="pre">validate_system_data_structure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyDataProcessor.html#AssemblyDataProcessor.validate_system_data_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.AssemblyDataProcessor.validate_system_data_structure" title="Link to this definition"></a></dt>
 <dd><p>Validate the structure and integrity of the system data.</p>
-<p>Ensures that the required keys and nested structures exist and conform to expected
-standards, including part IDs, surface labels, types, points, interactions, and constraints.</p>
+<p>Ensures that the required keys and nested structures exist and
+conform to expected standards, including part IDs, surface
+labels, types, points, interactions, and constraints.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -738,12 +777,15 @@ standards, including part IDs, surface labels, types, points, interactions, and 
 <li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.InvalidPartLabelError" title="otaf.exceptions.InvalidPartLabelError"><strong>otaf.exceptions.InvalidPartLabelError</strong></a> – If part labels are not integers.</p></li>
 <li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.InvalidSurfaceLabelError" title="otaf.exceptions.InvalidSurfaceLabelError"><strong>otaf.exceptions.InvalidSurfaceLabelError</strong></a> – If surface labels are not lowercase alphabetic strings.</p></li>
 <li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.UnsupportedSurfaceTypeError" title="otaf.exceptions.UnsupportedSurfaceTypeError"><strong>otaf.exceptions.UnsupportedSurfaceTypeError</strong></a> – If the surface type is not supported.</p></li>
-<li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.MissingSurfaceTypeKeyError" title="otaf.exceptions.MissingSurfaceTypeKeyError"><strong>otaf.exceptions.MissingSurfaceTypeKeyError</strong></a> – If a surface lacks a “TYPE” key.</p></li>
+<li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.MissingSurfaceTypeKeyError" title="otaf.exceptions.MissingSurfaceTypeKeyError"><strong>otaf.exceptions.MissingSurfaceTypeKeyError</strong></a> – If a surface lacks a <code class="docutils literal notranslate"><span class="pre">&quot;TYPE&quot;</span></code> key.</p></li>
 <li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.MissingOriginPointError" title="otaf.exceptions.MissingOriginPointError"><strong>otaf.exceptions.MissingOriginPointError</strong></a> – If no origin point is defined for a surface.</p></li>
 <li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.InvalidInteractionFormatError" title="otaf.exceptions.InvalidInteractionFormatError"><strong>otaf.exceptions.InvalidInteractionFormatError</strong></a> – If an interaction format is invalid.</p></li>
 <li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.InvalidSurfaceDirectionError" title="otaf.exceptions.InvalidSurfaceDirectionError"><strong>otaf.exceptions.InvalidSurfaceDirectionError</strong></a> – If a surface direction is invalid.</p></li>
 <li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.InvalidGlobalConstraintError" title="otaf.exceptions.InvalidGlobalConstraintError"><strong>otaf.exceptions.InvalidGlobalConstraintError</strong></a> – If the global constraint is not supported.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1000,8 +1042,8 @@ to nullify specific translation components.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id1">
-<span class="sig-name descname"><span class="pre">apply_FO_matrix_expansion_to_matrix_loop_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compatibility_loop_matrix_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/compatibilityLoopHandling.html#CompatibilityLoopHandling.apply_FO_matrix_expansion_to_matrix_loop_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">apply_FO_matrix_expansion_to_matrix_loop_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compatibility_loop_matrix_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/compatibilityLoopHandling.html#CompatibilityLoopHandling.apply_FO_matrix_expansion_to_matrix_loop_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
 <dd><p>Apply first-order matrix expansion to a list of compatibility loop matrices.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1017,8 +1059,8 @@ to nullify specific translation components.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id2">
-<span class="sig-name descname"><span class="pre">calculate_nominal_gap_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">el_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nullify_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nullify_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nullify_z</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/compatibilityLoopHandling.html#CompatibilityLoopHandling.calculate_nominal_gap_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">calculate_nominal_gap_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">el_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nullify_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nullify_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nullify_z</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/compatibilityLoopHandling.html#CompatibilityLoopHandling.calculate_nominal_gap_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Link to this definition"></a></dt>
 <dd><p>Calculate the nominal transformation matrix between two surfaces in a gap.</p>
 <p>This method computes the nominal transformation matrix between two surfaces in the
 compatibility loop, with options to nullify specific components of the translation vector.</p>
@@ -1065,8 +1107,8 @@ to compute the nominal transformation matrix.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id3">
-<span class="sig-name descname"><span class="pre">generate_FO_loop_matrices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/compatibilityLoopHandling.html#CompatibilityLoopHandling.generate_FO_loop_matrices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">generate_FO_loop_matrices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/compatibilityLoopHandling.html#CompatibilityLoopHandling.generate_FO_loop_matrices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Link to this definition"></a></dt>
 <dd><p>Generate first-order expanded matrices for compatibility loops.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1079,8 +1121,8 @@ to compute the nominal transformation matrix.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id4">
-<span class="sig-name descname"><span class="pre">generate_deviation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">el_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/compatibilityLoopHandling.html#CompatibilityLoopHandling.generate_deviation_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id4" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">generate_deviation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">el_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/compatibilityLoopHandling.html#CompatibilityLoopHandling.generate_deviation_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Link to this definition"></a></dt>
 <dd><p>Generate a deviation matrix based on loop element information.</p>
 <p>This method creates a deviation matrix for a specified element in the compatibility loop,
 taking into account surface types, constraints, and global constraints.</p>
@@ -1117,8 +1159,8 @@ specified configuration.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id5">
-<span class="sig-name descname"><span class="pre">generate_gap_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">el_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/compatibilityLoopHandling.html#CompatibilityLoopHandling.generate_gap_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id5" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">generate_gap_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">el_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/compatibilityLoopHandling.html#CompatibilityLoopHandling.generate_gap_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id4" title="Link to this definition"></a></dt>
 <dd><p>Generate a gap matrix based on loop element information.</p>
 <p>This method creates a gap matrix for the specified pair of surfaces in the compatibility loop,
 taking into account surface types, contact constraints, manual constraints, and global constraints.</p>
@@ -1156,8 +1198,8 @@ blocked degrees of freedom in the generated gap matrix.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id6">
-<span class="sig-name descname"><span class="pre">generate_loop_id_to_matrix_list_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/compatibilityLoopHandling.html#CompatibilityLoopHandling.generate_loop_id_to_matrix_list_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id6" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">generate_loop_id_to_matrix_list_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/compatibilityLoopHandling.html#CompatibilityLoopHandling.generate_loop_id_to_matrix_list_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id5" title="Link to this definition"></a></dt>
 <dd><p>Create a dictionary mapping compatibility loop IDs to lists of matrices.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1171,8 +1213,8 @@ of matrices representing the corresponding compatibility loops.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id7">
-<span class="sig-name descname"><span class="pre">generate_matrices_from_expanded_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expanded_loop_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/compatibilityLoopHandling.html#CompatibilityLoopHandling.generate_matrices_from_expanded_loop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id7" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">generate_matrices_from_expanded_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expanded_loop_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/compatibilityLoopHandling.html#CompatibilityLoopHandling.generate_matrices_from_expanded_loop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id6" title="Link to this definition"></a></dt>
 <dd><p>Generate matrices for a compatibility loop from its expanded string representation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1191,8 +1233,8 @@ of matrices representing the corresponding compatibility loops.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id8">
-<span class="sig-name descname"><span class="pre">generate_transformation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">el_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/compatibilityLoopHandling.html#CompatibilityLoopHandling.generate_transformation_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id8" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">generate_transformation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">el_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/compatibilityLoopHandling.html#CompatibilityLoopHandling.generate_transformation_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id7" title="Link to this definition"></a></dt>
 <dd><p>Generate a transformation matrix from loop element information.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1215,8 +1257,8 @@ from the cache.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id9">
-<span class="sig-name descname"><span class="pre">get_compatibility_expression_from_FO_matrices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/compatibilityLoopHandling.html#CompatibilityLoopHandling.get_compatibility_expression_from_FO_matrices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id9" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">get_compatibility_expression_from_FO_matrices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/compatibilityLoopHandling.html#CompatibilityLoopHandling.get_compatibility_expression_from_FO_matrices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id8" title="Link to this definition"></a></dt>
 <dd><p>Generate symbolic expressions representing compatibility constraints.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -1230,8 +1272,8 @@ the first-order expanded matrices.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id10">
-<span class="sig-name descname"><span class="pre">get_deviation_matrix_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ID</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/compatibilityLoopHandling.html#CompatibilityLoopHandling.get_deviation_matrix_by_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id10" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id9">
+<span class="sig-name descname"><span class="pre">get_deviation_matrix_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ID</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/compatibilityLoopHandling.html#CompatibilityLoopHandling.get_deviation_matrix_by_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id9" title="Link to this definition"></a></dt>
 <dd><p>Retrieve a deviation matrix by its identifier.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1250,8 +1292,8 @@ the first-order expanded matrices.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id11">
-<span class="sig-name descname"><span class="pre">get_gap_matrix_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ID</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/compatibilityLoopHandling.html#CompatibilityLoopHandling.get_gap_matrix_by_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id11" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id10">
+<span class="sig-name descname"><span class="pre">get_gap_matrix_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ID</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/compatibilityLoopHandling.html#CompatibilityLoopHandling.get_gap_matrix_by_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id10" title="Link to this definition"></a></dt>
 <dd><p>Retrieve a gap matrix by its identifier.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2137,8 +2179,8 @@ suitable for linear programming solvers like <cite>scipy.optimize.linprog</cite>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="id12">
-<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deviation_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/systemOfConstraintsAssemblyModel.html#SystemOfConstraintsAssemblyModel.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id12" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id11">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deviation_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/systemOfConstraintsAssemblyModel.html#SystemOfConstraintsAssemblyModel.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id11" title="Link to this definition"></a></dt>
 <dd><p>Generate input matrices and bounds for linear programming optimization.</p>
 <p>This method prepares inputs for <cite>scipy.optimize.linprog</cite> using the deviation variables
 and optionally provided bounds and objective coefficients.</p>

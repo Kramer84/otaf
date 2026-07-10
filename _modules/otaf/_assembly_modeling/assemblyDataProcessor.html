@@ -113,36 +113,31 @@
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">AssemblyDataProcessor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class to manage and validate mechanical system data for assembly representation.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Manage and validate mechanical system data for assemblies.</span>
 
-<span class="sd">    This class transforms a minimal representation of mechanical system data into a structured</span>
-<span class="sd">    format usable by the rest of the code. It ensures data integrity and validates compatibility</span>
-<span class="sd">    with defined requirements, including surfaces, points, interactions, and constraints.</span>
+<span class="sd">    This class transforms a minimal representation of mechanical</span>
+<span class="sd">    system data into a structured format usable by the rest of the</span>
+<span class="sd">    code. It ensures data integrity and validates compatibility with</span>
+<span class="sd">    defined requirements, including surfaces, points, interactions,</span>
+<span class="sd">    and constraints.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    system_data : dict, optional</span>
-<span class="sd">        A nested dictionary representing mechanical system data. If not provided,</span>
-<span class="sd">        an empty structure is initialized.</span>
+<span class="sd">        A nested dictionary representing mechanical system data. If</span>
+<span class="sd">        not provided, an empty structure is initialized (the</span>
+<span class="sd">        default is None).</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    system_data : dict</span>
 <span class="sd">        The validated and potentially augmented system data.</span>
-<span class="sd">    compatibility_loops_expanded : None or dict</span>
-<span class="sd">        Placeholder for compatibility loop expansions, initialized as None.</span>
+<span class="sd">    compatibility_loops_expanded : dict or None</span>
+<span class="sd">        Placeholder for compatibility loop expansions, initialized</span>
+<span class="sd">        as None.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize a `AssemblyDataProcessor` instance.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        system_data : dict, optional</span>
-<span class="sd">            The input system data dictionary. If None, an empty dictionary structure</span>
-<span class="sd">            is created and initialized.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize an AssemblyDataProcessor instance.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">system_data</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">deepcopy</span><span class="p">(</span><span class="n">system_data</span><span class="p">)</span> <span class="k">if</span> <span class="n">system_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_empty_system_data</span><span class="p">()</span>
         <span class="p">)</span>
@@ -151,9 +146,8 @@
 
 <div class="viewcode-block" id="AssemblyDataProcessor.__getitem__">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor.__getitem__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Retrieve data associated with a key from the system data.</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve data associated with a key from the system data.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -170,9 +164,8 @@
 
 <div class="viewcode-block" id="AssemblyDataProcessor.__setitem__">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor.__setitem__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set a value in the system data for a given key.</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set a value in the system data for a given key.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -186,9 +179,8 @@
 
 <div class="viewcode-block" id="AssemblyDataProcessor.__repr__">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor.__repr__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate a string representation of the system data.</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate a string representation of the system data.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -200,9 +192,8 @@
 
 <div class="viewcode-block" id="AssemblyDataProcessor.get_surface_points">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor.get_surface_points">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_surface_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Retrieve a copy of the points associated with a specific surface.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_surface_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve a copy of points associated with a specific surface.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -219,7 +210,7 @@
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        KeyError</span>
-<span class="sd">            If the specified part or surface ID is not found.</span>
+<span class="sd">            If the specified `part_id` or `surf_id` is not found.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">][</span><span class="n">part_id</span><span class="p">][</span><span class="n">surf_id</span><span class="p">]</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;POINTS&quot;</span><span class="p">,</span> <span class="p">{}))</span>
@@ -227,22 +218,35 @@
             <span class="k">raise</span> <span class="n">e</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_empty_system_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize an empty system data dictionary structure.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_empty_system_data</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize an empty system data dictionary structure.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        dict</span>
-<span class="sd">            A nested dictionary with keys for parts, loops, and global constraints.</span>
+<span class="sd">            A nested dictionary with keys for parts, loops, and global</span>
+<span class="sd">            constraints.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No system data dictionary wa passed, initializing empty one&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;PARTS&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;LOOPS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;COMPATIBILITY&quot;</span><span class="p">:</span> <span class="p">{}},</span> <span class="s2">&quot;GLOBAL_CONSTRAINTS&quot;</span><span class="p">:</span> <span class="s2">&quot;3D&quot;</span><span class="p">}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_is_single_feature_part</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Determine if a part is modeled with a single functional feature.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Determine if a part is modeled with a single functional feature.</span>
+
 <span class="sd">        Assumes feature keys are purely lowercase alphabetic strings.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        part_id : str</span>
+<span class="sd">            The ID of the part to inspect.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            ``True`` if the part has exactly one functional feature,</span>
+<span class="sd">            otherwise ``False``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">feature_keys</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_data</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">][</span><span class="n">part_id</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
@@ -252,12 +256,12 @@
 
 <div class="viewcode-block" id="AssemblyDataProcessor.validate_system_data_structure">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor.validate_system_data_structure">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">validate_system_data_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Validate the structure and integrity of the system data.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_system_data_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate the structure and integrity of the system data.</span>
 
-<span class="sd">        Ensures that the required keys and nested structures exist and conform to expected</span>
-<span class="sd">        standards, including part IDs, surface labels, types, points, interactions, and constraints.</span>
+<span class="sd">        Ensures that the required keys and nested structures exist and</span>
+<span class="sd">        conform to expected standards, including part IDs, surface</span>
+<span class="sd">        labels, types, points, interactions, and constraints.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -270,7 +274,7 @@
 <span class="sd">        otaf.exceptions.UnsupportedSurfaceTypeError</span>
 <span class="sd">            If the surface type is not supported.</span>
 <span class="sd">        otaf.exceptions.MissingSurfaceTypeKeyError</span>
-<span class="sd">            If a surface lacks a &quot;TYPE&quot; key.</span>
+<span class="sd">            If a surface lacks a ``&quot;TYPE&quot;`` key.</span>
 <span class="sd">        otaf.exceptions.MissingOriginPointError</span>
 <span class="sd">            If no origin point is defined for a surface.</span>
 <span class="sd">        otaf.exceptions.InvalidInteractionFormatError</span>
@@ -363,14 +367,18 @@
 
 <div class="viewcode-block" id="AssemblyDataProcessor.validate_point_dict">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor.validate_point_dict">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">validate_point_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Validate a dictionary of points for compliance with labeling, formatting, and uniqueness rules.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_point_dict</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">point_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate a dictionary of points for compliance with rules.</span>
+
+<span class="sd">        Checks labeling, formatting, and uniqueness rules.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        point_dict : Dict[str, Union[Tuple, numpy.ndarray]]</span>
-<span class="sd">            A dictionary where keys are point labels and values are their corresponding coordinates.</span>
+<span class="sd">        point_dict : dict</span>
+<span class="sd">            A dictionary where keys are point labels and values are</span>
+<span class="sd">            their corresponding coordinates.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -381,12 +389,15 @@
 <span class="sd">        otaf.exceptions.UniqueLabelSuffixError</span>
 <span class="sd">            If label suffixes are not unique across the points.</span>
 <span class="sd">        otaf.exceptions.NonUniqueCoordinatesError</span>
-<span class="sd">            If point coordinates are not unique. Includes information about duplicate points in the error message.</span>
+<span class="sd">            If point coordinates are not unique. Includes information</span>
+<span class="sd">            about duplicate points in the error message.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        - Labels must conform to the `SURF_POINT_PATTERN` defined in the `otaf.constants` module.</span>
-<span class="sd">        - Labels must have consistent prefixes (e.g., &quot;A&quot;, &quot;B&quot;, etc.) and unique numeric suffixes.</span>
+<span class="sd">        - Labels must conform to the ``SURF_POINT_PATTERN`` defined in</span>
+<span class="sd">          the ``otaf.constants`` module.</span>
+<span class="sd">        - Labels must have consistent prefixes (e.g., &quot;A&quot;, &quot;B&quot;, etc.)</span>
+<span class="sd">          and unique numeric suffixes.</span>
 <span class="sd">        - The coordinates for all points must be unique.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">label_array</span><span class="p">,</span> <span class="n">point_array</span> <span class="o">=</span> <span class="n">point_dict_to_arrays</span><span class="p">(</span><span class="n">point_dict</span><span class="p">)</span>
@@ -430,11 +441,12 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">part_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">surf_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">point_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">]],</span>
+        <span class="n">point_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]],</span>
         <span class="n">ignore_duplicates</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Add surface points to a specified part and surface, ensuring uniqueness and validating the input.</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add surface points to a specified part and surface.</span>
+
+<span class="sd">        Ensures uniqueness and validates the input point dictionary.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -442,21 +454,25 @@
 <span class="sd">            The ID of the part to which the surface belongs.</span>
 <span class="sd">        surf_id : str</span>
 <span class="sd">            The ID of the surface to which the points will be added.</span>
-<span class="sd">        point_dict : Dict[str, Union[Tuple, numpy.ndarray, List]]</span>
-<span class="sd">            A dictionary where keys are point labels and values are their corresponding coordinates.</span>
+<span class="sd">        point_dict : dict</span>
+<span class="sd">            A dictionary where keys are point labels and values are</span>
+<span class="sd">            their corresponding coordinates.</span>
 <span class="sd">        ignore_duplicates : bool, optional</span>
-<span class="sd">            If True, ignore duplicate points that match exactly with existing points (default is False).</span>
+<span class="sd">            If ``True``, ignore duplicate points that match exactly</span>
+<span class="sd">            with existing points (the default is False).</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        otaf.exceptions.PartNotFoundError</span>
-<span class="sd">            If the specified part ID is not found in the system data.</span>
+<span class="sd">            If the specified `part_id` is not found in the system data.</span>
 <span class="sd">        otaf.exceptions.SurfaceNotFoundError</span>
-<span class="sd">            If the specified surface ID is not found in the given part.</span>
+<span class="sd">            If the specified `surf_id` is not found in the given part.</span>
 <span class="sd">        otaf.exceptions.DuplicatePointError</span>
-<span class="sd">            If a point with the same label or coordinates already exists and duplicates are not ignored.</span>
+<span class="sd">            If a point with the same label or coordinates already</span>
+<span class="sd">            exists and duplicates are not ignored.</span>
 <span class="sd">        otaf.exceptions.LabelPatternError</span>
-<span class="sd">            If any labels in the point dictionary do not match the required pattern.</span>
+<span class="sd">            If any labels in the point dictionary do not match the</span>
+<span class="sd">            required pattern.</span>
 <span class="sd">        otaf.exceptions.LabelPrefixError</span>
 <span class="sd">            If label prefixes are inconsistent across the points.</span>
 <span class="sd">        otaf.exceptions.UniqueLabelSuffixError</span>
@@ -466,8 +482,11 @@
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        - Surface points are stored under the &quot;POINTS&quot; key of the surface&#39;s dictionary.</span>
-<span class="sd">        - If the label of a point matches the origin pattern (`SURF_ORIGIN_PATTERN`), the point is set as the surface&#39;s origin.</span>
+<span class="sd">        - Surface points are stored under the ``&quot;POINTS&quot;`` key of the</span>
+<span class="sd">          surface&#39;s dictionary.</span>
+<span class="sd">        - If the label of a point matches the origin pattern</span>
+<span class="sd">          (``SURF_ORIGIN_PATTERN``), the point is set as the</span>
+<span class="sd">          surface&#39;s origin.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">part_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_data</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">PartNotFoundError</span><span class="p">(</span><span class="n">part_id</span><span class="p">)</span>
@@ -517,11 +536,11 @@
 <div class="viewcode-block" id="AssemblyDataProcessor.generate_points_for_surface">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor.generate_points_for_surface">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate_points_for_surface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate points for a surface based on its type and characteristics.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate points for a surface based on its type.</span>
 
-<span class="sd">        This method determines the surface type and dispatches the task to the appropriate</span>
-<span class="sd">        surface-specific point generation method.</span>
+<span class="sd">        This method determines the surface type and dispatches the</span>
+<span class="sd">        task to the appropriate surface-specific point generation</span>
+<span class="sd">        method.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -554,22 +573,24 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_generate_points_for_plane</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate points for a plane surface.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate points for a plane surface.</span>
 
-<span class="sd">        Handles surfaces defined by contours in the global frame or by specified extents.</span>
+<span class="sd">        Handles surfaces defined by contours in the global frame or by</span>
+<span class="sd">        specified extents.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        part_id : str</span>
 <span class="sd">            The ID of the part containing the surface.</span>
 <span class="sd">        surf_id : str</span>
-<span class="sd">            The ID of the plane surface for which points will be generated.</span>
+<span class="sd">            The ID of the plane surface for which points will be</span>
+<span class="sd">            generated.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        otaf.exceptions.GeometricConditionError</span>
-<span class="sd">            If the points in the &quot;CONTOUR_GLOBAL&quot; data are not coplanar.</span>
+<span class="sd">            If the points in the ``&quot;CONTOUR_GLOBAL&quot;`` data are not</span>
+<span class="sd">            coplanar.</span>
 <span class="sd">        otaf.exceptions.DuplicatePointError</span>
 <span class="sd">            If duplicate points are detected during addition.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -600,17 +621,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_surface_points</span><span class="p">(</span><span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">,</span> <span class="n">point_dict</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_generate_points_for_cylinder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate points for a cylindrical surface.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate points for a cylindrical surface.</span>
 
-<span class="sd">        Handles surfaces defined by contours in the global frame or by specified extents.</span>
+<span class="sd">        Handles surfaces defined by contours in the global frame or by</span>
+<span class="sd">        specified extents.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        part_id : str</span>
 <span class="sd">            The ID of the part containing the surface.</span>
 <span class="sd">        surf_id : str</span>
-<span class="sd">            The ID of the cylindrical surface for which points will be generated.</span>
+<span class="sd">            The ID of the cylindrical surface for which points will be</span>
+<span class="sd">            generated.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -633,16 +655,11 @@
 <div class="viewcode-block" id="AssemblyDataProcessor.generate_expanded_loops">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor.generate_expanded_loops">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate_expanded_loops</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate the full representation of compatibility loops and store them as an attribute.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate full representation of compatibility loops.</span>
 
-<span class="sd">        This method processes the compact descriptions of compatibility loops in the system data</span>
-<span class="sd">        and expands them into their detailed forms.</span>
-
-<span class="sd">        Attributes</span>
-<span class="sd">        ----------</span>
-<span class="sd">        compatibility_loops_expanded : dict</span>
-<span class="sd">            A dictionary where keys are loop names and values are the fully expanded loop strings.</span>
+<span class="sd">        This method processes the compact descriptions of compatibility</span>
+<span class="sd">        loops in the system data and expands them into their detailed</span>
+<span class="sd">        forms, storing them in `compatibility_loops_expanded`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">compatibility_loops_expanded</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">loop_name</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expand_loop</span><span class="p">(</span><span class="n">compact_loop_str</span><span class="p">)</span>
@@ -651,11 +668,12 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_expand_loop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compact_loop_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Expand a compact loop string into its full representation.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Expand a compact loop string into its full representation.</span>
 
-<span class="sd">        The compact loop string describes a sequence of transformations and deviations in a mechanical system.</span>
-<span class="sd">        This method validates and processes the elements of the loop and generates the expanded sequence.</span>
+<span class="sd">        The compact loop string describes a sequence of transformations</span>
+<span class="sd">        and deviations in a mechanical system. This method validates</span>
+<span class="sd">        and processes the elements of the loop and generates the</span>
+<span class="sd">        expanded sequence.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -670,7 +688,8 @@
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
-<span class="sd">            If any loop element is invalid or if the loop order is inconsistent.</span>
+<span class="sd">            If any loop element is invalid or if the loop order is</span>
+<span class="sd">            inconsistent.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">split_compact_loop</span> <span class="o">=</span> <span class="n">compact_loop_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; -&gt; &quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">loop_element</span> <span class="ow">in</span> <span class="n">split_compact_loop</span><span class="p">:</span>
@@ -695,8 +714,7 @@
         <span class="k">return</span> <span class="s2">&quot; -&gt; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">expanded_loop</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate_loop_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loop_element</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Validate an individual loop element against the expected format.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate an individual loop element against the expected format.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -711,22 +729,26 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">otaf_constants</span><span class="o">.</span><span class="n">LOOP_ELEMENT_PATTERN</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">loop_element</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid loop element: </span><span class="si">{</span><span class="n">loop_element</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_check_loop_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_surf_point</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Check the order of loop elements to ensure the first transformation is valid.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_loop_order</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">part_surf_point</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check order of loop elements to ensure validation.</span>
 
-<span class="sd">        This method verifies whether the loop starts and ends on the same part</span>
-<span class="sd">        based on whether the first transformation is inter-part or intra-part.</span>
+<span class="sd">        This method verifies whether the loop starts and ends on the</span>
+<span class="sd">        same part based on whether the first transformation is</span>
+<span class="sd">        inter-part or intra-part.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        part_surf_point : List[Tuple[str, str, str]]</span>
-<span class="sd">            A list of tuples describing part-surface-point combinations in the loop.</span>
+<span class="sd">        part_surf_point : list of tuple of str</span>
+<span class="sd">            A list of tuples describing part-surface-point</span>
+<span class="sd">            combinations in the loop.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        bool</span>
-<span class="sd">            True if the first transformation is inter-part, False otherwise.</span>
+<span class="sd">            ``True`` if the first transformation is inter-part,</span>
+<span class="sd">            ``False`` otherwise.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -746,23 +768,26 @@
                 <span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_expanded_loop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_surf_point</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate the main sequence of the expanded loop, omitting defect</span>
-<span class="sd">        transformations for single-feature parts.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_expanded_loop</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">part_surf_point</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate the main sequence of the expanded loop.</span>
 
-<span class="sd">        This method processes the list of part-surface-point combinations to create the expanded loop,</span>
-<span class="sd">        excluding the closure.</span>
+<span class="sd">        Omits defect transformations for single-feature parts. This</span>
+<span class="sd">        method processes the list of part-surface-point combinations</span>
+<span class="sd">        to create the expanded loop, excluding the closure.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        part_surf_point : List[Tuple[str, str, str]]</span>
-<span class="sd">            A list of tuples describing part-surface-point combinations in the loop.</span>
+<span class="sd">        part_surf_point : list of tuple of str</span>
+<span class="sd">            A list of tuples describing part-surface-point</span>
+<span class="sd">            combinations in the loop.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        List[str]</span>
-<span class="sd">            A list of strings representing the main sequence of the expanded loop.</span>
+<span class="sd">        list of str</span>
+<span class="sd">            A list of strings representing the main sequence of the</span>
+<span class="sd">            expanded loop.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">sequence</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="p">(</span><span class="n">ps</span><span class="p">,</span> <span class="n">ss</span><span class="p">,</span> <span class="n">pts</span><span class="p">),</span> <span class="p">(</span><span class="n">pe</span><span class="p">,</span> <span class="n">se</span><span class="p">,</span> <span class="n">pte</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">part_surf_point</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">part_surf_point</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
@@ -779,25 +804,28 @@
         <span class="k">return</span> <span class="n">sequence</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_handle_loop_closure</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">part_surf_point</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="n">first_inter</span><span class="p">:</span> <span class="nb">bool</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">part_surf_point</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span>
+        <span class="n">first_inter</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Handle the special case of loop closure in an expanded loop.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle loop closure in an expanded loop.</span>
 
-<span class="sd">        This method generates the closure portion of the loop based on whether the first transformation</span>
-<span class="sd">        is inter-part or intra-part.</span>
+<span class="sd">        This method generates the closure portion of the loop based on</span>
+<span class="sd">        whether the first transformation is inter-part or intra-part.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        part_surf_point : List[Tuple[str, str, str]]</span>
-<span class="sd">            A list of tuples describing part-surface-point combinations in the loop.</span>
+<span class="sd">        part_surf_point : list of tuple of str</span>
+<span class="sd">            A list of tuples describing part-surface-point</span>
+<span class="sd">            combinations in the loop.</span>
 <span class="sd">        first_inter : bool</span>
 <span class="sd">            Indicates whether the first transformation is inter-part.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        List[str]</span>
-<span class="sd">            A list of strings representing the closure portion of the expanded loop.</span>
+<span class="sd">        list of str</span>
+<span class="sd">            A list of strings representing the closure portion of the</span>
+<span class="sd">            expanded loop.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">p_start</span><span class="p">,</span> <span class="n">s_start</span><span class="p">,</span> <span class="n">pt_start</span> <span class="o">=</span> <span class="n">part_surf_point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">p_end</span><span class="p">,</span> <span class="n">s_end</span><span class="p">,</span> <span class="n">pt_end</span> <span class="o">=</span> <span class="n">part_surf_point</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
