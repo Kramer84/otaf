@@ -107,25 +107,48 @@
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.DeviationMatrix">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">DeviationMatrix</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Represents a deviation matrix used in structural analysis.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a deviation matrix used in structural analysis.</span>
 
-<span class="sd">    A deviation matrix defines deviations in translation and rotation for parts and assemblies.</span>
-<span class="sd">    It can be compared to a small deviation torsor.</span>
+<span class="sd">    A deviation matrix defines deviations in translation and rotation</span>
+<span class="sd">    for parts and assemblies. It can be compared to a small deviation</span>
+<span class="sd">    torsor.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    index : int, optional</span>
-<span class="sd">        An index used to differentiate variable names. The same index can be used multiple times.</span>
+<span class="sd">        An index used to differentiate variable names. The same index</span>
+<span class="sd">        can be used multiple times (the default is -1).</span>
 <span class="sd">    translations : str, optional</span>
-<span class="sd">        Degrees of freedom for translation (&#39;x&#39;, &#39;y&#39;, &#39;z&#39;). Example: &quot;xyz&quot; for all three degrees.</span>
+<span class="sd">        Degrees of freedom for translation (&#39;x&#39;, &#39;y&#39;, &#39;z&#39;). Example:</span>
+<span class="sd">        &quot;xyz&quot; for all three degrees (the default is &quot;xyz&quot;).</span>
 <span class="sd">    rotations : str, optional</span>
-<span class="sd">        Degrees of freedom for rotation (&#39;x&#39;, &#39;y&#39;, &#39;z&#39;).</span>
+<span class="sd">        Degrees of freedom for rotation (&#39;x&#39;, &#39;y&#39;, &#39;z&#39;) (the default</span>
+<span class="sd">        is &quot;xyz&quot;).</span>
 <span class="sd">    inverse : bool, optional</span>
-<span class="sd">        Indicates whether the matrix represents deviations from nominal to real (True) or vice versa (False).</span>
-<span class="sd">        This affects the signs of the matrices and is necessary if a matrix is used in two directions.</span>
+<span class="sd">        Indicates whether the matrix represents deviations from</span>
+<span class="sd">        nominal to real (True) or vice versa (False) (the default</span>
+<span class="sd">        is False).</span>
 <span class="sd">    name : str, optional</span>
-<span class="sd">        Name of the matrix for identification (default is an empty string).</span>
+<span class="sd">        Name of the matrix for identification (the default is &quot;&quot;).</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ID : int</span>
+<span class="sd">        An index used to differentiate variable names.</span>
+<span class="sd">    TYPE : str</span>
+<span class="sd">        The type identifier, always &quot;D&quot;.</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Name of the matrix for identification.</span>
+<span class="sd">    inverse : bool</span>
+<span class="sd">        Indicates whether the matrix represents deviations from nominal</span>
+<span class="sd">        to real.</span>
+<span class="sd">    SE3_basis_indices : list of int</span>
+<span class="sd">        The SE(3) basis indices matching the active degrees</span>
+<span class="sd">        of freedom.</span>
+<span class="sd">    variables : list of sympy.Symbol</span>
+<span class="sd">        The symbolic variables representing the degrees of freedom.</span>
+<span class="sd">    n_variables : int</span>
+<span class="sd">        The total number of symbolic variables initialized.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
@@ -136,28 +159,7 @@
         <span class="n">inverse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize a DeviationMatrix instance.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        index : int, optional</span>
-<span class="sd">            An index used to differentiate variable names. The same index can be used multiple times (default is -1).</span>
-<span class="sd">        translations : str, optional</span>
-<span class="sd">            Degrees of freedom for translation (&#39;x&#39;, &#39;y&#39;, &#39;z&#39;). Example: &quot;xyz&quot; for all three degrees (default is &quot;xyz&quot;).</span>
-<span class="sd">        rotations : str, optional</span>
-<span class="sd">            Degrees of freedom for rotation (&#39;x&#39;, &#39;y&#39;, &#39;z&#39;) (default is &quot;xyz&quot;).</span>
-<span class="sd">        inverse : bool, optional</span>
-<span class="sd">            Indicates whether the matrix represents deviations from nominal to real (True) or vice versa (False).</span>
-<span class="sd">            This affects the signs of the matrices (default is False).</span>
-<span class="sd">        name : str, optional</span>
-<span class="sd">            Name of the matrix for identification (default is an empty string).</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        AssertionError</span>
-<span class="sd">            If the `index` is not an integer.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize a DeviationMatrix instance.&quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;Initializing DeviationMatrix with index: </span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">, translations: </span><span class="si">{</span><span class="n">translations</span><span class="si">}</span><span class="s2">, rotations: </span><span class="si">{</span><span class="n">rotations</span><span class="si">}</span><span class="s2">, inverse: </span><span class="si">{</span><span class="n">inverse</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
@@ -176,9 +178,8 @@
 
 <div class="viewcode-block" id="DeviationMatrix.__repr__">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.DeviationMatrix.__repr__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate a string representation of the DeviationMatrix.</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A string representation of the DeviationMatrix.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -189,16 +190,17 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;DeviationMatrix(index=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="si">}</span><span class="s2">, translations=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_translations</span><span class="si">}</span><span class="s2">&#39;, rotations=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_rotations</span><span class="si">}</span><span class="s2">&#39;, inverse=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">inverse</span><span class="si">}</span><span class="s2">, name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">)&quot;</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_basis_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize the symbolic basis variables for the deviation matrix.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_basis_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the symbolic basis variables.</span>
 
-<span class="sd">        This method sets up the variables based on the specified translations and rotations.</span>
-<span class="sd">        It uses the SE(3) basis indices defined in `otaf.constants.BASIS_DICT`.</span>
+<span class="sd">        This method sets up the variables based on the specified</span>
+<span class="sd">        translations and rotations. It uses the SE(3) basis indices</span>
+<span class="sd">        defined in ``otaf.constants.BASIS_DICT``.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        The variables are stored as symbolic `sympy.Symbol` instances and indexed by the provided `index`.</span>
+<span class="sd">        The variables are stored as symbolic ``sympy.Symbol``</span>
+<span class="sd">        instances and indexed by ``self.ID``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Initializing basis variables.&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">SE3_basis_indices</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
@@ -222,17 +224,18 @@
 
 <div class="viewcode-block" id="DeviationMatrix.get_inverse">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.DeviationMatrix.get_inverse">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate the inverse of the current DeviationMatrix.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;DeviationMatrix&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate the inverse of the current DeviationMatrix.</span>
 
-<span class="sd">        The inverse matrix has the same degrees of freedom (translations and rotations)</span>
-<span class="sd">        but with reversed directionality.</span>
+<span class="sd">        The inverse matrix has the same degrees of freedom</span>
+<span class="sd">        (translations and rotations) but with reversed</span>
+<span class="sd">        directionality.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        DeviationMatrix</span>
-<span class="sd">            A new instance of `DeviationMatrix` representing the inverse of the current matrix.</span>
+<span class="sd">            A new instance of ``DeviationMatrix`` representing the</span>
+<span class="sd">            inverse of the current matrix.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[Type: &#39;D&#39;, ID: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="si">}</span><span class="s2">] Generating inverse DeviationMatrix.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">DeviationMatrix</span><span class="p">(</span>
@@ -247,16 +250,16 @@
 <div class="viewcode-block" id="DeviationMatrix.get_variables">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.DeviationMatrix.get_variables">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Retrieve the symbolic variables associated with the deviation matrix.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve symbolic variables associated with the matrix.</span>
 
-<span class="sd">        These variables correspond to the degrees of freedom in translations and rotations,</span>
-<span class="sd">        defined during initialization.</span>
+<span class="sd">        These variables correspond to the degrees of freedom in</span>
+<span class="sd">        translations and rotations, defined during initialization.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        List[sympy.Symbol]</span>
-<span class="sd">            A list of symbolic variables representing the degrees of freedom.</span>
+<span class="sd">        list of sympy.Symbol</span>
+<span class="sd">            A list of symbolic variables representing the degrees of</span>
+<span class="sd">            freedom.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[Type: &#39;D&#39;, ID: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="si">}</span><span class="s2">] Retrieving variables.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span></div>
@@ -265,16 +268,16 @@
 <div class="viewcode-block" id="DeviationMatrix.get_matrix">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.DeviationMatrix.get_matrix">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate the SE(3) matrix for the deviation matrix.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate the SE(3) matrix for the deviation matrix.</span>
 
-<span class="sd">        The SE(3) matrix is constructed using the indices of the degrees of freedom specified</span>
-<span class="sd">        during initialization.</span>
+<span class="sd">        The SE(3) matrix is constructed using the indices of the</span>
+<span class="sd">        degrees of freedom specified during initialization.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        List[sympy.MatrixBase]</span>
-<span class="sd">            A list of symbolic matrices corresponding to the SE(3) basis elements.</span>
+<span class="sd">        list of sympy.MatrixBase</span>
+<span class="sd">            A list of symbolic matrices corresponding to the SE(3)</span>
+<span class="sd">            basis elements.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[Type: &#39;D&#39;, ID: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="si">}</span><span class="s2">] Generating SE3 matrix.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">get_SE3_matrices_from_indices</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SE3_basis_indices</span><span class="p">)</span></div>
@@ -283,16 +286,17 @@
 <div class="viewcode-block" id="DeviationMatrix.get_matrix_inverse">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.DeviationMatrix.get_matrix_inverse">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_matrix_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate the inverse SE(3) matrix for the deviation matrix.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate the inverse SE(3) matrix for the deviation matrix.</span>
 
-<span class="sd">        The inverse SE(3) matrix is constructed by reversing the directionality</span>
-<span class="sd">        of the degrees of freedom (i.e., multiplying by -1).</span>
+<span class="sd">        The inverse SE(3) matrix is constructed by reversing the</span>
+<span class="sd">        directionality of the degrees of freedom (i.e., multiplying</span>
+<span class="sd">        by ``-1``).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        List[sympy.MatrixBase]</span>
-<span class="sd">            A list of symbolic matrices corresponding to the inverse SE(3) basis elements.</span>
+<span class="sd">        list of sympy.MatrixBase</span>
+<span class="sd">            A list of symbolic matrices corresponding to the inverse</span>
+<span class="sd">            SE(3) basis elements.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[Type: &#39;D&#39;, ID: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="si">}</span><span class="s2">] Generating inverse SE3 matrix.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">get_SE3_matrices_from_indices</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SE3_basis_indices</span><span class="p">,</span> <span class="n">multiplier</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
@@ -304,23 +308,47 @@
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.GapMatrix">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">GapMatrix</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Represents a gap matrix used in structural analysis.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a gap matrix used in structural analysis.</span>
 
-<span class="sd">    A gap matrix defines gaps or clearances in translation and rotation for parts and assemblies.</span>
+<span class="sd">    A gap matrix defines gaps or clearances in translation and</span>
+<span class="sd">    rotation for parts and assemblies.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    index : int, optional</span>
-<span class="sd">        An index used to differentiate variable names. The same index can be used multiple times (default is -1).</span>
+<span class="sd">        An index used to differentiate variable names. The same index</span>
+<span class="sd">        can be used multiple times (the default is -1).</span>
 <span class="sd">    translations_blocked : str, optional</span>
-<span class="sd">        Degrees of freedom for translation that are blocked (&#39;x&#39;, &#39;y&#39;, &#39;z&#39;) (default is an empty string).</span>
+<span class="sd">        Degrees of freedom for translation that are blocked (&#39;x&#39;,</span>
+<span class="sd">        &#39;y&#39;, &#39;z&#39;) (the default is &quot;&quot;).</span>
 <span class="sd">    rotations_blocked : str, optional</span>
-<span class="sd">        Degrees of freedom for rotation that are blocked (&#39;x&#39;, &#39;y&#39;, &#39;z&#39;) (default is an empty string).</span>
+<span class="sd">        Degrees of freedom for rotation that are blocked (&#39;x&#39;, &#39;y&#39;,</span>
+<span class="sd">        &#39;z&#39;) (the default is &quot;&quot;).</span>
 <span class="sd">    inverse : bool, optional</span>
-<span class="sd">        Indicates whether the matrix represents gaps or clearances (True) or blocked degrees of freedom (False).</span>
+<span class="sd">        Indicates whether the matrix represents gaps or clearances</span>
+<span class="sd">        (True) or blocked degrees of freedom (False) (the default</span>
+<span class="sd">        is False).</span>
 <span class="sd">    name : str, optional</span>
-<span class="sd">        Name of the matrix for identification (default is an empty string).</span>
+<span class="sd">        Name of the matrix for identification (the default is &quot;&quot;).</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ID : int</span>
+<span class="sd">        An index used to differentiate variable names.</span>
+<span class="sd">    TYPE : str</span>
+<span class="sd">        The type identifier, always &quot;G&quot;.</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Name of the matrix for identification.</span>
+<span class="sd">    inverse : bool</span>
+<span class="sd">        Indicates whether the matrix represents gaps or clearances.</span>
+<span class="sd">    SE3_basis_indices : list of int</span>
+<span class="sd">        The SE(3) basis indices matching the unblocked degrees of</span>
+<span class="sd">        freedom.</span>
+<span class="sd">    variables : list of sympy.Symbol</span>
+<span class="sd">        The symbolic variables representing the unblocked degrees of</span>
+<span class="sd">        freedom.</span>
+<span class="sd">    n_variables : int</span>
+<span class="sd">        The total number of symbolic variables initialized.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
@@ -330,28 +358,8 @@
         <span class="n">rotations_blocked</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="n">inverse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-    <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize a GapMatrix instance.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        index : int, optional</span>
-<span class="sd">            An index used to differentiate variable names. The same index can be used multiple times (default is -1).</span>
-<span class="sd">        translations_blocked : str, optional</span>
-<span class="sd">            Degrees of freedom for translation that are blocked (&#39;x&#39;, &#39;y&#39;, &#39;z&#39;) (default is an empty string).</span>
-<span class="sd">        rotations_blocked : str, optional</span>
-<span class="sd">            Degrees of freedom for rotation that are blocked (&#39;x&#39;, &#39;y&#39;, &#39;z&#39;) (default is an empty string).</span>
-<span class="sd">        inverse : bool, optional</span>
-<span class="sd">            Indicates whether the matrix represents gaps or clearances (True) or blocked degrees of freedom (False).</span>
-<span class="sd">        name : str, optional</span>
-<span class="sd">            Name of the matrix for identification (default is an empty string).</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        AssertionError</span>
-<span class="sd">            If the `index` is not an integer.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize a GapMatrix instance.&quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;[Type: &#39;G&#39;, ID: </span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">] Initializing GapMatrix with blocked translations: </span><span class="si">{</span><span class="n">translations_blocked</span><span class="si">}</span><span class="s2">, blocked rotations: </span><span class="si">{</span><span class="n">rotations_blocked</span><span class="si">}</span><span class="s2">, inverse: </span><span class="si">{</span><span class="n">inverse</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
@@ -370,16 +378,17 @@
             <span class="sa">f</span><span class="s2">&quot;[Type: &#39;G&#39;, ID: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="si">}</span><span class="s2">] Initialized </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">)</span><span class="si">}</span><span class="s2"> variables for the gap matrix.&quot;</span>
         <span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_basis_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize the symbolic basis variables for the gap matrix.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_basis_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the symbolic basis variables for the gap matrix.</span>
 
-<span class="sd">        This method sets up variables based on the degrees of freedom that are not blocked</span>
-<span class="sd">        in translations and rotations, as defined during initialization.</span>
+<span class="sd">        This method sets up variables based on the degrees of freedom</span>
+<span class="sd">        that are not blocked in translations and rotations, as defined</span>
+<span class="sd">        during initialization.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        The variables are stored as symbolic `sympy.Symbol` instances and indexed by the provided `index`.</span>
+<span class="sd">        The variables are stored as symbolic ``sympy.Symbol``</span>
+<span class="sd">        instances and indexed by ``self.ID``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">SE3_basis_indices</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
@@ -403,9 +412,8 @@
 
 <div class="viewcode-block" id="GapMatrix.__repr__">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.GapMatrix.__repr__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate a string representation of the GapMatrix.</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A string representation of the GapMatrix.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -417,17 +425,18 @@
 
 <div class="viewcode-block" id="GapMatrix.get_inverse">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.GapMatrix.get_inverse">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate the inverse of the current GapMatrix.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;GapMatrix&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate the inverse of the current GapMatrix.</span>
 
-<span class="sd">        The inverse matrix has the same blocked degrees of freedom for translations and rotations</span>
-<span class="sd">        but reverses the directionality (gaps versus clearances).</span>
+<span class="sd">        The inverse matrix has the same blocked degrees of freedom for</span>
+<span class="sd">        translations and rotations but reverses the directionality</span>
+<span class="sd">        (gaps versus clearances).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        GapMatrix</span>
-<span class="sd">            A new instance of `GapMatrix` representing the inverse of the current matrix.</span>
+<span class="sd">            A new instance of ``GapMatrix`` representing the inverse</span>
+<span class="sd">            of the current matrix.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[Type: &#39;G&#39;, ID: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="si">}</span><span class="s2">] Generating inverse DeviationMatrix.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">GapMatrix</span><span class="p">(</span>
@@ -442,16 +451,17 @@
 <div class="viewcode-block" id="GapMatrix.get_variables">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.GapMatrix.get_variables">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Retrieve the symbolic variables associated with the gap matrix.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve symbolic variables associated with the gap matrix.</span>
 
-<span class="sd">        These variables correspond to the degrees of freedom in translations and rotations</span>
-<span class="sd">        that are not blocked, as defined during initialization.</span>
+<span class="sd">        These variables correspond to the degrees of freedom in</span>
+<span class="sd">        translations and rotations that are not blocked, as defined</span>
+<span class="sd">        during initialization.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        List[sympy.Symbol]</span>
-<span class="sd">            A list of symbolic variables representing the degrees of freedom.</span>
+<span class="sd">        list of sympy.Symbol</span>
+<span class="sd">            A list of symbolic variables representing the degrees of</span>
+<span class="sd">            freedom.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[Type: &#39;G&#39;, ID: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="si">}</span><span class="s2">] Retrieving variables.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span></div>
@@ -460,16 +470,17 @@
 <div class="viewcode-block" id="GapMatrix.get_matrix">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.GapMatrix.get_matrix">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate the SE(3) matrix for the gap matrix.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate the SE(3) matrix for the gap matrix.</span>
 
-<span class="sd">        The SE(3) matrix is constructed using the indices of the degrees of freedom</span>
-<span class="sd">        that are not blocked, specified during initialization.</span>
+<span class="sd">        The SE(3) matrix is constructed using the indices of the</span>
+<span class="sd">        degrees of freedom that are not blocked, specified during</span>
+<span class="sd">        initialization.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        List[sympy.MatrixBase]</span>
-<span class="sd">            A list of symbolic matrices corresponding to the SE(3) basis elements.</span>
+<span class="sd">        list of sympy.MatrixBase</span>
+<span class="sd">            A list of symbolic matrices corresponding to the SE(3)</span>
+<span class="sd">            basis elements.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[Type: &#39;G&#39;, ID: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="si">}</span><span class="s2">] Generating SE3 matrix.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">get_SE3_matrices_from_indices</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SE3_basis_indices</span><span class="p">)</span></div>
@@ -478,16 +489,17 @@
 <div class="viewcode-block" id="GapMatrix.get_matrix_inverse">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.GapMatrix.get_matrix_inverse">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_matrix_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate the inverse SE(3) matrix for the gap matrix.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate the inverse SE(3) matrix for the gap matrix.</span>
 
-<span class="sd">        The inverse SE(3) matrix is constructed by reversing the directionality of the degrees of freedom</span>
-<span class="sd">        (i.e., multiplying by -1).</span>
+<span class="sd">        The inverse SE(3) matrix is constructed by reversing the</span>
+<span class="sd">        directionality of the degrees of freedom (i.e., multiplying</span>
+<span class="sd">        by ``-1``).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        List[sympy.MatrixBase]</span>
-<span class="sd">            A list of symbolic matrices corresponding to the inverse SE(3) basis elements.</span>
+<span class="sd">        list of sympy.MatrixBase</span>
+<span class="sd">            A list of symbolic matrices corresponding to the inverse</span>
+<span class="sd">            SE(3) basis elements.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[Type: &#39;G&#39;, ID: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="si">}</span><span class="s2">] Generating inverse SE3 matrix.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">get_SE3_matrices_from_indices</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SE3_basis_indices</span><span class="p">,</span> <span class="n">multiplier</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
@@ -499,28 +511,37 @@
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.TransformationMatrix">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">TransformationMatrix</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class representing transformation matrices within the nominal geometry of a part.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Transformation matrices within the nominal geometry of a part.</span>
 
-<span class="sd">    Transformation matrices define the transformation between two coordinate systems.</span>
+<span class="sd">    Transformation matrices define the transformation between two</span>
+<span class="sd">    coordinate systems.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    index : int, optional</span>
-<span class="sd">        An index used to differentiate transformation matrices. The same index can be used multiple times (default is -1).</span>
+<span class="sd">        An index used to differentiate transformation matrices. The same</span>
+<span class="sd">        index can be used multiple times (the default is -1).</span>
 <span class="sd">    initial : np.ndarray, optional</span>
-<span class="sd">        The initial 4x4 matrix representing the initial coordinate system (default is the identity matrix).</span>
+<span class="sd">        The initial 4x4 matrix representing the initial coordinate</span>
+<span class="sd">        system (the default is the identity matrix).</span>
 <span class="sd">    final : np.ndarray, optional</span>
-<span class="sd">        The final 4x4 matrix representing the final coordinate system (default is the identity matrix).</span>
+<span class="sd">        The final 4x4 matrix representing the final coordinate</span>
+<span class="sd">        system (the default is the identity matrix).</span>
 <span class="sd">    name : str, optional</span>
-<span class="sd">        Name of the transformation matrix for identification (default is an empty string).</span>
-<span class="sd">    matrix : Optional[Union[np.ndarray, sympy.MatrixBase]], optional</span>
-<span class="sd">        The explicit transformation matrix. If provided, it overrides `initial` and `final` matrices (default is None).</span>
+<span class="sd">        Name of the transformation matrix for identification (the default</span>
+<span class="sd">        is &quot;&quot;).</span>
+<span class="sd">    matrix : np.ndarray or sympy.MatrixBase, optional</span>
+<span class="sd">        The explicit transformation matrix. If provided, it overrides</span>
+<span class="sd">        `initial` and `final` matrices (the default is ``None``).</span>
 
-<span class="sd">    Raises</span>
-<span class="sd">    ------</span>
-<span class="sd">    AssertionError</span>
-<span class="sd">        If the provided matrix is not a valid affine transformation matrix.</span>
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ID : int</span>
+<span class="sd">        An index used to differentiate transformation matrices.</span>
+<span class="sd">    TYPE : str</span>
+<span class="sd">        The type identifier, always &quot;T&quot;.</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Name of the transformation matrix for identification.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
@@ -530,28 +551,8 @@
         <span class="n">final</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="n">matrix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize a TransformationMatrix instance.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        index : int, optional</span>
-<span class="sd">            An index used to differentiate transformation matrices. The same index can be used multiple times (default is -1).</span>
-<span class="sd">        initial : np.ndarray, optional</span>
-<span class="sd">            The initial 4x4 matrix representing the initial coordinate system (default is the identity matrix).</span>
-<span class="sd">        final : np.ndarray, optional</span>
-<span class="sd">            The final 4x4 matrix representing the final coordinate system (default is the identity matrix).</span>
-<span class="sd">        name : str, optional</span>
-<span class="sd">            Name of the transformation matrix for identification (default is an empty string).</span>
-<span class="sd">        matrix : Optional[Union[np.ndarray, sympy.MatrixBase]], optional</span>
-<span class="sd">            The explicit transformation matrix. If provided, it overrides `initial` and `final` matrices (default is None).</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        AssertionError</span>
-<span class="sd">            If the provided matrix is not a valid affine transformation matrix.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize a TransformationMatrix instance.&quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[Type: &#39;T&#39;, ID: </span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">] Initializing TransformationMatrix.&quot;</span><span class="p">)</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span> <span class="s2">&quot;Wrong index, check class init parameters&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ID</span> <span class="o">=</span> <span class="n">index</span>
@@ -570,29 +571,30 @@
 
 <div class="viewcode-block" id="TransformationMatrix.__repr__">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.TransformationMatrix.__repr__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate a string representation of the TransformationMatrix.</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A string representation of the TransformationMatrix.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        str</span>
-<span class="sd">            String representation of the TransformationMatrix instance, including its index and matrix values.</span>
+<span class="sd">            String representation of the TransformationMatrix instance,</span>
+<span class="sd">            including its index and matrix values.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;TransformationMatrix with index </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="si">}</span><span class="s2"> and values:</span><span class="se">\n</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_matrix</span><span class="p">()</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span><span class="si">}</span><span class="s2"> and name : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_check_affine_validity_and_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Validate the affine transformation matrix and compute its inverse.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_affine_validity_and_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate the affine transformation matrix and compute its inverse.</span>
 
-<span class="sd">        Ensures the provided or calculated transformation matrix is a valid affine transformation,</span>
-<span class="sd">        and verifies the computed inverse matrix for consistency.</span>
+<span class="sd">        Ensures the provided or calculated transformation matrix is a</span>
+<span class="sd">        valid affine transformation, and verifies the computed inverse</span>
+<span class="sd">        matrix for consistency.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        AssertionError</span>
-<span class="sd">            If the matrix or its inverse is not a valid affine transformation matrix.</span>
+<span class="sd">            If the matrix or its inverse is not a valid affine</span>
+<span class="sd">            transformation matrix.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_matrix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_matrix</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
             <span class="n">matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_matrix</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -616,25 +618,28 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_change_of_basis_matrix</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">initial</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">final</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">as_array</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Calculate the change of basis matrix between two coordinate systems.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate change of basis matrix between coordinate systems.</span>
 
-<span class="sd">        The change of basis matrix is computed as the relative transformation from the</span>
-<span class="sd">        initial coordinate system to the final coordinate system.</span>
+<span class="sd">        The change of basis matrix is computed as the relative</span>
+<span class="sd">        transformation from the initial coordinate system to the</span>
+<span class="sd">        final coordinate system.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        initial : np.ndarray</span>
-<span class="sd">            The initial 4x4 matrix representing the initial coordinate system.</span>
+<span class="sd">            The initial 4x4 matrix representing the initial coordinate</span>
+<span class="sd">            system.</span>
 <span class="sd">        final : np.ndarray</span>
 <span class="sd">            The final 4x4 matrix representing the final coordinate system.</span>
 <span class="sd">        as_array : bool, optional</span>
-<span class="sd">            If True, returns the matrix as a NumPy array; otherwise, returns a sympy.Matrix (default is False).</span>
+<span class="sd">            If ``True``, returns the matrix as a NumPy array; otherwise,</span>
+<span class="sd">            returns a ``sympy.Matrix`` (the default is ``False``).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        Union[sympy.MatrixBase, np.ndarray]</span>
-<span class="sd">            The change of basis matrix between the initial and final coordinate systems.</span>
+<span class="sd">        sympy.MatrixBase or np.ndarray</span>
+<span class="sd">            The change of basis matrix between the initial and final</span>
+<span class="sd">            coordinate systems.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[Type: &#39;T&#39;, ID: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="si">}</span><span class="s2">] Calculating change of basis matrix.&quot;</span><span class="p">)</span>
 
@@ -656,17 +661,18 @@
 
 <div class="viewcode-block" id="TransformationMatrix.get_inverse">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.TransformationMatrix.get_inverse">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate the inverse of the current TransformationMatrix.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;TransformationMatrix&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate the inverse of the current TransformationMatrix.</span>
 
-<span class="sd">        The inverse transformation matrix swaps the initial and final coordinate systems,</span>
-<span class="sd">        or directly computes the inverse of the provided matrix.</span>
+<span class="sd">        The inverse transformation matrix swaps the initial and final</span>
+<span class="sd">        coordinate systems, or directly computes the inverse of the</span>
+<span class="sd">        provided matrix.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        TransformationMatrix</span>
-<span class="sd">            A new instance of `TransformationMatrix` representing the inverse transformation.</span>
+<span class="sd">            A new instance of ``TransformationMatrix`` representing the</span>
+<span class="sd">            inverse transformation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_matrix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_matrix</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">TransformationMatrix</span><span class="p">(</span>
@@ -686,16 +692,17 @@
 <div class="viewcode-block" id="TransformationMatrix.get_matrix">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.TransformationMatrix.get_matrix">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Retrieve the transformation matrix.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve the transformation matrix.</span>
 
-<span class="sd">        If the transformation matrix was explicitly provided during initialization, it is returned.</span>
-<span class="sd">        Otherwise, it is computed as the change of basis matrix between the initial and final coordinate systems.</span>
+<span class="sd">        If the transformation matrix was explicitly provided during</span>
+<span class="sd">        initialization, it is returned. Otherwise, it is computed as</span>
+<span class="sd">        the change of basis matrix between the initial and final</span>
+<span class="sd">        coordinate systems.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        sympy.MatrixBase</span>
-<span class="sd">            The transformation matrix as a symbolic sympy.Matrix.</span>
+<span class="sd">            The transformation matrix as a symbolic ``sympy.Matrix``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[Type: &#39;T&#39;, ID: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="si">}</span><span class="s2">] Generating transformation matrix.&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_matrix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_matrix</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
@@ -707,16 +714,18 @@
 <div class="viewcode-block" id="TransformationMatrix.get_matrix_inverse">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.TransformationMatrix.get_matrix_inverse">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_matrix_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Retrieve the inverse of the transformation matrix.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve the inverse of the transformation matrix.</span>
 
-<span class="sd">        If the transformation matrix was explicitly provided during initialization, its inverse is computed.</span>
-<span class="sd">        Otherwise, the inverse is calculated as the change of basis matrix between the final and initial coordinate systems.</span>
+<span class="sd">        If the transformation matrix was explicitly provided during</span>
+<span class="sd">        initialization, its inverse is computed. Otherwise, the</span>
+<span class="sd">        inverse is calculated as the change of basis matrix between</span>
+<span class="sd">        the final and initial coordinate systems.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        sympy.MatrixBase</span>
-<span class="sd">            The inverse transformation matrix as a symbolic sympy.Matrix.</span>
+<span class="sd">            The inverse transformation matrix as a symbolic</span>
+<span class="sd">            ``sympy.Matrix``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[Type: &#39;T&#39;, ID: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="si">}</span><span class="s2">] Generating inverse transformation matrix.&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_matrix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_matrix</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
@@ -730,34 +739,41 @@
 <div class="viewcode-block" id="I4">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.I4">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">I4</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class representing a 4x4 identity matrix.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A 4x4 identity matrix.</span>
 
-<span class="sd">    The identity matrix is commonly used in transformations as a neutral element, where no</span>
-<span class="sd">    translation or rotation is applied.</span>
+<span class="sd">    The identity matrix is commonly used in transformations as a</span>
+<span class="sd">    neutral element, where no translation or rotation is applied.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    TYPE : str</span>
+<span class="sd">        The type identifier, always ``&quot;I4&quot;``.</span>
+<span class="sd">    ID : int</span>
+<span class="sd">        The matrix identifier, always ``-1``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize a 4x4 identity matrix.</span>
-
-<span class="sd">        Sets the matrix type to &quot;I4&quot;.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize an I4 instance.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">TYPE</span> <span class="o">=</span> <span class="s2">&quot;I4&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ID</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 
 <div class="viewcode-block" id="I4.__repr__">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.I4.__repr__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate a string representation of I4.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A string representation of the I4 identity matrix.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            String representation of the I4 instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;I4 Identity Matrix&quot;</span></div>
 
 
 <div class="viewcode-block" id="I4.get_matrix">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.I4.get_matrix">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate a 4x4 identity matrix.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate a 4x4 identity matrix.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -770,17 +786,24 @@
 
 <div class="viewcode-block" id="I4.get_inverse">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.I4.get_inverse">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;I4&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve the inverse of the I4 instance.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        I4</span>
+<span class="sd">            The identity matrix instance itself.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 
 <div class="viewcode-block" id="I4.get_matrix_inverse">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.I4.get_matrix_inverse">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_matrix_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate the inverse of the 4x4 identity matrix.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate the inverse of the 4x4 identity matrix.</span>
 
-<span class="sd">        Since the inverse of an identity matrix is itself, this method returns the same matrix.</span>
+<span class="sd">        Since the inverse of an identity matrix is itself, this</span>
+<span class="sd">        method returns the same matrix.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -796,43 +819,50 @@
 <div class="viewcode-block" id="J4">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.J4">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">J4</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class representing a 4x4 rotation matrix for a 180° rotation around the z-axis.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A 4x4 rotation matrix for a 180° rotation around the z-axis.</span>
 
-<span class="sd">    This matrix is often used to represent a transformation involving a half-turn</span>
-<span class="sd">    rotation in a Cartesian coordinate system.</span>
+<span class="sd">    This matrix is often used to represent a transformation involving a</span>
+<span class="sd">    half-turn rotation in a Cartesian coordinate system.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    TYPE : str</span>
+<span class="sd">        The type identifier, always ``&quot;J4&quot;``.</span>
+<span class="sd">    ID : int</span>
+<span class="sd">        The matrix identifier, always ``-1``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize a 4x4 rotation matrix representing a 180° rotation around the z-axis.</span>
-
-<span class="sd">        Sets the matrix type to &quot;J4&quot;.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize a J4 instance.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">TYPE</span> <span class="o">=</span> <span class="s2">&quot;J4&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ID</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 
 <div class="viewcode-block" id="J4.__repr__">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.J4.__repr__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate a string representation of J4.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A string representation of the J4 rotation matrix.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            String representation of the J4 instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;J4 Rotation Matrix&quot;</span></div>
 
 
 <div class="viewcode-block" id="J4.get_matrix">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.J4.get_matrix">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate a 4x4 rotation matrix representing a 180° rotation around the z-axis.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate a 4x4 rotation matrix for a 180° z-axis rotation.</span>
 
-<span class="sd">        The matrix is constructed as follows:</span>
-<span class="sd">            - The x-axis and y-axis are negated.</span>
-<span class="sd">            - The z-axis and translation remain unchanged.</span>
+<span class="sd">        The matrix negates the x-axis and y-axis, while the z-axis and</span>
+<span class="sd">        the translation components remain unchanged.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        sympy.MatrixBase</span>
-<span class="sd">            A symbolic representation of a 4x4 rotation matrix for a 180° z-axis rotation.</span>
+<span class="sd">            A symbolic representation of a 4x4 rotation matrix for a</span>
+<span class="sd">            180-degree z-axis rotation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[Type: J4] Generating 4x4 rotation matrix for 180° z-axis rotation.&quot;</span><span class="p">)</span>
         <span class="n">J4</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
@@ -843,23 +873,30 @@
 
 <div class="viewcode-block" id="J4.get_inverse">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.J4.get_inverse">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;J4&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve the inverse of the J4 instance.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        J4</span>
+<span class="sd">            The rotation matrix instance itself.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 
 <div class="viewcode-block" id="J4.get_matrix_inverse">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.J4.get_matrix_inverse">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_matrix_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate the inverse of the 4x4 rotation matrix.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate the inverse of the 4x4 rotation matrix.</span>
 
-<span class="sd">        Since the inverse of a 180° rotation around the z-axis is the same rotation,</span>
-<span class="sd">        this method returns the same matrix.</span>
+<span class="sd">        Since the inverse of a 180-degree rotation around the z-axis</span>
+<span class="sd">        is the same rotation, this method returns the same matrix.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        sympy.MatrixBase</span>
-<span class="sd">            A symbolic representation of the 4x4 rotation matrix for a 180° z-axis rotation.</span>
+<span class="sd">            A symbolic representation of the 4x4 rotation matrix for a</span>
+<span class="sd">            180-degree z-axis rotation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[Type: J4] Generating inverse 4x4 rotation matrix.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_matrix</span><span class="p">()</span></div>

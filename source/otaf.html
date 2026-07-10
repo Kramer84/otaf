@@ -1276,24 +1276,108 @@ the first-order expanded matrices.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">DeviationMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#DeviationMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.DeviationMatrix" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Represents a deviation matrix used in structural analysis.</p>
-<p>A deviation matrix defines deviations in translation and rotation for parts and assemblies.
-It can be compared to a small deviation torsor.</p>
+<p>A deviation matrix defines deviations in translation and rotation
+for parts and assemblies. It can be compared to a small deviation
+torsor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>index</strong> (<em>int</em><em>, </em><em>optional</em>) – An index used to differentiate variable names. The same index can be used multiple times.</p></li>
-<li><p><strong>translations</strong> (<em>str</em><em>, </em><em>optional</em>) – Degrees of freedom for translation (‘x’, ‘y’, ‘z’). Example: “xyz” for all three degrees.</p></li>
-<li><p><strong>rotations</strong> (<em>str</em><em>, </em><em>optional</em>) – Degrees of freedom for rotation (‘x’, ‘y’, ‘z’).</p></li>
-<li><p><strong>inverse</strong> (<em>bool</em><em>, </em><em>optional</em>) – Indicates whether the matrix represents deviations from nominal to real (True) or vice versa (False).
-This affects the signs of the matrices and is necessary if a matrix is used in two directions.</p></li>
-<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the matrix for identification (default is an empty string).</p></li>
+<li><p><strong>index</strong> (<em>int</em><em>, </em><em>optional</em>) – An index used to differentiate variable names. The same index
+can be used multiple times (the default is -1).</p></li>
+<li><p><strong>translations</strong> (<em>str</em><em>, </em><em>optional</em>) – Degrees of freedom for translation (‘x’, ‘y’, ‘z’). Example:
+“xyz” for all three degrees (the default is “xyz”).</p></li>
+<li><p><strong>rotations</strong> (<em>str</em><em>, </em><em>optional</em>) – Degrees of freedom for rotation (‘x’, ‘y’, ‘z’) (the default
+is “xyz”).</p></li>
+<li><p><strong>inverse</strong> (<em>bool</em><em>, </em><em>optional</em>) – Indicates whether the matrix represents deviations from
+nominal to real (True) or vice versa (False) (the default
+is False).</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the matrix for identification (the default is “”).</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.DeviationMatrix.ID">
+<span class="sig-name descname"><span class="pre">ID</span></span><a class="headerlink" href="#otaf.DeviationMatrix.ID" title="Link to this definition"></a></dt>
+<dd><p>An index used to differentiate variable names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.DeviationMatrix.TYPE">
+<span class="sig-name descname"><span class="pre">TYPE</span></span><a class="headerlink" href="#otaf.DeviationMatrix.TYPE" title="Link to this definition"></a></dt>
+<dd><p>The type identifier, always “D”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.DeviationMatrix.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#otaf.DeviationMatrix.name" title="Link to this definition"></a></dt>
+<dd><p>Name of the matrix for identification.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.DeviationMatrix.inverse">
+<span class="sig-name descname"><span class="pre">inverse</span></span><a class="headerlink" href="#otaf.DeviationMatrix.inverse" title="Link to this definition"></a></dt>
+<dd><p>Indicates whether the matrix represents deviations from nominal
+to real.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.DeviationMatrix.SE3_basis_indices">
+<span class="sig-name descname"><span class="pre">SE3_basis_indices</span></span><a class="headerlink" href="#otaf.DeviationMatrix.SE3_basis_indices" title="Link to this definition"></a></dt>
+<dd><p>The SE(3) basis indices matching the active degrees
+of freedom.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.DeviationMatrix.variables">
+<span class="sig-name descname"><span class="pre">variables</span></span><a class="headerlink" href="#otaf.DeviationMatrix.variables" title="Link to this definition"></a></dt>
+<dd><p>The symbolic variables representing the degrees of freedom.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of sympy.Symbol</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.DeviationMatrix.n_variables">
+<span class="sig-name descname"><span class="pre">n_variables</span></span><a class="headerlink" href="#otaf.DeviationMatrix.n_variables" title="Link to this definition"></a></dt>
+<dd><p>The total number of symbolic variables initialized.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.DeviationMatrix.__repr__">
 <span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#DeviationMatrix.__repr__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.DeviationMatrix.__repr__" title="Link to this definition"></a></dt>
-<dd><p>Generate a string representation of the DeviationMatrix.</p>
+<dd><p>A string representation of the DeviationMatrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>String representation of the DeviationMatrix instance.</p>
@@ -1308,11 +1392,13 @@ This affects the signs of the matrices and is necessary if a matrix is used in t
 <dt class="sig sig-object py" id="otaf.DeviationMatrix.get_inverse">
 <span class="sig-name descname"><span class="pre">get_inverse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#DeviationMatrix.get_inverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.DeviationMatrix.get_inverse" title="Link to this definition"></a></dt>
 <dd><p>Generate the inverse of the current DeviationMatrix.</p>
-<p>The inverse matrix has the same degrees of freedom (translations and rotations)
-but with reversed directionality.</p>
+<p>The inverse matrix has the same degrees of freedom
+(translations and rotations) but with reversed
+directionality.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A new instance of <cite>DeviationMatrix</cite> representing the inverse of the current matrix.</p>
+<dd class="field-odd"><p>A new instance of <code class="docutils literal notranslate"><span class="pre">DeviationMatrix</span></code> representing the
+inverse of the current matrix.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#otaf.DeviationMatrix" title="otaf.DeviationMatrix">DeviationMatrix</a></p>
@@ -1324,14 +1410,15 @@ but with reversed directionality.</p>
 <dt class="sig sig-object py" id="otaf.DeviationMatrix.get_matrix">
 <span class="sig-name descname"><span class="pre">get_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#DeviationMatrix.get_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.DeviationMatrix.get_matrix" title="Link to this definition"></a></dt>
 <dd><p>Generate the SE(3) matrix for the deviation matrix.</p>
-<p>The SE(3) matrix is constructed using the indices of the degrees of freedom specified
-during initialization.</p>
+<p>The SE(3) matrix is constructed using the indices of the
+degrees of freedom specified during initialization.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A list of symbolic matrices corresponding to the SE(3) basis elements.</p>
+<dd class="field-odd"><p>A list of symbolic matrices corresponding to the SE(3)
+basis elements.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>List[sympy.MatrixBase]</p>
+<dd class="field-even"><p>list of sympy.MatrixBase</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1340,14 +1427,16 @@ during initialization.</p>
 <dt class="sig sig-object py" id="otaf.DeviationMatrix.get_matrix_inverse">
 <span class="sig-name descname"><span class="pre">get_matrix_inverse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#DeviationMatrix.get_matrix_inverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.DeviationMatrix.get_matrix_inverse" title="Link to this definition"></a></dt>
 <dd><p>Generate the inverse SE(3) matrix for the deviation matrix.</p>
-<p>The inverse SE(3) matrix is constructed by reversing the directionality
-of the degrees of freedom (i.e., multiplying by -1).</p>
+<p>The inverse SE(3) matrix is constructed by reversing the
+directionality of the degrees of freedom (i.e., multiplying
+by <code class="docutils literal notranslate"><span class="pre">-1</span></code>).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A list of symbolic matrices corresponding to the inverse SE(3) basis elements.</p>
+<dd class="field-odd"><p>A list of symbolic matrices corresponding to the inverse
+SE(3) basis elements.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>List[sympy.MatrixBase]</p>
+<dd class="field-even"><p>list of sympy.MatrixBase</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1355,15 +1444,16 @@ of the degrees of freedom (i.e., multiplying by -1).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.DeviationMatrix.get_variables">
 <span class="sig-name descname"><span class="pre">get_variables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#DeviationMatrix.get_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.DeviationMatrix.get_variables" title="Link to this definition"></a></dt>
-<dd><p>Retrieve the symbolic variables associated with the deviation matrix.</p>
-<p>These variables correspond to the degrees of freedom in translations and rotations,
-defined during initialization.</p>
+<dd><p>Retrieve symbolic variables associated with the matrix.</p>
+<p>These variables correspond to the degrees of freedom in
+translations and rotations, defined during initialization.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A list of symbolic variables representing the degrees of freedom.</p>
+<dd class="field-odd"><p>A list of symbolic variables representing the degrees of
+freedom.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>List[sympy.Symbol]</p>
+<dd class="field-even"><p>list of sympy.Symbol</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1374,27 +1464,43 @@ defined during initialization.</p>
 <dt class="sig sig-object py" id="otaf.FirstOrderMatrixExpansion">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">FirstOrderMatrixExpansion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/firstOrderMatrixExpansion.html#FirstOrderMatrixExpansion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.FirstOrderMatrixExpansion" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Initialize the FirstOrderMatrixExpansion class.</p>
+<p>First-order Taylor expansion of a matrix product.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>matrix_list</strong> (<em>List</em><em>[</em><em>Union</em><em>[</em><a class="reference internal" href="#otaf.DeviationMatrix" title="otaf.DeviationMatrix"><em>otaf.DeviationMatrix</em></a><em>, </em><a class="reference internal" href="#otaf.GapMatrix" title="otaf.GapMatrix"><em>otaf.GapMatrix</em></a><em>, </em><a class="reference internal" href="#otaf.TransformationMatrix" title="otaf.TransformationMatrix"><em>otaf.TransformationMatrix</em></a><em>, </em><a class="reference internal" href="#otaf.I4" title="otaf.I4"><em>otaf.I4</em></a><em>, </em><a class="reference internal" href="#otaf.J4" title="otaf.J4"><em>otaf.J4</em></a><em>]</em><em>]</em>) – List of matrices to be used in the first-order Taylor expansion.</p>
+<dd class="field-odd"><p><strong>matrix_list</strong> (<em>list</em><em> of </em><em>objects</em>) – List of matrices (<code class="docutils literal notranslate"><span class="pre">DeviationMatrix</span></code>, <code class="docutils literal notranslate"><span class="pre">GapMatrix</span></code>,
+<code class="docutils literal notranslate"><span class="pre">TransformationMatrix</span></code>, <code class="docutils literal notranslate"><span class="pre">I4</span></code>, or <code class="docutils literal notranslate"><span class="pre">J4</span></code>) to be used in the
+first-order Taylor expansion.</p>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.FirstOrderMatrixExpansion.matrix_list">
+<span class="sig-name descname"><span class="pre">matrix_list</span></span><a class="headerlink" href="#otaf.FirstOrderMatrixExpansion.matrix_list" title="Link to this definition"></a></dt>
+<dd><p>List of matrices used in the expansion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of objects</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.FirstOrderMatrixExpansion.compute_first_order_expansion">
 <span class="sig-name descname"><span class="pre">compute_first_order_expansion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/firstOrderMatrixExpansion.html#FirstOrderMatrixExpansion.compute_first_order_expansion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.FirstOrderMatrixExpansion.compute_first_order_expansion" title="Link to this definition"></a></dt>
 <dd><p>Construct the first-order Taylor expansion of a matrix product.</p>
-<p>This method computes the expansion by iterating through the provided list of matrices,
-identifying constant terms and first-order variable-dependent terms.</p>
+<p>This method computes the expansion by iterating through the
+provided list of matrices, identifying constant terms and
+first-order variable-dependent terms.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>tolerance</strong> (<em>float</em><em>, </em><em>optional</em>) – Tolerance value for symbolic simplification (default is 1e-8).</p>
+<dd class="field-odd"><p><strong>tolerance</strong> (<em>float</em><em>, </em><em>optional</em>) – Tolerance value for symbolic simplification (the default is
+1e-8).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A symbolic matrix representing the simplified first-order Taylor expansion.</p>
+<dd class="field-even"><p>A symbolic matrix representing the simplified first-order
+Taylor expansion.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>sp.MatrixBase</p>
+<dd class="field-odd"><p>sympy.MatrixBase</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1406,22 +1512,107 @@ identifying constant terms and first-order variable-dependent terms.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">GapMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translations_blocked</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotations_blocked</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#GapMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.GapMatrix" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Represents a gap matrix used in structural analysis.</p>
-<p>A gap matrix defines gaps or clearances in translation and rotation for parts and assemblies.</p>
+<p>A gap matrix defines gaps or clearances in translation and
+rotation for parts and assemblies.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>index</strong> (<em>int</em><em>, </em><em>optional</em>) – An index used to differentiate variable names. The same index can be used multiple times (default is -1).</p></li>
-<li><p><strong>translations_blocked</strong> (<em>str</em><em>, </em><em>optional</em>) – Degrees of freedom for translation that are blocked (‘x’, ‘y’, ‘z’) (default is an empty string).</p></li>
-<li><p><strong>rotations_blocked</strong> (<em>str</em><em>, </em><em>optional</em>) – Degrees of freedom for rotation that are blocked (‘x’, ‘y’, ‘z’) (default is an empty string).</p></li>
-<li><p><strong>inverse</strong> (<em>bool</em><em>, </em><em>optional</em>) – Indicates whether the matrix represents gaps or clearances (True) or blocked degrees of freedom (False).</p></li>
-<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the matrix for identification (default is an empty string).</p></li>
+<li><p><strong>index</strong> (<em>int</em><em>, </em><em>optional</em>) – An index used to differentiate variable names. The same index
+can be used multiple times (the default is -1).</p></li>
+<li><p><strong>translations_blocked</strong> (<em>str</em><em>, </em><em>optional</em>) – Degrees of freedom for translation that are blocked (‘x’,
+‘y’, ‘z’) (the default is “”).</p></li>
+<li><p><strong>rotations_blocked</strong> (<em>str</em><em>, </em><em>optional</em>) – Degrees of freedom for rotation that are blocked (‘x’, ‘y’,
+‘z’) (the default is “”).</p></li>
+<li><p><strong>inverse</strong> (<em>bool</em><em>, </em><em>optional</em>) – Indicates whether the matrix represents gaps or clearances
+(True) or blocked degrees of freedom (False) (the default
+is False).</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the matrix for identification (the default is “”).</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.GapMatrix.ID">
+<span class="sig-name descname"><span class="pre">ID</span></span><a class="headerlink" href="#otaf.GapMatrix.ID" title="Link to this definition"></a></dt>
+<dd><p>An index used to differentiate variable names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.GapMatrix.TYPE">
+<span class="sig-name descname"><span class="pre">TYPE</span></span><a class="headerlink" href="#otaf.GapMatrix.TYPE" title="Link to this definition"></a></dt>
+<dd><p>The type identifier, always “G”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.GapMatrix.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#otaf.GapMatrix.name" title="Link to this definition"></a></dt>
+<dd><p>Name of the matrix for identification.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.GapMatrix.inverse">
+<span class="sig-name descname"><span class="pre">inverse</span></span><a class="headerlink" href="#otaf.GapMatrix.inverse" title="Link to this definition"></a></dt>
+<dd><p>Indicates whether the matrix represents gaps or clearances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.GapMatrix.SE3_basis_indices">
+<span class="sig-name descname"><span class="pre">SE3_basis_indices</span></span><a class="headerlink" href="#otaf.GapMatrix.SE3_basis_indices" title="Link to this definition"></a></dt>
+<dd><p>The SE(3) basis indices matching the unblocked degrees of
+freedom.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.GapMatrix.variables">
+<span class="sig-name descname"><span class="pre">variables</span></span><a class="headerlink" href="#otaf.GapMatrix.variables" title="Link to this definition"></a></dt>
+<dd><p>The symbolic variables representing the unblocked degrees of
+freedom.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of sympy.Symbol</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.GapMatrix.n_variables">
+<span class="sig-name descname"><span class="pre">n_variables</span></span><a class="headerlink" href="#otaf.GapMatrix.n_variables" title="Link to this definition"></a></dt>
+<dd><p>The total number of symbolic variables initialized.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.GapMatrix.__repr__">
 <span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#GapMatrix.__repr__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.GapMatrix.__repr__" title="Link to this definition"></a></dt>
-<dd><p>Generate a string representation of the GapMatrix.</p>
+<dd><p>A string representation of the GapMatrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>String representation of the GapMatrix instance.</p>
@@ -1436,11 +1627,13 @@ identifying constant terms and first-order variable-dependent terms.</p>
 <dt class="sig sig-object py" id="otaf.GapMatrix.get_inverse">
 <span class="sig-name descname"><span class="pre">get_inverse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#GapMatrix.get_inverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.GapMatrix.get_inverse" title="Link to this definition"></a></dt>
 <dd><p>Generate the inverse of the current GapMatrix.</p>
-<p>The inverse matrix has the same blocked degrees of freedom for translations and rotations
-but reverses the directionality (gaps versus clearances).</p>
+<p>The inverse matrix has the same blocked degrees of freedom for
+translations and rotations but reverses the directionality
+(gaps versus clearances).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A new instance of <cite>GapMatrix</cite> representing the inverse of the current matrix.</p>
+<dd class="field-odd"><p>A new instance of <code class="docutils literal notranslate"><span class="pre">GapMatrix</span></code> representing the inverse
+of the current matrix.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#otaf.GapMatrix" title="otaf.GapMatrix">GapMatrix</a></p>
@@ -1452,14 +1645,16 @@ but reverses the directionality (gaps versus clearances).</p>
 <dt class="sig sig-object py" id="otaf.GapMatrix.get_matrix">
 <span class="sig-name descname"><span class="pre">get_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#GapMatrix.get_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.GapMatrix.get_matrix" title="Link to this definition"></a></dt>
 <dd><p>Generate the SE(3) matrix for the gap matrix.</p>
-<p>The SE(3) matrix is constructed using the indices of the degrees of freedom
-that are not blocked, specified during initialization.</p>
+<p>The SE(3) matrix is constructed using the indices of the
+degrees of freedom that are not blocked, specified during
+initialization.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A list of symbolic matrices corresponding to the SE(3) basis elements.</p>
+<dd class="field-odd"><p>A list of symbolic matrices corresponding to the SE(3)
+basis elements.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>List[sympy.MatrixBase]</p>
+<dd class="field-even"><p>list of sympy.MatrixBase</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1468,14 +1663,16 @@ that are not blocked, specified during initialization.</p>
 <dt class="sig sig-object py" id="otaf.GapMatrix.get_matrix_inverse">
 <span class="sig-name descname"><span class="pre">get_matrix_inverse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#GapMatrix.get_matrix_inverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.GapMatrix.get_matrix_inverse" title="Link to this definition"></a></dt>
 <dd><p>Generate the inverse SE(3) matrix for the gap matrix.</p>
-<p>The inverse SE(3) matrix is constructed by reversing the directionality of the degrees of freedom
-(i.e., multiplying by -1).</p>
+<p>The inverse SE(3) matrix is constructed by reversing the
+directionality of the degrees of freedom (i.e., multiplying
+by <code class="docutils literal notranslate"><span class="pre">-1</span></code>).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A list of symbolic matrices corresponding to the inverse SE(3) basis elements.</p>
+<dd class="field-odd"><p>A list of symbolic matrices corresponding to the inverse
+SE(3) basis elements.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>List[sympy.MatrixBase]</p>
+<dd class="field-even"><p>list of sympy.MatrixBase</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1483,15 +1680,17 @@ that are not blocked, specified during initialization.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.GapMatrix.get_variables">
 <span class="sig-name descname"><span class="pre">get_variables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#GapMatrix.get_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.GapMatrix.get_variables" title="Link to this definition"></a></dt>
-<dd><p>Retrieve the symbolic variables associated with the gap matrix.</p>
-<p>These variables correspond to the degrees of freedom in translations and rotations
-that are not blocked, as defined during initialization.</p>
+<dd><p>Retrieve symbolic variables associated with the gap matrix.</p>
+<p>These variables correspond to the degrees of freedom in
+translations and rotations that are not blocked, as defined
+during initialization.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A list of symbolic variables representing the degrees of freedom.</p>
+<dd class="field-odd"><p>A list of symbolic variables representing the degrees of
+freedom.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>List[sympy.Symbol]</p>
+<dd class="field-even"><p>list of sympy.Symbol</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1502,19 +1701,60 @@ that are not blocked, as defined during initialization.</p>
 <dt class="sig sig-object py" id="otaf.I4">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">I4</span></span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#I4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.I4" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Class representing a 4x4 identity matrix.</p>
-<p>The identity matrix is commonly used in transformations as a neutral element, where no
-translation or rotation is applied.</p>
+<p>A 4x4 identity matrix.</p>
+<p>The identity matrix is commonly used in transformations as a
+neutral element, where no translation or rotation is applied.</p>
+<dl class="field-list simple">
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.I4.TYPE">
+<span class="sig-name descname"><span class="pre">TYPE</span></span><a class="headerlink" href="#otaf.I4.TYPE" title="Link to this definition"></a></dt>
+<dd><p>The type identifier, always <code class="docutils literal notranslate"><span class="pre">&quot;I4&quot;</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.I4.ID">
+<span class="sig-name descname"><span class="pre">ID</span></span><a class="headerlink" href="#otaf.I4.ID" title="Link to this definition"></a></dt>
+<dd><p>The matrix identifier, always <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.I4.__repr__">
 <span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#I4.__repr__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.I4.__repr__" title="Link to this definition"></a></dt>
-<dd><p>Generate a string representation of I4.</p>
+<dd><p>A string representation of the I4 identity matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>String representation of the I4 instance.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.I4.get_inverse">
 <span class="sig-name descname"><span class="pre">get_inverse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#I4.get_inverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.I4.get_inverse" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Retrieve the inverse of the I4 instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The identity matrix instance itself.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#otaf.I4" title="otaf.I4">I4</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.I4.get_matrix">
@@ -1534,7 +1774,8 @@ translation or rotation is applied.</p>
 <dt class="sig sig-object py" id="otaf.I4.get_matrix_inverse">
 <span class="sig-name descname"><span class="pre">get_matrix_inverse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#I4.get_matrix_inverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.I4.get_matrix_inverse" title="Link to this definition"></a></dt>
 <dd><p>Generate the inverse of the 4x4 identity matrix.</p>
-<p>Since the inverse of an identity matrix is itself, this method returns the same matrix.</p>
+<p>Since the inverse of an identity matrix is itself, this
+method returns the same matrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>A symbolic representation of the 4x4 identity matrix.</p>
@@ -1631,34 +1872,71 @@ added to maintain consistency in the representation of spatial relationships.</p
 <dt class="sig sig-object py" id="otaf.J4">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">J4</span></span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#J4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.J4" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Class representing a 4x4 rotation matrix for a 180° rotation around the z-axis.</p>
-<p>This matrix is often used to represent a transformation involving a half-turn
-rotation in a Cartesian coordinate system.</p>
+<p>A 4x4 rotation matrix for a 180° rotation around the z-axis.</p>
+<p>This matrix is often used to represent a transformation involving a
+half-turn rotation in a Cartesian coordinate system.</p>
+<dl class="field-list simple">
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.J4.TYPE">
+<span class="sig-name descname"><span class="pre">TYPE</span></span><a class="headerlink" href="#otaf.J4.TYPE" title="Link to this definition"></a></dt>
+<dd><p>The type identifier, always <code class="docutils literal notranslate"><span class="pre">&quot;J4&quot;</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.J4.ID">
+<span class="sig-name descname"><span class="pre">ID</span></span><a class="headerlink" href="#otaf.J4.ID" title="Link to this definition"></a></dt>
+<dd><p>The matrix identifier, always <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.J4.__repr__">
 <span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#J4.__repr__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.J4.__repr__" title="Link to this definition"></a></dt>
-<dd><p>Generate a string representation of J4.</p>
+<dd><p>A string representation of the J4 rotation matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>String representation of the J4 instance.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.J4.get_inverse">
 <span class="sig-name descname"><span class="pre">get_inverse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#J4.get_inverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.J4.get_inverse" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Retrieve the inverse of the J4 instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The rotation matrix instance itself.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#otaf.J4" title="otaf.J4">J4</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.J4.get_matrix">
 <span class="sig-name descname"><span class="pre">get_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#J4.get_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.J4.get_matrix" title="Link to this definition"></a></dt>
-<dd><p>Generate a 4x4 rotation matrix representing a 180° rotation around the z-axis.</p>
-<dl class="simple">
-<dt>The matrix is constructed as follows:</dt><dd><ul class="simple">
-<li><p>The x-axis and y-axis are negated.</p></li>
-<li><p>The z-axis and translation remain unchanged.</p></li>
-</ul>
-</dd>
-</dl>
+<dd><p>Generate a 4x4 rotation matrix for a 180° z-axis rotation.</p>
+<p>The matrix negates the x-axis and y-axis, while the z-axis and
+the translation components remain unchanged.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A symbolic representation of a 4x4 rotation matrix for a 180° z-axis rotation.</p>
+<dd class="field-odd"><p>A symbolic representation of a 4x4 rotation matrix for a
+180-degree z-axis rotation.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>sympy.MatrixBase</p>
@@ -1670,11 +1948,12 @@ rotation in a Cartesian coordinate system.</p>
 <dt class="sig sig-object py" id="otaf.J4.get_matrix_inverse">
 <span class="sig-name descname"><span class="pre">get_matrix_inverse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#J4.get_matrix_inverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.J4.get_matrix_inverse" title="Link to this definition"></a></dt>
 <dd><p>Generate the inverse of the 4x4 rotation matrix.</p>
-<p>Since the inverse of a 180° rotation around the z-axis is the same rotation,
-this method returns the same matrix.</p>
+<p>Since the inverse of a 180-degree rotation around the z-axis
+is the same rotation, this method returns the same matrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A symbolic representation of the 4x4 rotation matrix for a 180° z-axis rotation.</p>
+<dd class="field-odd"><p>A symbolic representation of the 4x4 rotation matrix for a
+180-degree z-axis rotation.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>sympy.MatrixBase</p>
@@ -2140,29 +2419,66 @@ for the gap and deviation variables, returning the computed results for validati
 <dt class="sig sig-object py" id="otaf.TransformationMatrix">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">TransformationMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([[1.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">1.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">0.,</span> <span class="pre">1.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">1.]])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">final</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([[1.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">1.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">0.,</span> <span class="pre">1.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">1.]])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#TransformationMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.TransformationMatrix" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Class representing transformation matrices within the nominal geometry of a part.</p>
-<p>Transformation matrices define the transformation between two coordinate systems.</p>
+<p>Transformation matrices within the nominal geometry of a part.</p>
+<p>Transformation matrices define the transformation between two
+coordinate systems.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>index</strong> (<em>int</em><em>, </em><em>optional</em>) – An index used to differentiate transformation matrices. The same index can be used multiple times (default is -1).</p></li>
-<li><p><strong>initial</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – The initial 4x4 matrix representing the initial coordinate system (default is the identity matrix).</p></li>
-<li><p><strong>final</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – The final 4x4 matrix representing the final coordinate system (default is the identity matrix).</p></li>
-<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the transformation matrix for identification (default is an empty string).</p></li>
-<li><p><strong>matrix</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><em>np.ndarray</em><em>, </em><em>sympy.MatrixBase</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – The explicit transformation matrix. If provided, it overrides <cite>initial</cite> and <cite>final</cite> matrices (default is None).</p></li>
+<li><p><strong>index</strong> (<em>int</em><em>, </em><em>optional</em>) – An index used to differentiate transformation matrices. The same
+index can be used multiple times (the default is -1).</p></li>
+<li><p><strong>initial</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – The initial 4x4 matrix representing the initial coordinate
+system (the default is the identity matrix).</p></li>
+<li><p><strong>final</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – The final 4x4 matrix representing the final coordinate
+system (the default is the identity matrix).</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the transformation matrix for identification (the default
+is “”).</p></li>
+<li><p><strong>matrix</strong> (<em>np.ndarray</em><em> or </em><em>sympy.MatrixBase</em><em>, </em><em>optional</em>) – The explicit transformation matrix. If provided, it overrides
+<cite>initial</cite> and <cite>final</cite> matrices (the default is <code class="docutils literal notranslate"><span class="pre">None</span></code>).</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>AssertionError</strong> – If the provided matrix is not a valid affine transformation matrix.</p>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.TransformationMatrix.ID">
+<span class="sig-name descname"><span class="pre">ID</span></span><a class="headerlink" href="#otaf.TransformationMatrix.ID" title="Link to this definition"></a></dt>
+<dd><p>An index used to differentiate transformation matrices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.TransformationMatrix.TYPE">
+<span class="sig-name descname"><span class="pre">TYPE</span></span><a class="headerlink" href="#otaf.TransformationMatrix.TYPE" title="Link to this definition"></a></dt>
+<dd><p>The type identifier, always “T”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.TransformationMatrix.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#otaf.TransformationMatrix.name" title="Link to this definition"></a></dt>
+<dd><p>Name of the transformation matrix for identification.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.TransformationMatrix.__repr__">
 <span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#TransformationMatrix.__repr__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.TransformationMatrix.__repr__" title="Link to this definition"></a></dt>
-<dd><p>Generate a string representation of the TransformationMatrix.</p>
+<dd><p>A string representation of the TransformationMatrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>String representation of the TransformationMatrix instance, including its index and matrix values.</p>
+<dd class="field-odd"><p>String representation of the TransformationMatrix instance,
+including its index and matrix values.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>str</p>
@@ -2173,22 +2489,26 @@ for the gap and deviation variables, returning the computed results for validati
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.TransformationMatrix.get_change_of_basis_matrix">
 <span class="sig-name descname"><span class="pre">get_change_of_basis_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">final</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_array</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#TransformationMatrix.get_change_of_basis_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.TransformationMatrix.get_change_of_basis_matrix" title="Link to this definition"></a></dt>
-<dd><p>Calculate the change of basis matrix between two coordinate systems.</p>
-<p>The change of basis matrix is computed as the relative transformation from the
-initial coordinate system to the final coordinate system.</p>
+<dd><p>Calculate change of basis matrix between coordinate systems.</p>
+<p>The change of basis matrix is computed as the relative
+transformation from the initial coordinate system to the
+final coordinate system.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>initial</strong> (<em>np.ndarray</em>) – The initial 4x4 matrix representing the initial coordinate system.</p></li>
+<li><p><strong>initial</strong> (<em>np.ndarray</em>) – The initial 4x4 matrix representing the initial coordinate
+system.</p></li>
 <li><p><strong>final</strong> (<em>np.ndarray</em>) – The final 4x4 matrix representing the final coordinate system.</p></li>
-<li><p><strong>as_array</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, returns the matrix as a NumPy array; otherwise, returns a sympy.Matrix (default is False).</p></li>
+<li><p><strong>as_array</strong> (<em>bool</em><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, returns the matrix as a NumPy array; otherwise,
+returns a <code class="docutils literal notranslate"><span class="pre">sympy.Matrix</span></code> (the default is <code class="docutils literal notranslate"><span class="pre">False</span></code>).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The change of basis matrix between the initial and final coordinate systems.</p>
+<dd class="field-even"><p>The change of basis matrix between the initial and final
+coordinate systems.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Union[sympy.MatrixBase, np.ndarray]</p>
+<dd class="field-odd"><p>sympy.MatrixBase or np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2197,11 +2517,13 @@ initial coordinate system to the final coordinate system.</p>
 <dt class="sig sig-object py" id="otaf.TransformationMatrix.get_inverse">
 <span class="sig-name descname"><span class="pre">get_inverse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#TransformationMatrix.get_inverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.TransformationMatrix.get_inverse" title="Link to this definition"></a></dt>
 <dd><p>Generate the inverse of the current TransformationMatrix.</p>
-<p>The inverse transformation matrix swaps the initial and final coordinate systems,
-or directly computes the inverse of the provided matrix.</p>
+<p>The inverse transformation matrix swaps the initial and final
+coordinate systems, or directly computes the inverse of the
+provided matrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A new instance of <cite>TransformationMatrix</cite> representing the inverse transformation.</p>
+<dd class="field-odd"><p>A new instance of <code class="docutils literal notranslate"><span class="pre">TransformationMatrix</span></code> representing the
+inverse transformation.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#otaf.TransformationMatrix" title="otaf.TransformationMatrix">TransformationMatrix</a></p>
@@ -2213,11 +2535,13 @@ or directly computes the inverse of the provided matrix.</p>
 <dt class="sig sig-object py" id="otaf.TransformationMatrix.get_matrix">
 <span class="sig-name descname"><span class="pre">get_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#TransformationMatrix.get_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.TransformationMatrix.get_matrix" title="Link to this definition"></a></dt>
 <dd><p>Retrieve the transformation matrix.</p>
-<p>If the transformation matrix was explicitly provided during initialization, it is returned.
-Otherwise, it is computed as the change of basis matrix between the initial and final coordinate systems.</p>
+<p>If the transformation matrix was explicitly provided during
+initialization, it is returned. Otherwise, it is computed as
+the change of basis matrix between the initial and final
+coordinate systems.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The transformation matrix as a symbolic sympy.Matrix.</p>
+<dd class="field-odd"><p>The transformation matrix as a symbolic <code class="docutils literal notranslate"><span class="pre">sympy.Matrix</span></code>.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>sympy.MatrixBase</p>
@@ -2229,11 +2553,14 @@ Otherwise, it is computed as the change of basis matrix between the initial and 
 <dt class="sig sig-object py" id="otaf.TransformationMatrix.get_matrix_inverse">
 <span class="sig-name descname"><span class="pre">get_matrix_inverse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#TransformationMatrix.get_matrix_inverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.TransformationMatrix.get_matrix_inverse" title="Link to this definition"></a></dt>
 <dd><p>Retrieve the inverse of the transformation matrix.</p>
-<p>If the transformation matrix was explicitly provided during initialization, its inverse is computed.
-Otherwise, the inverse is calculated as the change of basis matrix between the final and initial coordinate systems.</p>
+<p>If the transformation matrix was explicitly provided during
+initialization, its inverse is computed. Otherwise, the
+inverse is calculated as the change of basis matrix between
+the final and initial coordinate systems.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The inverse transformation matrix as a symbolic sympy.Matrix.</p>
+<dd class="field-odd"><p>The inverse transformation matrix as a symbolic
+<code class="docutils literal notranslate"><span class="pre">sympy.Matrix</span></code>.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>sympy.MatrixBase</p>
