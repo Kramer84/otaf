@@ -13,8 +13,8 @@
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
-      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -31,6 +31,7 @@
           
           <a href="../../../index.html" class="icon icon-home">
             otaf
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -43,20 +44,12 @@
               <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/modules.html">otaf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.capabilities.html">otaf.capabilities package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.common.html">otaf.common package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.constants.html">otaf.constants package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.distribution.html">otaf.distribution package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.example_models.html">otaf.example_models package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.exceptions.html">otaf.exceptions package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.geometry.html">otaf.geometry package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.optimization.html">otaf.optimization package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.plotting.html">otaf.plotting package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.sampling.html">otaf.sampling package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.sensitivity.html">otaf.sensitivity package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.surrogate.html">otaf.surrogate package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.tolerances.html">otaf.tolerances package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.uncertainty.html">otaf.uncertainty package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/Ex1_2D_4dof_Analytical_Ref.html">Ex 1: Analytical Reference Model (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/Ex1_2D_4dof_Opti_Manual.html">Ex 1: Optimization-Based Model &amp; Vector Loops (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/Ex1_2D_4dof_Opti_Auto_Surrogate.html">Ex 1: Automatic Topological Generation &amp; Surrogate Optimization (2D / 4-DOF)</a></li>
 </ul>
 
         </div>
@@ -106,8 +99,6 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">otaf.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_symbol_coef_map</span><span class="p">,</span> <span class="n">get_symbols_in_expressions</span>
 
 
-<div class="viewcode-block" id="SystemOfConstraintsAssemblyModel">
-<a class="viewcode-back" href="../../../source/otaf.html#otaf.SystemOfConstraintsAssemblyModel">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SystemOfConstraintsAssemblyModel</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Prepare matrices for tolerance analysis involving deviations and gaps.</span>
@@ -168,7 +159,7 @@
         <span class="n">compatibility_eqs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">interface_eqs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">matrices</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span>
-            <span class="n">Tuple</span><span class="p">[</span>
+            <span class="n">Iterable</span><span class="p">[</span>
                 <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                 <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                 <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -723,7 +714,6 @@
             <span class="s2">&quot;gap_values&quot;</span><span class="p">:</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span> <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">success</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
             <span class="s2">&quot;objective&quot;</span><span class="p">:</span> <span class="n">res</span><span class="o">.</span><span class="n">fun</span> <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">success</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="p">}</span></div>
-</div>
 
 
 

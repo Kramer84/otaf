@@ -13,8 +13,8 @@
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
-      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -31,6 +31,7 @@
           
           <a href="../../../index.html" class="icon icon-home">
             otaf
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -43,20 +44,12 @@
               <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/modules.html">otaf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.capabilities.html">otaf.capabilities package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.common.html">otaf.common package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.constants.html">otaf.constants package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.distribution.html">otaf.distribution package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.example_models.html">otaf.example_models package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.exceptions.html">otaf.exceptions package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.geometry.html">otaf.geometry package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.optimization.html">otaf.optimization package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.plotting.html">otaf.plotting package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.sampling.html">otaf.sampling package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.sensitivity.html">otaf.sensitivity package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.surrogate.html">otaf.surrogate package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.tolerances.html">otaf.tolerances package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../source/otaf.uncertainty.html">otaf.uncertainty package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/Ex1_2D_4dof_Analytical_Ref.html">Ex 1: Analytical Reference Model (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/Ex1_2D_4dof_Opti_Manual.html">Ex 1: Optimization-Based Model &amp; Vector Loops (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/Ex1_2D_4dof_Opti_Auto_Surrogate.html">Ex 1: Automatic Topological Generation &amp; Surrogate Optimization (2D / 4-DOF)</a></li>
 </ul>
 
         </div>
@@ -694,24 +687,24 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    sample : np.ndarray</span>
-<span class="sd">        A 2D array of shape (N, M), where each column represents a</span>
+<span class="sd">        A 2D array of shape ``(N, M)``, where each column represents a</span>
 <span class="sd">        random vector component from a standard normal distribution.</span>
 <span class="sd">    parameters : array_like</span>
-<span class="sd">        A 1D array or sequence of size 2 * M, where elements alternate</span>
-<span class="sd">        between mean and standard deviation (mu_0, sigma_0, mu_1,</span>
-<span class="sd">        sigma_1, ...).</span>
+<span class="sd">        A 1D array or sequence of size ``2 * M``, where elements alternate</span>
+<span class="sd">        between mean and standard deviation ``(mu_0, sigma_0, mu_1,</span>
+<span class="sd">        sigma_1, ...)``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    np.ndarray</span>
-<span class="sd">        A 2D array of shape (N, M), with each column scaled using the</span>
+<span class="sd">        A 2D array of shape ``(N, M)``, with each column scaled using the</span>
 <span class="sd">        parameters.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        If `sample` is not a 2D array, if the size of `parameters` does</span>
-<span class="sd">        not equal `` 2 * M ``, or if any standard deviation is negative.</span>
+<span class="sd">        If ``sample`` is not a 2D array, if the size of ``parameters`` does</span>
+<span class="sd">        not equal ``2 * M``, or if any standard deviation is negative.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">sample</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sample must be a 2D array, but got shape </span><span class="si">{</span><span class="n">sample</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>

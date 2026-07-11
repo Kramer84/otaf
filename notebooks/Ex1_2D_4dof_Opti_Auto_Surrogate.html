@@ -1,0 +1,474 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ex 1: Automatic Topological Generation &amp; Surrogate Optimization (2D / 4-DOF) &mdash; otaf 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Ex 1: Optimization-Based Model &amp; Vector Loops (2D / 4-DOF)" href="Ex1_2D_4dof_Opti_Manual.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            otaf
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules.html">otaf</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Ex1_2D_4dof_Analytical_Ref.html">Ex 1: Analytical Reference Model (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Ex1_2D_4dof_Opti_Manual.html">Ex 1: Optimization-Based Model &amp; Vector Loops (2D / 4-DOF)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Ex 1: Automatic Topological Generation &amp; Surrogate Optimization (2D / 4-DOF)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#1.-High-Level-Topological-Dictionary-&amp;-Automated-Loops">1. High-Level Topological Dictionary &amp; Automated Loops</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#2.-High-Level-Topological-Dictionary">2. High-Level Topological Dictionary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#2.-Surrogate-Training-(MLP)">2. Surrogate Training (MLP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#3.-Defining-the-Evaluation-Closure-and-Optimization-Logic">3. Defining the Evaluation Closure and Optimization Logic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#4.-Constraint-Factory-and-Feasible-Warm-Start-(x_0)">4. Constraint Factory and Feasible Warm Start (<span class="math notranslate nohighlight">\(x_0\)</span>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#5.-Min-Max-Global-Optimization-Loop">5. Min-Max Global Optimization Loop</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">otaf</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Ex 1: Automatic Topological Generation &amp; Surrogate Optimization (2D / 4-DOF)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/notebooks/Ex1_2D_4dof_Opti_Auto_Surrogate.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <style>
+   .toctree-wrapper .tocsection { display: none; }
+</style><section id="Ex-1:-Automatic-Topological-Generation-&amp;-Surrogate-Optimization-(2D-/-4-DOF)">
+<h1>Ex 1: Automatic Topological Generation &amp; Surrogate Optimization (2D / 4-DOF)<a class="headerlink" href="#Ex-1:-Automatic-Topological-Generation-&-Surrogate-Optimization-(2D-/-4-DOF)" title="Link to this heading"></a></h1>
+<p>This notebook represents the complete methodology for imprecise tolerance analysis on the 2D baseline assembly.</p>
+<p>Building on the manual vector loops constructed previously, this notebook introduces the streamlined workflow required to scale the methodology to high-dimensional systems:</p>
+<ol class="arabic simple">
+<li><p><strong>Automatic Graph-Based Assembly Modeling:</strong> Automatically constructing the <code class="docutils literal notranslate"><span class="pre">SystemOfConstraintsAssemblyModel</span></code> from a high-level topological dictionary.</p></li>
+<li><p><strong>Multi-Layer Perceptron (MLP) Surrogate:</strong> Replacing expensive direct geometric optimizations with a PyTorch neural network.</p></li>
+<li><p><strong>Automated Tracking &amp; Constraint Injection:</strong> Using <code class="docutils literal notranslate"><span class="pre">otaf.optimization.OptimizationTracker</span></code> and the model’s native constraint generator to manage the credal space boundaries.</p></li>
+<li><p><strong>Min-Max Bounds Resolution:</strong> Finding a feasible warm-start (<span class="math notranslate nohighlight">\(x_0\)</span>) and optimizing across threshold levels (<span class="math notranslate nohighlight">\(\alpha_k\)</span>) to compute the P-Box.</p></li>
+</ol>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">minimize</span><span class="p">,</span> <span class="n">NonlinearConstraint</span><span class="p">,</span> <span class="n">Bounds</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">otaf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">otaf.example_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">model1</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gldpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">GLD</span>
+
+<span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">suppress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<section id="1.-High-Level-Topological-Dictionary-&amp;-Automated-Loops">
+<h2>1. High-Level Topological Dictionary &amp; Automated Loops<a class="headerlink" href="#1.-High-Level-Topological-Dictionary-&-Automated-Loops" title="Link to this heading"></a></h2>
+<p>Instead of manually defining deviation and gap matrices, we define the assembly as a topological graph. The <code class="docutils literal notranslate"><span class="pre">otaf.AssemblyDataProcessor</span></code> interprets the interactions and expands the first-order loops.</p>
+<p><em>(Note: For the surrogate and optimization phases, we will dynamically pull the parameters directly from ``otaf.example_models.model1``, but this dictionary illustrates how the physics of ``model1`` are constructed).</em></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Nominal dimensions and base frames</span>
+<span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">X3</span> <span class="o">=</span> <span class="mf">99.8</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">10.0</span>
+<span class="n">R0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+<span class="n">x_</span><span class="p">,</span> <span class="n">y_</span><span class="p">,</span> <span class="n">z_</span> <span class="o">=</span> <span class="n">R0</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">R0</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">R0</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+<span class="c1"># Part 1 and 2 points</span>
+<span class="n">P1A0</span><span class="p">,</span> <span class="n">P1A1</span><span class="p">,</span> <span class="n">P1A2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">X3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">X3</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+<span class="n">P1B0</span><span class="p">,</span> <span class="n">P1B1</span><span class="p">,</span> <span class="n">P1B2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">X1</span><span class="p">,</span> <span class="n">X3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">X1</span><span class="p">,</span> <span class="n">X3</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">X1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+<span class="n">P1C0</span><span class="p">,</span> <span class="n">P1C1</span><span class="p">,</span> <span class="n">P1C2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">X1</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">X1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+<span class="n">P2A0</span><span class="p">,</span> <span class="n">P2A1</span><span class="p">,</span> <span class="n">P2A2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">X3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">X3</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+<span class="n">P2B0</span><span class="p">,</span> <span class="n">P2B1</span><span class="p">,</span> <span class="n">P2B2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">X2</span><span class="p">,</span> <span class="n">X3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">X2</span><span class="p">,</span> <span class="n">X3</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">X2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+<span class="n">P2C0</span><span class="p">,</span> <span class="n">P2C1</span><span class="p">,</span> <span class="n">P2C2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">X2</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">X2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="2.-High-Level-Topological-Dictionary">
+<h2>2. High-Level Topological Dictionary<a class="headerlink" href="#2.-High-Level-Topological-Dictionary" title="Link to this heading"></a></h2>
+<p>Instead of manually defining deviation and gap matrices, we define the assembly as a topological graph. The <code class="docutils literal notranslate"><span class="pre">otaf.AssemblyDataProcessor</span></code> interprets the interactions and automatically expands the first-order loops.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">system_data</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;PARTS&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;1&#39;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;a&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">x_</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">y_</span><span class="p">,</span> <span class="n">z_</span><span class="p">]),</span> <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;A0&#39;</span><span class="p">:</span> <span class="n">P1A0</span><span class="p">,</span> <span class="s1">&#39;A1&#39;</span><span class="p">:</span> <span class="n">P1A1</span><span class="p">,</span> <span class="s1">&#39;A2&#39;</span><span class="p">:</span> <span class="n">P1A2</span><span class="p">},</span> <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span> <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;P2a&#39;</span><span class="p">],</span> <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;PERFECT&quot;</span><span class="p">],</span> <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FLOATING&quot;</span><span class="p">]},</span>
+            <span class="s2">&quot;b&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">R0</span><span class="p">,</span> <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;B0&#39;</span><span class="p">:</span> <span class="n">P1B0</span><span class="p">,</span> <span class="s1">&#39;B1&#39;</span><span class="p">:</span> <span class="n">P1B1</span><span class="p">,</span> <span class="s1">&#39;B2&#39;</span><span class="p">:</span> <span class="n">P1B2</span><span class="p">},</span> <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span> <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;P2b&#39;</span><span class="p">],</span> <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;NONE&quot;</span><span class="p">],</span> <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FLOATING&quot;</span><span class="p">]},</span>
+            <span class="s2">&quot;c&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">y_</span><span class="p">,</span> <span class="n">x_</span><span class="p">,</span> <span class="n">z_</span><span class="p">]),</span> <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;C0&#39;</span><span class="p">:</span> <span class="n">P1C0</span><span class="p">,</span> <span class="s1">&#39;C1&#39;</span><span class="p">:</span> <span class="n">P1C1</span><span class="p">,</span> <span class="s1">&#39;C2&#39;</span><span class="p">:</span> <span class="n">P1C2</span><span class="p">},</span> <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span> <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;P2c&#39;</span><span class="p">],</span> <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;PERFECT&quot;</span><span class="p">],</span> <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SLIDING&quot;</span><span class="p">]},</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;2&#39;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;a&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">R0</span><span class="p">,</span> <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;A0&#39;</span><span class="p">:</span> <span class="n">P2A0</span><span class="p">,</span> <span class="s1">&#39;A1&#39;</span><span class="p">:</span> <span class="n">P2A1</span><span class="p">,</span> <span class="s1">&#39;A2&#39;</span><span class="p">:</span> <span class="n">P2A2</span><span class="p">},</span> <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span> <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;P1a&#39;</span><span class="p">],</span> <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;PERFECT&quot;</span><span class="p">],</span> <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FLOATING&quot;</span><span class="p">]},</span>
+            <span class="s2">&quot;b&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">x_</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">y_</span><span class="p">,</span> <span class="n">z_</span><span class="p">]),</span> <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;B0&#39;</span><span class="p">:</span> <span class="n">P2B0</span><span class="p">,</span> <span class="s1">&#39;B1&#39;</span><span class="p">:</span> <span class="n">P2B1</span><span class="p">,</span> <span class="s1">&#39;B2&#39;</span><span class="p">:</span> <span class="n">P2B2</span><span class="p">},</span> <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span> <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;P1b&#39;</span><span class="p">],</span> <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;NONE&quot;</span><span class="p">],</span> <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FLOATING&quot;</span><span class="p">]},</span>
+            <span class="s2">&quot;c&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">y_</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">x_</span><span class="p">,</span> <span class="n">z_</span><span class="p">]),</span> <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;C0&#39;</span><span class="p">:</span> <span class="n">P2C0</span><span class="p">,</span> <span class="s1">&#39;C1&#39;</span><span class="p">:</span> <span class="n">P2C1</span><span class="p">,</span> <span class="s1">&#39;C2&#39;</span><span class="p">:</span> <span class="n">P2C2</span><span class="p">},</span> <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span> <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;P1c&#39;</span><span class="p">],</span> <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;PERFECT&quot;</span><span class="p">],</span> <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SLIDING&quot;</span><span class="p">]},</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;LOOPS&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;COMPATIBILITY&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;L0&quot;</span><span class="p">:</span> <span class="s2">&quot;P1cC0 -&gt; P2cC0 -&gt; P2aA0 -&gt; P1aA0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;L1&quot;</span><span class="p">:</span> <span class="s2">&quot;P1cC0 -&gt; P2cC0 -&gt; P2bB0 -&gt; P1bB0&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;GLOBAL_CONSTRAINTS&quot;</span><span class="p">:</span> <span class="s2">&quot;2D_NZ&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Process the topology</span>
+<span class="n">SDA</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">AssemblyDataProcessor</span><span class="p">(</span><span class="n">system_data</span><span class="p">)</span>
+<span class="n">SDA</span><span class="o">.</span><span class="n">generate_expanded_loops</span><span class="p">()</span>
+
+<span class="c1"># Extract constraints automatically and embed the slack variable (s)</span>
+<span class="n">CLH</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">CompatibilityLoopHandling</span><span class="p">(</span><span class="n">SDA</span><span class="p">)</span>
+<span class="n">ILH</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">InterfaceLoopHandling</span><span class="p">(</span><span class="n">SDA</span><span class="p">,</span> <span class="n">CLH</span><span class="p">,</span> <span class="n">circle_resolution</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">SOCAM</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">SystemOfConstraintsAssemblyModel</span><span class="p">(</span>
+    <span class="n">CLH</span><span class="o">.</span><span class="n">get_compatibility_expression_from_FO_matrices</span><span class="p">(),</span>
+    <span class="n">ILH</span><span class="o">.</span><span class="n">get_interface_loop_expressions</span><span class="p">()</span>
+<span class="p">)</span>
+<span class="n">SOCAM</span><span class="o">.</span><span class="n">embedOptimizationVariable</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total DOFs: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">SOCAM</span><span class="o">.</span><span class="n">deviation_symbols</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Variables: </span><span class="si">{</span><span class="n">SOCAM</span><span class="o">.</span><span class="n">deviation_symbols</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Total DOFs: 4
+Variables: [u_d_4, gamma_d_4, u_d_5, gamma_d_5]
+</pre></div></div>
+</div>
+</section>
+<section id="2.-Surrogate-Training-(MLP)">
+<h2>2. Surrogate Training (MLP)<a class="headerlink" href="#2.-Surrogate-Training-(MLP)" title="Link to this heading"></a></h2>
+<p>To bypass the expensive direct optimizations, we fit a PyTorch surrogate. We draw the distribution parameters directly from the <code class="docutils literal notranslate"><span class="pre">model1</span></code> definition, taking advantage of the <code class="docutils literal notranslate"><span class="pre">multiply_composed_distribution_standard_with_constants</span></code> utility to push the sampling into the failure space for robust training.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fetch distributions and parameters natively from model1</span>
+<span class="n">jointDist</span><span class="p">,</span> <span class="n">symbols</span><span class="p">,</span> <span class="n">max_std_vect</span><span class="p">,</span> <span class="n">mu_vect</span> <span class="o">=</span> <span class="n">model1</span><span class="o">.</span><span class="n">getDistributionParams</span><span class="p">(</span><span class="n">tol</span><span class="o">=</span><span class="mf">0.31</span><span class="p">,</span> <span class="n">capa</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">dim</span> <span class="o">=</span> <span class="n">model1</span><span class="o">.</span><span class="n">dim</span>
+
+<span class="c1"># Artificial dispersion multiplier to ensure limit-state representation</span>
+<span class="n">mult</span> <span class="o">=</span> <span class="mf">1.35</span>
+<span class="n">expanded_dist</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">multiply_composed_distribution_standard_with_constants</span><span class="p">(</span><span class="n">jointDist</span><span class="p">,</span> <span class="p">[</span><span class="n">mult</span><span class="p">]</span><span class="o">*</span><span class="n">dim</span><span class="p">)</span>
+
+<span class="c1"># Generate Sample</span>
+<span class="n">sample_size</span> <span class="o">=</span> <span class="mi">100000</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">420</span><span class="p">)</span>
+<span class="n">TRAIN_SAMPLE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">expanded_dist</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">sample_size</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float32&quot;</span><span class="p">)</span>
+
+<span class="c1"># Compute exact gap optimizations for training</span>
+<span class="n">TRAIN_RESULTS</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">uncertainty</span><span class="o">.</span><span class="n">compute_gap_optimizations_on_sample_batch</span><span class="p">(</span>
+    <span class="n">SOCAM</span><span class="p">,</span> <span class="n">TRAIN_SAMPLE</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_cpu</span><span class="o">=-</span><span class="mi">2</span><span class="p">,</span> <span class="n">progress_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float32&quot;</span>
+<span class="p">)</span>
+
+<span class="n">failure_ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">TRAIN_RESULTS</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">sample_size</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ratio of failed simulations in sample: </span><span class="si">{</span><span class="n">failure_ratio</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "54fed309236b4be4a43f71765491f50a", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Ratio of failed simulations in sample: 0.14665
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Neural Network Initialization and Training</span>
+<span class="n">neural_model</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">surrogate</span><span class="o">.</span><span class="n">NeuralRegressorNetwork</span><span class="p">(</span>
+    <span class="n">input_dim</span><span class="o">=</span><span class="n">dim</span><span class="p">,</span> <span class="n">output_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">TRAIN_SAMPLE</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">TRAIN_RESULTS</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">clamping</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">finish_critertion_epoch</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">loss_finish</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span>
+    <span class="n">metric_finish</span><span class="o">=</span><span class="mf">0.9998</span><span class="p">,</span> <span class="n">max_epochs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">30000</span><span class="p">,</span>
+    <span class="n">compile_model</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">train_size</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">display_progress_disable</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+
+<span class="n">neural_model</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+    <span class="o">*</span><span class="n">otaf</span><span class="o">.</span><span class="n">surrogate</span><span class="o">.</span><span class="n">get_custom_mlp_layers</span><span class="p">([</span><span class="n">dim</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">activation_class</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">GELU</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">neural_model</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">neural_model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.003</span><span class="p">,</span> <span class="n">weight_decay</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+<span class="n">otaf</span><span class="o">.</span><span class="n">surrogate</span><span class="o">.</span><span class="n">initialize_model_weights</span><span class="p">(</span><span class="n">neural_model</span><span class="p">)</span>
+<span class="n">neural_model</span><span class="o">.</span><span class="n">scheduler</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">ExponentialLR</span><span class="p">(</span><span class="n">neural_model</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="mf">1.0001</span><span class="p">)</span>
+<span class="n">neural_model</span><span class="o">.</span><span class="n">loss_fn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>
+
+<span class="n">neural_model</span><span class="o">.</span><span class="n">train_model</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="3.-Defining-the-Evaluation-Closure-and-Optimization-Logic">
+<h2>3. Defining the Evaluation Closure and Optimization Logic<a class="headerlink" href="#3.-Defining-the-Evaluation-Closure-and-Optimization-Logic" title="Link to this heading"></a></h2>
+<p>We define a closure <code class="docutils literal notranslate"><span class="pre">get_model_evaluator</span></code> to map the normalized inputs (<span class="math notranslate nohighlight">\(x \in [0,1]\)</span>) directly to the un-normalized model evaluation.</p>
+<p>We also wrap the optimization execution using the <code class="docutils literal notranslate"><span class="pre">otaf.optimization.OptimizationTracker</span></code> to reliably store all configuration evaluations, successful GLD parameters, and failure probabilities for later visualization.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_model_evaluator</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">mu_vect</span><span class="p">,</span> <span class="n">surrogate_model</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Closure mapping scaled input x to unstandardized surrogate space.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">x_transformed</span> <span class="o">=</span> <span class="p">(</span><span class="n">sample</span> <span class="o">-</span> <span class="n">mu_vect</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">mu_vect</span>
+        <span class="n">prediction</span> <span class="o">=</span> <span class="n">surrogate_model</span><span class="o">.</span><span class="n">evaluate_model_non_standard_space</span><span class="p">(</span><span class="n">x_transformed</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">prediction</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">evaluate</span>
+
+<span class="nd">@otaf</span><span class="o">.</span><span class="n">optimization</span><span class="o">.</span><span class="n">scaling</span><span class="p">(</span><span class="n">scale_factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">optimization_function</span><span class="p">(</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">failure_slack</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">gld</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">experiment_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tracker</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">logprob</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">minimize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+    <span class="n">multiplier</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">minimize</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">slack</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">gld_params</span> <span class="o">=</span> <span class="n">gld</span><span class="o">.</span><span class="n">fit_LMM</span><span class="p">(</span><span class="n">slack</span><span class="p">,</span> <span class="n">disp_fit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">disp_optimizer</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">fp_slack</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">slack</span> <span class="o">&lt;</span> <span class="n">failure_slack</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">gld_params</span><span class="p">)):</span>
+        <span class="n">fp_out</span> <span class="o">=</span> <span class="n">fp_slack</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fp_out</span> <span class="o">=</span> <span class="n">gld</span><span class="o">.</span><span class="n">CDF_num</span><span class="p">(</span><span class="n">failure_slack</span><span class="p">,</span> <span class="n">gld_params</span><span class="p">,</span> <span class="n">xtol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+
+    <span class="n">tracker</span><span class="o">.</span><span class="n">update_objective_data</span><span class="p">(</span>
+        <span class="n">exp_key</span><span class="o">=</span><span class="n">experiment_key</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">fp_gld</span><span class="o">=</span><span class="n">fp_out</span><span class="p">,</span>
+        <span class="n">fp_slack</span><span class="o">=</span><span class="n">fp_slack</span><span class="p">,</span> <span class="n">gld_params</span><span class="o">=</span><span class="n">gld_params</span><span class="p">,</span> <span class="n">failure_slack</span><span class="o">=</span><span class="n">failure_slack</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">logprob</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">multiplier</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1e-16</span> <span class="o">+</span> <span class="n">fp_out</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">multiplier</span> <span class="o">*</span> <span class="n">fp_out</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="4.-Constraint-Factory-and-Feasible-Warm-Start-(x_0)">
+<h2>4. Constraint Factory and Feasible Warm Start (<span class="math notranslate nohighlight">\(x_0\)</span>)<a class="headerlink" href="#4.-Constraint-Factory-and-Feasible-Warm-Start-(x_0)" title="Link to this heading"></a></h2>
+<p>Instead of manually constructing tolerance equations, we pull the encapsulated credal set constraint function natively from <code class="docutils literal notranslate"><span class="pre">model1</span></code>. We use SLSQP to push a generic uniform array to the closest valid point on the boundary, serving as a reliable warm start for COBYQA.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">optimize_scaling_vector</span><span class="p">(</span><span class="n">constraint_fn</span><span class="p">,</span> <span class="n">n_vars</span><span class="p">,</span> <span class="n">x_warm</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Finds the independent scaling factors x closest to 1.0 satisfying the credal constraints.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">x_warm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">x_warm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n_vars</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span>
+        <span class="n">fun</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="n">jac</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">),</span>
+        <span class="n">x0</span><span class="o">=</span><span class="n">x_warm</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;SLSQP&quot;</span><span class="p">,</span>
+        <span class="n">bounds</span><span class="o">=</span><span class="n">Bounds</span><span class="p">(</span><span class="n">lb</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">keep_feasible</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="n">constraints</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ineq&quot;</span><span class="p">,</span> <span class="s2">&quot;fun&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">constraint_fn</span><span class="p">(</span><span class="n">x</span><span class="p">))},</span>
+        <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;ftol&quot;</span><span class="p">:</span> <span class="mf">1e-10</span><span class="p">,</span> <span class="s2">&quot;maxiter&quot;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span> <span class="s2">&quot;disp&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_directional_constraint</span><span class="p">(</span><span class="n">tr</span><span class="p">,</span> <span class="n">expKey</span><span class="p">,</span> <span class="n">is_minimization</span><span class="p">):</span>
+    <span class="n">lb</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="k">if</span> <span class="n">is_minimization</span> <span class="k">else</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+    <span class="n">ub</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span> <span class="k">if</span> <span class="n">is_minimization</span> <span class="k">else</span> <span class="mf">0.0</span>
+    <span class="k">return</span> <span class="n">NonlinearConstraint</span><span class="p">(</span>
+        <span class="n">fun</span><span class="o">=</span><span class="n">model1</span><span class="o">.</span><span class="n">getScaledCredalSetConstraintsFunction</span><span class="p">(</span><span class="n">max_std_vect</span><span class="p">,</span> <span class="n">tr</span><span class="p">,</span> <span class="n">expKey</span><span class="p">),</span>
+        <span class="n">lb</span><span class="o">=</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">ub</span><span class="p">,</span> <span class="n">keep_feasible</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="5.-Min-Max-Global-Optimization-Loop">
+<h2>5. Min-Max Global Optimization Loop<a class="headerlink" href="#5.-Min-Max-Global-Optimization-Loop" title="Link to this heading"></a></h2>
+<p>With the tracker, closure, and constraints configured, we iterate over the alpha levels (<span class="math notranslate nohighlight">\(\alpha_k\)</span>).</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">pf_min_max_optimizer</span><span class="p">(</span><span class="n">failure_slack</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">experiment_key</span><span class="p">,</span> <span class="n">model_eval_fn</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">dim</span><span class="p">):</span>
+    <span class="n">gld</span> <span class="o">=</span> <span class="n">GLD</span><span class="p">(</span><span class="s1">&#39;VSL&#39;</span><span class="p">)</span>
+    <span class="n">normalized_bounds</span> <span class="o">=</span> <span class="n">Bounds</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">keep_feasible</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Optimizing bounds for Slack = </span><span class="si">{</span><span class="n">failure_slack</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+
+    <span class="n">res_maxi</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span>
+        <span class="n">optimization_function</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span>
+        <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">failure_slack</span><span class="p">,</span> <span class="n">gld</span><span class="p">,</span> <span class="n">model_eval_fn</span><span class="p">,</span> <span class="n">experiment_key</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;COBYQA&quot;</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">normalized_bounds</span><span class="p">,</span>
+        <span class="n">constraints</span><span class="o">=</span><span class="n">create_directional_constraint</span><span class="p">(</span><span class="n">tracker</span><span class="p">,</span> <span class="n">experiment_key</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+        <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;f_target&quot;</span><span class="p">:</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="s2">&quot;maxiter&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span> <span class="s2">&quot;feasibility_tol&quot;</span><span class="p">:</span> <span class="mf">1e-5</span><span class="p">,</span> <span class="s2">&quot;disp&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="n">res_mini</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span>
+        <span class="n">optimization_function</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span>
+        <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">failure_slack</span><span class="p">,</span> <span class="n">gld</span><span class="p">,</span> <span class="n">model_eval_fn</span><span class="p">,</span> <span class="n">experiment_key</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;COBYQA&quot;</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">normalized_bounds</span><span class="p">,</span>
+        <span class="n">constraints</span><span class="o">=</span><span class="n">create_directional_constraint</span><span class="p">(</span><span class="n">tracker</span><span class="p">,</span> <span class="n">experiment_key</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+        <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;f_target&quot;</span><span class="p">:</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="s2">&quot;maxiter&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span> <span class="s2">&quot;feasibility_tol&quot;</span><span class="p">:</span> <span class="mf">1e-5</span><span class="p">,</span> <span class="s2">&quot;disp&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">res_mini</span><span class="p">,</span> <span class="n">res_maxi</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Execution</span>
+<span class="n">sample_gld</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">jointDist</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="mi">100000</span><span class="p">))</span>
+<span class="n">evaluator</span> <span class="o">=</span> <span class="n">get_model_evaluator</span><span class="p">(</span><span class="n">sample_gld</span><span class="p">,</span> <span class="n">mu_vect</span><span class="p">,</span> <span class="n">neural_model</span><span class="p">)</span>
+<span class="n">tracker</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">optimization</span><span class="o">.</span><span class="n">OptimizationTracker</span><span class="p">(</span><span class="n">bounds</span><span class="o">=</span><span class="n">Bounds</span><span class="p">(</span><span class="mf">1e-7</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">constraint_tolerance</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">precision_decimals</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="c1"># Obtain feasible starting point</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Finding feasible start (x0)...&quot;</span><span class="p">)</span>
+<span class="n">base_constraint</span> <span class="o">=</span> <span class="n">model1</span><span class="o">.</span><span class="n">getScaledCredalSetConstraintsFunction</span><span class="p">(</span><span class="n">max_std_vect</span><span class="p">)</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="n">optimize_scaling_vector</span><span class="p">(</span><span class="n">base_constraint</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Sweep alpha levels</span>
+<span class="n">alpha_levels</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.025</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.075</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">slack</span> <span class="ow">in</span> <span class="n">alpha_levels</span><span class="p">:</span>
+    <span class="n">pf_min_max_optimizer</span><span class="p">(</span>
+        <span class="n">failure_slack</span><span class="o">=</span><span class="n">slack</span><span class="p">,</span>
+        <span class="n">tracker</span><span class="o">=</span><span class="n">tracker</span><span class="p">,</span>
+        <span class="n">experiment_key</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;model1_slack_</span><span class="si">{</span><span class="n">slack</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">model_eval_fn</span><span class="o">=</span><span class="n">evaluator</span><span class="p">,</span>
+        <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span>
+        <span class="n">dim</span><span class="o">=</span><span class="n">dim</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Save the centralized tracker dictionary to CSV for analysis</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">to_dataframe</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;OptimizationResults_model1_4_dof.csv&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Optimization Complete. Data saved to OptimizationResults_model1_4_dof.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Ex1_2D_4dof_Opti_Manual.html" class="btn btn-neutral float-left" title="Ex 1: Optimization-Based Model &amp; Vector Loops (2D / 4-DOF)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kramer84.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

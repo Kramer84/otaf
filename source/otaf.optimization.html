@@ -14,8 +14,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=2709fde1"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -34,6 +34,7 @@
           
           <a href="../index.html" class="icon icon-home">
             otaf
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -69,37 +70,12 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.capabilities.html">otaf.capabilities package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.common.html">otaf.common package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.constants.html">otaf.constants package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.distribution.html">otaf.distribution package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.example_models.html">otaf.example_models package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.exceptions.html">otaf.exceptions package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.geometry.html">otaf.geometry package</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">otaf.optimization package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-otaf.optimization">Module contents</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#otaf.optimization.OptimizationTracker"><code class="docutils literal notranslate"><span class="pre">OptimizationTracker</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#otaf.optimization.OptimizationTracker.history"><code class="docutils literal notranslate"><span class="pre">OptimizationTracker.history</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#otaf.optimization.OptimizationTracker.precision_decimals"><code class="docutils literal notranslate"><span class="pre">OptimizationTracker.precision_decimals</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#otaf.optimization.OptimizationTracker.bounds"><code class="docutils literal notranslate"><span class="pre">OptimizationTracker.bounds</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#otaf.optimization.OptimizationTracker.constraint_tolerance"><code class="docutils literal notranslate"><span class="pre">OptimizationTracker.constraint_tolerance</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#otaf.optimization.OptimizationTracker.filter_points"><code class="docutils literal notranslate"><span class="pre">OptimizationTracker.filter_points()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#otaf.optimization.OptimizationTracker.get_data"><code class="docutils literal notranslate"><span class="pre">OptimizationTracker.get_data()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#otaf.optimization.OptimizationTracker.to_dataframe"><code class="docutils literal notranslate"><span class="pre">OptimizationTracker.to_dataframe()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#otaf.optimization.OptimizationTracker.update_constraint_data"><code class="docutils literal notranslate"><span class="pre">OptimizationTracker.update_constraint_data()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#otaf.optimization.OptimizationTracker.update_objective_data"><code class="docutils literal notranslate"><span class="pre">OptimizationTracker.update_objective_data()</span></code></a></li>
 </ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.plotting.html">otaf.plotting package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.sampling.html">otaf.sampling package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.sensitivity.html">otaf.sensitivity package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.surrogate.html">otaf.surrogate package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.tolerances.html">otaf.tolerances package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.uncertainty.html">otaf.uncertainty package</a></li>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Ex1_2D_4dof_Analytical_Ref.html">Ex 1: Analytical Reference Model (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Ex1_2D_4dof_Opti_Manual.html">Ex 1: Optimization-Based Model &amp; Vector Loops (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Ex1_2D_4dof_Opti_Auto_Surrogate.html">Ex 1: Automatic Topological Generation &amp; Surrogate Optimization (2D / 4-DOF)</a></li>
 </ul>
 
         </div>
@@ -135,7 +111,7 @@
 <p>Tool to track optimization history and manage constraints.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="otaf.optimization.OptimizationTracker">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.optimization.</span></span><span class="sig-name descname"><span class="pre">OptimizationTracker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraint_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision_decimals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationTracker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationTracker" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.optimization.</span></span><span class="sig-name descname"><span class="pre">OptimizationTracker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraint_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision_decimals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/optimization/_optimization_storage.html#OptimizationTracker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.optimization.OptimizationTracker" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>High-performance storage for optimization loops.</p>
 <p>Uses byte-hashing for <code class="docutils literal notranslate"><span class="pre">O(1)</span></code> lookups during execution, and exports to
@@ -280,7 +256,7 @@ outputs.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -305,7 +281,7 @@ Default is “local”.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>

@@ -32,3 +32,10 @@ html, body {
     margin: 0;
     padding: 0;
 }
+
+/* Constrain the sidebar logo height and center it nicely */
+.wy-side-nav-search img.logo {
+    max-height: 60px;
+    width: auto;
+    margin-bottom: 5px;
+}

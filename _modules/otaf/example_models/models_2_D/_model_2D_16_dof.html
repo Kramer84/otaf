@@ -1,0 +1,698 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>otaf.example_models.models_2_D._model_2D_16_dof &mdash; otaf 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            otaf
+              <img src="../../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules.html">otaf</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../notebooks/Ex1_2D_4dof_Analytical_Ref.html">Ex 1: Analytical Reference Model (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../notebooks/Ex1_2D_4dof_Opti_Manual.html">Ex 1: Optimization-Based Model &amp; Vector Loops (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../notebooks/Ex1_2D_4dof_Opti_Auto_Surrogate.html">Ex 1: Automatic Topological Generation &amp; Surrogate Optimization (2D / 4-DOF)</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">otaf</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">otaf.example_models.models_2_D._model_2D_16_dof</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for otaf.example_models.models_2_D._model_2D_16_dof</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;get_system_of_constraints_assembly_model&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;get_distribution_params&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;eval_scaled_credal_set_constraints&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;get_scaled_credal_set_constraints_function&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dim&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;sample_multiplier&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;no_tol&quot;</span><span class="p">,</span> 
+<span class="p">]</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">otaf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">otaf.tolerances</span><span class="w"> </span><span class="kn">import</span> <span class="n">sigma_delta_3D_plane</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_assembly_data</span><span class="p">(</span>
+    <span class="n">hM</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span>
+    <span class="n">hF</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.2</span><span class="p">,</span>
+    <span class="n">L1</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">30.0</span><span class="p">,</span>
+    <span class="n">L2</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">70.0</span><span class="p">,</span>
+    <span class="n">L3</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">30.0</span><span class="p">,</span>
+    <span class="n">lM</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span>
+    <span class="n">lF</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.2</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate the system configuration data for the assembly.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    hM : float, default 10.0</span>
+<span class="sd">        Height parameter for the male component.</span>
+<span class="sd">    hF : float, default 10.2</span>
+<span class="sd">        Height parameter for the female component.</span>
+<span class="sd">    L1 : float, default 30.0</span>
+<span class="sd">        Length of the first section.</span>
+<span class="sd">    L2 : float, default 70.0</span>
+<span class="sd">        Length of the second section.</span>
+<span class="sd">    L3 : float, default 30.0</span>
+<span class="sd">        Length of the third section.</span>
+<span class="sd">    lM : float, default 10.0</span>
+<span class="sd">        Interface length for the male component.</span>
+<span class="sd">    lF : float, default 10.2</span>
+<span class="sd">        Interface length for the female component.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        A configuration dictionary detailing components, frames,</span>
+<span class="sd">        points, interactions, loops, and global constraints.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">P1A0</span><span class="p">,</span> <span class="n">P1A1</span><span class="p">,</span> <span class="n">P1A2</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">-</span> <span class="n">lM</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">hM</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">-</span> <span class="n">lM</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">-</span> <span class="n">lM</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">hM</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+    <span class="p">)</span>
+    <span class="n">P1B0</span><span class="p">,</span> <span class="n">P1B1</span><span class="p">,</span> <span class="n">P1B2</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">+</span> <span class="n">lM</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">hM</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">+</span> <span class="n">lM</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">+</span> <span class="n">lM</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">hM</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+    <span class="p">)</span>
+    <span class="n">P1C0</span><span class="p">,</span> <span class="n">P1C1</span><span class="p">,</span> <span class="n">P1C2</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">+</span> <span class="n">L2</span> <span class="o">-</span> <span class="n">lM</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">hM</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">+</span> <span class="n">L2</span> <span class="o">-</span> <span class="n">lM</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">+</span> <span class="n">L2</span> <span class="o">-</span> <span class="n">lM</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">hM</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+    <span class="p">)</span>
+    <span class="n">P1D0</span><span class="p">,</span> <span class="n">P1D1</span><span class="p">,</span> <span class="n">P1D2</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">+</span> <span class="n">L2</span> <span class="o">+</span> <span class="n">lM</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">hM</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">+</span> <span class="n">L2</span> <span class="o">+</span> <span class="n">lM</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">+</span> <span class="n">L2</span> <span class="o">+</span> <span class="n">lM</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">hM</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+    <span class="p">)</span>
+    <span class="n">P1E0</span><span class="p">,</span> <span class="n">P1E1</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">+</span> <span class="n">L2</span> <span class="o">+</span> <span class="n">L3</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)))</span>
+    <span class="n">P2A0</span><span class="p">,</span> <span class="n">P2A1</span><span class="p">,</span> <span class="n">P2A2</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">-</span> <span class="n">lF</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">hF</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">-</span> <span class="n">lF</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">-</span> <span class="n">lF</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">hF</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+    <span class="p">)</span>
+    <span class="n">P2B0</span><span class="p">,</span> <span class="n">P2B1</span><span class="p">,</span> <span class="n">P2B2</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">+</span> <span class="n">lF</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">hF</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">+</span> <span class="n">lF</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">+</span> <span class="n">lF</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">hF</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+    <span class="p">)</span>
+    <span class="n">P2C0</span><span class="p">,</span> <span class="n">P2C1</span><span class="p">,</span> <span class="n">P2C2</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">+</span> <span class="n">L2</span> <span class="o">-</span> <span class="n">lF</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">hF</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">+</span> <span class="n">L2</span> <span class="o">-</span> <span class="n">lF</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">+</span> <span class="n">L2</span> <span class="o">-</span> <span class="n">lF</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">hF</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+    <span class="p">)</span>
+    <span class="n">P2D0</span><span class="p">,</span> <span class="n">P2D1</span><span class="p">,</span> <span class="n">P2D2</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">+</span> <span class="n">L2</span> <span class="o">+</span> <span class="n">lF</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">hF</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">+</span> <span class="n">L2</span> <span class="o">+</span> <span class="n">lF</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">+</span> <span class="n">L2</span> <span class="o">+</span> <span class="n">lF</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">hF</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+    <span class="p">)</span>
+    <span class="n">P2E0</span><span class="p">,</span> <span class="n">P2E1</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">+</span> <span class="n">L2</span> <span class="o">+</span> <span class="n">L3</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)))</span>
+    <span class="n">R0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+    <span class="n">x_</span><span class="p">,</span> <span class="n">y_</span><span class="p">,</span> <span class="n">z_</span> <span class="o">=</span> <span class="p">(</span><span class="n">R0</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">R0</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">R0</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">RP1b</span> <span class="o">=</span> <span class="n">RP1d</span> <span class="o">=</span> <span class="n">R0</span>
+    <span class="n">RP1a</span> <span class="o">=</span> <span class="n">RP1c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">x_</span><span class="p">,</span> <span class="o">-</span><span class="n">y_</span><span class="p">,</span> <span class="n">z_</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">RP1e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">y_</span><span class="p">,</span> <span class="o">-</span><span class="n">x_</span><span class="p">,</span> <span class="n">z_</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">RP2a</span> <span class="o">=</span> <span class="n">RP2c</span> <span class="o">=</span> <span class="n">R0</span>
+    <span class="n">RP2b</span> <span class="o">=</span> <span class="n">RP2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">x_</span><span class="p">,</span> <span class="o">-</span><span class="n">y_</span><span class="p">,</span> <span class="n">z_</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">RP2e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">y_</span><span class="p">,</span> <span class="n">x_</span><span class="p">,</span> <span class="n">z_</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">TP1cC0</span><span class="p">,</span> <span class="n">TP1cC1</span><span class="p">,</span> <span class="n">TP1cC2</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP1c</span><span class="p">,</span> <span class="n">P1C0</span><span class="p">),</span>
+        <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP1c</span><span class="p">,</span> <span class="n">P1C1</span><span class="p">),</span>
+        <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP1c</span><span class="p">,</span> <span class="n">P1C2</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">TP1aA0</span><span class="p">,</span> <span class="n">TP1aA1</span><span class="p">,</span> <span class="n">TP1aA2</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP1a</span><span class="p">,</span> <span class="n">P1A0</span><span class="p">),</span>
+        <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP1a</span><span class="p">,</span> <span class="n">P1A1</span><span class="p">),</span>
+        <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP1a</span><span class="p">,</span> <span class="n">P1A2</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">TP1bB0</span><span class="p">,</span> <span class="n">TP1bB1</span><span class="p">,</span> <span class="n">TP1bB2</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP1b</span><span class="p">,</span> <span class="n">P1B0</span><span class="p">),</span>
+        <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP1b</span><span class="p">,</span> <span class="n">P1B1</span><span class="p">),</span>
+        <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP1b</span><span class="p">,</span> <span class="n">P1B2</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">TP1dD0</span><span class="p">,</span> <span class="n">TP1dD1</span><span class="p">,</span> <span class="n">TP1dD2</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP1d</span><span class="p">,</span> <span class="n">P1D0</span><span class="p">),</span>
+        <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP1d</span><span class="p">,</span> <span class="n">P1D1</span><span class="p">),</span>
+        <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP1d</span><span class="p">,</span> <span class="n">P1D2</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">TP1eE0</span><span class="p">,</span> <span class="n">TP1eE1</span> <span class="o">=</span> <span class="p">(</span><span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP1e</span><span class="p">,</span> <span class="n">P1E0</span><span class="p">),</span> <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP1e</span><span class="p">,</span> <span class="n">P1E1</span><span class="p">))</span>
+    <span class="n">TP2aA0</span><span class="p">,</span> <span class="n">TP2aA1</span><span class="p">,</span> <span class="n">TP2aA2</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP2a</span><span class="p">,</span> <span class="n">P2A0</span><span class="p">),</span>
+        <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP2a</span><span class="p">,</span> <span class="n">P2A1</span><span class="p">),</span>
+        <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP2a</span><span class="p">,</span> <span class="n">P2A2</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">TP2cC0</span><span class="p">,</span> <span class="n">TP2cC1</span><span class="p">,</span> <span class="n">TP2cC2</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP2c</span><span class="p">,</span> <span class="n">P2C0</span><span class="p">),</span>
+        <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP2c</span><span class="p">,</span> <span class="n">P2C1</span><span class="p">),</span>
+        <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP2c</span><span class="p">,</span> <span class="n">P2C2</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">TP2bB0</span><span class="p">,</span> <span class="n">TP2bB1</span><span class="p">,</span> <span class="n">TP2bB2</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP2b</span><span class="p">,</span> <span class="n">P2B0</span><span class="p">),</span>
+        <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP2b</span><span class="p">,</span> <span class="n">P2B1</span><span class="p">),</span>
+        <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP2b</span><span class="p">,</span> <span class="n">P2B2</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">TP2dD0</span><span class="p">,</span> <span class="n">TP2dD1</span><span class="p">,</span> <span class="n">TP2dD2</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP2d</span><span class="p">,</span> <span class="n">P2D0</span><span class="p">),</span>
+        <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP2d</span><span class="p">,</span> <span class="n">P2D1</span><span class="p">),</span>
+        <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP2d</span><span class="p">,</span> <span class="n">P2D2</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">TP2eE0</span><span class="p">,</span> <span class="n">TP2eE1</span> <span class="o">=</span> <span class="p">(</span><span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP2e</span><span class="p">,</span> <span class="n">P2E0</span><span class="p">),</span> <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP2e</span><span class="p">,</span> <span class="n">P2E1</span><span class="p">))</span>
+    <span class="n">system_data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;PARTS&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">RP1a</span><span class="p">,</span>
+                    <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;NONE&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;A0&quot;</span><span class="p">:</span> <span class="n">P1A0</span><span class="p">,</span> <span class="s2">&quot;A1&quot;</span><span class="p">:</span> <span class="n">P1A1</span><span class="p">,</span> <span class="s2">&quot;A2&quot;</span><span class="p">:</span> <span class="n">P1A2</span><span class="p">},</span>
+                    <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;P2a&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FLOATING&quot;</span><span class="p">],</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">RP1b</span><span class="p">,</span>
+                    <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;NONE&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;B0&quot;</span><span class="p">:</span> <span class="n">P1B0</span><span class="p">,</span> <span class="s2">&quot;B1&quot;</span><span class="p">:</span> <span class="n">P1B1</span><span class="p">,</span> <span class="s2">&quot;B2&quot;</span><span class="p">:</span> <span class="n">P1B2</span><span class="p">},</span>
+                    <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;P2b&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FLOATING&quot;</span><span class="p">],</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">RP1c</span><span class="p">,</span>
+                    <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;NONE&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;C0&quot;</span><span class="p">:</span> <span class="n">P1C0</span><span class="p">,</span> <span class="s2">&quot;C1&quot;</span><span class="p">:</span> <span class="n">P1C1</span><span class="p">,</span> <span class="s2">&quot;C2&quot;</span><span class="p">:</span> <span class="n">P1C2</span><span class="p">},</span>
+                    <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;P2c&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FLOATING&quot;</span><span class="p">],</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;d&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">RP1d</span><span class="p">,</span>
+                    <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;NONE&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;D0&quot;</span><span class="p">:</span> <span class="n">P1D0</span><span class="p">,</span> <span class="s2">&quot;D1&quot;</span><span class="p">:</span> <span class="n">P1D1</span><span class="p">,</span> <span class="s2">&quot;D2&quot;</span><span class="p">:</span> <span class="n">P1D2</span><span class="p">},</span>
+                    <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;P2d&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FLOATING&quot;</span><span class="p">],</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;e&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">RP1e</span><span class="p">,</span>
+                    <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;PERFECT&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;E0&quot;</span><span class="p">:</span> <span class="n">P1E0</span><span class="p">,</span> <span class="s2">&quot;E1&quot;</span><span class="p">:</span> <span class="n">P1E1</span><span class="p">},</span>
+                    <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;P2e&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SLIDING&quot;</span><span class="p">],</span>
+                <span class="p">},</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">RP2a</span><span class="p">,</span>
+                    <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;NONE&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;A0&quot;</span><span class="p">:</span> <span class="n">P2A0</span><span class="p">,</span> <span class="s2">&quot;A1&quot;</span><span class="p">:</span> <span class="n">P2A1</span><span class="p">,</span> <span class="s2">&quot;A2&quot;</span><span class="p">:</span> <span class="n">P2A2</span><span class="p">},</span>
+                    <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;P1a&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FLOATING&quot;</span><span class="p">],</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">RP2b</span><span class="p">,</span>
+                    <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;NONE&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;B0&quot;</span><span class="p">:</span> <span class="n">P2B0</span><span class="p">,</span> <span class="s2">&quot;B1&quot;</span><span class="p">:</span> <span class="n">P2B1</span><span class="p">,</span> <span class="s2">&quot;B2&quot;</span><span class="p">:</span> <span class="n">P2B2</span><span class="p">},</span>
+                    <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;P1b&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FLOATING&quot;</span><span class="p">],</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">RP2c</span><span class="p">,</span>
+                    <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;NONE&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;C0&quot;</span><span class="p">:</span> <span class="n">P2C0</span><span class="p">,</span> <span class="s2">&quot;C1&quot;</span><span class="p">:</span> <span class="n">P2C1</span><span class="p">,</span> <span class="s2">&quot;C2&quot;</span><span class="p">:</span> <span class="n">P2C2</span><span class="p">},</span>
+                    <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;P1c&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FLOATING&quot;</span><span class="p">],</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;d&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">RP2d</span><span class="p">,</span>
+                    <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;NONE&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;D0&quot;</span><span class="p">:</span> <span class="n">P2D0</span><span class="p">,</span> <span class="s2">&quot;D1&quot;</span><span class="p">:</span> <span class="n">P2D1</span><span class="p">,</span> <span class="s2">&quot;D2&quot;</span><span class="p">:</span> <span class="n">P2D2</span><span class="p">},</span>
+                    <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;P1d&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FLOATING&quot;</span><span class="p">],</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;e&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">RP2e</span><span class="p">,</span>
+                    <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;PERFECT&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;E0&quot;</span><span class="p">:</span> <span class="n">P2E0</span><span class="p">,</span> <span class="s2">&quot;E1&quot;</span><span class="p">:</span> <span class="n">P2E1</span><span class="p">},</span>
+                    <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;P1e&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SLIDING&quot;</span><span class="p">],</span>
+                <span class="p">},</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;LOOPS&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;COMPATIBILITY&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;L0&quot;</span><span class="p">:</span> <span class="s2">&quot;P1eE0 -&gt; P2eE0 -&gt; P2aA0 -&gt; P1aA0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;L1&quot;</span><span class="p">:</span> <span class="s2">&quot;P1eE0 -&gt; P2eE0 -&gt; P2dD0 -&gt; P1dD0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;L2&quot;</span><span class="p">:</span> <span class="s2">&quot;P1cC0 -&gt; P2cC0 -&gt; P2bB0 -&gt; P1bB0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;L3&quot;</span><span class="p">:</span> <span class="s2">&quot;P1bB0 -&gt; P2bB0 -&gt; P2aA0 -&gt; P1aA0&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;GLOBAL_CONSTRAINTS&quot;</span><span class="p">:</span> <span class="s2">&quot;2D_NZ&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">system_data</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_assembly_data_processor_object</span><span class="p">(</span>
+    <span class="n">system_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">otaf</span><span class="o">.</span><span class="n">AssemblyDataProcessor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize and prepare an AssemblyDataProcessor instance.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    system_data : dict, optional</span>
+<span class="sd">        The configuration dictionary containing assembly definitions.</span>
+<span class="sd">        If None, default assembly data is generated.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    otaf.AssemblyDataProcessor</span>
+<span class="sd">        The data processor with generated expanded loops.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">SDA</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">AssemblyDataProcessor</span><span class="p">(</span><span class="n">system_data</span><span class="p">)</span>
+    <span class="n">SDA</span><span class="o">.</span><span class="n">generate_expanded_loops</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">SDA</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_compatibility_loop_handling_object</span><span class="p">(</span>
+    <span class="n">SDA</span><span class="p">:</span> <span class="n">otaf</span><span class="o">.</span><span class="n">AssemblyDataProcessor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">otaf</span><span class="o">.</span><span class="n">CompatibilityLoopHandling</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a CompatibilityLoopHandling instance for assembly loops.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    SDA : otaf.AssemblyDataProcessor, optional</span>
+<span class="sd">        The assembly data processor. If None, a default instance</span>
+<span class="sd">        is instantiated.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    otaf.CompatibilityLoopHandling</span>
+<span class="sd">        The configured compatibility loop handler object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">SDA</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">SDA</span> <span class="k">if</span> <span class="n">SDA</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">get_assembly_data_processor_object</span><span class="p">(</span><span class="n">get_assembly_data</span><span class="p">())</span>
+    <span class="p">)</span>
+    <span class="n">CLH</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">CompatibilityLoopHandling</span><span class="p">(</span><span class="n">SDA</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">CLH</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_interface_loop_handling_object</span><span class="p">(</span>
+    <span class="n">SDA</span><span class="p">:</span> <span class="n">otaf</span><span class="o">.</span><span class="n">AssemblyDataProcessor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">CLH</span><span class="p">:</span> <span class="n">otaf</span><span class="o">.</span><span class="n">CompatibilityLoopHandling</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">otaf</span><span class="o">.</span><span class="n">InterfaceLoopHandling</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create an InterfaceLoopHandling instance with set resolution.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    SDA : otaf.AssemblyDataProcessor, optional</span>
+<span class="sd">        The assembly data processor. If None, a default hierarchy</span>
+<span class="sd">        is created along with `CLH`.</span>
+<span class="sd">    CLH : otaf.CompatibilityLoopHandling, optional</span>
+<span class="sd">        The compatibility loop handler. If None, a default hierarchy</span>
+<span class="sd">        is created along with `SDA`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    otaf.InterfaceLoopHandling</span>
+<span class="sd">        The initialized interface loop handler object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">SDA</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">CLH</span><span class="p">:</span>
+        <span class="n">SDA</span> <span class="o">=</span> <span class="n">get_assembly_data_processor_object</span><span class="p">(</span><span class="n">get_assembly_data</span><span class="p">())</span>
+        <span class="n">CLH</span> <span class="o">=</span> <span class="n">get_compatibility_loop_handling_object</span><span class="p">(</span><span class="n">SDA</span><span class="p">)</span>
+    <span class="n">ILH</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">InterfaceLoopHandling</span><span class="p">(</span><span class="n">SDA</span><span class="p">,</span> <span class="n">CLH</span><span class="p">,</span> <span class="n">circle_resolution</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ILH</span>
+
+
+<div class="viewcode-block" id="get_system_of_constraints_assembly_model">
+<a class="viewcode-back" href="../../../../source/otaf.example_models.models_2_D.model2.html#otaf.example_models.models_2_D.model2.get_system_of_constraints_assembly_model">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_system_of_constraints_assembly_model</span><span class="p">(</span>
+    <span class="n">hM</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span>
+    <span class="n">hF</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.2</span><span class="p">,</span>
+    <span class="n">L1</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">30.0</span><span class="p">,</span>
+    <span class="n">L2</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">70.0</span><span class="p">,</span>
+    <span class="n">L3</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">30.0</span><span class="p">,</span>
+    <span class="n">lM</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span>
+    <span class="n">lF</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.2</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">otaf</span><span class="o">.</span><span class="n">SystemOfConstraintsAssemblyModel</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct the complete system of constraints assembly model.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    hM : float, default 10.0</span>
+<span class="sd">        Height parameter for the male component.</span>
+<span class="sd">    hF : float, default 10.2</span>
+<span class="sd">        Height parameter for the female component.</span>
+<span class="sd">    L1 : float, default 30.0</span>
+<span class="sd">        Length of the first section.</span>
+<span class="sd">    L2 : float, default 70.0</span>
+<span class="sd">        Length of the second section.</span>
+<span class="sd">    L3 : float, default 30.0</span>
+<span class="sd">        Length of the third section.</span>
+<span class="sd">    lM : float, default 10.0</span>
+<span class="sd">        Interface length for the male component.</span>
+<span class="sd">    lF : float, default 10.2</span>
+<span class="sd">        Interface length for the female component.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    otaf.SystemOfConstraintsAssemblyModel</span>
+<span class="sd">        The initialized assembly model with embedded optimization</span>
+<span class="sd">        variables.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">SDA</span> <span class="o">=</span> <span class="n">get_assembly_data_processor_object</span><span class="p">(</span><span class="n">get_assembly_data</span><span class="p">(</span><span class="n">hM</span><span class="p">,</span> <span class="n">hF</span><span class="p">,</span> <span class="n">L1</span><span class="p">,</span> <span class="n">L2</span><span class="p">,</span> <span class="n">L3</span><span class="p">,</span> <span class="n">lM</span><span class="p">,</span> <span class="n">lF</span><span class="p">))</span>
+    <span class="n">CLH</span> <span class="o">=</span> <span class="n">get_compatibility_loop_handling_object</span><span class="p">(</span><span class="n">SDA</span><span class="p">)</span>
+    <span class="n">ILH</span> <span class="o">=</span> <span class="n">get_interface_loop_handling_object</span><span class="p">(</span><span class="n">SDA</span><span class="p">,</span> <span class="n">CLH</span><span class="p">)</span>
+    <span class="n">compatibility_expressions</span> <span class="o">=</span> <span class="n">CLH</span><span class="o">.</span><span class="n">get_compatibility_expression_from_FO_matrices</span><span class="p">()</span>
+    <span class="n">interface_constraints</span> <span class="o">=</span> <span class="n">ILH</span><span class="o">.</span><span class="n">get_interface_loop_expressions</span><span class="p">()</span>
+    <span class="n">SOCAM</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">SystemOfConstraintsAssemblyModel</span><span class="p">(</span>
+        <span class="n">compatibility_expressions</span><span class="p">,</span> <span class="n">interface_constraints</span>
+    <span class="p">)</span>
+    <span class="n">SOCAM</span><span class="o">.</span><span class="n">embedOptimizationVariable</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">SOCAM</span></div>
+
+
+
+<div class="viewcode-block" id="get_distribution_params">
+<a class="viewcode-back" href="../../../../source/otaf.example_models.models_2_D.model2.html#otaf.example_models.models_2_D.model2.get_distribution_params">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_distribution_params</span><span class="p">(</span>
+    <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.16</span><span class="p">,</span>
+    <span class="n">capa</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">hM</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span>
+    <span class="n">hF</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.2</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute defect distribution parameters and variance vectors.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tol : float, default 0.16</span>
+<span class="sd">        Tolerance limit value used to compute standard deviations.</span>
+<span class="sd">    capa : float, default 1.0</span>
+<span class="sd">        Process capability index factor.</span>
+<span class="sd">    hM : float, default 10.0</span>
+<span class="sd">        Height parameter for the male component.</span>
+<span class="sd">    hF : float, default 10.2</span>
+<span class="sd">        Height parameter for the female component.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    RandDeviationVect : otaf.distribution.ComposedDistribution</span>
+<span class="sd">        The joint normal defect distribution model.</span>
+<span class="sd">    deviation_symbols : list of sympy.Symbol</span>
+<span class="sd">        The symbolic tracking parameters for spatial deviations.</span>
+<span class="sd">    max_std_vect : np.ndarray</span>
+<span class="sd">        A 1D array of calculated maximum standard deviations.</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        A 1D array of zero-initialized mean parameter offsets.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">deviation_symbols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+        <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span>
+            <span class="s2">&quot;u_d_2 gamma_d_2 u_d_3 gamma_d_3 u_d_4 gamma_d_4 u_d_5 gamma_d_5 u_d_6 gamma_d_6 u_d_7 gamma_d_7 u_d_8 gamma_d_8 u_d_9 gamma_d_9&quot;</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">sigma_e_pos</span> <span class="o">=</span> <span class="n">tol</span> <span class="o">/</span> <span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">capa</span><span class="p">)</span>
+    <span class="n">theta_max_m</span> <span class="o">=</span> <span class="n">tol</span> <span class="o">/</span> <span class="n">hM</span>
+    <span class="n">theta_max_f</span> <span class="o">=</span> <span class="n">tol</span> <span class="o">/</span> <span class="n">hF</span>
+    <span class="n">sigma_e_theta_m</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">theta_max_m</span> <span class="o">/</span> <span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">capa</span><span class="p">)</span>
+    <span class="n">sigma_e_theta_f</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">theta_max_f</span> <span class="o">/</span> <span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">capa</span><span class="p">)</span>
+    <span class="n">RandDeviationVect</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">get_composed_normal_defect_distribution</span><span class="p">(</span>
+        <span class="n">defect_names</span><span class="o">=</span><span class="n">deviation_symbols</span><span class="p">,</span>
+        <span class="n">sigma_dict</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;gamma_d_2&quot;</span><span class="p">:</span> <span class="n">sigma_e_theta_f</span><span class="p">,</span>
+            <span class="s2">&quot;gamma_d_3&quot;</span><span class="p">:</span> <span class="n">sigma_e_theta_m</span><span class="p">,</span>
+            <span class="s2">&quot;gamma_d_4&quot;</span><span class="p">:</span> <span class="n">sigma_e_theta_f</span><span class="p">,</span>
+            <span class="s2">&quot;gamma_d_5&quot;</span><span class="p">:</span> <span class="n">sigma_e_theta_m</span><span class="p">,</span>
+            <span class="s2">&quot;gamma_d_6&quot;</span><span class="p">:</span> <span class="n">sigma_e_theta_m</span><span class="p">,</span>
+            <span class="s2">&quot;gamma_d_7&quot;</span><span class="p">:</span> <span class="n">sigma_e_theta_f</span><span class="p">,</span>
+            <span class="s2">&quot;gamma_d_8&quot;</span><span class="p">:</span> <span class="n">sigma_e_theta_f</span><span class="p">,</span>
+            <span class="s2">&quot;gamma_d_9&quot;</span><span class="p">:</span> <span class="n">sigma_e_theta_m</span><span class="p">,</span>
+            <span class="s2">&quot;u&quot;</span><span class="p">:</span> <span class="n">sigma_e_pos</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">max_std_vect</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">sigma_e_pos</span><span class="p">,</span>
+            <span class="n">sigma_e_theta_f</span><span class="p">,</span>
+            <span class="n">sigma_e_pos</span><span class="p">,</span>
+            <span class="n">sigma_e_theta_m</span><span class="p">,</span>
+            <span class="n">sigma_e_pos</span><span class="p">,</span>
+            <span class="n">sigma_e_theta_f</span><span class="p">,</span>
+            <span class="n">sigma_e_pos</span><span class="p">,</span>
+            <span class="n">sigma_e_theta_m</span><span class="p">,</span>
+            <span class="n">sigma_e_pos</span><span class="p">,</span>
+            <span class="n">sigma_e_theta_m</span><span class="p">,</span>
+            <span class="n">sigma_e_pos</span><span class="p">,</span>
+            <span class="n">sigma_e_theta_f</span><span class="p">,</span>
+            <span class="n">sigma_e_pos</span><span class="p">,</span>
+            <span class="n">sigma_e_theta_f</span><span class="p">,</span>
+            <span class="n">sigma_e_pos</span><span class="p">,</span>
+            <span class="n">sigma_e_theta_m</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">RandDeviationVect</span><span class="p">,</span> <span class="n">deviation_symbols</span><span class="p">,</span> <span class="n">max_std_vect</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">16</span><span class="p">))</span></div>
+
+
+
+<span class="n">dim</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="n">sample_multiplier</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+<span class="n">no_tol</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="eval_scaled_credal_set_constraints">
+<a class="viewcode-back" href="../../../../source/otaf.example_models.models_2_D.model2.html#otaf.example_models.models_2_D.model2.eval_scaled_credal_set_constraints">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">eval_scaled_credal_set_constraints</span><span class="p">(</span>
+    <span class="n">x_scaled</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">max_std_vect</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">tracker</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">experiment_key</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.16</span><span class="p">,</span>
+    <span class="n">capa</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">hM</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span>
+    <span class="n">hF</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.2</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Map scaled deviations to real values and evaluate constraints.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x_scaled : np.ndarray</span>
+<span class="sd">        The scaled standard deviation vector inputs.</span>
+<span class="sd">    max_std_vect : np.ndarray</span>
+<span class="sd">        The upper-bound limits for standard deviation mapping.</span>
+<span class="sd">    tracker : Any, optional</span>
+<span class="sd">        Data logging tracker instance. Default is None.</span>
+<span class="sd">    experiment_key : Any, optional</span>
+<span class="sd">        Unique identifier key for tracking logs. Default is None.</span>
+<span class="sd">    tol : float, default 0.16</span>
+<span class="sd">        The baseline design tolerance.</span>
+<span class="sd">    capa : float, default 1.0</span>
+<span class="sd">        The process capability standard multiplier.</span>
+<span class="sd">    hM : float, default 10.0</span>
+<span class="sd">        Height parameter for the male component.</span>
+<span class="sd">    hF : float, default 10.2</span>
+<span class="sd">        Height parameter for the female component.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        The calculated constraint evaluation bounds array.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">tol</span> <span class="o">/</span> <span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">capa</span><span class="p">)</span>
+    <span class="n">constraint1</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">sigma_delta_3D_plane</span><span class="p">(</span><span class="n">hF</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x_std</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x_std</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="n">target</span>
+    <span class="p">)</span> <span class="o">/</span> <span class="n">target</span>
+    <span class="n">constraint2</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">sigma_delta_3D_plane</span><span class="p">(</span><span class="n">hM</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x_std</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x_std</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">-</span> <span class="n">target</span>
+    <span class="p">)</span> <span class="o">/</span> <span class="n">target</span>
+    <span class="n">constraint3</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">sigma_delta_3D_plane</span><span class="p">(</span><span class="n">hF</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x_std</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x_std</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span> <span class="o">-</span> <span class="n">target</span>
+    <span class="p">)</span> <span class="o">/</span> <span class="n">target</span>
+    <span class="n">constraint4</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">sigma_delta_3D_plane</span><span class="p">(</span><span class="n">hM</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x_std</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x_std</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span> <span class="o">-</span> <span class="n">target</span>
+    <span class="p">)</span> <span class="o">/</span> <span class="n">target</span>
+    <span class="n">constraint5</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">sigma_delta_3D_plane</span><span class="p">(</span><span class="n">hM</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x_std</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x_std</span><span class="p">[</span><span class="mi">9</span><span class="p">])</span> <span class="o">-</span> <span class="n">target</span>
+    <span class="p">)</span> <span class="o">/</span> <span class="n">target</span>
+    <span class="n">constraint6</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">sigma_delta_3D_plane</span><span class="p">(</span><span class="n">hF</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x_std</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x_std</span><span class="p">[</span><span class="mi">11</span><span class="p">])</span> <span class="o">-</span> <span class="n">target</span>
+    <span class="p">)</span> <span class="o">/</span> <span class="n">target</span>
+    <span class="n">constraint7</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">sigma_delta_3D_plane</span><span class="p">(</span><span class="n">hF</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x_std</span><span class="p">[</span><span class="mi">12</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x_std</span><span class="p">[</span><span class="mi">13</span><span class="p">])</span> <span class="o">-</span> <span class="n">target</span>
+    <span class="p">)</span> <span class="o">/</span> <span class="n">target</span>
+    <span class="n">constraint8</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">sigma_delta_3D_plane</span><span class="p">(</span><span class="n">hM</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x_std</span><span class="p">[</span><span class="mi">14</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x_std</span><span class="p">[</span><span class="mi">15</span><span class="p">])</span> <span class="o">-</span> <span class="n">target</span>
+    <span class="p">)</span> <span class="o">/</span> <span class="n">target</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">constraint1</span><span class="p">,</span>
+            <span class="n">constraint2</span><span class="p">,</span>
+            <span class="n">constraint3</span><span class="p">,</span>
+            <span class="n">constraint4</span><span class="p">,</span>
+            <span class="n">constraint5</span><span class="p">,</span>
+            <span class="n">constraint6</span><span class="p">,</span>
+            <span class="n">constraint7</span><span class="p">,</span>
+            <span class="n">constraint8</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_scaled_credal_set_constraints_function</span><span class="p">(</span>
+    <span class="n">max_std_vect</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">tracker</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">experiment_key</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.16</span><span class="p">,</span>
+    <span class="n">capa</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">hM</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span>
+    <span class="n">hF</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.2</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a wrapped lambda function for scaled constraints.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    max_std_vect : np.ndarray</span>
+<span class="sd">        The upper-bound limits for standard deviation mapping.</span>
+<span class="sd">    tracker : Any, optional</span>
+<span class="sd">        Data logging tracker instance. Default is None.</span>
+<span class="sd">    experiment_key : Any, optional</span>
+<span class="sd">        Unique identifier key for tracking logs. Default is None.</span>
+<span class="sd">    tol : float, default 0.16</span>
+<span class="sd">        The baseline design tolerance.</span>
+<span class="sd">    capa : float, default 1.0</span>
+<span class="sd">        The process capability index multiplier.</span>
+<span class="sd">    hM : float, default 10.0</span>
+<span class="sd">        Height parameter for the male component.</span>
+<span class="sd">    hF : float, default 10.2</span>
+<span class="sd">        Height parameter for the female component.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Callable[[np.ndarray], np.ndarray]</span>
+<span class="sd">        A single-argument function mapping `x_scaled` to its</span>
+<span class="sd">        evaluated constraint array.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x_real</span> <span class="o">=</span> <span class="n">x_scaled</span> <span class="o">*</span> <span class="n">max_std_vect</span>
+    <span class="n">constraint_array</span> <span class="o">=</span> <span class="n">eval_credal_set_constraints</span><span class="p">(</span>
+        <span class="n">x_real</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span> <span class="n">capa</span><span class="o">=</span><span class="n">capa</span><span class="p">,</span> <span class="n">hM</span><span class="o">=</span><span class="n">hM</span><span class="p">,</span> <span class="n">hF</span><span class="o">=</span><span class="n">hF</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">tracker</span><span class="p">:</span>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">update_constraint_data</span><span class="p">(</span>
+            <span class="n">exp_key</span><span class="o">=</span><span class="n">experiment_key</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x_scaled</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="n">constraint_array</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">constraint_array</span>
+
+
+<div class="viewcode-block" id="get_scaled_credal_set_constraints_function">
+<a class="viewcode-back" href="../../../../source/otaf.example_models.models_2_D.model2.html#otaf.example_models.models_2_D.model2.get_scaled_credal_set_constraints_function">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_scaled_credal_set_constraints_function</span><span class="p">(</span>
+    <span class="n">max_std_vect</span><span class="p">,</span> <span class="n">tracker</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">experiment_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.16</span><span class="p">,</span> <span class="n">capa</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">hM</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">hF</span><span class="o">=</span><span class="mf">10.2</span>
+<span class="p">):</span>
+    <span class="k">return</span> <span class="k">lambda</span> <span class="n">x_scaled</span><span class="p">:</span> <span class="n">eval_scaled_credal_set_constraints</span><span class="p">(</span>
+        <span class="n">x_scaled</span><span class="p">,</span>
+        <span class="n">max_std_vect</span><span class="p">,</span>
+        <span class="n">tracker</span><span class="p">,</span>
+        <span class="n">experiment_key</span><span class="p">,</span>
+        <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span>
+        <span class="n">capa</span><span class="o">=</span><span class="n">capa</span><span class="p">,</span>
+        <span class="n">hM</span><span class="o">=</span><span class="n">hM</span><span class="p">,</span>
+        <span class="n">hF</span><span class="o">=</span><span class="n">hF</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kramer84.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

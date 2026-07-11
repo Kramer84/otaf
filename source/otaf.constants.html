@@ -14,8 +14,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=2709fde1"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -34,6 +34,7 @@
           
           <a href="../index.html" class="icon icon-home">
             otaf
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -69,23 +70,12 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.capabilities.html">otaf.capabilities package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.common.html">otaf.common package</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">otaf.constants package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-otaf.constants">Module contents</a></li>
 </ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.distribution.html">otaf.distribution package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.example_models.html">otaf.example_models package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.exceptions.html">otaf.exceptions package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.geometry.html">otaf.geometry package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.optimization.html">otaf.optimization package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.plotting.html">otaf.plotting package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.sampling.html">otaf.sampling package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.sensitivity.html">otaf.sensitivity package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.surrogate.html">otaf.surrogate package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.tolerances.html">otaf.tolerances package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.uncertainty.html">otaf.uncertainty package</a></li>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Ex1_2D_4dof_Analytical_Ref.html">Ex 1: Analytical Reference Model (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Ex1_2D_4dof_Opti_Manual.html">Ex 1: Optimization-Based Model &amp; Vector Loops (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Ex1_2D_4dof_Opti_Auto_Surrogate.html">Ex 1: Automatic Topological Generation &amp; Surrogate Optimization (2D / 4-DOF)</a></li>
 </ul>
 
         </div>
@@ -118,7 +108,256 @@
 <h1>otaf.constants package<a class="headerlink" href="#otaf-constants-package" title="Link to this heading"></a></h1>
 <section id="module-otaf.constants">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-otaf.constants" title="Link to this heading"></a></h2>
-<p>Constants and configuration values for the OTAF project.</p>
+<p>Constants, regex patterns, and utilities for surface and gap modeling.</p>
+<p>This module defines base surface types, directions, contact types, and
+regular expressions for validating naming patterns of surfaces and parts.
+It also includes mappings for constraints and degrees of freedom (DOFs).</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">otaf.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">BASE_SURFACE_TYPES</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">BASE_SURFACE_TYPES</span><span class="p">)</span>
+<span class="go">[&#39;plane&#39;, &#39;cylinder&#39;, &#39;cone&#39;, &#39;sphere&#39;]</span>
+</pre></div>
+</div>
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.BASE_PART_SURF_PATTERN">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">BASE_PART_SURF_PATTERN</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('^P(\\d+)([a-z]+)$')</span></span><a class="headerlink" href="#otaf.constants.BASE_PART_SURF_PATTERN" title="Link to this definition"></a></dt>
+<dd><p>Regex pattern verifying structural part-surface tokens.</p>
+<p>Matches naming schemes such as <code class="docutils literal notranslate"><span class="pre">P1a</span></code>, capturing the target part index and the
+surface identifier string.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.BASE_SURFACE_TYPES">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">BASE_SURFACE_TYPES</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['plane',</span> <span class="pre">'cylinder',</span> <span class="pre">'cone',</span> <span class="pre">'sphere']</span></span><a class="headerlink" href="#otaf.constants.BASE_SURFACE_TYPES" title="Link to this definition"></a></dt>
+<dd><p>List of supported surface types for geometric modeling.</p>
+<p>Accepted types include <code class="docutils literal notranslate"><span class="pre">'plane'</span></code>, <code class="docutils literal notranslate"><span class="pre">'cylinder'</span></code>, <code class="docutils literal notranslate"><span class="pre">'cone'</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">'sphere'</span></code>. Only <code class="docutils literal notranslate"><span class="pre">'plane'</span></code> and <code class="docutils literal notranslate"><span class="pre">'cylinder'</span></code> are currently
+supported for interactions.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.BASIS_DICT">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">BASIS_DICT</span></span><a class="headerlink" href="#otaf.constants.BASIS_DICT" title="Link to this definition"></a></dt>
+<dd><p>Matrix generators forming the mathematical $SE(3)$ displacement basis.</p>
+<p>Provides projections, axes, and symbolic variable associations mapping minor
+variational transformations under small-displacement hypotheses.</p>
+<section id="structure">
+<h3>Structure<a class="headerlink" href="#structure" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>dict of str to dict</dt><dd><p>Indexed by coordinate transformation entry tags (<code class="docutils literal notranslate"><span class="pre">'1'</span></code> through
+<code class="docutils literal notranslate"><span class="pre">'6'</span></code>). Inner components hold:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">'MATRIX'</span></code> : list of list of int
+The coordinate translation or rotation generator step layout block.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'AXIS'</span></code> : str
+The target axis identifier symbol (<code class="docutils literal notranslate"><span class="pre">'x'</span></code>, <code class="docutils literal notranslate"><span class="pre">'y'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'z'</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'VARIABLE_D'</span></code> : str
+The designated notation for tracking positional part deviation metrics.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'VARIABLE_G'</span></code> : str
+The designated notation for tracking feature clearance gap metrics.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">meta hide-value<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.CONTACT_TYPES">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">CONTACT_TYPES</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['FIXED',</span> <span class="pre">'SLIDING',</span> <span class="pre">'FLOATING']</span></span><a class="headerlink" href="#otaf.constants.CONTACT_TYPES" title="Link to this definition"></a></dt>
+<dd><p>List of cinematic contact interaction types between mating parts.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.CONTACT_TYPE_TO_GAP_DOF">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">CONTACT_TYPE_TO_GAP_DOF</span></span><a class="headerlink" href="#otaf.constants.CONTACT_TYPE_TO_GAP_DOF" title="Link to this definition"></a></dt>
+<dd><p>Mapping from local interface boundary conditions to locked clearance DOFs.</p>
+<section id="id1">
+<h3>Structure<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>dict of str to dict of str to str</dt><dd><p>Maps localized contact pairs (e.g., <code class="docutils literal notranslate"><span class="pre">'plane-plane-sliding'</span></code>) to locked
+directional components.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">meta hide-value<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.D_MATRIX_MSTRING_PATTERN">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">D_MATRIX_MSTRING_PATTERN</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('^D(\\d+)([a-z]+)$')</span></span><a class="headerlink" href="#otaf.constants.D_MATRIX_MSTRING_PATTERN" title="Link to this definition"></a></dt>
+<dd><p>Regex for deviation matrix simplified naming, e.g., <code class="docutils literal notranslate"><span class="pre">D1a</span></code>.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.D_MATRIX_PATTERN1">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">D_MATRIX_PATTERN1</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('^D(i*)(\\d+)([a-z]+)$')</span></span><a class="headerlink" href="#otaf.constants.D_MATRIX_PATTERN1" title="Link to this definition"></a></dt>
+<dd><p>Regex for deviation matrix type 1, e.g., <code class="docutils literal notranslate"><span class="pre">D1a</span></code> or <code class="docutils literal notranslate"><span class="pre">Di1a</span></code>.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.D_MATRIX_PATTERN2">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">D_MATRIX_PATTERN2</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('^D(i*)(\\d+)([a-z]+)([A-Z]+\\d+)$')</span></span><a class="headerlink" href="#otaf.constants.D_MATRIX_PATTERN2" title="Link to this definition"></a></dt>
+<dd><p>Regex for deviation matrix type 2, e.g., <code class="docutils literal notranslate"><span class="pre">D1aA5</span></code>.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.D_MATRIX_PATTERN3">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">D_MATRIX_PATTERN3</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('^D(i*)(\\d+)([a-z]+)(\\d+)([a-z]+)$')</span></span><a class="headerlink" href="#otaf.constants.D_MATRIX_PATTERN3" title="Link to this definition"></a></dt>
+<dd><p>Regex for deviation matrix type 3, e.g., <code class="docutils literal notranslate"><span class="pre">D1a5b</span></code>.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.GAP_TYPE_TO_NULLIFIED_NOMINAL_COMPONENTS">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">GAP_TYPE_TO_NULLIFIED_NOMINAL_COMPONENTS</span></span><a class="headerlink" href="#otaf.constants.GAP_TYPE_TO_NULLIFIED_NOMINAL_COMPONENTS" title="Link to this definition"></a></dt>
+<dd><p>Mapping from gap topology variants to inactive perfect matrix items.</p>
+<section id="id2">
+<h3>Structure<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>dict of str to dict of str to bool</dt><dd><p>Determines whether individual translational tracking axes must be
+nullified within nominal configuration models.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">meta hide-value<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF</span></span><a class="headerlink" href="#otaf.constants.GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF" title="Link to this definition"></a></dt>
+<dd><p>Mapping from dimensional constraints to dropped deviation DOFs.</p>
+<section id="id3">
+<h3>Structure<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>dict of str to dict of str to str</dt><dd><p>Maps dimensional constraints (e.g., <code class="docutils literal notranslate"><span class="pre">'2D_NX'</span></code>) to target strings
+identifying coordinate axes removed from calculations.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">meta hide-value<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.GLOBAL_CONSTRAINTS_TO_GAP_DOF">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">GLOBAL_CONSTRAINTS_TO_GAP_DOF</span></span><a class="headerlink" href="#otaf.constants.GLOBAL_CONSTRAINTS_TO_GAP_DOF" title="Link to this definition"></a></dt>
+<dd><p>Mapping from system spatial limits to constrained clearance gap DOFs.</p>
+<section id="id4">
+<h3>Structure<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>dict of str to dict of str to str</dt><dd><p>Maps systemic dimensions to coordinate strings specifying blocked linear
+and rotational components.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">meta hide-value<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.G_MATRIX_MSTRING_PATTERN">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">G_MATRIX_MSTRING_PATTERN</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('^GP(\\d+)([a-z]+)([A-Z]+\\d+)P(\\d+)([a-z]+)([A-Z]+\\d+)$')</span></span><a class="headerlink" href="#otaf.constants.G_MATRIX_MSTRING_PATTERN" title="Link to this definition"></a></dt>
+<dd><p>Regex for gap matrix simplified naming, e.g., <code class="docutils literal notranslate"><span class="pre">GP1aA0P2aA0</span></code>.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.G_MATRIX_PATTERN1">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">G_MATRIX_PATTERN1</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('^GP(i*)(\\d+)([a-z]+)([A-Z]+\\d+)P(\\d+)([a-z]+)([A-Z]+\\d+)$')</span></span><a class="headerlink" href="#otaf.constants.G_MATRIX_PATTERN1" title="Link to this definition"></a></dt>
+<dd><p>Regex for gap matrix type 1, e.g., <code class="docutils literal notranslate"><span class="pre">GPi1aA0P2aA0</span></code>.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.G_MATRIX_PATTERN2">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">G_MATRIX_PATTERN2</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('^GP(i*)(\\d+)([a-z]+)P(\\d+)([a-z]+)$')</span></span><a class="headerlink" href="#otaf.constants.G_MATRIX_PATTERN2" title="Link to this definition"></a></dt>
+<dd><p>Regex for gap matrix type 2, e.g., <code class="docutils literal notranslate"><span class="pre">GPi1aP2a</span></code>.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.LOC_STAMP_PATTERN">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">LOC_STAMP_PATTERN</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('^P(\\d+)([a-z]+)([A-Z]+\\d+)$')</span></span><a class="headerlink" href="#otaf.constants.LOC_STAMP_PATTERN" title="Link to this definition"></a></dt>
+<dd><p>Regex to validate positioning location stamp tokens (e.g., <code class="docutils literal notranslate"><span class="pre">P1aA5</span></code>).</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.LOOP_ELEMENT_PATTERN">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">LOOP_ELEMENT_PATTERN</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('^P\\d+[a-z]+[A-Z]+\\d+$')</span></span><a class="headerlink" href="#otaf.constants.LOOP_ELEMENT_PATTERN" title="Link to this definition"></a></dt>
+<dd><p>Regex to validate kinematic loop element identifiers (e.g., <code class="docutils literal notranslate"><span class="pre">P1aA5</span></code>).</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.SURFACE_DICT_VALUE_CHECKS">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">SURFACE_DICT_VALUE_CHECKS</span></span><a class="headerlink" href="#otaf.constants.SURFACE_DICT_VALUE_CHECKS" title="Link to this definition"></a></dt>
+<dd><p>Validation lambdas checking individual parameter values for surfaces.</p>
+<section id="id5">
+<h3>Structure<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>dict of str to callable</dt><dd><p>Maps metadata validation tokens (<code class="docutils literal notranslate"><span class="pre">'TYPE'</span></code>, <code class="docutils literal notranslate"><span class="pre">'FRAME'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ORIGIN'</span></code>,
+<code class="docutils literal notranslate"><span class="pre">'INTERACTIONS'</span></code>) to diagnostic execution rules checking conformance.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">meta hide-value<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.SURFACE_DIRECTIONS">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">SURFACE_DIRECTIONS</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['centripetal',</span> <span class="pre">'centrifugal']</span></span><a class="headerlink" href="#otaf.constants.SURFACE_DIRECTIONS" title="Link to this definition"></a></dt>
+<dd><p>List of valid surface orientation vectors for revolutionary surfaces.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.SURF_ORIGIN_PATTERN">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">SURF_ORIGIN_PATTERN</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('[A-Z]+0+$')</span></span><a class="headerlink" href="#otaf.constants.SURF_ORIGIN_PATTERN" title="Link to this definition"></a></dt>
+<dd><p>Regex to validate surface origin names, e.g., <code class="docutils literal notranslate"><span class="pre">AA0000</span></code>.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.SURF_POINT_PATTERN">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">SURF_POINT_PATTERN</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('[A-Z]+[0-9]+$')</span></span><a class="headerlink" href="#otaf.constants.SURF_POINT_PATTERN" title="Link to this definition"></a></dt>
+<dd><p>Regex to validate surface point names, e.g., <code class="docutils literal notranslate"><span class="pre">AA01</span></code>.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.SURF_TYPE_TO_DEVIATION_DOF">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">SURF_TYPE_TO_DEVIATION_DOF</span></span><a class="headerlink" href="#otaf.constants.SURF_TYPE_TO_DEVIATION_DOF" title="Link to this definition"></a></dt>
+<dd><p>Mapping from feature topology combinations to active deviation DOFs.</p>
+<section id="id6">
+<h3>Structure<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>dict of str to dict of str to str</dt><dd><p>Maps joint feature configurations (e.g., <code class="docutils literal notranslate"><span class="pre">'plane-none'</span></code>) to active
+<code class="docutils literal notranslate"><span class="pre">'translations'</span></code> and <code class="docutils literal notranslate"><span class="pre">'rotations'</span></code> coordinate axis symbols.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">meta hide-value<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.T_MATRIX_PATTERN">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">T_MATRIX_PATTERN</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('^TP(\\d+)([a-z]+)([A-Z]+\\d+)([a-z]+)([A-Z]+\\d+)$')</span></span><a class="headerlink" href="#otaf.constants.T_MATRIX_PATTERN" title="Link to this definition"></a></dt>
+<dd><p>Regex for coordinate transformation matrix matching (e.g.,
+<code class="docutils literal notranslate"><span class="pre">TP1aA0bB99</span></code>).</p>
+</dd></dl>
+
 </section>
 </section>
 

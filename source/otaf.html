@@ -14,11 +14,9 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=2709fde1"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -36,6 +34,7 @@
           
           <a href="../index.html" class="icon icon-home">
             otaf
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -83,20 +82,12 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.capabilities.html">otaf.capabilities package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.common.html">otaf.common package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.constants.html">otaf.constants package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.distribution.html">otaf.distribution package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.example_models.html">otaf.example_models package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.exceptions.html">otaf.exceptions package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.geometry.html">otaf.geometry package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.optimization.html">otaf.optimization package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.plotting.html">otaf.plotting package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.sampling.html">otaf.sampling package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.sensitivity.html">otaf.sensitivity package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.surrogate.html">otaf.surrogate package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.tolerances.html">otaf.tolerances package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.uncertainty.html">otaf.uncertainty package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Ex1_2D_4dof_Analytical_Ref.html">Ex 1: Analytical Reference Model (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Ex1_2D_4dof_Opti_Manual.html">Ex 1: Optimization-Based Model &amp; Vector Loops (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Ex1_2D_4dof_Opti_Auto_Surrogate.html">Ex 1: Automatic Topological Generation &amp; Surrogate Optimization (2D / 4-DOF)</a></li>
 </ul>
 
         </div>
@@ -161,7 +152,32 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.constants.html">otaf.constants package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="otaf.constants.html#module-otaf.constants">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="otaf.constants.html#module-otaf.constants">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="otaf.constants.html#otaf.constants.BASE_PART_SURF_PATTERN"><code class="docutils literal notranslate"><span class="pre">BASE_PART_SURF_PATTERN</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.constants.html#otaf.constants.BASE_SURFACE_TYPES"><code class="docutils literal notranslate"><span class="pre">BASE_SURFACE_TYPES</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.constants.html#otaf.constants.BASIS_DICT"><code class="docutils literal notranslate"><span class="pre">BASIS_DICT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.constants.html#otaf.constants.CONTACT_TYPES"><code class="docutils literal notranslate"><span class="pre">CONTACT_TYPES</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.constants.html#otaf.constants.CONTACT_TYPE_TO_GAP_DOF"><code class="docutils literal notranslate"><span class="pre">CONTACT_TYPE_TO_GAP_DOF</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.constants.html#otaf.constants.D_MATRIX_MSTRING_PATTERN"><code class="docutils literal notranslate"><span class="pre">D_MATRIX_MSTRING_PATTERN</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.constants.html#otaf.constants.D_MATRIX_PATTERN1"><code class="docutils literal notranslate"><span class="pre">D_MATRIX_PATTERN1</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.constants.html#otaf.constants.D_MATRIX_PATTERN2"><code class="docutils literal notranslate"><span class="pre">D_MATRIX_PATTERN2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.constants.html#otaf.constants.D_MATRIX_PATTERN3"><code class="docutils literal notranslate"><span class="pre">D_MATRIX_PATTERN3</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.constants.html#otaf.constants.GAP_TYPE_TO_NULLIFIED_NOMINAL_COMPONENTS"><code class="docutils literal notranslate"><span class="pre">GAP_TYPE_TO_NULLIFIED_NOMINAL_COMPONENTS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.constants.html#otaf.constants.GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF"><code class="docutils literal notranslate"><span class="pre">GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.constants.html#otaf.constants.GLOBAL_CONSTRAINTS_TO_GAP_DOF"><code class="docutils literal notranslate"><span class="pre">GLOBAL_CONSTRAINTS_TO_GAP_DOF</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.constants.html#otaf.constants.G_MATRIX_MSTRING_PATTERN"><code class="docutils literal notranslate"><span class="pre">G_MATRIX_MSTRING_PATTERN</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.constants.html#otaf.constants.G_MATRIX_PATTERN1"><code class="docutils literal notranslate"><span class="pre">G_MATRIX_PATTERN1</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.constants.html#otaf.constants.G_MATRIX_PATTERN2"><code class="docutils literal notranslate"><span class="pre">G_MATRIX_PATTERN2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.constants.html#otaf.constants.LOC_STAMP_PATTERN"><code class="docutils literal notranslate"><span class="pre">LOC_STAMP_PATTERN</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.constants.html#otaf.constants.LOOP_ELEMENT_PATTERN"><code class="docutils literal notranslate"><span class="pre">LOOP_ELEMENT_PATTERN</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.constants.html#otaf.constants.SURFACE_DICT_VALUE_CHECKS"><code class="docutils literal notranslate"><span class="pre">SURFACE_DICT_VALUE_CHECKS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.constants.html#otaf.constants.SURFACE_DIRECTIONS"><code class="docutils literal notranslate"><span class="pre">SURFACE_DIRECTIONS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.constants.html#otaf.constants.SURF_ORIGIN_PATTERN"><code class="docutils literal notranslate"><span class="pre">SURF_ORIGIN_PATTERN</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.constants.html#otaf.constants.SURF_POINT_PATTERN"><code class="docutils literal notranslate"><span class="pre">SURF_POINT_PATTERN</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.constants.html#otaf.constants.SURF_TYPE_TO_DEVIATION_DOF"><code class="docutils literal notranslate"><span class="pre">SURF_TYPE_TO_DEVIATION_DOF</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.constants.html#otaf.constants.T_MATRIX_PATTERN"><code class="docutils literal notranslate"><span class="pre">T_MATRIX_PATTERN</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.distribution.html">otaf.distribution package</a><ul>
@@ -180,11 +196,11 @@
 <li class="toctree-l1"><a class="reference internal" href="otaf.example_models.html">otaf.example_models package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="otaf.example_models.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="otaf.example_models.models_2_D.html">otaf.example_models.models_2_D package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="otaf.example_models.models_2_D.html#module-otaf.example_models.models_2_D">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.example_models.models_2_D.html#available-models">Available Models</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.example_models.models_3_D.html">otaf.example_models.models_3_D package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="otaf.example_models.models_3_D.html#module-otaf.example_models.models_3_D">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.example_models.models_3_D.html#available-models">Available Models</a></li>
 </ul>
 </li>
 </ul>
@@ -344,7 +360,30 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.sensitivity.html">otaf.sensitivity package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="otaf.sensitivity.html#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="otaf.sensitivity.html#module-otaf.sensitivity">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.composedDistribution"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.composedDistribution</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.size"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.generate"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.generateWithWeights"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.generateWithWeights()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getClassName"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.getClassName()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getId"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.getId()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getName"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.getName()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getShadowedId"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.getShadowedId()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getSize"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.getSize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getVisibility"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.getVisibility()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.hasName"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.hasName()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.hasUniformWeights"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.hasUniformWeights()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.hasVisibleName"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.hasVisibleName()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setComposedDistribution"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.setComposedDistribution()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setName"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.setName()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setShadowedId"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.setShadowedId()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setSize"><code class="docutils literal notranslate"><span class="pre">SobolIndicesExperimentWithComposedDistribution.setSize()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.sensitivity.html#otaf.sensitivity.plotSobolIndicesWithErr"><code class="docutils literal notranslate"><span class="pre">plotSobolIndicesWithErr()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.surrogate.html">otaf.surrogate package</a><ul>
@@ -404,7 +443,7 @@
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-otaf" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="otaf.AssemblyDataProcessor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">AssemblyDataProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyDataProcessor.html#AssemblyDataProcessor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.AssemblyDataProcessor" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">AssemblyDataProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#otaf.AssemblyDataProcessor" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Manage and validate mechanical system data for assemblies.</p>
 <p>This class transforms a minimal representation of mechanical
@@ -485,7 +524,7 @@ as None.</p>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -524,19 +563,6 @@ with existing points (the default is False).</p></li>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>part_id</strong> (<em>str</em>)</p></li>
-<li><p><strong>surf_id</strong> (<em>str</em>)</p></li>
-<li><p><strong>point_dict</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>tuple</em><em>[</em><em>float</em><em>, </em><em>...</em><em>] </em><em>| </em><em>ndarray</em><em> | </em><em>list</em><em>[</em><em>float</em><em>]</em><em>]</em>)</p></li>
-<li><p><strong>ignore_duplicates</strong> (<em>bool</em>)</p></li>
-</ul>
-</dd>
-</dl>
 <ul class="simple">
 <li><p>Surface points are stored under the <code class="docutils literal notranslate"><span class="pre">&quot;POINTS&quot;</span></code> key of the
 surface’s dictionary.</p></li>
@@ -555,7 +581,7 @@ loops in the system data and expands them into their detailed
 forms, storing them in <cite>compatibility_loops_expanded</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -566,7 +592,7 @@ forms, storing them in <cite>compatibility_loops_expanded</cite>.</p>
 <dd><p>Generate open cylinders for 3D cylindrical features.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
+<dd class="field-odd"><p>list</p>
 </dd>
 </dl>
 </dd></dl>
@@ -576,11 +602,11 @@ forms, storing them in <cite>compatibility_loops_expanded</cite>.</p>
 <span class="sig-name descname"><span class="pre">generate_functional_lines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyDataProcessor.html#AssemblyDataProcessor.generate_functional_lines"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.AssemblyDataProcessor.generate_functional_lines" title="Link to this definition"></a></dt>
 <dd><p>Generate cylinders representing 2D lines for planar features in a 2D system.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>radius</strong> (<em>float</em>)</p>
 </dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>radius</strong> (<em>float</em>)</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
 </dd>
 </dl>
 </dd></dl>
@@ -626,7 +652,7 @@ method.</p>
 </ul>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -746,14 +772,6 @@ their corresponding coordinates.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>point_dict</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>tuple</em><em>[</em><em>float</em><em>, </em><em>...</em><em>] </em><em>| </em><em>ndarray</em><em>]</em>)</p>
-</dd>
-</dl>
 <ul class="simple">
 <li><p>Labels must conform to the <code class="docutils literal notranslate"><span class="pre">SURF_POINT_PATTERN</span></code> defined in
 the <code class="docutils literal notranslate"><span class="pre">otaf.constants</span></code> module.</p></li>
@@ -785,7 +803,7 @@ labels, types, points, interactions, and constraints.</p>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -794,7 +812,7 @@ labels, types, points, interactions, and constraints.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="otaf.CompatibilityLoopHandling">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">CompatibilityLoopHandling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">assemblyDataProcessor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/compatibilityLoopHandling.html#CompatibilityLoopHandling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.CompatibilityLoopHandling" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">CompatibilityLoopHandling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">assemblyDataProcessor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#otaf.CompatibilityLoopHandling" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class for processing system data and constructing compatibility constraint matrices.</p>
 <p>This class processes system data to generate and manage compatibility loops, constructing the
@@ -898,7 +916,7 @@ expansions for compatibility loops.</p>
 <dd class="field-odd"><p><strong>ID</strong> (<em>str</em><em> | </em><em>int</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list[<a class="reference internal" href="#otaf.GapMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.GapMatrix"><em>GapMatrix</em></a> | <a class="reference internal" href="#otaf.TransformationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix"><em>TransformationMatrix</em></a>]</p>
+<dd class="field-even"><p>list[<a class="reference internal" href="#otaf.GapMatrix" title="otaf.GapMatrix"><em>GapMatrix</em></a> | <a class="reference internal" href="#otaf.TransformationMatrix" title="otaf.TransformationMatrix"><em>TransformationMatrix</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -912,7 +930,7 @@ expansions for compatibility loops.</p>
 <dd class="field-odd"><p><strong>ID</strong> (<em>str</em><em> | </em><em>int</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list[<a class="reference internal" href="#otaf.DeviationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix"><em>DeviationMatrix</em></a>]</p>
+<dd class="field-even"><p>list[<a class="reference internal" href="#otaf.DeviationMatrix" title="otaf.DeviationMatrix"><em>DeviationMatrix</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -934,7 +952,7 @@ expansions for compatibility loops.</p>
 <dd><p>Create a dictionary mapping loop IDs to matrix lists for compatibility loops.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict[str, list[<a class="reference internal" href="#otaf.TransformationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix"><em>TransformationMatrix</em></a> | <a class="reference internal" href="#otaf.DeviationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix"><em>DeviationMatrix</em></a> | <a class="reference internal" href="#otaf.GapMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.GapMatrix"><em>GapMatrix</em></a> | <a class="reference internal" href="#otaf.I4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.I4"><em>I4</em></a> | <a class="reference internal" href="#otaf.J4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.J4"><em>J4</em></a>]]</p>
+<dd class="field-odd"><p>dict[str, list[<a class="reference internal" href="#otaf.TransformationMatrix" title="otaf.TransformationMatrix"><em>TransformationMatrix</em></a> | <a class="reference internal" href="#otaf.DeviationMatrix" title="otaf.DeviationMatrix"><em>DeviationMatrix</em></a> | <a class="reference internal" href="#otaf.GapMatrix" title="otaf.GapMatrix"><em>GapMatrix</em></a> | <a class="reference internal" href="#otaf.I4" title="otaf.I4"><em>I4</em></a> | <a class="reference internal" href="#otaf.J4" title="otaf.J4"><em>J4</em></a>]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -956,7 +974,7 @@ expansions for compatibility loops.</p>
 <dd><p>Apply first-order matrix expansion to a list of compatibility loop matrices.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>compatibility_loop_matrix_list</strong> (<em>list</em><em>[</em><a class="reference internal" href="#otaf.TransformationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix"><em>TransformationMatrix</em></a><em> | </em><a class="reference internal" href="#otaf.DeviationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix"><em>DeviationMatrix</em></a><em> | </em><a class="reference internal" href="#otaf.GapMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.GapMatrix"><em>GapMatrix</em></a><em> | </em><a class="reference internal" href="#otaf.I4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.I4"><em>I4</em></a><em> | </em><a class="reference internal" href="#otaf.J4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.J4"><em>J4</em></a><em>]</em>)</p>
+<dd class="field-odd"><p><strong>compatibility_loop_matrix_list</strong> (<em>list</em><em>[</em><a class="reference internal" href="#otaf.TransformationMatrix" title="otaf.TransformationMatrix"><em>TransformationMatrix</em></a><em> | </em><a class="reference internal" href="#otaf.DeviationMatrix" title="otaf.DeviationMatrix"><em>DeviationMatrix</em></a><em> | </em><a class="reference internal" href="#otaf.GapMatrix" title="otaf.GapMatrix"><em>GapMatrix</em></a><em> | </em><a class="reference internal" href="#otaf.I4" title="otaf.I4"><em>I4</em></a><em> | </em><a class="reference internal" href="#otaf.J4" title="otaf.J4"><em>J4</em></a><em>]</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><em>MatrixBase</em></p>
@@ -973,7 +991,7 @@ expansions for compatibility loops.</p>
 <dd class="field-odd"><p><strong>expanded_loop_str</strong> (<em>str</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list[<a class="reference internal" href="#otaf.TransformationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix"><em>TransformationMatrix</em></a> | <a class="reference internal" href="#otaf.DeviationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix"><em>DeviationMatrix</em></a> | <a class="reference internal" href="#otaf.GapMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.GapMatrix"><em>GapMatrix</em></a> | <a class="reference internal" href="#otaf.I4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.I4"><em>I4</em></a> | <a class="reference internal" href="#otaf.J4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.J4"><em>J4</em></a>]</p>
+<dd class="field-even"><p>list[<a class="reference internal" href="#otaf.TransformationMatrix" title="otaf.TransformationMatrix"><em>TransformationMatrix</em></a> | <a class="reference internal" href="#otaf.DeviationMatrix" title="otaf.DeviationMatrix"><em>DeviationMatrix</em></a> | <a class="reference internal" href="#otaf.GapMatrix" title="otaf.GapMatrix"><em>GapMatrix</em></a> | <a class="reference internal" href="#otaf.I4" title="otaf.I4"><em>I4</em></a> | <a class="reference internal" href="#otaf.J4" title="otaf.J4"><em>J4</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -987,7 +1005,7 @@ expansions for compatibility loops.</p>
 <dd class="field-odd"><p><strong>el_info</strong> (<em>dict</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list[<a class="reference internal" href="#otaf.TransformationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix"><em>TransformationMatrix</em></a>]</p>
+<dd class="field-even"><p>list[<a class="reference internal" href="#otaf.TransformationMatrix" title="otaf.TransformationMatrix"><em>TransformationMatrix</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1001,7 +1019,7 @@ expansions for compatibility loops.</p>
 <dd class="field-odd"><p><strong>el_info</strong> (<em>dict</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list[<a class="reference internal" href="#otaf.DeviationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix"><em>DeviationMatrix</em></a>]</p>
+<dd class="field-even"><p>list[<a class="reference internal" href="#otaf.DeviationMatrix" title="otaf.DeviationMatrix"><em>DeviationMatrix</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1015,7 +1033,7 @@ expansions for compatibility loops.</p>
 <dd class="field-odd"><p><strong>el_info</strong> (<em>dict</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list[<a class="reference internal" href="#otaf.GapMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.GapMatrix"><em>GapMatrix</em></a> | <a class="reference internal" href="#otaf.TransformationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix"><em>TransformationMatrix</em></a> | <a class="reference internal" href="#otaf.I4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.I4"><em>I4</em></a> | <a class="reference internal" href="#otaf.J4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.J4"><em>J4</em></a>]</p>
+<dd class="field-even"><p>list[<a class="reference internal" href="#otaf.GapMatrix" title="otaf.GapMatrix"><em>GapMatrix</em></a> | <a class="reference internal" href="#otaf.TransformationMatrix" title="otaf.TransformationMatrix"><em>TransformationMatrix</em></a> | <a class="reference internal" href="#otaf.I4" title="otaf.I4"><em>I4</em></a> | <a class="reference internal" href="#otaf.J4" title="otaf.J4"><em>J4</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1036,7 +1054,7 @@ to nullify specific translation components.</p>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#otaf.TransformationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix"><em>TransformationMatrix</em></a> | <a class="reference internal" href="#otaf.I4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.I4"><em>I4</em></a> | <a class="reference internal" href="#otaf.J4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.J4"><em>J4</em></a></p>
+<dd class="field-even"><p><a class="reference internal" href="#otaf.TransformationMatrix" title="otaf.TransformationMatrix"><em>TransformationMatrix</em></a> | <a class="reference internal" href="#otaf.I4" title="otaf.I4"><em>I4</em></a> | <a class="reference internal" href="#otaf.J4" title="otaf.J4"><em>J4</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1101,7 +1119,7 @@ to compute the nominal transformation matrix.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#otaf.TransformationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix"><em>TransformationMatrix</em></a> | <a class="reference internal" href="#otaf.I4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.I4"><em>I4</em></a> | <a class="reference internal" href="#otaf.J4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.J4"><em>J4</em></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#otaf.TransformationMatrix" title="otaf.TransformationMatrix"><em>TransformationMatrix</em></a> | <a class="reference internal" href="#otaf.I4" title="otaf.I4"><em>I4</em></a> | <a class="reference internal" href="#otaf.J4" title="otaf.J4"><em>J4</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1153,7 +1171,7 @@ specified configuration.</p>
 <dd class="field-even"><p><strong>el_info</strong> (<em>dict</em>)</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[<a class="reference internal" href="#otaf.DeviationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.DeviationMatrix"><em>DeviationMatrix</em></a>]</p>
+<dd class="field-odd"><p>list[<a class="reference internal" href="#otaf.DeviationMatrix" title="otaf.DeviationMatrix"><em>DeviationMatrix</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1192,7 +1210,7 @@ blocked degrees of freedom in the generated gap matrix.</p></li>
 <dd class="field-even"><p><strong>el_info</strong> (<em>dict</em>)</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[<a class="reference internal" href="#otaf.GapMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.GapMatrix"><em>GapMatrix</em></a> | <a class="reference internal" href="#otaf.TransformationMatrix" title="otaf._assembly_modeling.assemblyModelingBaseObjects.TransformationMatrix"><em>TransformationMatrix</em></a> | <a class="reference internal" href="#otaf.I4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.I4"><em>I4</em></a> | <a class="reference internal" href="#otaf.J4" title="otaf._assembly_modeling.assemblyModelingBaseObjects.J4"><em>J4</em></a>]</p>
+<dd class="field-odd"><p>list[<a class="reference internal" href="#otaf.GapMatrix" title="otaf.GapMatrix"><em>GapMatrix</em></a> | <a class="reference internal" href="#otaf.TransformationMatrix" title="otaf.TransformationMatrix"><em>TransformationMatrix</em></a> | <a class="reference internal" href="#otaf.I4" title="otaf.I4"><em>I4</em></a> | <a class="reference internal" href="#otaf.J4" title="otaf.J4"><em>J4</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1315,7 +1333,7 @@ the first-order expanded matrices.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="otaf.DeviationMatrix">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">DeviationMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#DeviationMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.DeviationMatrix" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">DeviationMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#otaf.DeviationMatrix" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Represents a deviation matrix used in structural analysis.</p>
 <p>A deviation matrix defines deviations in translation and rotation
@@ -1504,7 +1522,7 @@ freedom.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="otaf.FirstOrderMatrixExpansion">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">FirstOrderMatrixExpansion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/firstOrderMatrixExpansion.html#FirstOrderMatrixExpansion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.FirstOrderMatrixExpansion" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">FirstOrderMatrixExpansion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#otaf.FirstOrderMatrixExpansion" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>First-order Taylor expansion of a matrix product.</p>
 <dl class="field-list simple">
@@ -1551,7 +1569,7 @@ Taylor expansion.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="otaf.GapMatrix">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">GapMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translations_blocked</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotations_blocked</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#GapMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.GapMatrix" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">GapMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translations_blocked</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotations_blocked</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#otaf.GapMatrix" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Represents a gap matrix used in structural analysis.</p>
 <p>A gap matrix defines gaps or clearances in translation and
@@ -1741,7 +1759,7 @@ freedom.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="otaf.I4">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">I4</span></span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#I4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.I4" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">I4</span></span><a class="headerlink" href="#otaf.I4" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A 4x4 identity matrix.</p>
 <p>The identity matrix is commonly used in transformations as a
@@ -1832,7 +1850,7 @@ method returns the same matrix.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="otaf.InterfaceLoopHandling">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">InterfaceLoopHandling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">assemblyDataProcessor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compatibility_loop_handling</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">circle_resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/_interface_constraints/interfaceLoopHandling.html#InterfaceLoopHandling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.InterfaceLoopHandling" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">InterfaceLoopHandling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">assemblyDataProcessor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compatibility_loop_handling</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">circle_resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#otaf.InterfaceLoopHandling" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1848,14 +1866,14 @@ method returns the same matrix.</p>
 <dd><p>Extract unique gap matrices from expanded compatibility loops and return them as a set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">set</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span></p>
+<dd class="field-odd"><p>set[str]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="otaf.InterfaceLoopHandling.facing_point_dictionary">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">facing_point_dictionary</span></span><a class="headerlink" href="#otaf.InterfaceLoopHandling.facing_point_dictionary" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">facing_point_dictionary</span></span><a class="headerlink" href="#otaf.InterfaceLoopHandling.facing_point_dictionary" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1875,12 +1893,15 @@ elemnt</p>
 structured by parts and surfaces.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">set</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]]</span></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>Dict[str, Dict[str, Dict[str, Set[str]]]]</strong> (<em>A nested dictionary categorizing gap matrices</em>)</p></li>
+<li><p><em>into ‘used’ and ‘unused’ for each part and surface.</em></p></li>
+</ul>
+</p>
 </dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[str, Dict[str, Dict[str, Set[str]]]]: A nested dictionary categorizing gap matrices
-into ‘used’ and ‘unused’ for each part and surface.</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, dict[str, dict[str, set[str]]]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1898,7 +1919,7 @@ the corresponding surface on the other part. If an inverse gap matrix is missing
 added to maintain consistency in the representation of spatial relationships.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">set</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]</span></p>
+<dd class="field-odd"><p>dict[str, dict[str, set[str]]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1912,7 +1933,7 @@ added to maintain consistency in the representation of spatial relationships.</p
 
 <dl class="py class">
 <dt class="sig sig-object py" id="otaf.J4">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">J4</span></span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#J4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.J4" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">J4</span></span><a class="headerlink" href="#otaf.J4" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A 4x4 rotation matrix for a 180° rotation around the z-axis.</p>
 <p>This matrix is often used to represent a transformation involving a
@@ -2007,7 +2028,7 @@ is the same rotation, this method returns the same matrix.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="otaf.SystemOfConstraintsAssemblyModel">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">SystemOfConstraintsAssemblyModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compatibility_eqs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface_eqs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/systemOfConstraintsAssemblyModel.html#SystemOfConstraintsAssemblyModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.SystemOfConstraintsAssemblyModel" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">SystemOfConstraintsAssemblyModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compatibility_eqs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface_eqs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#otaf.SystemOfConstraintsAssemblyModel" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Prepare matrices for tolerance analysis involving deviations and gaps.</p>
 <p>This class processes compatibility and interface equations to generate a
@@ -2208,11 +2229,8 @@ determined).</p></li>
 (the default is inferred).</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span></p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><ul class="simple">
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
 <li><p><strong>C</strong> (<em>numpy.ndarray</em>) – Coefficients of the linear objective function.</p></li>
 <li><p><strong>A_ub</strong> (<em>numpy.ndarray</em>) – Matrix representing inequality constraints.</p></li>
 <li><p><strong>B_ub</strong> (<em>numpy.ndarray</em>) – Right-hand side of inequality constraints.</p></li>
@@ -2222,9 +2240,12 @@ determined).</p></li>
 </ul>
 </p>
 </dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If the number of deviation variables in <cite>deviation_array</cite> does
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the number of deviation variables in <cite>deviation_array</cite> does
     not match <code class="docutils literal notranslate"><span class="pre">deviation_symbols</span></code>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[<em>ndarray</em>, <em>ndarray</em>, <em>ndarray</em>, <em>ndarray</em>, <em>ndarray</em>, <em>ndarray</em>]</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -2243,7 +2264,7 @@ improperly formatted.</p></li>
 <dd><p>Compact textual summary with matrices for the LP.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2258,11 +2279,6 @@ can be found, even in cases where the optimization problem would
 otherwise have no solution. The sign of <code class="docutils literal notranslate"><span class="pre">s</span></code> indicates whether
 the parts can be assembled, and the variable can be used in
 meta-model construction.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
-</dd>
-</dl>
 <p class="rubric">Notes</p>
 <ul class="simple">
 <li><p>The variable <code class="docutils literal notranslate"><span class="pre">s</span></code> is appended to the list of gap variables
@@ -2272,6 +2288,11 @@ the new variable:
 - <code class="docutils literal notranslate"><span class="pre">A_ub_Gap</span></code> is augmented with a column of -1.
 - <code class="docutils literal notranslate"><span class="pre">A_eq_Gap</span></code> is augmented with a column of zeros.</p></li>
 </ul>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -2282,20 +2303,20 @@ the new variable:
 equations and verifies that all variables appearing in the
 interface equations are included.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Symbol</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Symbol</span></code>]]</span></p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
 <li><p><strong>deviation_symbols</strong> (<em>list of sympy.Symbol</em>) – List of deviation variables present in the compatibility
 equations.</p></li>
 <li><p><strong>gap_symbols</strong> (<em>list of sympy.Symbol</em>) – List of gap variables present in the compatibility equations.</p></li>
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>AssertionError</strong> – If any variable in the interface equations is not included in
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If any variable in the interface equations is not included in
     the compatibility equations.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[list[<em>Symbol</em>], list[<em>Symbol</em>]]</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -2323,11 +2344,8 @@ as: <code class="docutils literal notranslate"><span class="pre">A_ub_Def</span>
 <dd class="field-odd"><p><strong>rnd</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of decimal places to round the matrix elements (the
 default is 9).</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span></p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><ul class="simple">
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
 <li><p><strong>A_eq_Def</strong> (<em>numpy.ndarray</em>) – Coefficient matrix for deviation variables in compatibility
 equations.</p></li>
 <li><p><strong>A_eq_Gap</strong> (<em>numpy.ndarray</em>) – Coefficient matrix for gap variables in compatibility
@@ -2339,6 +2357,9 @@ equations.</p></li>
 <li><p><strong>K_ub</strong> (<em>numpy.ndarray</em>) – Constants in interface equations.</p></li>
 </ul>
 </p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[<em>ndarray</em>, <em>ndarray</em>, <em>ndarray</em>, <em>ndarray</em>, <em>ndarray</em>, <em>ndarray</em>]</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -2360,16 +2381,16 @@ unique class indices based on the pattern <code class="docutils literal notransl
 is the numeric class identifier). It counts the number of
 variables associated with each class index and returns two lists.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]]</span></p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
 <li><p><strong>unique_classes</strong> (<em>list of int</em>) – Sorted list of unique class indices.</p></li>
 <li><p><strong>sizes</strong> (<em>list of int</em>) – List of sizes, where each size corresponds to the number of
 variables for a class index.</p></li>
 </ul>
 </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[list[int], list[int]]</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -2414,15 +2435,15 @@ returning the computed results for validation.</p>
 is 9).</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]</span></p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><ul class="simple">
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
 <li><p><strong>compatibility_result</strong> (<em>list of float</em>) – Results of evaluating the compatibility equations.</p></li>
 <li><p><strong>interface_results</strong> (<em>list of float</em>) – Results of evaluating the interface equations.</p></li>
 </ul>
 </p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[list[float], list[float]]</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -2440,7 +2461,7 @@ constraints.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="otaf.TransformationMatrix">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">TransformationMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([[1.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">1.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">0.,</span> <span class="pre">1.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">1.]])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">final</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([[1.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">1.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">0.,</span> <span class="pre">1.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">1.]])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#TransformationMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.TransformationMatrix" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">TransformationMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([[1.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">1.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">0.,</span> <span class="pre">1.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">1.]])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">final</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([[1.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">1.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">0.,</span> <span class="pre">1.,</span> <span class="pre">0.],</span> <span class="pre">[0.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">1.]])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#otaf.TransformationMatrix" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Transformation matrices within the nominal geometry of a part.</p>
 <p>Transformation matrices define the transformation between two

@@ -1,0 +1,318 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ex 1: Analytical Reference Model (2D / 4-DOF) &mdash; otaf 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Ex 1: Optimization-Based Model &amp; Vector Loops (2D / 4-DOF)" href="Ex1_2D_4dof_Opti_Manual.html" />
+    <link rel="prev" title="otaf.uncertainty package" href="../source/otaf.uncertainty.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            otaf
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules.html">otaf</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Ex 1: Analytical Reference Model (2D / 4-DOF)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Defining-the-%22Max-Sigma%22-Baseline">Defining the “Max Sigma” Baseline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Analytical-Assembly-Function">Analytical Assembly Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Monte-Carlo-Propagation">Monte Carlo Propagation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Ex1_2D_4dof_Opti_Manual.html">Ex 1: Optimization-Based Model &amp; Vector Loops (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Ex1_2D_4dof_Opti_Auto_Surrogate.html">Ex 1: Automatic Topological Generation &amp; Surrogate Optimization (2D / 4-DOF)</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">otaf</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Ex 1: Analytical Reference Model (2D / 4-DOF)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/notebooks/Ex1_2D_4dof_Analytical_Ref.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <style>
+   .toctree-wrapper .tocsection { display: none; }
+</style><section id="Ex-1:-Analytical-Reference-Model-(2D-/-4-DOF)">
+<h1>Ex 1: Analytical Reference Model (2D / 4-DOF)<a class="headerlink" href="#Ex-1:-Analytical-Reference-Model-(2D-/-4-DOF)" title="Link to this heading"></a></h1>
+<p>This notebook establishes the baseline statistical tolerance analysis for the minimal 1.5D/2D assembly: a rigid square part that must fit within a square pocket.</p>
+<p><strong>Hypotheses &amp; Setup (from Thesis Section 4.2.1):</strong></p>
+<ul class="simple">
+<li><p><strong>Dimensions:</strong> Male part <span class="math notranslate nohighlight">\(L_1 = 99.8\)</span> mm, Female pocket <span class="math notranslate nohighlight">\(L_2 = 100\)</span> mm, Feature width <span class="math notranslate nohighlight">\(h = 10\)</span> mm.</p></li>
+<li><p><strong>Tolerance:</strong> <span class="math notranslate nohighlight">\(t = 0.31\)</span> mm applied to the two interacting features.</p></li>
+<li><p><strong>Capability:</strong> Target process capability <span class="math notranslate nohighlight">\(C_p = 1\)</span>.</p></li>
+<li><p><strong>Degrees of Freedom:</strong> 4 variables in total.</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\(u_{d4}, \gamma_{d4}\)</span> for the Planar Feature on Part 2 (Pocket).</p></li>
+<li><p><span class="math notranslate nohighlight">\(u_{d5}, \gamma_{d5}\)</span> for the Planar Feature on Part 1 (Square Part).</p></li>
+</ul>
+</li>
+<li><p><strong>Limit State:</strong> The standard physical clearance <span class="math notranslate nohighlight">\(j\)</span> must remain positive. The continuous slack variable transformation (<span class="math notranslate nohighlight">\(s\)</span>) is not required for this purely analytical Monte Carlo evaluation.</p></li>
+</ul>
+<div><p><img alt="666c947317c9487bbd253e612a60a33a" class="no-scaled-link" src="../_images/Ex1_Rectangular_Pocket.png" width="750" /></p>
+</div><section id="Defining-the-%22Max-Sigma%22-Baseline">
+<h2>Defining the “Max Sigma” Baseline<a class="headerlink" href="#Defining-the-%22Max-Sigma%22-Baseline" title="Link to this heading"></a></h2>
+<p>Before introducing epistemic uncertainty and exploring the credal set, we must establish a precise probabilistic baseline. We evaluate the assembly at the boundary of the capability constraint. This assumes the manufacturing process uses the maximum allowable variance dictated by <span class="math notranslate nohighlight">\(t\)</span> and <span class="math notranslate nohighlight">\(Cq_p\)</span>.</p>
+<p>For a planar feature, the maximal standard deviations for translation and rotation, assuming independent centered normal distributions, are extracted from the local defect expression:</p>
+<div class="math notranslate nohighlight">
+\[\sigma_{u, \max} = \frac{t}{6 C_p}\]</div>
+<div class="math notranslate nohighlight">
+\[\sigma_{\gamma, \max} = \frac{t}{6 C_p \cdot y_{\max}}\]</div>
+<p>where <span class="math notranslate nohighlight">\(y_{\max} = h/2\)</span>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">otaf</span>
+
+<span class="c1"># Geometric parameters</span>
+<span class="n">L1</span> <span class="o">=</span> <span class="mf">99.8</span>  <span class="c1"># Nominal length of the male piece (Part 1)</span>
+<span class="n">L2</span> <span class="o">=</span> <span class="mf">100.0</span> <span class="c1"># Nominal length of the female pocket (Part 2)</span>
+<span class="n">h</span> <span class="o">=</span> <span class="mf">10.0</span>   <span class="c1"># Nominal width of the features</span>
+<span class="n">y_max</span> <span class="o">=</span> <span class="n">h</span> <span class="o">/</span> <span class="mf">2.0</span>
+
+<span class="c1"># Tolerance and Capability</span>
+<span class="n">t</span> <span class="o">=</span> <span class="mf">0.31</span>
+<span class="n">Cqp</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+<span class="c1"># Maximal allowable standard deviations based on the capability constraint</span>
+<span class="n">sigma_target</span> <span class="o">=</span> <span class="n">t</span> <span class="o">/</span> <span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">Cqp</span><span class="p">)</span>
+
+<span class="n">sigma_u_max</span> <span class="o">=</span> <span class="n">sigma_target</span>
+<span class="n">sigma_gamma_max</span> <span class="o">=</span> <span class="n">sigma_target</span> <span class="o">/</span> <span class="n">y_max</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Max Translational Std Dev (sigma_u_max): </span><span class="si">{</span><span class="n">sigma_u_max</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Max Rotational Std Dev (sigma_gamma_max): </span><span class="si">{</span><span class="n">sigma_gamma_max</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Max Translational Std Dev (sigma_u_max): 0.05167
+Max Rotational Std Dev (sigma_gamma_max): 0.01033
+</pre></div></div>
+</div>
+</section>
+<section id="Analytical-Assembly-Function">
+<h2>Analytical Assembly Function<a class="headerlink" href="#Analytical-Assembly-Function" title="Link to this heading"></a></h2>
+<p>The assembly constraint is the clearance <span class="math notranslate nohighlight">\(j = X_2 - X_1\)</span>, which must remain strictly positive across the entire width of the feature. Because the parts can rotate, the minimum clearance will always occur at one of the extremities (<span class="math notranslate nohighlight">\(+y_{\max}\)</span> or <span class="math notranslate nohighlight">\(-y_{\max}\)</span>).</p>
+<p>The function calculates the physical position of the top and bottom corners of both features and extracts the minimum resulting gap.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">analytical_assembly_model_4_DOF</span><span class="p">(</span><span class="n">sample_of_defects</span><span class="p">,</span> <span class="n">round_val</span><span class="o">=</span><span class="mi">12</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the minimum spatial clearance between the two parts.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sample_of_defects : ot.Sample</span>
+<span class="sd">        OpenTURNS sample containing [u_d4, gamma_d4, u_d5, gamma_d5]</span>
+<span class="sd">    round_val : int</span>
+<span class="sd">        Decimal rounding to handle floating point noise.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ot.Sample</span>
+<span class="sd">        The minimum gap j for each realization.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">sample_of_defects</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+    <span class="n">desc</span> <span class="o">=</span> <span class="n">sample_of_defects</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()</span>
+
+    <span class="c1"># Safely extract variables based on thesis nomenclature</span>
+    <span class="n">zero_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="n">smp_u4</span>     <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sample_of_defects</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">([</span><span class="s2">&quot;u_d4&quot;</span><span class="p">]))</span>     <span class="k">if</span> <span class="s2">&quot;u_d4&quot;</span> <span class="ow">in</span> <span class="n">desc</span> <span class="k">else</span> <span class="n">zero_array</span>
+    <span class="n">smp_gamma4</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sample_of_defects</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">([</span><span class="s2">&quot;gamma_d4&quot;</span><span class="p">]))</span> <span class="k">if</span> <span class="s2">&quot;gamma_d4&quot;</span> <span class="ow">in</span> <span class="n">desc</span> <span class="k">else</span> <span class="n">zero_array</span>
+
+    <span class="n">smp_u5</span>     <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sample_of_defects</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">([</span><span class="s2">&quot;u_d5&quot;</span><span class="p">]))</span>     <span class="k">if</span> <span class="s2">&quot;u_d5&quot;</span> <span class="ow">in</span> <span class="n">desc</span> <span class="k">else</span> <span class="n">zero_array</span>
+    <span class="n">smp_gamma5</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sample_of_defects</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">([</span><span class="s2">&quot;gamma_d5&quot;</span><span class="p">]))</span> <span class="k">if</span> <span class="s2">&quot;gamma_d5&quot;</span> <span class="ow">in</span> <span class="n">desc</span> <span class="k">else</span> <span class="n">zero_array</span>
+
+    <span class="c1"># Part 1 (Male) displaced geometry at extremities</span>
+    <span class="c1"># Displacement = nominal + translation +/- lever arm effect of rotation</span>
+    <span class="n">X1_corners</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span>
+        <span class="n">L1</span> <span class="o">+</span> <span class="n">smp_u5</span> <span class="o">-</span> <span class="n">y_max</span> <span class="o">*</span> <span class="n">smp_gamma5</span><span class="p">,</span>
+        <span class="n">L1</span> <span class="o">+</span> <span class="n">smp_u5</span> <span class="o">+</span> <span class="n">y_max</span> <span class="o">*</span> <span class="n">smp_gamma5</span>
+    <span class="p">])</span>
+
+    <span class="c1"># Part 2 (Female) displaced geometry at extremities</span>
+    <span class="n">X2_corners</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span>
+        <span class="n">L2</span> <span class="o">-</span> <span class="n">smp_u4</span> <span class="o">-</span> <span class="n">y_max</span> <span class="o">*</span> <span class="n">smp_gamma4</span><span class="p">,</span>
+        <span class="n">L2</span> <span class="o">-</span> <span class="n">smp_u4</span> <span class="o">+</span> <span class="n">y_max</span> <span class="o">*</span> <span class="n">smp_gamma4</span>
+    <span class="p">])</span>
+
+    <span class="c1"># The physical gap is evaluated at both corners, the minimum dictates collision</span>
+    <span class="n">gaps</span> <span class="o">=</span> <span class="n">X2_corners</span> <span class="o">-</span> <span class="n">X1_corners</span>
+    <span class="n">min_gap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">gaps</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">round_val</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">min_gap</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Monte-Carlo-Propagation">
+<h2>Monte Carlo Propagation<a class="headerlink" href="#Monte-Carlo-Propagation" title="Link to this heading"></a></h2>
+<p>We estimate the reference probability of failure. According to the equal allocation hypothesis, this maximum standard deviation configuration should yield a <span class="math notranslate nohighlight">\(P_f \approx 5\%\)</span>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fixed seed for reproducible reference</span>
+<span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">888</span><span class="p">)</span>
+<span class="n">size_MC</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">1e5</span><span class="p">)</span>
+
+<span class="c1"># Constructing the distribution using the otaf library and thesis nomenclature</span>
+<span class="n">deviation_vector</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">get_composed_normal_defect_distribution</span><span class="p">(</span>
+    <span class="n">defect_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;u_d4&quot;</span><span class="p">,</span> <span class="s2">&quot;gamma_d4&quot;</span><span class="p">,</span> <span class="s2">&quot;u_d5&quot;</span><span class="p">,</span> <span class="s2">&quot;gamma_d5&quot;</span><span class="p">],</span>
+    <span class="n">sigma_dict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;u_&quot;</span><span class="p">:</span> <span class="n">sigma_u_max</span><span class="p">,</span> <span class="s2">&quot;gamma_&quot;</span><span class="p">:</span> <span class="n">sigma_gamma_max</span><span class="p">}</span>
+<span class="p">)</span>
+
+<span class="c1"># Sample and evaluate</span>
+<span class="n">max_defect_sample</span> <span class="o">=</span> <span class="n">deviation_vector</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">size_MC</span><span class="p">)</span>
+<span class="n">clearance_sample</span> <span class="o">=</span> <span class="n">analytical_assembly_model_4_DOF</span><span class="p">(</span><span class="n">max_defect_sample</span><span class="p">)</span>
+<span class="n">clearance_distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">UserDefined</span><span class="p">(</span><span class="n">clearance_sample</span><span class="p">)</span>
+
+<span class="c1"># Compute Probability of Failure (Gap &lt;= 0)</span>
+<span class="n">pf_baseline</span> <span class="o">=</span> <span class="n">clearance_distribution</span><span class="o">.</span><span class="n">computeCDF</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reference Probability of Failure at Max Sigma: </span><span class="si">{</span><span class="n">pf_baseline</span><span class="si">:</span><span class="s2">.4%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+WARNING:root:No mu_dict passed, initializing all unspecified means to 0.0
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Reference Probability of Failure at Max Sigma: 5.1710%
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Visualize the clearance CDF</span>
+<span class="n">clearance_distribution</span><span class="o">.</span><span class="n">drawCDF</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Ex1_2D_4dof_Analytical_Ref_7_0.png" src="../_images/notebooks_Ex1_2D_4dof_Analytical_Ref_7_0.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../source/otaf.uncertainty.html" class="btn btn-neutral float-left" title="otaf.uncertainty package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Ex1_2D_4dof_Opti_Manual.html" class="btn btn-neutral float-right" title="Ex 1: Optimization-Based Model &amp; Vector Loops (2D / 4-DOF)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kramer84.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

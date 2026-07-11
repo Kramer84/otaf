@@ -14,11 +14,11 @@
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=2709fde1"></script>
-      <script src="_static/doctools.js?v=9a2dae69"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
       <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -35,6 +35,7 @@
           
           <a href="#" class="icon icon-home">
             otaf
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -47,20 +48,12 @@
               <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="source/modules.html">otaf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.capabilities.html">otaf.capabilities package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.common.html">otaf.common package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.constants.html">otaf.constants package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.distribution.html">otaf.distribution package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.example_models.html">otaf.example_models package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.exceptions.html">otaf.exceptions package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.geometry.html">otaf.geometry package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.optimization.html">otaf.optimization package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.plotting.html">otaf.plotting package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.sampling.html">otaf.sampling package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.sensitivity.html">otaf.sensitivity package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.surrogate.html">otaf.surrogate package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.tolerances.html">otaf.tolerances package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.uncertainty.html">otaf.uncertainty package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/Ex1_2D_4dof_Analytical_Ref.html">Ex 1: Analytical Reference Model (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/Ex1_2D_4dof_Opti_Manual.html">Ex 1: Optimization-Based Model &amp; Vector Loops (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/Ex1_2D_4dof_Opti_Auto_Surrogate.html">Ex 1: Automatic Topological Generation &amp; Surrogate Optimization (2D / 4-DOF)</a></li>
 </ul>
 
         </div>
@@ -455,61 +448,28 @@ DOI]</a> | Copy DOI:
 <li class="toctree-l2"><a class="reference internal" href="source/otaf.html">otaf package</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.capabilities.html">otaf.capabilities package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="source/otaf.capabilities.html#module-otaf.capabilities">Module contents</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/Ex1_2D_4dof_Analytical_Ref.html">Ex 1: Analytical Reference Model (2D / 4-DOF)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/Ex1_2D_4dof_Analytical_Ref.html#Defining-the-%22Max-Sigma%22-Baseline">Defining the “Max Sigma” Baseline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/Ex1_2D_4dof_Analytical_Ref.html#Analytical-Assembly-Function">Analytical Assembly Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/Ex1_2D_4dof_Analytical_Ref.html#Monte-Carlo-Propagation">Monte Carlo Propagation</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.common.html">otaf.common package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="source/otaf.common.html#module-otaf.common">Module contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/Ex1_2D_4dof_Opti_Manual.html">Ex 1: Optimization-Based Model &amp; Vector Loops (2D / 4-DOF)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/Ex1_2D_4dof_Opti_Manual.html#The-Slack-Variable-Formulation">The Slack Variable Formulation</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.constants.html">otaf.constants package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="source/otaf.constants.html#module-otaf.constants">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.distribution.html">otaf.distribution package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="source/otaf.distribution.html#module-otaf.distribution">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.example_models.html">otaf.example_models package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="source/otaf.example_models.html#subpackages">Subpackages</a></li>
-<li class="toctree-l2"><a class="reference internal" href="source/otaf.example_models.html#module-otaf.example_models">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.exceptions.html">otaf.exceptions package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="source/otaf.exceptions.html#module-otaf.exceptions">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.geometry.html">otaf.geometry package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="source/otaf.geometry.html#module-otaf.geometry">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.optimization.html">otaf.optimization package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="source/otaf.optimization.html#module-otaf.optimization">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.plotting.html">otaf.plotting package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="source/otaf.plotting.html#module-otaf.plotting">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.sampling.html">otaf.sampling package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="source/otaf.sampling.html#module-otaf.sampling">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.sensitivity.html">otaf.sensitivity package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="source/otaf.sensitivity.html#module-contents">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.surrogate.html">otaf.surrogate package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="source/otaf.surrogate.html#module-otaf.surrogate">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.tolerances.html">otaf.tolerances package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="source/otaf.tolerances.html#module-otaf.tolerances">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.uncertainty.html">otaf.uncertainty package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="source/otaf.uncertainty.html#module-otaf.uncertainty">Module contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/Ex1_2D_4dof_Opti_Auto_Surrogate.html">Ex 1: Automatic Topological Generation &amp; Surrogate Optimization (2D / 4-DOF)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/Ex1_2D_4dof_Opti_Auto_Surrogate.html#1.-High-Level-Topological-Dictionary-&amp;-Automated-Loops">1. High-Level Topological Dictionary &amp; Automated Loops</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/Ex1_2D_4dof_Opti_Auto_Surrogate.html#2.-High-Level-Topological-Dictionary">2. High-Level Topological Dictionary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/Ex1_2D_4dof_Opti_Auto_Surrogate.html#2.-Surrogate-Training-(MLP)">2. Surrogate Training (MLP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/Ex1_2D_4dof_Opti_Auto_Surrogate.html#3.-Defining-the-Evaluation-Closure-and-Optimization-Logic">3. Defining the Evaluation Closure and Optimization Logic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/Ex1_2D_4dof_Opti_Auto_Surrogate.html#4.-Constraint-Factory-and-Feasible-Warm-Start-(x_0)">4. Constraint Factory and Feasible Warm Start (<span class="math notranslate nohighlight">\(x_0\)</span>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/Ex1_2D_4dof_Opti_Auto_Surrogate.html#5.-Min-Max-Global-Optimization-Loop">5. Min-Max Global Optimization Loop</a></li>
 </ul>
 </li>
 </ul>

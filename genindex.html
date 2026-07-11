@@ -13,8 +13,8 @@
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=2709fde1"></script>
-      <script src="_static/doctools.js?v=9a2dae69"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="#" />
@@ -31,6 +31,7 @@
           
           <a href="index.html" class="icon icon-home">
             otaf
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -43,20 +44,12 @@
               <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="source/modules.html">otaf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.capabilities.html">otaf.capabilities package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.common.html">otaf.common package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.constants.html">otaf.constants package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.distribution.html">otaf.distribution package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.example_models.html">otaf.example_models package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.exceptions.html">otaf.exceptions package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.geometry.html">otaf.geometry package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.optimization.html">otaf.optimization package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.plotting.html">otaf.plotting package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.sampling.html">otaf.sampling package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.sensitivity.html">otaf.sensitivity package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.surrogate.html">otaf.surrogate package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.tolerances.html">otaf.tolerances package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/otaf.uncertainty.html">otaf.uncertainty package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/Ex1_2D_4dof_Analytical_Ref.html">Ex 1: Analytical Reference Model (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/Ex1_2D_4dof_Opti_Manual.html">Ex 1: Optimization-Based Model &amp; Vector Loops (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/Ex1_2D_4dof_Opti_Auto_Surrogate.html">Ex 1: Automatic Topological Generation &amp; Surrogate Optimization (2D / 4-DOF)</a></li>
 </ul>
 
         </div>
@@ -201,6 +194,14 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="source/otaf.constants.html#otaf.constants.BASE_PART_SURF_PATTERN">BASE_PART_SURF_PATTERN (in module otaf.constants)</a>
+</li>
+      <li><a href="source/otaf.constants.html#otaf.constants.BASE_SURFACE_TYPES">BASE_SURFACE_TYPES (in module otaf.constants)</a>
+</li>
+      <li><a href="source/otaf.constants.html#otaf.constants.BASIS_DICT">BASIS_DICT (in module otaf.constants)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/otaf.common.html#otaf.common.bidirectional_string_to_array_conversion">bidirectional_string_to_array_conversion() (in module otaf.common)</a>
 </li>
       <li><a href="source/otaf.optimization.html#otaf.optimization.OptimizationTracker.bounds">bounds (otaf.optimization.OptimizationTracker attribute)</a>
@@ -245,6 +246,8 @@
 </li>
       <li><a href="source/otaf.sampling.html#otaf.sampling.compose_defects_with_lambdas">compose_defects_with_lambdas() (in module otaf.sampling)</a>
 </li>
+      <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.composedDistribution">composedDistribution (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution attribute)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/otaf.geometry.html#otaf.geometry.compute_bounding_box">compute_bounding_box() (in module otaf.geometry)</a>
@@ -273,6 +276,10 @@
 </li>
       <li><a href="source/otaf.optimization.html#otaf.optimization.OptimizationTracker.constraint_tolerance">constraint_tolerance (otaf.optimization.OptimizationTracker attribute)</a>
 </li>
+      <li><a href="source/otaf.constants.html#otaf.constants.CONTACT_TYPE_TO_GAP_DOF">CONTACT_TYPE_TO_GAP_DOF (in module otaf.constants)</a>
+</li>
+      <li><a href="source/otaf.constants.html#otaf.constants.CONTACT_TYPES">CONTACT_TYPES (in module otaf.constants)</a>
+</li>
       <li><a href="source/otaf.exceptions.html#otaf.exceptions.CylindricalInterferenceGeometricException">CylindricalInterferenceGeometricException</a>
 </li>
   </ul></td>
@@ -281,8 +288,18 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="source/otaf.constants.html#otaf.constants.D_MATRIX_MSTRING_PATTERN">D_MATRIX_MSTRING_PATTERN (in module otaf.constants)</a>
+</li>
+      <li><a href="source/otaf.constants.html#otaf.constants.D_MATRIX_PATTERN1">D_MATRIX_PATTERN1 (in module otaf.constants)</a>
+</li>
+      <li><a href="source/otaf.constants.html#otaf.constants.D_MATRIX_PATTERN2">D_MATRIX_PATTERN2 (in module otaf.constants)</a>
+</li>
+      <li><a href="source/otaf.constants.html#otaf.constants.D_MATRIX_PATTERN3">D_MATRIX_PATTERN3 (in module otaf.constants)</a>
+</li>
       <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.deviation_symbols">deviation_symbols (otaf.SystemOfConstraintsAssemblyModel attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/otaf.html#otaf.DeviationMatrix">DeviationMatrix (class in otaf)</a>
 </li>
       <li><a href="source/otaf.sampling.html#otaf.sampling.LagrangeConstraintSolver.dim">dim (otaf.sampling.LagrangeConstraintSolver attribute)</a>
@@ -291,8 +308,6 @@
         <li><a href="source/otaf.sampling.html#otaf.sampling.UniformSurfaceSampler.dim">(otaf.sampling.UniformSurfaceSampler attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/otaf.geometry.html#otaf.geometry.distance_between_planes">distance_between_planes() (in module otaf.geometry)</a>
 </li>
       <li><a href="source/otaf.geometry.html#otaf.geometry.do_bounding_boxes_overlap">do_bounding_boxes_overlap() (in module otaf.geometry)</a>
@@ -309,10 +324,28 @@
 </li>
       <li><a href="source/otaf.geometry.html#otaf.geometry.euclidean_distance">euclidean_distance() (in module otaf.geometry)</a>
 </li>
-      <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.evaluate_model_non_standard_space">evaluate_model_non_standard_space() (otaf.surrogate.NeuralRegressorNetwork method)</a>
+      <li><a href="source/otaf.example_models.models_2_D.model1.html#otaf.example_models.models_2_D.model1.eval_credal_set_constraints">eval_credal_set_constraints() (in module otaf.example_models.models_2_D.model1)</a>
+
+      <ul>
+        <li><a href="source/otaf.example_models.models_3_D.model3.html#otaf.example_models.models_3_D.model3.eval_credal_set_constraints">(in module otaf.example_models.models_3_D.model3)</a>
 </li>
+        <li><a href="source/otaf.example_models.models_3_D.model4.html#otaf.example_models.models_3_D.model4.eval_credal_set_constraints">(in module otaf.example_models.models_3_D.model4)</a>
+</li>
+      </ul></li>
+      <li><a href="source/otaf.example_models.models_2_D.model1.html#otaf.example_models.models_2_D.model1.eval_scaled_credal_set_constraints">eval_scaled_credal_set_constraints() (in module otaf.example_models.models_2_D.model1)</a>
+
+      <ul>
+        <li><a href="source/otaf.example_models.models_2_D.model2.html#otaf.example_models.models_2_D.model2.eval_scaled_credal_set_constraints">(in module otaf.example_models.models_2_D.model2)</a>
+</li>
+        <li><a href="source/otaf.example_models.models_3_D.model3.html#otaf.example_models.models_3_D.model3.eval_scaled_credal_set_constraints">(in module otaf.example_models.models_3_D.model3)</a>
+</li>
+        <li><a href="source/otaf.example_models.models_3_D.model4.html#otaf.example_models.models_3_D.model4.eval_scaled_credal_set_constraints">(in module otaf.example_models.models_3_D.model4)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.evaluate_model_non_standard_space">evaluate_model_non_standard_space() (otaf.surrogate.NeuralRegressorNetwork method)</a>
+</li>
       <li><a href="source/otaf.common.html#otaf.common.extract_expressions_with_variables">extract_expressions_with_variables() (in module otaf.common)</a>
 </li>
       <li><a href="source/otaf.html#otaf.InterfaceLoopHandling.extract_unique_gap_matrices_from_expanded_loops">extract_unique_gap_matrices_from_expanded_loops() (otaf.InterfaceLoopHandling method)</a>
@@ -353,9 +386,19 @@
         <li><a href="source/otaf.sampling.html#otaf.sampling.UniformSurfaceSampler.g">(otaf.sampling.UniformSurfaceSampler attribute)</a>
 </li>
       </ul></li>
+      <li><a href="source/otaf.constants.html#otaf.constants.G_MATRIX_MSTRING_PATTERN">G_MATRIX_MSTRING_PATTERN (in module otaf.constants)</a>
+</li>
+      <li><a href="source/otaf.constants.html#otaf.constants.G_MATRIX_PATTERN1">G_MATRIX_PATTERN1 (in module otaf.constants)</a>
+</li>
+      <li><a href="source/otaf.constants.html#otaf.constants.G_MATRIX_PATTERN2">G_MATRIX_PATTERN2 (in module otaf.constants)</a>
+</li>
       <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.gap_symbols">gap_symbols (otaf.SystemOfConstraintsAssemblyModel attribute)</a>
 </li>
+      <li><a href="source/otaf.constants.html#otaf.constants.GAP_TYPE_TO_NULLIFIED_NOMINAL_COMPONENTS">GAP_TYPE_TO_NULLIFIED_NOMINAL_COMPONENTS (in module otaf.constants)</a>
+</li>
       <li><a href="source/otaf.html#otaf.GapMatrix">GapMatrix (class in otaf)</a>
+</li>
+      <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.generate">generate() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
 </li>
       <li><a href="source/otaf.html#otaf.InterfaceLoopHandling.generate_all_gap_matrix_names">generate_all_gap_matrix_names() (otaf.InterfaceLoopHandling method)</a>
 </li>
@@ -403,6 +446,8 @@
 </li>
       <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.generateConstraintMatrices">generateConstraintMatrices() (otaf.SystemOfConstraintsAssemblyModel method)</a>
 </li>
+      <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.generateWithWeights">generateWithWeights() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
       <li><a href="source/otaf.exceptions.html#otaf.exceptions.GeometricConditionError">GeometricConditionError</a>
 </li>
       <li><a href="source/otaf.surrogate.html#otaf.surrogate.get_base_relu_mlp_model">get_base_relu_mlp_model() (in module otaf.surrogate)</a>
@@ -419,12 +464,20 @@
 </li>
       <li><a href="source/otaf.optimization.html#otaf.optimization.OptimizationTracker.get_data">get_data() (otaf.optimization.OptimizationTracker method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/otaf.html#id9">get_deviation_matrix_by_id() (otaf.CompatibilityLoopHandling method)</a>, <a href="source/otaf.html#otaf.CompatibilityLoopHandling.get_deviation_matrix_by_id">[1]</a>
 </li>
+      <li><a href="source/otaf.example_models.models_2_D.model1.html#otaf.example_models.models_2_D.model1.get_distribution_params">get_distribution_params() (in module otaf.example_models.models_2_D.model1)</a>
+
+      <ul>
+        <li><a href="source/otaf.example_models.models_2_D.model2.html#otaf.example_models.models_2_D.model2.get_distribution_params">(in module otaf.example_models.models_2_D.model2)</a>
+</li>
+        <li><a href="source/otaf.example_models.models_3_D.model3.html#otaf.example_models.models_3_D.model3.get_distribution_params">(in module otaf.example_models.models_3_D.model3)</a>
+</li>
+      </ul></li>
       <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.get_feature_indices_and_dimensions">get_feature_indices_and_dimensions() (otaf.SystemOfConstraintsAssemblyModel method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/otaf.html#id10">get_gap_matrix_by_id() (otaf.CompatibilityLoopHandling method)</a>, <a href="source/otaf.html#otaf.CompatibilityLoopHandling.get_gap_matrix_by_id">[1]</a>
 </li>
       <li><a href="source/otaf.html#otaf.InterfaceLoopHandling.get_interface_loop_expressions">get_interface_loop_expressions() (otaf.InterfaceLoopHandling method)</a>
@@ -473,6 +526,14 @@
 </li>
       <li><a href="source/otaf.distribution.html#otaf.distribution.get_prob_below_threshold">get_prob_below_threshold() (in module otaf.distribution)</a>
 </li>
+      <li><a href="source/otaf.example_models.models_2_D.model1.html#otaf.example_models.models_2_D.model1.get_scaled_credal_set_constraints_function">get_scaled_credal_set_constraints_function() (in module otaf.example_models.models_2_D.model1)</a>
+
+      <ul>
+        <li><a href="source/otaf.example_models.models_2_D.model2.html#otaf.example_models.models_2_D.model2.get_scaled_credal_set_constraints_function">(in module otaf.example_models.models_2_D.model2)</a>
+</li>
+        <li><a href="source/otaf.example_models.models_3_D.model4.html#otaf.example_models.models_3_D.model4.get_scaled_credal_set_constraints_function">(in module otaf.example_models.models_3_D.model4)</a>
+</li>
+      </ul></li>
       <li><a href="source/otaf.common.html#otaf.common.get_SE3_base">get_SE3_base() (in module otaf.common)</a>
 </li>
       <li><a href="source/otaf.common.html#otaf.common.get_SE3_matrices_from_indices">get_SE3_matrices_from_indices() (in module otaf.common)</a>
@@ -483,6 +544,14 @@
 </li>
       <li><a href="source/otaf.common.html#otaf.common.get_symbols_in_expressions">get_symbols_in_expressions() (in module otaf.common)</a>
 </li>
+      <li><a href="source/otaf.example_models.models_2_D.model1.html#otaf.example_models.models_2_D.model1.get_system_of_constraints_assembly_model">get_system_of_constraints_assembly_model() (in module otaf.example_models.models_2_D.model1)</a>
+
+      <ul>
+        <li><a href="source/otaf.example_models.models_2_D.model2.html#otaf.example_models.models_2_D.model2.get_system_of_constraints_assembly_model">(in module otaf.example_models.models_2_D.model2)</a>
+</li>
+        <li><a href="source/otaf.example_models.models_3_D.model3.html#otaf.example_models.models_3_D.model3.get_system_of_constraints_assembly_model">(in module otaf.example_models.models_3_D.model3)</a>
+</li>
+      </ul></li>
       <li><a href="source/otaf.html#otaf.AssemblyDataProcessor.get_topological_graph">get_topological_graph() (otaf.AssemblyDataProcessor method)</a>
 </li>
       <li><a href="source/otaf.common.html#otaf.common.get_tqdm_range">get_tqdm_range() (in module otaf.common)</a>
@@ -497,6 +566,22 @@
         <li><a href="source/otaf.html#otaf.GapMatrix.get_variables">(otaf.GapMatrix method)</a>
 </li>
       </ul></li>
+      <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getClassName">getClassName() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
+      <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getId">getId() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
+      <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getName">getName() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
+      <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getShadowedId">getShadowedId() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
+      <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getSize">getSize() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
+      <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.getVisibility">getVisibility() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
+      <li><a href="source/otaf.constants.html#otaf.constants.GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF">GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF (in module otaf.constants)</a>
+</li>
+      <li><a href="source/otaf.constants.html#otaf.constants.GLOBAL_CONSTRAINTS_TO_GAP_DOF">GLOBAL_CONSTRAINTS_TO_GAP_DOF (in module otaf.constants)</a>
+</li>
       <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.gradient">gradient() (otaf.surrogate.NeuralRegressorNetwork method)</a>
 </li>
   </ul></td>
@@ -505,10 +590,16 @@
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.hessian">hessian() (otaf.surrogate.NeuralRegressorNetwork method)</a>
+      <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.hasName">hasName() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
+      <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.hasUniformWeights">hasUniformWeights() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
+      <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.hasVisibleName">hasVisibleName() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.hessian">hessian() (otaf.surrogate.NeuralRegressorNetwork method)</a>
+</li>
       <li><a href="source/otaf.plotting.html#otaf.plotting.hex_to_rgba">hex_to_rgba() (in module otaf.plotting)</a>
 </li>
       <li><a href="source/otaf.optimization.html#otaf.optimization.OptimizationTracker.history">history (otaf.optimization.OptimizationTracker attribute)</a>
@@ -597,13 +688,17 @@
 </li>
       <li><a href="source/otaf.exceptions.html#otaf.exceptions.LabelPrefixError">LabelPrefixError</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/otaf.sampling.html#otaf.sampling.LagrangeConstraintSolver">LagrangeConstraintSolver (class in otaf.sampling)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/otaf.geometry.html#otaf.geometry.line_plane_intersection">line_plane_intersection() (in module otaf.geometry)</a>
 </li>
       <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.load_model">load_model() (otaf.surrogate.NeuralRegressorNetwork method)</a>
+</li>
+      <li><a href="source/otaf.constants.html#otaf.constants.LOC_STAMP_PATTERN">LOC_STAMP_PATTERN (in module otaf.constants)</a>
+</li>
+      <li><a href="source/otaf.constants.html#otaf.constants.LOOP_ELEMENT_PATTERN">LOOP_ELEMENT_PATTERN (in module otaf.constants)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -645,7 +740,15 @@
 </li>
         <li><a href="source/otaf.example_models.models_2_D.html#module-otaf.example_models.models_2_D">otaf.example_models.models_2_D</a>
 </li>
+        <li><a href="source/otaf.example_models.models_2_D.model1.html#module-otaf.example_models.models_2_D.model1">otaf.example_models.models_2_D.model1</a>
+</li>
+        <li><a href="source/otaf.example_models.models_2_D.model2.html#module-otaf.example_models.models_2_D.model2">otaf.example_models.models_2_D.model2</a>
+</li>
         <li><a href="source/otaf.example_models.models_3_D.html#module-otaf.example_models.models_3_D">otaf.example_models.models_3_D</a>
+</li>
+        <li><a href="source/otaf.example_models.models_3_D.model3.html#module-otaf.example_models.models_3_D.model3">otaf.example_models.models_3_D.model3</a>
+</li>
+        <li><a href="source/otaf.example_models.models_3_D.model4.html#module-otaf.example_models.models_3_D.model4">otaf.example_models.models_3_D.model4</a>
 </li>
         <li><a href="source/otaf.exceptions.html#module-otaf.exceptions">otaf.exceptions</a>
 </li>
@@ -656,6 +759,8 @@
         <li><a href="source/otaf.plotting.html#module-otaf.plotting">otaf.plotting</a>
 </li>
         <li><a href="source/otaf.sampling.html#module-otaf.sampling">otaf.sampling</a>
+</li>
+        <li><a href="source/otaf.sensitivity.html#module-otaf.sensitivity">otaf.sensitivity</a>
 </li>
         <li><a href="source/otaf.surrogate.html#module-otaf.surrogate">otaf.surrogate</a>
 </li>
@@ -775,13 +880,41 @@
         <li><a href="source/otaf.example_models.models_2_D.html#module-otaf.example_models.models_2_D">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    otaf.example_models.models_2_D.model1
+
+      <ul>
+        <li><a href="source/otaf.example_models.models_2_D.model1.html#module-otaf.example_models.models_2_D.model1">module</a>
+</li>
+      </ul></li>
+      <li>
+    otaf.example_models.models_2_D.model2
+
+      <ul>
+        <li><a href="source/otaf.example_models.models_2_D.model2.html#module-otaf.example_models.models_2_D.model2">module</a>
+</li>
+      </ul></li>
       <li>
     otaf.example_models.models_3_D
 
       <ul>
         <li><a href="source/otaf.example_models.models_3_D.html#module-otaf.example_models.models_3_D">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    otaf.example_models.models_3_D.model3
+
+      <ul>
+        <li><a href="source/otaf.example_models.models_3_D.model3.html#module-otaf.example_models.models_3_D.model3">module</a>
+</li>
+      </ul></li>
+      <li>
+    otaf.example_models.models_3_D.model4
+
+      <ul>
+        <li><a href="source/otaf.example_models.models_3_D.model4.html#module-otaf.example_models.models_3_D.model4">module</a>
 </li>
       </ul></li>
       <li>
@@ -817,6 +950,13 @@
 
       <ul>
         <li><a href="source/otaf.sampling.html#module-otaf.sampling">module</a>
+</li>
+      </ul></li>
+      <li>
+    otaf.sensitivity
+
+      <ul>
+        <li><a href="source/otaf.sensitivity.html#module-otaf.sensitivity">module</a>
 </li>
       </ul></li>
       <li>
@@ -866,10 +1006,12 @@
 </li>
       <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.plot_results">plot_results() (otaf.surrogate.NeuralRegressorNetwork method)</a>
 </li>
-      <li><a href="source/otaf.geometry.html#otaf.geometry.point_dict_to_arrays">point_dict_to_arrays() (in module otaf.geometry)</a>
+      <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.plotSobolIndicesWithErr">plotSobolIndicesWithErr() (in module otaf.sensitivity)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="source/otaf.geometry.html#otaf.geometry.point_dict_to_arrays">point_dict_to_arrays() (in module otaf.geometry)</a>
+</li>
       <li><a href="source/otaf.geometry.html#otaf.geometry.point_in_hull">point_in_hull() (in module otaf.geometry)</a>
 </li>
       <li><a href="source/otaf.geometry.html#otaf.geometry.point_plane_distance">point_plane_distance() (in module otaf.geometry)</a>
@@ -920,11 +1062,23 @@
         <li><a href="source/otaf.html#otaf.GapMatrix.SE3_basis_indices">(otaf.GapMatrix attribute)</a>
 </li>
       </ul></li>
+      <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setComposedDistribution">setComposedDistribution() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
+      <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setName">setName() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
+      <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setShadowedId">setShadowedId() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
+      <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.setSize">setSize() (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution method)</a>
+</li>
       <li><a href="source/otaf.tolerances.html#otaf.tolerances.sigma_delta_3D_plane">sigma_delta_3D_plane() (in module otaf.tolerances)</a>
 </li>
       <li><a href="source/otaf.tolerances.html#otaf.tolerances.sigma_delta_circular_feature">sigma_delta_circular_feature() (in module otaf.tolerances)</a>
 </li>
       <li><a href="source/otaf.tolerances.html#otaf.tolerances.sigma_delta_cylindrical_feature">sigma_delta_cylindrical_feature() (in module otaf.tolerances)</a>
+</li>
+      <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution.size">size (otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution attribute)</a>
+</li>
+      <li><a href="source/otaf.sensitivity.html#otaf.sensitivity.SobolIndicesExperimentWithComposedDistribution">SobolIndicesExperimentWithComposedDistribution (class in otaf.sensitivity)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -944,6 +1098,16 @@
       </ul></li>
       <li><a href="source/otaf.sampling.html#otaf.sampling.UniformSurfaceSampler.step_size">step_size (otaf.sampling.UniformSurfaceSampler attribute)</a>
 </li>
+      <li><a href="source/otaf.constants.html#otaf.constants.SURF_ORIGIN_PATTERN">SURF_ORIGIN_PATTERN (in module otaf.constants)</a>
+</li>
+      <li><a href="source/otaf.constants.html#otaf.constants.SURF_POINT_PATTERN">SURF_POINT_PATTERN (in module otaf.constants)</a>
+</li>
+      <li><a href="source/otaf.constants.html#otaf.constants.SURF_TYPE_TO_DEVIATION_DOF">SURF_TYPE_TO_DEVIATION_DOF (in module otaf.constants)</a>
+</li>
+      <li><a href="source/otaf.constants.html#otaf.constants.SURFACE_DICT_VALUE_CHECKS">SURFACE_DICT_VALUE_CHECKS (in module otaf.constants)</a>
+</li>
+      <li><a href="source/otaf.constants.html#otaf.constants.SURFACE_DIRECTIONS">SURFACE_DIRECTIONS (in module otaf.constants)</a>
+</li>
       <li><a href="source/otaf.geometry.html#otaf.geometry.surface_from_planar_contour">surface_from_planar_contour() (in module otaf.geometry)</a>
 </li>
       <li><a href="source/otaf.exceptions.html#otaf.exceptions.SurfaceNotFoundError">SurfaceNotFoundError</a>
@@ -958,6 +1122,8 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="source/otaf.constants.html#otaf.constants.T_MATRIX_PATTERN">T_MATRIX_PATTERN (in module otaf.constants)</a>
+</li>
       <li><a href="source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.test_zero_deviation_feasibility">test_zero_deviation_feasibility() (otaf.SystemOfConstraintsAssemblyModel method)</a>
 </li>
       <li><a href="source/otaf.geometry.html#otaf.geometry.tfrt">tfrt() (in module otaf.geometry)</a>
@@ -972,10 +1138,10 @@
 </li>
       <li><a href="source/otaf.surrogate.html#otaf.surrogate.NeuralRegressorNetwork.training_stopping_criterion">training_stopping_criterion() (otaf.surrogate.NeuralRegressorNetwork method)</a>
 </li>
-      <li><a href="source/otaf.geometry.html#otaf.geometry.transform_point">transform_point() (in module otaf.geometry)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="source/otaf.geometry.html#otaf.geometry.transform_point">transform_point() (in module otaf.geometry)</a>
+</li>
       <li><a href="source/otaf.html#otaf.TransformationMatrix">TransformationMatrix (class in otaf)</a>
 </li>
       <li><a href="source/otaf.common.html#otaf.common.tree">tree() (in module otaf.common)</a>

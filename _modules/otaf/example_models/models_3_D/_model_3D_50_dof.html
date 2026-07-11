@@ -1,0 +1,1364 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>otaf.example_models.models_3_D._model_3D_50_dof &mdash; otaf 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            otaf
+              <img src="../../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules.html">otaf</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../notebooks/Ex1_2D_4dof_Analytical_Ref.html">Ex 1: Analytical Reference Model (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../notebooks/Ex1_2D_4dof_Opti_Manual.html">Ex 1: Optimization-Based Model &amp; Vector Loops (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../notebooks/Ex1_2D_4dof_Opti_Auto_Surrogate.html">Ex 1: Automatic Topological Generation &amp; Surrogate Optimization (2D / 4-DOF)</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">otaf</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">otaf.example_models.models_3_D._model_3D_50_dof</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for otaf.example_models.models_3_D._model_3D_50_dof</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;get_system_of_constraints_assembly_model&quot;</span>
+    <span class="s2">&quot;get_distribution_params&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;eval_credal_set_constraints&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;eval_scaled_credal_set_constraints&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;get_scaled_credal_set_constraints_function&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dim&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;sample_multiplier&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;no_tol&quot;</span><span class="p">,</span> 
+    <span class="p">]</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterable</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">otaf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">otaf.tolerances</span><span class="w"> </span><span class="kn">import</span> <span class="n">sigma_delta_3D_plane</span><span class="p">,</span> <span class="n">sigma_delta_cylindrical_feature</span>
+
+<span class="n">_VAR_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;^([A-Za-z]+)_([A-Za-z0-9]+)$&quot;</span><span class="p">)</span>
+<span class="n">_PREFIX_MAP</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;w&quot;</span><span class="p">:</span> <span class="s2">&quot;u&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="s2">&quot;beta&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;beta&quot;</span><span class="p">:</span> <span class="s2">&quot;gamma&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;u&quot;</span><span class="p">:</span> <span class="s2">&quot;v&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;v&quot;</span><span class="p">:</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="s2">&quot;alpha&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;d&quot;</span><span class="p">:</span> <span class="s2">&quot;d&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">LinearizationStrategy</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Linearization strategy choices for circular features.&quot;&quot;&quot;</span>
+    <span class="n">INSCRIBED</span> <span class="o">=</span> <span class="s2">&quot;inscribed&quot;</span>
+    <span class="n">MEAN</span> <span class="o">=</span> <span class="s2">&quot;mean&quot;</span>
+    <span class="n">CIRCUMSCRIBED</span> <span class="o">=</span> <span class="s2">&quot;circumscribed&quot;</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SmallDispTorsor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Small displacement torsor representation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Name of the torsor.</span>
+<span class="sd">    omega : array_like</span>
+<span class="sd">        Rotational vector component (angular displacement).</span>
+<span class="sd">    v : array_like</span>
+<span class="sd">        Translational vector component (linear displacement).</span>
+<span class="sd">    point : Any</span>
+<span class="sd">        The geometric point where the torsor is expressed. Must</span>
+<span class="sd">        support subtraction, equality checks, and cross products.</span>
+<span class="sd">    point_name : str</span>
+<span class="sd">        Name of the geometric point.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Name of the torsor.</span>
+<span class="sd">    omega : array_like</span>
+<span class="sd">        Rotational vector component.</span>
+<span class="sd">    v : array_like</span>
+<span class="sd">        Translational vector component.</span>
+<span class="sd">    point : Any</span>
+<span class="sd">        The geometric point where the torsor is expressed.</span>
+<span class="sd">    point_name : str</span>
+<span class="sd">        Name of the geometric point.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">omega</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">point</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">point_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">omega</span> <span class="o">=</span> <span class="n">omega</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">point</span> <span class="o">=</span> <span class="n">point</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">point_name</span> <span class="o">=</span> <span class="n">point_name</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">move_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_point</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">target_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmallDispTorsor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Transport the torsor to a new geometric point.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        target_point : Any</span>
+<span class="sd">            The new geometric point destination.</span>
+<span class="sd">        target_name : str</span>
+<span class="sd">            The name of the destination point.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        SmallDispTorsor</span>
+<span class="sd">            The transported small displacement torsor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">target_to_current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">point</span> <span class="o">-</span> <span class="n">target_point</span>
+        <span class="n">v_new</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">+</span> <span class="n">target_to_current</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">omega</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">SmallDispTorsor</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">target_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">omega</span><span class="p">,</span> <span class="n">v_new</span><span class="p">,</span> <span class="n">target_point</span><span class="p">,</span> <span class="n">target_name</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">SmallDispTorsor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmallDispTorsor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add two torsors expressed at the same geometric point.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : SmallDispTorsor</span>
+<span class="sd">            The other torsor to add.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        SmallDispTorsor</span>
+<span class="sd">            The combined torsor sum.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the torsors are expressed at different points.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">point</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Cannot add torsors at different points: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">point_name</span><span class="si">}</span><span class="s2">&#39; vs &#39;</span><span class="si">{</span><span class="n">other</span><span class="o">.</span><span class="n">point_name</span><span class="si">}</span><span class="s2">&#39;. Use .move_to() first.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">SmallDispTorsor</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">+</span><span class="si">{</span><span class="n">other</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">omega</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">omega</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">v</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">point_name</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__neg__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmallDispTorsor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Negate the torsor components.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        SmallDispTorsor</span>
+<span class="sd">            The negated torsor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">SmallDispTorsor</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;(-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">omega</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">point_name</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">SmallDispTorsor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmallDispTorsor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Subtract another torsor from this torsor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : SmallDispTorsor</span>
+<span class="sd">            The torsor to subtract.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        SmallDispTorsor</span>
+<span class="sd">            The difference torsor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span> <span class="o">+</span> <span class="o">-</span><span class="n">other</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CylindricalInterfaceConstraint</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Cylindrical interface joint constraint evaluator.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Name of the interface constraint.</span>
+<span class="sd">    gap_torsor : SmallDispTorsor</span>
+<span class="sd">        The gap torsor associated with the interface.</span>
+<span class="sd">    d_hole : float or sympy.Symbol</span>
+<span class="sd">        The diameter of the internal hole feature.</span>
+<span class="sd">    d_pin : float or sympy.Symbol</span>
+<span class="sd">        The diameter of the mating pin feature.</span>
+<span class="sd">    length : float or sympy.Symbol</span>
+<span class="sd">        The axial mating length of the cylindrical joint.</span>
+<span class="sd">    Nd : int, default 8</span>
+<span class="sd">        The number of discretization facets for linearization.</span>
+<span class="sd">    strategy : LinearizationStrategy, optional</span>
+<span class="sd">        The linearization strategy applied to circular bounds.</span>
+<span class="sd">        Default is ``LinearizationStrategy.CIRCUMSCRIBED``.</span>
+<span class="sd">    z_eval_points : list of float or list of sympy.Symbol, optional</span>
+<span class="sd">        Axial locations along the Z-axis to evaluate constraints.</span>
+<span class="sd">        If None, evaluates at the two extreme boundaries.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Name of the interface constraint.</span>
+<span class="sd">    gap_torsor : SmallDispTorsor</span>
+<span class="sd">        The gap torsor associated with the interface.</span>
+<span class="sd">    d_hole : float or sympy.Symbol</span>
+<span class="sd">        The diameter of the internal hole feature.</span>
+<span class="sd">    d_pin : float or sympy.Symbol</span>
+<span class="sd">        The diameter of the mating pin feature.</span>
+<span class="sd">    length : float or sympy.Symbol</span>
+<span class="sd">        The axial mating length of the cylindrical joint.</span>
+<span class="sd">    Nd : int</span>
+<span class="sd">        The number of discretization facets for linearization.</span>
+<span class="sd">    strategy : LinearizationStrategy</span>
+<span class="sd">        The linearization strategy applied to circular bounds.</span>
+<span class="sd">    z_eval_points : list of float or list of sympy.Symbol</span>
+<span class="sd">        Axial locations along the Z-axis to evaluate constraints.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">gap_torsor</span><span class="p">:</span> <span class="n">SmallDispTorsor</span><span class="p">,</span>
+        <span class="n">d_hole</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">,</span>
+        <span class="n">d_pin</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">,</span>
+        <span class="n">length</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">,</span>
+        <span class="n">Nd</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="n">strategy</span><span class="p">:</span> <span class="n">LinearizationStrategy</span> <span class="o">=</span> <span class="n">LinearizationStrategy</span><span class="o">.</span><span class="n">CIRCUMSCRIBED</span><span class="p">,</span>
+        <span class="n">z_eval_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gap_torsor</span> <span class="o">=</span> <span class="n">gap_torsor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_hole</span> <span class="o">=</span> <span class="n">d_hole</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_pin</span> <span class="o">=</span> <span class="n">d_pin</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Nd</span> <span class="o">=</span> <span class="n">Nd</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">strategy</span> <span class="o">=</span> <span class="n">strategy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z_eval_points</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">z_eval_points</span>
+            <span class="k">if</span> <span class="n">z_eval_points</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="p">[</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_equations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate linearized clearance constraint equations.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dict</span>
+<span class="sd">            A list of dictionaries representing individual constraint</span>
+<span class="sd">            facets, each containing keys ``&#39;eval_point_index&#39;``,</span>
+<span class="sd">            ``&#39;z_offset&#39;``, ``&#39;facet_k&#39;``, and ``&#39;expression&#39;``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">constraints</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">delta_R</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d_hole</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_pin</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">theta1</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">sp</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">Nd</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="n">LinearizationStrategy</span><span class="o">.</span><span class="n">INSCRIBED</span><span class="p">:</span>
+            <span class="n">rf</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta1</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="n">LinearizationStrategy</span><span class="o">.</span><span class="n">MEAN</span><span class="p">:</span>
+            <span class="n">rf</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">sp</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta1</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">))</span> <span class="o">/</span> <span class="mf">2.0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rf</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="n">u_center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap_torsor</span><span class="o">.</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">v_center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap_torsor</span><span class="o">.</span><span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap_torsor</span><span class="o">.</span><span class="n">omega</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">beta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap_torsor</span><span class="o">.</span><span class="n">omega</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">point_idx</span><span class="p">,</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">z_eval_points</span><span class="p">):</span>
+            <span class="n">u_local</span> <span class="o">=</span> <span class="n">u_center</span> <span class="o">+</span> <span class="n">z</span> <span class="o">*</span> <span class="n">beta</span>
+            <span class="n">v_local</span> <span class="o">=</span> <span class="n">v_center</span> <span class="o">-</span> <span class="n">z</span> <span class="o">*</span> <span class="n">alpha</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Nd</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">theta_k</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">sp</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">k</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">Nd</span>
+                <span class="n">ck</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_k</span><span class="p">)</span>
+                <span class="n">sk</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_k</span><span class="p">)</span>
+                <span class="n">expr</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">u_local</span> <span class="o">*</span> <span class="n">ck</span> <span class="o">+</span> <span class="n">v_local</span> <span class="o">*</span> <span class="n">sk</span> <span class="o">-</span> <span class="n">delta_R</span> <span class="o">*</span> <span class="n">rf</span><span class="p">)</span>
+                <span class="n">constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;eval_point_index&quot;</span><span class="p">:</span> <span class="n">point_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                        <span class="s2">&quot;z_offset&quot;</span><span class="p">:</span> <span class="n">z</span><span class="p">,</span>
+                        <span class="s2">&quot;facet_k&quot;</span><span class="p">:</span> <span class="n">k</span><span class="p">,</span>
+                        <span class="s2">&quot;expression&quot;</span><span class="p">:</span> <span class="n">expr</span><span class="p">,</span>
+                    <span class="p">}</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="n">constraints</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_dynamic_mapping</span><span class="p">(</span>
+    <span class="n">defect_vars</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">clearance_vars</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a standardized symbolic variable mapping dictionary.</span>
+
+<span class="sd">    Parses variable names matching regex patterns to rename and index</span>
+<span class="sd">    defect and clearance quantities uniformly.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    defect_vars : iterable object</span>
+<span class="sd">        A sequence of symbolic variable objects representing defects.</span>
+<span class="sd">    clearance_vars : iterable object</span>
+<span class="sd">        A sequence of symbolic variable objects representing clearances.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        A mapping configuration dictionary translating original variables</span>
+<span class="sd">        to standardized `sympy.Symbol` instances.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mapping</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">defect_index</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">defect_vars</span><span class="p">:</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">_VAR_RE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">m</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">prefix</span><span class="p">,</span> <span class="n">suffix</span> <span class="o">=</span> <span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">defect_index</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">suffix</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">defect_index</span><span class="p">))</span>
+        <span class="n">mapping</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_PREFIX_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span><span class="w"> </span><span class="n">prefix</span><span class="p">)</span><span class="si">}</span><span class="s2">_d_</span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">clearance_index</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">g_counter</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">clearance_vars</span><span class="p">:</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">_VAR_RE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">m</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">prefix</span><span class="p">,</span> <span class="n">suffix</span> <span class="o">=</span> <span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="n">clearance_index</span><span class="p">:</span>
+            <span class="n">c_idx</span><span class="p">,</span> <span class="n">sign</span> <span class="o">=</span> <span class="p">(</span><span class="n">clearance_index</span><span class="p">[</span><span class="n">suffix</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">suffix</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span> <span class="ow">and</span> <span class="p">(</span><span class="n">rev</span> <span class="o">:=</span> <span class="p">(</span><span class="n">suffix</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span> <span class="o">+</span> <span class="n">suffix</span><span class="p">[:</span><span class="mi">2</span><span class="p">]))</span> <span class="ow">in</span> <span class="n">clearance_index</span><span class="p">:</span>
+            <span class="n">c_idx</span><span class="p">,</span> <span class="n">sign</span> <span class="o">=</span> <span class="p">(</span><span class="n">clearance_index</span><span class="p">[</span><span class="n">rev</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">clearance_index</span><span class="p">[</span><span class="n">suffix</span><span class="p">]</span> <span class="o">=</span> <span class="n">g_counter</span>
+            <span class="n">c_idx</span><span class="p">,</span> <span class="n">sign</span> <span class="o">=</span> <span class="p">(</span><span class="n">g_counter</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">g_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">new_sym</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_PREFIX_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span><span class="w"> </span><span class="n">prefix</span><span class="p">)</span><span class="si">}</span><span class="s2">_g_</span><span class="si">{</span><span class="n">c_idx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">mapping</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_sym</span> <span class="k">if</span> <span class="n">sign</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="o">-</span><span class="n">new_sym</span>
+    <span class="k">return</span> <span class="n">mapping</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_linear_matrices</span><span class="p">(</span>
+    <span class="n">expressions</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
+    <span class="n">clearance_vars</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
+    <span class="n">defect_vars</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
+    <span class="n">length_vars</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">length_subs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">,</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">,</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract linear constraint matrices from symbolic expressions.</span>
+
+<span class="sd">    Solves the given system of linear equations to form standard matrix</span>
+<span class="sd">    representations for clearance and defect parameters.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    expressions : iterable object</span>
+<span class="sd">        A sequence of linear symbolic constraint expressions.</span>
+<span class="sd">    clearance_vars : iterable object</span>
+<span class="sd">        A sequence of sympy symbols representing clearance variables.</span>
+<span class="sd">    defect_vars : iterable object</span>
+<span class="sd">        A sequence of sympy symbols representing defect variables.</span>
+<span class="sd">    length_vars : iterable object, optional</span>
+<span class="sd">        A sequence of dimensional parameters to substitute. Default is</span>
+<span class="sd">        None.</span>
+<span class="sd">    length_subs : dict, optional</span>
+<span class="sd">        A dictionary mapping dimensional symbols to numerical values.</span>
+<span class="sd">        Default is None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple of sympy.Matrix</span>
+<span class="sd">        A tuple containing three matrices: (A, B, C) corresponding</span>
+<span class="sd">        to the equality system :math:`\\mathtt{A} \\cdot</span>
+<span class="sd">        \\mathtt{clearances} + \\mathtt{B} \\cdot \\mathtt{defects} +</span>
+<span class="sd">        \\mathtt{C} = 0`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">length_vars</span> <span class="ow">and</span> <span class="n">length_subs</span><span class="p">:</span>
+        <span class="n">valid_subs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">length_subs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">length_vars</span><span class="p">}</span>
+        <span class="n">expressions</span> <span class="o">=</span> <span class="p">[</span><span class="n">expr</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">valid_subs</span><span class="p">)</span> <span class="k">for</span> <span class="n">expr</span> <span class="ow">in</span> <span class="n">expressions</span><span class="p">]</span>
+    <span class="n">A</span><span class="p">,</span> <span class="n">rhs1</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">linear_eq_to_matrix</span><span class="p">(</span><span class="n">expressions</span><span class="p">,</span> <span class="o">*</span><span class="n">clearance_vars</span><span class="p">)</span>
+    <span class="n">B</span><span class="p">,</span> <span class="n">rhs2</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">linear_eq_to_matrix</span><span class="p">(</span><span class="o">-</span><span class="n">rhs1</span><span class="p">,</span> <span class="o">*</span><span class="n">defect_vars</span><span class="p">)</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="o">-</span><span class="n">rhs2</span>
+    <span class="k">if</span> <span class="n">length_subs</span><span class="p">:</span>
+        <span class="n">remaining_symbols</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">free_symbols</span> <span class="o">|</span> <span class="n">B</span><span class="o">.</span><span class="n">free_symbols</span> <span class="o">|</span> <span class="n">C</span><span class="o">.</span><span class="n">free_symbols</span>
+        <span class="k">if</span> <span class="n">remaining_symbols</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Warning: Matrices still contain unbound symbols: </span><span class="si">{</span><span class="n">remaining_symbols</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">)</span>
+
+
+<span class="n">l0</span><span class="p">,</span> <span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="p">,</span> <span class="n">l3</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;l0 l1 l2 l3&quot;</span><span class="p">)</span>
+<span class="n">B3</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">B0</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">l1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">B1</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">l0</span><span class="p">,</span> <span class="n">l1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">B2</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">l0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">l0</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">l1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">A_prime_0</span> <span class="o">=</span> <span class="n">B0</span> <span class="o">+</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">l2</span> <span class="o">/</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">A_prime_1</span> <span class="o">=</span> <span class="n">B1</span> <span class="o">+</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">l2</span> <span class="o">/</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">A_prime_2</span> <span class="o">=</span> <span class="n">B2</span> <span class="o">+</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">l2</span> <span class="o">/</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">A_prime_3</span> <span class="o">=</span> <span class="n">B3</span> <span class="o">+</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">l2</span> <span class="o">/</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">C_prime_0</span> <span class="o">=</span> <span class="n">B0</span> <span class="o">+</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">l3</span> <span class="o">/</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">C_prime_1</span> <span class="o">=</span> <span class="n">B1</span> <span class="o">+</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">l3</span> <span class="o">/</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">C_prime_2</span> <span class="o">=</span> <span class="n">B2</span> <span class="o">+</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">l3</span> <span class="o">/</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">C_prime_3</span> <span class="o">=</span> <span class="n">B3</span> <span class="o">+</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">l3</span> <span class="o">/</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">a1b1</span><span class="p">,</span> <span class="n">b1b1</span><span class="p">,</span> <span class="n">w1b1</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;alpha_1b1 beta_1b1 w_1b1&quot;</span><span class="p">)</span>
+<span class="n">a2b2</span><span class="p">,</span> <span class="n">b2b2</span><span class="p">,</span> <span class="n">w2b2</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;alpha_2b2 beta_2b2 w_2b2&quot;</span><span class="p">)</span>
+<span class="n">a1d1</span><span class="p">,</span> <span class="n">b1d1</span><span class="p">,</span> <span class="n">u1d1</span><span class="p">,</span> <span class="n">v1d1</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;alpha_1d1 beta_1d1 u_1d1 v_1d1&quot;</span><span class="p">)</span>
+<span class="n">a2d2</span><span class="p">,</span> <span class="n">b2d2</span><span class="p">,</span> <span class="n">u2d2</span><span class="p">,</span> <span class="n">v2d2</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;alpha_2d2 beta_2d2 u_2d2 v_2d2&quot;</span><span class="p">)</span>
+<span class="n">a1e1</span><span class="p">,</span> <span class="n">b1e1</span><span class="p">,</span> <span class="n">u1e1</span><span class="p">,</span> <span class="n">v1e1</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;alpha_1e1 beta_1e1 u_1e1 v_1e1&quot;</span><span class="p">)</span>
+<span class="n">a2e2</span><span class="p">,</span> <span class="n">b2e2</span><span class="p">,</span> <span class="n">u2e2</span><span class="p">,</span> <span class="n">v2e2</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;alpha_2e2 beta_2e2 u_2e2 v_2e2&quot;</span><span class="p">)</span>
+<span class="n">a1f1</span><span class="p">,</span> <span class="n">b1f1</span><span class="p">,</span> <span class="n">u1f1</span><span class="p">,</span> <span class="n">v1f1</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;alpha_1f1 beta_1f1 u_1f1 v_1f1&quot;</span><span class="p">)</span>
+<span class="n">a2f2</span><span class="p">,</span> <span class="n">b2f2</span><span class="p">,</span> <span class="n">u2f2</span><span class="p">,</span> <span class="n">v2f2</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;alpha_2f2 beta_2f2 u_2f2 v_2f2&quot;</span><span class="p">)</span>
+<span class="n">a1g1</span><span class="p">,</span> <span class="n">b1g1</span><span class="p">,</span> <span class="n">u1g1</span><span class="p">,</span> <span class="n">v1g1</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;alpha_1g1 beta_1g1 u_1g1 v_1g1&quot;</span><span class="p">)</span>
+<span class="n">a2g2</span><span class="p">,</span> <span class="n">b2g2</span><span class="p">,</span> <span class="n">u2g2</span><span class="p">,</span> <span class="n">v2g2</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;alpha_2g2 beta_2g2 u_2g2 v_2g2&quot;</span><span class="p">)</span>
+<span class="n">d1d</span><span class="p">,</span> <span class="n">d1e</span><span class="p">,</span> <span class="n">d1f</span><span class="p">,</span> <span class="n">d1g</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;d_1d d_1e d_1f d_1g&quot;</span><span class="p">)</span>
+<span class="n">d2d</span><span class="p">,</span> <span class="n">d2e</span><span class="p">,</span> <span class="n">d2f</span><span class="p">,</span> <span class="n">d2g</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;d_2d d_2e d_2f d_2g&quot;</span><span class="p">)</span>
+<span class="n">d3d</span><span class="p">,</span> <span class="n">d4e</span><span class="p">,</span> <span class="n">d5f</span><span class="p">,</span> <span class="n">d6g</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;d_3d d_4e d_5f d_6g&quot;</span><span class="p">)</span>
+<span class="n">u1b2b</span><span class="p">,</span> <span class="n">v1b2b</span><span class="p">,</span> <span class="n">g1b2b</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;u_1b2b v_1b2b gamma_1b2b&quot;</span><span class="p">)</span>
+<span class="n">a3d1d</span><span class="p">,</span> <span class="n">b3d1d</span><span class="p">,</span> <span class="n">g3d1d</span><span class="p">,</span> <span class="n">u3d1d</span><span class="p">,</span> <span class="n">v3d1d</span><span class="p">,</span> <span class="n">w3d1d</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span>
+    <span class="s2">&quot;alpha_3d1d beta_3d1d gamma_3d1d u_3d1d v_3d1d w_3d1d&quot;</span>
+<span class="p">)</span>
+<span class="n">a3d2d</span><span class="p">,</span> <span class="n">b3d2d</span><span class="p">,</span> <span class="n">u3d2d</span><span class="p">,</span> <span class="n">v3d2d</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;alpha_3d2d beta_3d2d u_3d2d v_3d2d&quot;</span><span class="p">)</span>
+<span class="n">a4e1e</span><span class="p">,</span> <span class="n">b4e1e</span><span class="p">,</span> <span class="n">g4e1e</span><span class="p">,</span> <span class="n">u4e1e</span><span class="p">,</span> <span class="n">v4e1e</span><span class="p">,</span> <span class="n">w4e1e</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span>
+    <span class="s2">&quot;alpha_4e1e beta_4e1e gamma_4e1e u_4e1e v_4e1e w_4e1e&quot;</span>
+<span class="p">)</span>
+<span class="n">a4e2e</span><span class="p">,</span> <span class="n">b4e2e</span><span class="p">,</span> <span class="n">u4e2e</span><span class="p">,</span> <span class="n">v4e2e</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;alpha_4e2e beta_4e2e u_4e2e v_4e2e&quot;</span><span class="p">)</span>
+<span class="n">a5f1f</span><span class="p">,</span> <span class="n">b5f1f</span><span class="p">,</span> <span class="n">g5f1f</span><span class="p">,</span> <span class="n">u5f1f</span><span class="p">,</span> <span class="n">v5f1f</span><span class="p">,</span> <span class="n">w5f1f</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span>
+    <span class="s2">&quot;alpha_5f1f beta_5f1f gamma_5f1f u_5f1f v_5f1f w_5f1f&quot;</span>
+<span class="p">)</span>
+<span class="n">a5f2f</span><span class="p">,</span> <span class="n">b5f2f</span><span class="p">,</span> <span class="n">u5f2f</span><span class="p">,</span> <span class="n">v5f2f</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;alpha_5f2f beta_5f2f u_5f2f v_5f2f&quot;</span><span class="p">)</span>
+<span class="n">a6g1g</span><span class="p">,</span> <span class="n">b6g1g</span><span class="p">,</span> <span class="n">g6g1g</span><span class="p">,</span> <span class="n">u6g1g</span><span class="p">,</span> <span class="n">v6g1g</span><span class="p">,</span> <span class="n">w6g1g</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span>
+    <span class="s2">&quot;alpha_6g1g beta_6g1g gamma_6g1g u_6g1g v_6g1g w_6g1g&quot;</span>
+<span class="p">)</span>
+<span class="n">a6g2g</span><span class="p">,</span> <span class="n">b6g2g</span><span class="p">,</span> <span class="n">u6g2g</span><span class="p">,</span> <span class="n">v6g2g</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;alpha_6g2g beta_6g2g u_6g2g v_6g2g&quot;</span><span class="p">)</span>
+<span class="n">T_1b_1</span> <span class="o">=</span> <span class="n">SmallDispTorsor</span><span class="p">(</span>
+    <span class="s2">&quot;T_{1b/1}&quot;</span><span class="p">,</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">a1b1</span><span class="p">,</span> <span class="n">b1b1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">w1b1</span><span class="p">]),</span> <span class="n">R</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span>
+<span class="p">)</span>
+<span class="n">T_2b_2</span> <span class="o">=</span> <span class="n">SmallDispTorsor</span><span class="p">(</span>
+    <span class="s2">&quot;T_{2b/2}&quot;</span><span class="p">,</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">a2b2</span><span class="p">,</span> <span class="n">b2b2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">w2b2</span><span class="p">]),</span> <span class="n">R</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span>
+<span class="p">)</span>
+<span class="n">T_1d_1</span> <span class="o">=</span> <span class="n">SmallDispTorsor</span><span class="p">(</span>
+    <span class="s2">&quot;T_{1d/1}&quot;</span><span class="p">,</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">a1d1</span><span class="p">,</span> <span class="n">b1d1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">u1d1</span><span class="p">,</span> <span class="n">v1d1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="n">A_prime_0</span><span class="p">,</span>
+    <span class="s2">&quot;A&#39;_0&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">T_2d_2</span> <span class="o">=</span> <span class="n">SmallDispTorsor</span><span class="p">(</span>
+    <span class="s2">&quot;T_{2d/2}&quot;</span><span class="p">,</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">a2d2</span><span class="p">,</span> <span class="n">b2d2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">u2d2</span><span class="p">,</span> <span class="n">v2d2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="n">C_prime_0</span><span class="p">,</span>
+    <span class="s2">&quot;C&#39;_0&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">T_1e_1</span> <span class="o">=</span> <span class="n">SmallDispTorsor</span><span class="p">(</span>
+    <span class="s2">&quot;T_{1e/1}&quot;</span><span class="p">,</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">a1e1</span><span class="p">,</span> <span class="n">b1e1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">u1e1</span><span class="p">,</span> <span class="n">v1e1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="n">A_prime_1</span><span class="p">,</span>
+    <span class="s2">&quot;A&#39;_1&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">T_2e_2</span> <span class="o">=</span> <span class="n">SmallDispTorsor</span><span class="p">(</span>
+    <span class="s2">&quot;T_{2e/2}&quot;</span><span class="p">,</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">a2e2</span><span class="p">,</span> <span class="n">b2e2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">u2e2</span><span class="p">,</span> <span class="n">v2e2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="n">C_prime_1</span><span class="p">,</span>
+    <span class="s2">&quot;C&#39;_1&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">T_1f_1</span> <span class="o">=</span> <span class="n">SmallDispTorsor</span><span class="p">(</span>
+    <span class="s2">&quot;T_{1f/1}&quot;</span><span class="p">,</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">a1f1</span><span class="p">,</span> <span class="n">b1f1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">u1f1</span><span class="p">,</span> <span class="n">v1f1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="n">A_prime_2</span><span class="p">,</span>
+    <span class="s2">&quot;A&#39;_2&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">T_2f_2</span> <span class="o">=</span> <span class="n">SmallDispTorsor</span><span class="p">(</span>
+    <span class="s2">&quot;T_{2f/2}&quot;</span><span class="p">,</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">a2f2</span><span class="p">,</span> <span class="n">b2f2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">u2f2</span><span class="p">,</span> <span class="n">v2f2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="n">C_prime_2</span><span class="p">,</span>
+    <span class="s2">&quot;C&#39;_2&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">T_1g_1</span> <span class="o">=</span> <span class="n">SmallDispTorsor</span><span class="p">(</span>
+    <span class="s2">&quot;T_{1g/1}&quot;</span><span class="p">,</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">a1g1</span><span class="p">,</span> <span class="n">b1g1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">u1g1</span><span class="p">,</span> <span class="n">v1g1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="n">A_prime_3</span><span class="p">,</span>
+    <span class="s2">&quot;A&#39;_3&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">T_2g_2</span> <span class="o">=</span> <span class="n">SmallDispTorsor</span><span class="p">(</span>
+    <span class="s2">&quot;T_{2g/2}&quot;</span><span class="p">,</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">a2g2</span><span class="p">,</span> <span class="n">b2g2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">u2g2</span><span class="p">,</span> <span class="n">v2g2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="n">C_prime_3</span><span class="p">,</span>
+    <span class="s2">&quot;C&#39;_3&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">G_1b_2b</span> <span class="o">=</span> <span class="n">SmallDispTorsor</span><span class="p">(</span>
+    <span class="s2">&quot;G_{1b/2b}&quot;</span><span class="p">,</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">g1b2b</span><span class="p">]),</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">u1b2b</span><span class="p">,</span> <span class="n">v1b2b</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">R</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span>
+<span class="p">)</span>
+<span class="n">G_3d_1d</span> <span class="o">=</span> <span class="n">SmallDispTorsor</span><span class="p">(</span>
+    <span class="s2">&quot;G_{3d/1d}&quot;</span><span class="p">,</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">a3d1d</span><span class="p">,</span> <span class="n">b3d1d</span><span class="p">,</span> <span class="n">g3d1d</span><span class="p">]),</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">u3d1d</span><span class="p">,</span> <span class="n">v3d1d</span><span class="p">,</span> <span class="n">w3d1d</span><span class="p">]),</span>
+    <span class="n">A_prime_0</span><span class="p">,</span>
+    <span class="s2">&quot;A&#39;_0&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">G_3d_2d</span> <span class="o">=</span> <span class="n">SmallDispTorsor</span><span class="p">(</span>
+    <span class="s2">&quot;G_{3d/2d}&quot;</span><span class="p">,</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">a3d2d</span><span class="p">,</span> <span class="n">b3d2d</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">u3d2d</span><span class="p">,</span> <span class="n">v3d2d</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="n">C_prime_0</span><span class="p">,</span>
+    <span class="s2">&quot;C&#39;_0&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">G_4e_1e</span> <span class="o">=</span> <span class="n">SmallDispTorsor</span><span class="p">(</span>
+    <span class="s2">&quot;G_{4e/1e}&quot;</span><span class="p">,</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">a4e1e</span><span class="p">,</span> <span class="n">b4e1e</span><span class="p">,</span> <span class="n">g4e1e</span><span class="p">]),</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">u4e1e</span><span class="p">,</span> <span class="n">v4e1e</span><span class="p">,</span> <span class="n">w4e1e</span><span class="p">]),</span>
+    <span class="n">A_prime_1</span><span class="p">,</span>
+    <span class="s2">&quot;A&#39;_1&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">G_4e_2e</span> <span class="o">=</span> <span class="n">SmallDispTorsor</span><span class="p">(</span>
+    <span class="s2">&quot;G_{4e/2e}&quot;</span><span class="p">,</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">a4e2e</span><span class="p">,</span> <span class="n">b4e2e</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">u4e2e</span><span class="p">,</span> <span class="n">v4e2e</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="n">C_prime_1</span><span class="p">,</span>
+    <span class="s2">&quot;C&#39;_1&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">G_5f_1f</span> <span class="o">=</span> <span class="n">SmallDispTorsor</span><span class="p">(</span>
+    <span class="s2">&quot;G_{5f/1f}&quot;</span><span class="p">,</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">a5f1f</span><span class="p">,</span> <span class="n">b5f1f</span><span class="p">,</span> <span class="n">g5f1f</span><span class="p">]),</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">u5f1f</span><span class="p">,</span> <span class="n">v5f1f</span><span class="p">,</span> <span class="n">w5f1f</span><span class="p">]),</span>
+    <span class="n">A_prime_2</span><span class="p">,</span>
+    <span class="s2">&quot;A&#39;_2&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">G_5f_2f</span> <span class="o">=</span> <span class="n">SmallDispTorsor</span><span class="p">(</span>
+    <span class="s2">&quot;G_{5f/2f}&quot;</span><span class="p">,</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">a5f2f</span><span class="p">,</span> <span class="n">b5f2f</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">u5f2f</span><span class="p">,</span> <span class="n">v5f2f</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="n">C_prime_2</span><span class="p">,</span>
+    <span class="s2">&quot;C&#39;_2&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">G_6g_1g</span> <span class="o">=</span> <span class="n">SmallDispTorsor</span><span class="p">(</span>
+    <span class="s2">&quot;G_{6g/1g}&quot;</span><span class="p">,</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">a6g1g</span><span class="p">,</span> <span class="n">b6g1g</span><span class="p">,</span> <span class="n">g6g1g</span><span class="p">]),</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">u6g1g</span><span class="p">,</span> <span class="n">v6g1g</span><span class="p">,</span> <span class="n">w6g1g</span><span class="p">]),</span>
+    <span class="n">A_prime_3</span><span class="p">,</span>
+    <span class="s2">&quot;A&#39;_3&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">G_6g_2g</span> <span class="o">=</span> <span class="n">SmallDispTorsor</span><span class="p">(</span>
+    <span class="s2">&quot;G_{6g/2g}&quot;</span><span class="p">,</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">a6g2g</span><span class="p">,</span> <span class="n">b6g2g</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">u6g2g</span><span class="p">,</span> <span class="n">v6g2g</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="n">C_prime_3</span><span class="p">,</span>
+    <span class="s2">&quot;C&#39;_3&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">defect_vars_glob</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">a1b1</span><span class="p">,</span>
+    <span class="n">b1b1</span><span class="p">,</span>
+    <span class="n">w1b1</span><span class="p">,</span>
+    <span class="n">a2b2</span><span class="p">,</span>
+    <span class="n">b2b2</span><span class="p">,</span>
+    <span class="n">w2b2</span><span class="p">,</span>
+    <span class="n">a1d1</span><span class="p">,</span>
+    <span class="n">b1d1</span><span class="p">,</span>
+    <span class="n">u1d1</span><span class="p">,</span>
+    <span class="n">v1d1</span><span class="p">,</span>
+    <span class="n">a2d2</span><span class="p">,</span>
+    <span class="n">b2d2</span><span class="p">,</span>
+    <span class="n">u2d2</span><span class="p">,</span>
+    <span class="n">v2d2</span><span class="p">,</span>
+    <span class="n">a1e1</span><span class="p">,</span>
+    <span class="n">b1e1</span><span class="p">,</span>
+    <span class="n">u1e1</span><span class="p">,</span>
+    <span class="n">v1e1</span><span class="p">,</span>
+    <span class="n">a2e2</span><span class="p">,</span>
+    <span class="n">b2e2</span><span class="p">,</span>
+    <span class="n">u2e2</span><span class="p">,</span>
+    <span class="n">v2e2</span><span class="p">,</span>
+    <span class="n">a1f1</span><span class="p">,</span>
+    <span class="n">b1f1</span><span class="p">,</span>
+    <span class="n">u1f1</span><span class="p">,</span>
+    <span class="n">v1f1</span><span class="p">,</span>
+    <span class="n">a2f2</span><span class="p">,</span>
+    <span class="n">b2f2</span><span class="p">,</span>
+    <span class="n">u2f2</span><span class="p">,</span>
+    <span class="n">v2f2</span><span class="p">,</span>
+    <span class="n">a1g1</span><span class="p">,</span>
+    <span class="n">b1g1</span><span class="p">,</span>
+    <span class="n">u1g1</span><span class="p">,</span>
+    <span class="n">v1g1</span><span class="p">,</span>
+    <span class="n">a2g2</span><span class="p">,</span>
+    <span class="n">b2g2</span><span class="p">,</span>
+    <span class="n">u2g2</span><span class="p">,</span>
+    <span class="n">v2g2</span><span class="p">,</span>
+    <span class="n">d1d</span><span class="p">,</span>
+    <span class="n">d1e</span><span class="p">,</span>
+    <span class="n">d1f</span><span class="p">,</span>
+    <span class="n">d1g</span><span class="p">,</span>
+    <span class="n">d2d</span><span class="p">,</span>
+    <span class="n">d2e</span><span class="p">,</span>
+    <span class="n">d2f</span><span class="p">,</span>
+    <span class="n">d2g</span><span class="p">,</span>
+    <span class="n">d3d</span><span class="p">,</span>
+    <span class="n">d4e</span><span class="p">,</span>
+    <span class="n">d5f</span><span class="p">,</span>
+    <span class="n">d6g</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">clearance_vars_glob</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">u1b2b</span><span class="p">,</span>
+    <span class="n">v1b2b</span><span class="p">,</span>
+    <span class="n">g1b2b</span><span class="p">,</span>
+    <span class="n">a3d1d</span><span class="p">,</span>
+    <span class="n">b3d1d</span><span class="p">,</span>
+    <span class="n">g3d1d</span><span class="p">,</span>
+    <span class="n">u3d1d</span><span class="p">,</span>
+    <span class="n">v3d1d</span><span class="p">,</span>
+    <span class="n">w3d1d</span><span class="p">,</span>
+    <span class="n">a3d2d</span><span class="p">,</span>
+    <span class="n">b3d2d</span><span class="p">,</span>
+    <span class="n">u3d2d</span><span class="p">,</span>
+    <span class="n">v3d2d</span><span class="p">,</span>
+    <span class="n">a4e1e</span><span class="p">,</span>
+    <span class="n">b4e1e</span><span class="p">,</span>
+    <span class="n">g4e1e</span><span class="p">,</span>
+    <span class="n">u4e1e</span><span class="p">,</span>
+    <span class="n">v4e1e</span><span class="p">,</span>
+    <span class="n">w4e1e</span><span class="p">,</span>
+    <span class="n">a4e2e</span><span class="p">,</span>
+    <span class="n">b4e2e</span><span class="p">,</span>
+    <span class="n">u4e2e</span><span class="p">,</span>
+    <span class="n">v4e2e</span><span class="p">,</span>
+    <span class="n">a5f1f</span><span class="p">,</span>
+    <span class="n">b5f1f</span><span class="p">,</span>
+    <span class="n">g5f1f</span><span class="p">,</span>
+    <span class="n">u5f1f</span><span class="p">,</span>
+    <span class="n">v5f1f</span><span class="p">,</span>
+    <span class="n">w5f1f</span><span class="p">,</span>
+    <span class="n">a5f2f</span><span class="p">,</span>
+    <span class="n">b5f2f</span><span class="p">,</span>
+    <span class="n">u5f2f</span><span class="p">,</span>
+    <span class="n">v5f2f</span><span class="p">,</span>
+    <span class="n">a6g1g</span><span class="p">,</span>
+    <span class="n">b6g1g</span><span class="p">,</span>
+    <span class="n">g6g1g</span><span class="p">,</span>
+    <span class="n">u6g1g</span><span class="p">,</span>
+    <span class="n">v6g1g</span><span class="p">,</span>
+    <span class="n">w6g1g</span><span class="p">,</span>
+    <span class="n">a6g2g</span><span class="p">,</span>
+    <span class="n">b6g2g</span><span class="p">,</span>
+    <span class="n">u6g2g</span><span class="p">,</span>
+    <span class="n">v6g2g</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_kinematic_loop_expressions</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">(</span>
+    <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">]]</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate symbolic equations for kinematic loops.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    expressions : list of sympy.Expr</span>
+<span class="sd">        The expanded symbolic equations tracking rotational and</span>
+<span class="sd">        translational loop defects.</span>
+<span class="sd">    defect_vars : list of sympy.Symbol</span>
+<span class="sd">        The list of symbolic defect tracking variables.</span>
+<span class="sd">    clearance_vars : list of sympy.Symbol</span>
+<span class="sd">        The list of symbolic clearance tracking variables.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">T_common</span> <span class="o">=</span> <span class="n">T_1b_1</span> <span class="o">-</span> <span class="n">G_1b_2b</span> <span class="o">-</span> <span class="n">T_2b_2</span>
+    <span class="n">L1</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">T_common</span>
+        <span class="o">+</span> <span class="n">T_2d_2</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">)</span>
+        <span class="o">+</span> <span class="n">G_3d_2d</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">)</span>
+        <span class="o">-</span> <span class="n">G_3d_1d</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">)</span>
+        <span class="o">-</span> <span class="n">T_1d_1</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">L2</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">T_common</span>
+        <span class="o">+</span> <span class="n">T_2e_2</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">)</span>
+        <span class="o">+</span> <span class="n">G_4e_2e</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">)</span>
+        <span class="o">-</span> <span class="n">G_4e_1e</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">)</span>
+        <span class="o">-</span> <span class="n">T_1e_1</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">L3</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">T_common</span>
+        <span class="o">+</span> <span class="n">T_2f_2</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">)</span>
+        <span class="o">+</span> <span class="n">G_5f_2f</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">)</span>
+        <span class="o">-</span> <span class="n">G_5f_1f</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">)</span>
+        <span class="o">-</span> <span class="n">T_1f_1</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">L4</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">T_common</span>
+        <span class="o">+</span> <span class="n">T_2g_2</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">)</span>
+        <span class="o">+</span> <span class="n">G_6g_2g</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">)</span>
+        <span class="o">-</span> <span class="n">G_6g_1g</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">)</span>
+        <span class="o">-</span> <span class="n">T_1g_1</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">loops</span> <span class="o">=</span> <span class="p">[</span><span class="n">L1</span><span class="p">,</span> <span class="n">L2</span><span class="p">,</span> <span class="n">L3</span><span class="p">,</span> <span class="n">L4</span><span class="p">]</span>
+    <span class="n">expressions</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">loop</span> <span class="ow">in</span> <span class="n">loops</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+            <span class="n">expressions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">loop</span><span class="o">.</span><span class="n">omega</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+            <span class="n">expressions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">loop</span><span class="o">.</span><span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">expressions</span><span class="p">,</span> <span class="n">defect_vars_glob</span><span class="p">,</span> <span class="n">clearance_vars_glob</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_interface_constraint_expressions</span><span class="p">(</span>
+    <span class="n">num_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+    <span class="n">strategy</span><span class="p">:</span> <span class="n">LinearizationStrategy</span> <span class="o">=</span> <span class="n">LinearizationStrategy</span><span class="o">.</span><span class="n">CIRCUMSCRIBED</span><span class="p">,</span>
+    <span class="n">z_eval_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate cylindrical interface constraint equations.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    num_points : int, default 16</span>
+<span class="sd">        The number of discretization facets for linearization.</span>
+<span class="sd">    strategy : LinearizationStrategy, optional</span>
+<span class="sd">        The linearization strategy applied to circular bounds.</span>
+<span class="sd">        Default is ``LinearizationStrategy.CIRCUMSCRIBED``.</span>
+<span class="sd">    z_eval_points : list of float or list of sympy.Symbol, optional</span>
+<span class="sd">        Axial locations along the Z-axis to evaluate constraints.</span>
+<span class="sd">        If None, evaluates at the two extreme boundaries.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list of sympy.Expr</span>
+<span class="sd">        The collected symbolic interface constraint expressions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">interfaces</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">CylindricalInterfaceConstraint</span><span class="p">(</span>
+            <span class="s2">&quot;1d/3d&quot;</span><span class="p">,</span>
+            <span class="n">G_3d_1d</span><span class="p">,</span>
+            <span class="n">d1d</span><span class="p">,</span>
+            <span class="n">d3d</span><span class="p">,</span>
+            <span class="n">l2</span><span class="p">,</span>
+            <span class="n">Nd</span><span class="o">=</span><span class="n">num_points</span><span class="p">,</span>
+            <span class="n">strategy</span><span class="o">=</span><span class="n">strategy</span><span class="p">,</span>
+            <span class="n">z_eval_points</span><span class="o">=</span><span class="n">z_eval_points</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">CylindricalInterfaceConstraint</span><span class="p">(</span>
+            <span class="s2">&quot;1e/4e&quot;</span><span class="p">,</span>
+            <span class="n">G_4e_1e</span><span class="p">,</span>
+            <span class="n">d1e</span><span class="p">,</span>
+            <span class="n">d4e</span><span class="p">,</span>
+            <span class="n">l2</span><span class="p">,</span>
+            <span class="n">Nd</span><span class="o">=</span><span class="n">num_points</span><span class="p">,</span>
+            <span class="n">strategy</span><span class="o">=</span><span class="n">strategy</span><span class="p">,</span>
+            <span class="n">z_eval_points</span><span class="o">=</span><span class="n">z_eval_points</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">CylindricalInterfaceConstraint</span><span class="p">(</span>
+            <span class="s2">&quot;1f/5f&quot;</span><span class="p">,</span>
+            <span class="n">G_5f_1f</span><span class="p">,</span>
+            <span class="n">d1f</span><span class="p">,</span>
+            <span class="n">d5f</span><span class="p">,</span>
+            <span class="n">l2</span><span class="p">,</span>
+            <span class="n">Nd</span><span class="o">=</span><span class="n">num_points</span><span class="p">,</span>
+            <span class="n">strategy</span><span class="o">=</span><span class="n">strategy</span><span class="p">,</span>
+            <span class="n">z_eval_points</span><span class="o">=</span><span class="n">z_eval_points</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">CylindricalInterfaceConstraint</span><span class="p">(</span>
+            <span class="s2">&quot;1g/6g&quot;</span><span class="p">,</span>
+            <span class="n">G_6g_1g</span><span class="p">,</span>
+            <span class="n">d1g</span><span class="p">,</span>
+            <span class="n">d6g</span><span class="p">,</span>
+            <span class="n">l2</span><span class="p">,</span>
+            <span class="n">Nd</span><span class="o">=</span><span class="n">num_points</span><span class="p">,</span>
+            <span class="n">strategy</span><span class="o">=</span><span class="n">strategy</span><span class="p">,</span>
+            <span class="n">z_eval_points</span><span class="o">=</span><span class="n">z_eval_points</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">CylindricalInterfaceConstraint</span><span class="p">(</span>
+            <span class="s2">&quot;2d/3d&quot;</span><span class="p">,</span>
+            <span class="n">G_3d_2d</span><span class="p">,</span>
+            <span class="n">d2d</span><span class="p">,</span>
+            <span class="n">d3d</span><span class="p">,</span>
+            <span class="n">l3</span><span class="p">,</span>
+            <span class="n">Nd</span><span class="o">=</span><span class="n">num_points</span><span class="p">,</span>
+            <span class="n">strategy</span><span class="o">=</span><span class="n">strategy</span><span class="p">,</span>
+            <span class="n">z_eval_points</span><span class="o">=</span><span class="n">z_eval_points</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">CylindricalInterfaceConstraint</span><span class="p">(</span>
+            <span class="s2">&quot;2e/4e&quot;</span><span class="p">,</span>
+            <span class="n">G_4e_2e</span><span class="p">,</span>
+            <span class="n">d2e</span><span class="p">,</span>
+            <span class="n">d4e</span><span class="p">,</span>
+            <span class="n">l3</span><span class="p">,</span>
+            <span class="n">Nd</span><span class="o">=</span><span class="n">num_points</span><span class="p">,</span>
+            <span class="n">strategy</span><span class="o">=</span><span class="n">strategy</span><span class="p">,</span>
+            <span class="n">z_eval_points</span><span class="o">=</span><span class="n">z_eval_points</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">CylindricalInterfaceConstraint</span><span class="p">(</span>
+            <span class="s2">&quot;2f/5f&quot;</span><span class="p">,</span>
+            <span class="n">G_5f_2f</span><span class="p">,</span>
+            <span class="n">d2f</span><span class="p">,</span>
+            <span class="n">d5f</span><span class="p">,</span>
+            <span class="n">l3</span><span class="p">,</span>
+            <span class="n">Nd</span><span class="o">=</span><span class="n">num_points</span><span class="p">,</span>
+            <span class="n">strategy</span><span class="o">=</span><span class="n">strategy</span><span class="p">,</span>
+            <span class="n">z_eval_points</span><span class="o">=</span><span class="n">z_eval_points</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">CylindricalInterfaceConstraint</span><span class="p">(</span>
+            <span class="s2">&quot;2g/6g&quot;</span><span class="p">,</span>
+            <span class="n">G_6g_2g</span><span class="p">,</span>
+            <span class="n">d2g</span><span class="p">,</span>
+            <span class="n">d6g</span><span class="p">,</span>
+            <span class="n">l3</span><span class="p">,</span>
+            <span class="n">Nd</span><span class="o">=</span><span class="n">num_points</span><span class="p">,</span>
+            <span class="n">strategy</span><span class="o">=</span><span class="n">strategy</span><span class="p">,</span>
+            <span class="n">z_eval_points</span><span class="o">=</span><span class="n">z_eval_points</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">]</span>
+    <span class="n">expressions</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">interface</span> <span class="ow">in</span> <span class="n">interfaces</span><span class="p">:</span>
+        <span class="n">constraints</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">generate_equations</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">constraints</span><span class="p">:</span>
+            <span class="n">expressions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;expression&quot;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">expressions</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">rename_variables</span><span class="p">(</span>
+    <span class="n">expressions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">],</span> <span class="n">mapping_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Substitute variables in symbolic expressions using a mapping.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    expressions : list of sympy.Expr</span>
+<span class="sd">        The input symbolic expressions to modify.</span>
+<span class="sd">    mapping_dict : dict</span>
+<span class="sd">        A lookup mapping old symbols to their replacement symbols.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list of sympy.Expr</span>
+<span class="sd">        The modified expressions with updated variable symbols.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">expr</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">mapping_dict</span><span class="p">)</span> <span class="k">for</span> <span class="n">expr</span> <span class="ow">in</span> <span class="n">expressions</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">print_kinematic_loops</span><span class="p">(</span><span class="n">expressions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print formatted kinematic loop equations to stdout.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    expressions : list of sympy.Expr</span>
+<span class="sd">        The symbolic loop expressions to display.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">axis_names</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;Rotation x&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Rotation y&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Rotation z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Translation x&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Translation y&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Translation z&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">expr</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">expressions</span><span class="p">):</span>
+        <span class="n">loop_num</span> <span class="o">=</span> <span class="n">idx</span> <span class="o">//</span> <span class="mi">6</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">eq_num</span> <span class="o">=</span> <span class="n">idx</span> <span class="o">%</span> <span class="mi">6</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">eq_num</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Loop </span><span class="si">{</span><span class="n">loop_num</span><span class="si">}</span><span class="s2"> Equations ===&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Eq </span><span class="si">{</span><span class="n">eq_num</span><span class="si">}</span><span class="s2"> [</span><span class="si">{</span><span class="n">axis_names</span><span class="p">[</span><span class="n">eq_num</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">]:</span><span class="se">\n</span><span class="si">{</span><span class="n">expr</span><span class="si">}</span><span class="s2"> = 0&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">print_interface_constraints</span><span class="p">(</span><span class="n">expressions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print formatted interface constraints to stdout.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    expressions : list of sympy.Expr</span>
+<span class="sd">        The symbolic interface expressions to display.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Interface Constraints (Eq &lt;= 0) ===&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">expr</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">expressions</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Constraint </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">:</span><span class="se">\n</span><span class="si">{</span><span class="n">expr</span><span class="si">}</span><span class="s2"> &lt;= 0&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_system_of_constraints_assembly_model</span><span class="p">(</span>
+    <span class="n">L</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span>
+    <span class="n">CIRCLE_RESOLUTION</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
+    <span class="n">strategy</span><span class="p">:</span> <span class="n">LinearizationStrategy</span> <span class="o">=</span> <span class="n">LinearizationStrategy</span><span class="o">.</span><span class="n">CIRCUMSCRIBED</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">otaf</span><span class="o">.</span><span class="n">SystemOfConstraintsAssemblyModel</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct the system of constraints assembly model.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    L : array_like, optional</span>
+<span class="sd">        An array containing geometric parameters l0, l1, l2, l3.</span>
+<span class="sd">        The default is [50, 50, 30, 30].</span>
+<span class="sd">    CIRCLE_RESOLUTION : int, default 64</span>
+<span class="sd">        The number of discretization points for linearization.</span>
+<span class="sd">    strategy : LinearizationStrategy, optional</span>
+<span class="sd">        The linearization strategy applied to circular constraints.</span>
+<span class="sd">        Default is ``LinearizationStrategy.CIRCUMSCRIBED``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    otaf.SystemOfConstraintsAssemblyModel</span>
+<span class="sd">        The initialized assembly model with embedded optimization</span>
+<span class="sd">        variables.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    AssertionError</span>
+<span class="sd">        If `L` does not contain exactly 4 elements.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">L</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">,</span> <span class="p">(</span>
+        <span class="s2">&quot;Length list L must contain exactly 4 elements corresponding to l0, l1, l2, l3.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">l0</span><span class="p">,</span> <span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="p">,</span> <span class="n">l3</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;l0 l1 l2 l3&quot;</span><span class="p">)</span>
+    <span class="n">length_subs</span> <span class="o">=</span> <span class="p">{</span><span class="n">l0</span><span class="p">:</span> <span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">l1</span><span class="p">:</span> <span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">l2</span><span class="p">:</span> <span class="n">L</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">l3</span><span class="p">:</span> <span class="n">L</span><span class="p">[</span><span class="mi">3</span><span class="p">]}</span>
+    <span class="n">loop_exprs</span><span class="p">,</span> <span class="n">d_vars</span><span class="p">,</span> <span class="n">c_vars</span> <span class="o">=</span> <span class="n">get_kinematic_loop_expressions</span><span class="p">()</span>
+    <span class="n">interf_exprs</span> <span class="o">=</span> <span class="n">get_interface_constraint_expressions</span><span class="p">(</span>
+        <span class="n">num_points</span><span class="o">=</span><span class="n">CIRCLE_RESOLUTION</span><span class="p">,</span>
+        <span class="n">strategy</span><span class="o">=</span><span class="n">strategy</span><span class="p">,</span>
+        <span class="n">z_eval_points</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">L</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">otaf_mapping</span> <span class="o">=</span> <span class="n">create_dynamic_mapping</span><span class="p">(</span><span class="n">defect_vars_glob</span><span class="p">,</span> <span class="n">clearance_vars_glob</span><span class="p">)</span>
+    <span class="n">mapped_loop_exprs</span> <span class="o">=</span> <span class="n">rename_variables</span><span class="p">(</span><span class="n">loop_exprs</span><span class="p">,</span> <span class="n">otaf_mapping</span><span class="p">)</span>
+    <span class="n">mapped_interf_exprs</span> <span class="o">=</span> <span class="n">rename_variables</span><span class="p">(</span><span class="n">interf_exprs</span><span class="p">,</span> <span class="n">otaf_mapping</span><span class="p">)</span>
+    <span class="n">mapped_clearances</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">otaf_mapping</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">clearance_vars_glob</span> <span class="k">if</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">otaf_mapping</span>
+    <span class="p">]</span>
+    <span class="n">mapped_defects</span> <span class="o">=</span> <span class="p">[</span><span class="n">otaf_mapping</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">defect_vars_glob</span> <span class="k">if</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">otaf_mapping</span><span class="p">]</span>
+    <span class="n">comp_mats</span> <span class="o">=</span> <span class="n">extract_linear_matrices</span><span class="p">(</span>
+        <span class="n">mapped_loop_exprs</span><span class="p">,</span>
+        <span class="n">mapped_clearances</span><span class="p">,</span>
+        <span class="n">mapped_defects</span><span class="p">,</span>
+        <span class="p">[</span><span class="n">l0</span><span class="p">,</span> <span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="p">,</span> <span class="n">l3</span><span class="p">],</span>
+        <span class="n">length_subs</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">interf_mats</span> <span class="o">=</span> <span class="n">extract_linear_matrices</span><span class="p">(</span>
+        <span class="n">mapped_interf_exprs</span><span class="p">,</span>
+        <span class="n">mapped_clearances</span><span class="p">,</span>
+        <span class="n">mapped_defects</span><span class="p">,</span>
+        <span class="p">[</span><span class="n">l0</span><span class="p">,</span> <span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="p">,</span> <span class="n">l3</span><span class="p">],</span>
+        <span class="n">length_subs</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">A_eq_gap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">comp_mats</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">A_eq_def</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">comp_mats</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">K_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">comp_mats</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+    <span class="n">A_ub_gap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">interf_mats</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">A_ub_def</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">interf_mats</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">K_ub</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">interf_mats</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+    <span class="n">matrices_for_socam</span> <span class="o">=</span> <span class="p">[</span><span class="n">A_eq_def</span><span class="p">,</span> <span class="n">A_eq_gap</span><span class="p">,</span> <span class="n">K_eq</span><span class="p">,</span> <span class="o">-</span><span class="n">A_ub_def</span><span class="p">,</span> <span class="o">-</span><span class="n">A_ub_gap</span><span class="p">,</span> <span class="o">-</span><span class="n">K_ub</span><span class="p">]</span>
+    <span class="n">SOCAM</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">SystemOfConstraintsAssemblyModel</span><span class="p">(</span><span class="n">matrices</span><span class="o">=</span><span class="n">matrices_for_socam</span><span class="p">)</span>
+    <span class="n">SOCAM</span><span class="o">.</span><span class="n">deviation_symbols</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mapped_defects</span><span class="p">)</span>
+    <span class="n">SOCAM</span><span class="o">.</span><span class="n">gap_symbols</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mapped_clearances</span><span class="p">)</span>
+    <span class="n">SOCAM</span><span class="o">.</span><span class="n">embedOptimizationVariable</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">SOCAM</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_distribution_params</span><span class="p">(</span>
+    <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.21</span><span class="p">,</span>
+    <span class="n">capa</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">hPlate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">30.0</span><span class="p">,</span>
+    <span class="n">EH</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">50.0</span><span class="p">,</span>
+    <span class="n">LB</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">25.0</span><span class="p">,</span>
+    <span class="n">Dext</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">20.0</span><span class="p">,</span>
+    <span class="n">Dint</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">19.8</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute defect distribution parameters and variance vectors.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tol : float, default 0.21</span>
+<span class="sd">        Tolerance limit value used to compute standard deviations.</span>
+<span class="sd">    capa : float, default 1.0</span>
+<span class="sd">        Process capability index factor.</span>
+<span class="sd">    hPlate : float, default 30.0</span>
+<span class="sd">        The height parameter of the plate component.</span>
+<span class="sd">    EH : float, default 50.0</span>
+<span class="sd">        The embedment height component.</span>
+<span class="sd">    LB : float, default 25.0</span>
+<span class="sd">        The length parameter of the base section.</span>
+<span class="sd">    Dext : float, default 20.0</span>
+<span class="sd">        The nominal external component diameter.</span>
+<span class="sd">    Dint : float, default 19.8</span>
+<span class="sd">        The nominal internal component diameter.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    RandDeviationVect : otaf.distribution.ComposedDistribution</span>
+<span class="sd">        The joint normal defect distribution model.</span>
+<span class="sd">    mapped_defects : list of sympy.Symbol</span>
+<span class="sd">        The descriptive tracking labels for standard deviations.</span>
+<span class="sd">    std_vect : np.ndarray</span>
+<span class="sd">        A 1D array of calculated maximum standard deviations.</span>
+<span class="sd">    mu_vect : np.ndarray</span>
+<span class="sd">        A 1D array of calculated mean parameter offsets.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sigma_e_pos</span> <span class="o">=</span> <span class="n">tol</span> <span class="o">/</span> <span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">capa</span><span class="p">)</span>
+    <span class="n">theta_max</span> <span class="o">=</span> <span class="n">tol</span> <span class="o">/</span> <span class="n">hPlate</span>
+    <span class="n">sigma_e_theta</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">theta_max</span> <span class="o">/</span> <span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">capa</span><span class="p">)</span>
+    <span class="n">sigma_e_pos_plate</span> <span class="o">=</span> <span class="n">tol</span> <span class="o">/</span> <span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">capa</span><span class="p">)</span>
+    <span class="n">sigma_e_theta_plate</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">tol</span> <span class="o">/</span> <span class="p">(</span><span class="n">EH</span> <span class="o">+</span> <span class="n">LB</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">capa</span><span class="p">)</span>
+    <span class="n">sigma_diam</span> <span class="o">=</span> <span class="n">sigma_e_pos</span>
+    <span class="n">otaf_mapping</span> <span class="o">=</span> <span class="n">create_dynamic_mapping</span><span class="p">(</span><span class="n">defect_vars_glob</span><span class="p">,</span> <span class="n">clearance_vars_glob</span><span class="p">)</span>
+    <span class="n">mapped_defects</span> <span class="o">=</span> <span class="p">[</span><span class="n">otaf_mapping</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">defect_vars_glob</span> <span class="k">if</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">otaf_mapping</span><span class="p">]</span>
+    <span class="n">mu_vect</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">38</span> <span class="o">+</span> <span class="p">[</span><span class="n">Dext</span><span class="p">]</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">+</span> <span class="p">[</span><span class="n">Dint</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">std_vect</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">sigma_e_theta_plate</span><span class="p">,</span> <span class="n">sigma_e_theta_plate</span><span class="p">,</span> <span class="n">sigma_e_pos_plate</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="o">+</span> <span class="p">[</span><span class="n">sigma_e_theta</span><span class="p">,</span> <span class="n">sigma_e_theta</span><span class="p">,</span> <span class="n">sigma_e_pos</span><span class="p">,</span> <span class="n">sigma_e_pos</span><span class="p">]</span> <span class="o">*</span> <span class="mi">8</span>
+        <span class="o">+</span> <span class="p">[</span><span class="n">sigma_diam</span><span class="p">]</span> <span class="o">*</span> <span class="mi">12</span>
+    <span class="p">)</span>
+    <span class="n">RandDeviationVect</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">get_composed_normal_defect_distribution</span><span class="p">(</span>
+        <span class="n">mapped_defects</span><span class="p">,</span> <span class="n">mu_list</span><span class="o">=</span><span class="n">mu_vect</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">sigma_list</span><span class="o">=</span><span class="n">std_vect</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">RandDeviationVect</span><span class="p">,</span> <span class="n">mapped_defects</span><span class="p">,</span> <span class="n">std_vect</span><span class="p">,</span> <span class="n">mu_vect</span><span class="p">)</span>
+
+
+<span class="n">dim</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">sample_multiplier</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+<span class="n">no_tol</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="eval_credal_set_constraints">
+<a class="viewcode-back" href="../../../../source/otaf.example_models.models_3_D.model4.html#otaf.example_models.models_3_D.model4.eval_credal_set_constraints">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">eval_credal_set_constraints</span><span class="p">(</span>
+    <span class="n">x_std</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.21</span><span class="p">,</span>
+    <span class="n">capa</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">hPlate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">30.0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Evaluate the normalized credal set boundary conditions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x_std : np.ndarray</span>
+<span class="sd">        A 1D array containing standard deviation vector values.</span>
+<span class="sd">    tol : float, default 0.21</span>
+<span class="sd">        The baseline design tolerance.</span>
+<span class="sd">    capa : float, default 1.0</span>
+<span class="sd">        The process capability standard multiplier.</span>
+<span class="sd">    hPlate : float, default 30.0</span>
+<span class="sd">        The height parameter of the plate component.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        An array containing the evaluated constraint metrics.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">tol</span> <span class="o">/</span> <span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">capa</span><span class="p">)</span>
+    <span class="n">cons0</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">sigma_delta_3D_plane</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="n">target</span><span class="p">)</span> <span class="o">/</span> <span class="n">target</span>
+    <span class="n">cons1</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">sigma_delta_3D_plane</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span> <span class="o">-</span> <span class="n">target</span><span class="p">)</span> <span class="o">/</span> <span class="n">target</span>
+    <span class="n">cons2</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span>
+        <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span>
+                <span class="n">sigma_delta_cylindrical_feature</span><span class="p">(</span>
+                    <span class="n">hPlate</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">38</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+                <span class="p">),</span>
+                <span class="n">sigma_delta_cylindrical_feature</span><span class="p">(</span>
+                    <span class="n">hPlate</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">38</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+            <span class="o">-</span> <span class="n">target</span>
+        <span class="p">)</span>
+        <span class="o">/</span> <span class="n">target</span>
+    <span class="p">)</span>
+    <span class="n">cons3</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span>
+        <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span>
+                <span class="n">sigma_delta_cylindrical_feature</span><span class="p">(</span>
+                    <span class="n">hPlate</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">39</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">16</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">14</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">17</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span>
+                <span class="p">),</span>
+                <span class="n">sigma_delta_cylindrical_feature</span><span class="p">(</span>
+                    <span class="n">hPlate</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">39</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">16</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">14</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">17</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+            <span class="o">-</span> <span class="n">target</span>
+        <span class="p">)</span>
+        <span class="o">/</span> <span class="n">target</span>
+    <span class="p">)</span>
+    <span class="n">cons4</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span>
+        <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span>
+                <span class="n">sigma_delta_cylindrical_feature</span><span class="p">(</span>
+                    <span class="n">hPlate</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">40</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">24</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">22</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">25</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">23</span><span class="p">]</span>
+                <span class="p">),</span>
+                <span class="n">sigma_delta_cylindrical_feature</span><span class="p">(</span>
+                    <span class="n">hPlate</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">40</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">24</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">22</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">25</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">23</span><span class="p">]</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+            <span class="o">-</span> <span class="n">target</span>
+        <span class="p">)</span>
+        <span class="o">/</span> <span class="n">target</span>
+    <span class="p">)</span>
+    <span class="n">cons5</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span>
+        <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span>
+                <span class="n">sigma_delta_cylindrical_feature</span><span class="p">(</span>
+                    <span class="n">hPlate</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">41</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">32</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">30</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">33</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">31</span><span class="p">]</span>
+                <span class="p">),</span>
+                <span class="n">sigma_delta_cylindrical_feature</span><span class="p">(</span>
+                    <span class="n">hPlate</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">41</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">32</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">30</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">33</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">31</span><span class="p">]</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+            <span class="o">-</span> <span class="n">target</span>
+        <span class="p">)</span>
+        <span class="o">/</span> <span class="n">target</span>
+    <span class="p">)</span>
+    <span class="n">cons6</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span>
+        <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span>
+                <span class="n">sigma_delta_cylindrical_feature</span><span class="p">(</span>
+                    <span class="n">hPlate</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">42</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">12</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">13</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span>
+                <span class="p">),</span>
+                <span class="n">sigma_delta_cylindrical_feature</span><span class="p">(</span>
+                    <span class="n">hPlate</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">42</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">12</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">13</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+            <span class="o">-</span> <span class="n">target</span>
+        <span class="p">)</span>
+        <span class="o">/</span> <span class="n">target</span>
+    <span class="p">)</span>
+    <span class="n">cons7</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span>
+        <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span>
+                <span class="n">sigma_delta_cylindrical_feature</span><span class="p">(</span>
+                    <span class="n">hPlate</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">43</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">20</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">18</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">21</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">19</span><span class="p">]</span>
+                <span class="p">),</span>
+                <span class="n">sigma_delta_cylindrical_feature</span><span class="p">(</span>
+                    <span class="n">hPlate</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">43</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">20</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">18</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">21</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">19</span><span class="p">]</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+            <span class="o">-</span> <span class="n">target</span>
+        <span class="p">)</span>
+        <span class="o">/</span> <span class="n">target</span>
+    <span class="p">)</span>
+    <span class="n">cons8</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span>
+        <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span>
+                <span class="n">sigma_delta_cylindrical_feature</span><span class="p">(</span>
+                    <span class="n">hPlate</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">44</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">28</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">26</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">29</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">27</span><span class="p">]</span>
+                <span class="p">),</span>
+                <span class="n">sigma_delta_cylindrical_feature</span><span class="p">(</span>
+                    <span class="n">hPlate</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">44</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">28</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">26</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">29</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">27</span><span class="p">]</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+            <span class="o">-</span> <span class="n">target</span>
+        <span class="p">)</span>
+        <span class="o">/</span> <span class="n">target</span>
+    <span class="p">)</span>
+    <span class="n">cons9</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span>
+        <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span>
+                <span class="n">sigma_delta_cylindrical_feature</span><span class="p">(</span>
+                    <span class="n">hPlate</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">45</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">36</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">34</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">37</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">35</span><span class="p">]</span>
+                <span class="p">),</span>
+                <span class="n">sigma_delta_cylindrical_feature</span><span class="p">(</span>
+                    <span class="n">hPlate</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">45</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">36</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">34</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">37</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">35</span><span class="p">]</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+            <span class="o">-</span> <span class="n">target</span>
+        <span class="p">)</span>
+        <span class="o">/</span> <span class="n">target</span>
+    <span class="p">)</span>
+    <span class="n">cons10</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">46</span><span class="p">]</span> <span class="o">-</span> <span class="n">target</span><span class="p">)</span> <span class="o">/</span> <span class="n">target</span>
+    <span class="n">cons11</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">47</span><span class="p">]</span> <span class="o">-</span> <span class="n">target</span><span class="p">)</span> <span class="o">/</span> <span class="n">target</span>
+    <span class="n">cons12</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">48</span><span class="p">]</span> <span class="o">-</span> <span class="n">target</span><span class="p">)</span> <span class="o">/</span> <span class="n">target</span>
+    <span class="n">cons13</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">49</span><span class="p">]</span> <span class="o">-</span> <span class="n">target</span><span class="p">)</span> <span class="o">/</span> <span class="n">target</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">cons0</span><span class="p">(</span><span class="n">x_std</span><span class="p">),</span>
+            <span class="n">cons1</span><span class="p">(</span><span class="n">x_std</span><span class="p">),</span>
+            <span class="n">cons2</span><span class="p">(</span><span class="n">x_std</span><span class="p">),</span>
+            <span class="n">cons3</span><span class="p">(</span><span class="n">x_std</span><span class="p">),</span>
+            <span class="n">cons4</span><span class="p">(</span><span class="n">x_std</span><span class="p">),</span>
+            <span class="n">cons5</span><span class="p">(</span><span class="n">x_std</span><span class="p">),</span>
+            <span class="n">cons6</span><span class="p">(</span><span class="n">x_std</span><span class="p">),</span>
+            <span class="n">cons7</span><span class="p">(</span><span class="n">x_std</span><span class="p">),</span>
+            <span class="n">cons8</span><span class="p">(</span><span class="n">x_std</span><span class="p">),</span>
+            <span class="n">cons9</span><span class="p">(</span><span class="n">x_std</span><span class="p">),</span>
+            <span class="n">cons10</span><span class="p">(</span><span class="n">x_std</span><span class="p">),</span>
+            <span class="n">cons11</span><span class="p">(</span><span class="n">x_std</span><span class="p">),</span>
+            <span class="n">cons12</span><span class="p">(</span><span class="n">x_std</span><span class="p">),</span>
+            <span class="n">cons13</span><span class="p">(</span><span class="n">x_std</span><span class="p">),</span>
+        <span class="p">]</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="eval_scaled_credal_set_constraints">
+<a class="viewcode-back" href="../../../../source/otaf.example_models.models_3_D.model4.html#otaf.example_models.models_3_D.model4.eval_scaled_credal_set_constraints">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">eval_scaled_credal_set_constraints</span><span class="p">(</span>
+    <span class="n">x_scaled</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">max_std_vect</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">tracker</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">experiment_key</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.21</span><span class="p">,</span>
+    <span class="n">capa</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">hPlate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">30.0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Map scaled deviations to real values and evaluate constraints.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x_scaled : np.ndarray</span>
+<span class="sd">        The scaled standard deviation vector inputs.</span>
+<span class="sd">    max_std_vect : np.ndarray</span>
+<span class="sd">        The upper-bound limits for standard deviation mapping.</span>
+<span class="sd">    tracker : Any, optional</span>
+<span class="sd">        Data logging tracker instance. Default is None.</span>
+<span class="sd">    experiment_key : Any, optional</span>
+<span class="sd">        Unique identifier key for tracking logs. Default is None.</span>
+<span class="sd">    tol : float, default 0.21</span>
+<span class="sd">        The baseline design tolerance.</span>
+<span class="sd">    capa : float, default 1.0</span>
+<span class="sd">        The process capability standard multiplier.</span>
+<span class="sd">    hPlate : float, default 30.0</span>
+<span class="sd">        The height parameter of the plate component.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        The calculated constraint evaluation bounds array.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x_real</span> <span class="o">=</span> <span class="n">x_scaled</span> <span class="o">*</span> <span class="n">max_std_vect</span>
+    <span class="n">constraint_array</span> <span class="o">=</span> <span class="n">eval_credal_set_constraints</span><span class="p">(</span>
+        <span class="n">x_real</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span> <span class="n">capa</span><span class="o">=</span><span class="n">capa</span><span class="p">,</span> <span class="n">hPlate</span><span class="o">=</span><span class="n">hPlate</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">tracker</span><span class="p">:</span>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">update_constraint_data</span><span class="p">(</span>
+            <span class="n">exp_key</span><span class="o">=</span><span class="n">experiment_key</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x_scaled</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="n">constraint_array</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">constraint_array</span></div>
+
+
+
+<div class="viewcode-block" id="get_scaled_credal_set_constraints_function">
+<a class="viewcode-back" href="../../../../source/otaf.example_models.models_3_D.model4.html#otaf.example_models.models_3_D.model4.get_scaled_credal_set_constraints_function">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_scaled_credal_set_constraints_function</span><span class="p">(</span>
+    <span class="n">max_std_vect</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">tracker</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">experiment_key</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.21</span><span class="p">,</span>
+    <span class="n">capa</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">hPlate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">30.0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a wrapped lambda function for scaled constraints.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    max_std_vect : np.ndarray</span>
+<span class="sd">        The upper-bound limits for standard deviation mapping.</span>
+<span class="sd">    tracker : Any, optional</span>
+<span class="sd">        Data logging tracker instance. Default is None.</span>
+<span class="sd">    experiment_key : Any, optional</span>
+<span class="sd">        Unique identifier key for tracking logs. Default is None.</span>
+<span class="sd">    tol : float, default 0.21</span>
+<span class="sd">        The baseline design tolerance.</span>
+<span class="sd">    capa : float, default 1.0</span>
+<span class="sd">        The process capability standard multiplier.</span>
+<span class="sd">    hPlate : float, default 30.0</span>
+<span class="sd">        The height parameter of the plate component.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Callable[[np.ndarray], np.ndarray]</span>
+<span class="sd">        A single-argument function mapping `x_scaled` to its</span>
+<span class="sd">        evaluated constraint array.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="k">lambda</span> <span class="n">x_scaled</span><span class="p">:</span> <span class="n">eval_scaled_credal_set_constraints</span><span class="p">(</span>
+        <span class="n">x_scaled</span><span class="p">,</span>
+        <span class="n">max_std_vect</span><span class="p">,</span>
+        <span class="n">tracker</span><span class="p">,</span>
+        <span class="n">experiment_key</span><span class="p">,</span>
+        <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span>
+        <span class="n">capa</span><span class="o">=</span><span class="n">capa</span><span class="p">,</span>
+        <span class="n">hPlate</span><span class="o">=</span><span class="n">hPlate</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kramer84.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

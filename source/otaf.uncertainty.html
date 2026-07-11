@@ -14,12 +14,13 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=2709fde1"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Ex 1: Analytical Reference Model (2D / 4-DOF)" href="../notebooks/Ex1_2D_4dof_Analytical_Ref.html" />
     <link rel="prev" title="otaf.tolerances package" href="otaf.tolerances.html" /> 
 </head>
 
@@ -33,6 +34,7 @@
           
           <a href="../index.html" class="icon icon-home">
             otaf
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -68,32 +70,12 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.capabilities.html">otaf.capabilities package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.common.html">otaf.common package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.constants.html">otaf.constants package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.distribution.html">otaf.distribution package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.example_models.html">otaf.example_models package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.exceptions.html">otaf.exceptions package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.geometry.html">otaf.geometry package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.optimization.html">otaf.optimization package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.plotting.html">otaf.plotting package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.sampling.html">otaf.sampling package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.sensitivity.html">otaf.sensitivity package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.surrogate.html">otaf.surrogate package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="otaf.tolerances.html">otaf.tolerances package</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">otaf.uncertainty package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-otaf.uncertainty">Module contents</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#otaf.uncertainty.compute_failure_probability_FORM"><code class="docutils literal notranslate"><span class="pre">compute_failure_probability_FORM()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#otaf.uncertainty.compute_failure_probability_NAIS"><code class="docutils literal notranslate"><span class="pre">compute_failure_probability_NAIS()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#otaf.uncertainty.compute_failure_probability_SUBSET"><code class="docutils literal notranslate"><span class="pre">compute_failure_probability_SUBSET()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#otaf.uncertainty.compute_failure_probability_subset_sampling"><code class="docutils literal notranslate"><span class="pre">compute_failure_probability_subset_sampling()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#otaf.uncertainty.compute_gap_optimizations_on_sample"><code class="docutils literal notranslate"><span class="pre">compute_gap_optimizations_on_sample()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#otaf.uncertainty.compute_gap_optimizations_on_sample_batch"><code class="docutils literal notranslate"><span class="pre">compute_gap_optimizations_on_sample_batch()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#otaf.uncertainty.milp_batch_sequential"><code class="docutils literal notranslate"><span class="pre">milp_batch_sequential()</span></code></a></li>
 </ul>
-</li>
-</ul>
-</li>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Ex1_2D_4dof_Analytical_Ref.html">Ex 1: Analytical Reference Model (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Ex1_2D_4dof_Opti_Manual.html">Ex 1: Optimization-Based Model &amp; Vector Loops (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Ex1_2D_4dof_Opti_Auto_Surrogate.html">Ex 1: Automatic Topological Generation &amp; Surrogate Optimization (2D / 4-DOF)</a></li>
 </ul>
 
         </div>
@@ -172,15 +154,15 @@ object.</p>
 <li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, print additional information. Default is False.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">SimulationResult</span></code>]</span></p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><ul class="simple">
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
 <li><p><strong>proba</strong> (<em>float</em>) – The estimated failure probability.</p></li>
 <li><p><strong>result</strong> (<em>ot.SimulationResult</em>) – Additional NAIS algorithm results object.</p></li>
 </ul>
 </p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[float, <em>SimulationResult</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -202,17 +184,17 @@ Default is 2.0.</p></li>
 is 0.1.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">SimulationResult</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span></p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><ul class="simple">
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
 <li><p><strong>proba</strong> (<em>float</em>) – The estimated failure probability.</p></li>
 <li><p><strong>result</strong> (<em>ot.SimulationResult</em>) – Additional subset sampling algorithm results object.</p></li>
 <li><p><strong>algo</strong> (<em>ot.SubsetSampling</em>) – The subset sampling algorithm instance used for the
 simulation.</p></li>
 </ul>
 </p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[float, <em>SimulationResult</em>, <em>Any</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -352,6 +334,7 @@ batch element.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="otaf.tolerances.html" class="btn btn-neutral float-left" title="otaf.tolerances package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../notebooks/Ex1_2D_4dof_Analytical_Ref.html" class="btn btn-neutral float-right" title="Ex 1: Analytical Reference Model (2D / 4-DOF)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
