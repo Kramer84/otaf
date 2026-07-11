@@ -4,6 +4,10 @@
 
    <!-- PROJECT LOGO -->
 
+.. image:: logo/logo.png
+   :width: 333px
+   :align: center
+
 .. container::
 
    .. raw:: html

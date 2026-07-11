@@ -1,3 +1,16 @@
+/* Define your framework's custom design variables */
+:root {
+    /* Colors */
+    --color-background-primary: #ffffff;    /* Main page background */
+    --color-background-secondary: #f8f9fa;  /* Code block background */
+    --color-foreground-primary: #2b2b2b;    /* General text color */
+    --color-accent-primary: #1a5f7a;        /* Main Headings (H1, H2, H3) */
+    --color-accent-secondary: #c85c00;      /* Hyperlinks and anchors */
+
+    /* Layout Dimensions */
+    --sidebar-width: 270px;                 /* Dynamic sidebar width variable */
+}
+
 /* Fix inverted color scheme for Markdown-rendered content */
 .markdown-body {
     background-color: var(--color-background-primary); /* Match the theme's primary background */
@@ -33,9 +46,51 @@ html, body {
     padding: 0;
 }
 
-/* Constrain the sidebar logo height and center it nicely */
+/* Constrain the sidebar logo height, protect aspect ratio, and center it */
+.wy-side-nav-search img,
 .wy-side-nav-search img.logo {
-    max-height: 60px;
-    width: auto;
-    margin-bottom: 5px;
+    max-height: 180px !important;
+    width: auto !important;
+    max-width: 100% !important;
+    margin: 0 auto 5px auto !important;
+    display: block !important;
+}
+
+/* Shrink the left sidebar navigation panel using global variable */
+.wy-nav-side {
+    width: var(--sidebar-width) !important;
+}
+
+/* Ensure the fixed search box matches the new sidebar width variable */
+.wy-side-nav-search {
+    width: var(--sidebar-width) !important;
+}
+
+/* Pull the main content window left to fill the newly opened space precisely */
+.wy-nav-content-wrap {
+    margin-left: var(--sidebar-width) !important;
+}
+
+/* Adjust the top bar header for mobile/smaller screens */
+.wy-nav-top {
+    width: 100% !important;
+}
+
+/* Force long sidebar navigation text (and sub-nested span tags) to wrap cleanly */
+.wy-menu-vertical li a,
+.wy-menu-vertical li a span,
+.wy-menu-vertical li.current a {
+    white-space: normal !important;       /* Break the theme's nowrap rule */
+    overflow-wrap: break-word !important; /* Break long filenames/paths safely */
+    word-break: break-word !important;
+    text-overflow: unset !important;      /* Strip the clipping '...' effect */
+    line-height: 1.4 !important;          /* Balance spacing for multi-line wrapped text */
+    height: auto !important;
+    display: block !important;
+}
+
+/* Provide breathing room padding specifically for wrapped list entries */
+.wy-menu-vertical li a {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
 }
