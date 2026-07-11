@@ -13,10 +13,8 @@
     <img src="logo/logo.png" alt="Logo" width="333" height="333" onerror="this.style.display='none'">
   </a>
 
-<h3 align="center">OTAF</h3>
-
   <p align="center">
-    <strong>Open Tolerance Analysis Framework</strong>
+    <strong>OTAF: Open Tolerance Analysis Framework</strong>
     <br />
     A scientific Python framework for statistical tolerance analysis of over-constrained mechanical assemblies using linear system-of-constraints optimization.
     <br />
@@ -63,6 +61,8 @@
 
 In industrial systems with clearances and multi-point contacts (over-constrained mechanisms), the relative kinematics of parts cannot be defined by standard algebraic equations. OTAF solves this by constructing a math-based **System of Constraints (SOC)**, converting 3D variational geometry challenges into bounded linear programming optimizations.
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ### Key Methodology
 
 The framework transitions high-level assembly descriptions into rigorous mathematical structures through a two-layer model:
@@ -83,7 +83,7 @@ By injecting an auxiliary slack variable $s$ into the interface constraints via 
 * **Uncertainty Quantification:** [OpenTURNS](https://openturns.github.io/www/)
 * **Execution & Parallelization:** [Joblib](https://joblib.readthedocs.io/)
 * **Type Integrity Checking:** [Beartype](https://github.com/beartype/beartype)
-* **3D Mesh Rendering & Visualization:** [Trimesh](https://github.com/mikedh/trimesh), [Pytransform3d](https://github.com/dfki-ric/pytransform3d)
+* **3D Mesh Rendering & Visualization:** [Trimesh](https://github.com/mikedh/trimesh)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -121,6 +121,8 @@ pip install .[surrogate]
 pip install .[all]
 
 ```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Usage
 
@@ -197,7 +199,9 @@ print("Feasible without defects:", ideal_test["success"])
 
 ```
 
-### Local Documentation Compilation
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Local Documentation Compilation
 
 To build full API reference catalogs locally, verify `pandoc` is present on your local system:
 
@@ -210,6 +214,8 @@ make html
 
 ```
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ## Framework Assumptions & Capabilities
 
 * **Dual Probabilistic Scope:** Natively handles classical statistical tolerance analyses using fixed vectors of random standard distributions. For advanced reliability workflows, it supports epistemic uncertainty methods (imprecise probabilities) to trace upper and lower response envelopes (probability-boxes) by altering standard deviation allocations ($\lambda$-spaces) and internal variable correlations.
@@ -217,6 +223,8 @@ make html
 * **Manual Feature Injections:** Custom operational requirements or functional conditions can be injected manually into the optimization queue as additional independent vector loops.
 * **Computational Scaling & Surrogates:** Standard Monte Carlo studies ($10^6$ trials) scale efficiently through the linear programming backend and typically complete in under an hour via `joblib` parallel processing. The neural network-based surrogate modeling package (`otaf.surrogate`) is explicitly optimized to mitigate calculation bottlenecks encountered during extensive multi-dimensional optimization loops within imprecise probability space exploration.
 * **Cylinder Processing Workaround:** High-level automated boundary matching contains known algorithmic parsing limitations for cylinder-to-cylinder interactions that still need to be resolved. Users analyzing complex multi-primitive cylindrical joints should bypass automated generation scripts and leverage the validated, hand-coded 30-DOF and 50-DOF reference models located in `src/otaf/example_models/models_3_D/`.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Roadmap
 
@@ -227,6 +235,8 @@ OTAF is fully functional for standard planar operations and customized Torsor-ba
 * [ ] **Intrinsic Dimension Variability:** Support intrinsic component variance tracking (e.g., individual part radius changes) as stochastically independent parameters alongside rigid-body displacement profiles.
 * [ ] **Part-Internal Joint Tracking:** Enable the generation of isolated clearance loops for interdependent matching surfaces residing entirely inside a single complex physical part.
 * [ ] **CAD Ecosystem Integration:** Develop open APIs to directly extract geometric coordinates and surface topology bounds from modern open CAD formats.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Contributing
 
@@ -248,6 +258,8 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 For bug reports, feature requests, or scientific inquiries, please open an issue on the repository tracking system.
 
 **Project Link:** [https://github.com/Kramer84/otaf](https://github.com/Kramer84/otaf)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Acknowledgments
 
@@ -279,6 +291,8 @@ The theoretical, mathematical, and optimization concepts executed inside OTAF ar
   * *Links:* [[Resolve via DOI]](https://doi.org/10.7712/120223.10344.19792) | Copy DOI: `10.7712/120223.10344.19792`
 
 ---
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 [contributors-shield]: https://img.shields.io/github/contributors/Kramer84/otaf.svg?style=for-the-badge
 [contributors-url]: https://github.com/Kramer84/otaf/graphs/contributors

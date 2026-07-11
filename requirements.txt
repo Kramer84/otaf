@@ -12,18 +12,18 @@ gldpy
 # Optional dependencies for surrogate modeling
 torch
 torcheval
-scikit-learn
 
 # Optional dependencies for visualization and 3D geometry processing
 networkx
 trimesh
 triangle
-pytransform3d
 pyglet<2
 
 # Optional documentation dependencies
 sphinx
 sphinx-autodoc-typehints
 sphinx_rtd_theme
-furo
 myst-parser
+nbsphinx
+notebook
+pandoc

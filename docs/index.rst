@@ -1,10 +1,10 @@
-Welcome to OTAF's Documentation!
+OTAF Documentation
 ================================
 
 .. include:: source/README.rst
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
    :caption: API Reference:
 
    source/modules

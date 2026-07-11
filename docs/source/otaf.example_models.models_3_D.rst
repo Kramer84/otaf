@@ -1,5 +1,5 @@
-otaf.example\_models.models\_3\_D package
-=========================================
+otaf.example_models.models_3_D package
+======================================
 
 .. automodule:: otaf.example_models.models_3_D
    :members:

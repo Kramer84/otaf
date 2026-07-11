@@ -14,47 +14,38 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # Step 2: Set up Python (Upgraded to match your local 3.12 environment)
+    # Step 2: Set up Python with automatic caching enabled
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.12'
+        cache: 'pip'
 
     - name: Install Pandoc
       run: sudo apt-get install -y pandoc
 
-    # Step 3: Install dependencies
+    # Step 3: Fast, CPU-isolated dependency installation
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install sphinx sphinx_rtd_theme myst-parser nbsphinx notebook
-        pip install beartype numpy scipy sympy openturns pandas torch torcheval matplotlib tqdm joblib trimesh gldpy pytransform3d[all]
-
-    - name: Convert README.md to README.rst
-      run: |
-        # 1. Run the standard translation
-        pandoc README.md -f markdown -t rst -o docs/source/README.rst
-
-        # 2. Convert the escaped HTML image tag into a native rST image directive
-        # This replaces the raw HTML string with an operational relative path target
-        sed -i 's|<img src="logo/logo.png".*>|.. image:: ../logo/logo.png\n   :width: 333px\n   :align: center|g' docs/source/README.rst
+        pip install sphinx sphinx-autodoc-typehints sphinx_rtd_theme myst-parser nbsphinx notebook
+        pip install beartype numpy scipy>=1.14.0 sympy openturns pandas matplotlib tqdm joblib trimesh gldpy
+        pip3 install torch --index-url https://download.pytorch.org/whl/cpu
+        pip install torcheval
 
     # Step 4: Asset Copy Operations & Automated RST Generation
     - name: Prepare Assets and Generate API Layouts
       run: |
-        # 1. Handle Logo and Asset copies safely
-        mkdir -p docs/logo
-        if [ -f logo/logo.png ]; then
-          cp logo/logo.png docs/logo/logo.png
-        fi
-
-        # 2. Clear out stale auto-generated API pages
+        mkdir -p docs/source/logo
+        if [ -f logo/logo.png ]; then cp logo/logo.png docs/source/logo/logo.png; fi
         rm -f docs/source/otaf*.rst docs/source/modules.rst
+        
+        pandoc README.md -f markdown -t rst -o docs/source/README.rst
+        
+        python3 -c 'content = open("docs/source/README.rst").read(); marker = "About The Project\n-----------------"; body = content.split(marker)[1] if marker in content else content; mangled = ".. raw:: html\n\n   <p align=\"right\">\n\n(back to top)\n\n.. raw:: html\n\n   </p>"; working = ".. raw:: html\n\n   <p align=\"right\"><a href=\"#readme-top\">back to top</a></p>"; body = body.replace(mangled, working); header = ".. _readme-top:\n\n|Contributors| |Forks| |Stargazers| |Issues| |MIT License|\n\n.. image:: logo/logo.png\n   :width: 240px\n   :align: center\n   :alt: OTAF Logo\n\n.. role:: center\n   :class: center\n\n**OTAF: Open Tolerance Analysis Framework**\n\nA scientific Python framework for statistical tolerance analysis of over-constrained mechanical assemblies using linear system-of-constraints optimization.\n\n`Explore the Docs <https://kramer84.github.io/otaf/>`_ | `Report Bug <https://github.com/Kramer84/otaf/issues>`_ | `Request Feature <https://github.com/Kramer84/otaf/issues>`_\n\n.. contents:: Table of Contents\n   :depth: 3\n\n----"; open("docs/source/README.rst", "w").write(header + "\n\n" + marker + body)'
 
-        # 3. Run standard apidoc to discover baseline structure
         sphinx-apidoc -f -o docs/source/ src/otaf
 
-        # 4. Automate the 2D Models deep tree generation
         cat << 'EOF' > docs/source/otaf.example_models.models_2_D.rst
         otaf.example_models.models_2_D package
         ======================================
@@ -94,7 +85,6 @@ jobs:
            :show-inheritance:
         EOF
 
-        # 5. Automate the 3D Models deep tree generation
         cat << 'EOF' > docs/source/otaf.example_models.models_3_D.rst
         otaf.example_models.models_3_D package
         ======================================

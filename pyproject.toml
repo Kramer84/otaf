@@ -40,14 +40,12 @@ dependencies = [
 [project.optional-dependencies]
 surrogate = [
     "torch",
-    "torcheval",
-    "scikit-learn"
+    "torcheval"
 ]
 viz = [
     "networkx",
     "trimesh",
     "triangle",
-    "pytransform3d",
     "pyglet<2"
 ]
 docs = [
