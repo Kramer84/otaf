@@ -1,219 +1,25 @@
+.. _readme-top:
+
 |Contributors| |Forks| |Stargazers| |Issues| |MIT License|
 
-.. raw:: html
-
-   <!-- PROJECT LOGO -->
-
 .. image:: logo/logo.png
-   :width: 333px
+   :width: 240px
    :align: center
+   :alt: OTAF Logo
 
-.. container::
+.. role:: center
+   :class: center
 
-   .. raw:: html
+**OTAF: Open Tolerance Analysis Framework**
 
-      <h3 align="center">
+A scientific Python framework for statistical tolerance analysis of over-constrained mechanical assemblies using linear system-of-constraints optimization.
 
-   OTAF
+`Explore the Docs <https://kramer84.github.io/otaf/>`_ | `Report Bug <https://github.com/Kramer84/otaf/issues>`_ | `Request Feature <https://github.com/Kramer84/otaf/issues>`_
 
-   .. raw:: html
+.. contents:: Table of Contents
+   :depth: 3
 
-      </h3>
-
-   .. raw:: html
-
-      <p align="center">
-
-   Open Tolerance Analysis Framework A scientific Python framework for
-   statistical tolerance analysis of over-constrained mechanical
-   assemblies using linear system-of-constraints optimization. Explore
-   the docs · Report Bug · Request Feature
-
-   .. raw:: html
-
-      </p>
-
-.. raw:: html
-
-   <details>
-
-.. raw:: html
-
-   <summary>
-
-Table of Contents
-
-.. raw:: html
-
-   </summary>
-
-.. raw:: html
-
-   <ol>
-
-.. raw:: html
-
-   <li>
-
-About The Project
-
-.. raw:: html
-
-   <ul>
-
-.. raw:: html
-
-   <li>
-
-Key Methodology
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-Built With
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   </ul>
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-Getting Started
-
-.. raw:: html
-
-   <ul>
-
-.. raw:: html
-
-   <li>
-
-Prerequisites
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-Installation
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   </ul>
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-Usage
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-Framework Assumptions & Capabilities
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-Roadmap
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-Contributing
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-License
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-Contact
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-Acknowledgments
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-Mathematical & Literature References
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   </ol>
-
-.. raw:: html
-
-   </details>
+----
 
 About The Project
 -----------------
@@ -232,6 +38,10 @@ be defined by standard algebraic equations. OTAF solves this by
 constructing a math-based **System of Constraints (SOC)**, converting 3D
 variational geometry challenges into bounded linear programming
 optimizations.
+
+.. raw:: html
+
+   <p align="right"><a href="#readme-top">back to top</a></p>
 
 Key Methodology
 ~~~~~~~~~~~~~~~
@@ -262,13 +72,7 @@ system’s geometric compensation capacity, signaling an assembly failure.
 
 .. raw:: html
 
-   <p align="right">
-
-(back to top)
-
-.. raw:: html
-
-   </p>
+   <p align="right"><a href="#readme-top">back to top</a></p>
 
 Built With
 ~~~~~~~~~~
@@ -286,13 +90,7 @@ Built With
 
 .. raw:: html
 
-   <p align="right">
-
-(back to top)
-
-.. raw:: html
-
-   </p>
+   <p align="right"><a href="#readme-top">back to top</a></p>
 
 Getting Started
 ---------------
@@ -332,6 +130,10 @@ subsets:
 
    # Install all components including Sphinx documentation pipelines
    pip install .[all]
+
+.. raw:: html
+
+   <p align="right"><a href="#readme-top">back to top</a></p>
 
 Usage
 -----
@@ -414,8 +216,12 @@ generate standard optimization targets:
    ideal_test = soc_model.test_zero_deviation_feasibility()
    print("Feasible without defects:", ideal_test["success"])
 
+.. raw:: html
+
+   <p align="right"><a href="#readme-top">back to top</a></p>
+
 Local Documentation Compilation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------
 
 To build full API reference catalogs locally, verify ``pandoc`` is
 present on your local system:
@@ -427,6 +233,10 @@ present on your local system:
    cd docs/
    make clean
    make html
+
+.. raw:: html
+
+   <p align="right"><a href="#readme-top">back to top</a></p>
 
 Framework Assumptions & Capabilities
 ------------------------------------
@@ -461,6 +271,10 @@ Framework Assumptions & Capabilities
    hand-coded 30-DOF and 50-DOF reference models located in
    ``src/otaf/example_models/models_3_D/``.
 
+.. raw:: html
+
+   <p align="right"><a href="#readme-top">back to top</a></p>
+
 Roadmap
 -------
 
@@ -485,6 +299,10 @@ production-grade CAD ecosystems:
 -  ☐ **CAD Ecosystem Integration:** Develop open APIs to directly
    extract geometric coordinates and surface topology bounds from modern
    open CAD formats.
+
+.. raw:: html
+
+   <p align="right"><a href="#readme-top">back to top</a></p>
 
 Contributing
 ------------
@@ -513,6 +331,10 @@ bug reports, feature requests, or scientific inquiries, please open an
 issue on the repository tracking system.
 
 **Project Link:** https://github.com/Kramer84/otaf
+
+.. raw:: html
+
+   <p align="right"><a href="#readme-top">back to top</a></p>
 
 Acknowledgments
 ---------------
@@ -582,6 +404,10 @@ imprecise probabilities, explore the following foundation references:
       ``10.7712/120223.10344.19792``
 
 --------------
+
+.. raw:: html
+
+   <p align="right"><a href="#readme-top">back to top</a></p>
 
 .. |Contributors| image:: https://img.shields.io/github/contributors/Kramer84/otaf.svg?style=for-the-badge
    :target: https://github.com/Kramer84/otaf/graphs/contributors

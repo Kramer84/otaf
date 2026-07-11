@@ -46,6 +46,17 @@ html, body {
     padding: 0;
 }
 
+/* Constrain the sidebar logo height, protect aspect ratio, and center it */
+.wy-side-nav-search img,
+.wy-side-nav-search img.logo {
+    max-height: 200px !important;
+    width: auto !important;
+    max-width: 100% !important;
+    margin: 0 auto 5px auto !important;
+    display: block !important;
+}
+
+
 /* Expands the main page text bounds to eliminate excessive right-side margins */
 .wy-nav-content {
     max-width: 1100px !important;
