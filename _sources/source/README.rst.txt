@@ -282,8 +282,7 @@ Built With
 -  **Type Integrity Checking:**
    `Beartype <https://github.com/beartype/beartype>`__
 -  **3D Mesh Rendering & Visualization:**
-   `Trimesh <https://github.com/mikedh/trimesh>`__,
-   `Pytransform3d <https://github.com/dfki-ric/pytransform3d>`__
+   `Trimesh <https://github.com/mikedh/trimesh>`__
 
 .. raw:: html
 

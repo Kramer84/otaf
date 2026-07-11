@@ -8,7 +8,7 @@
     --color-accent-secondary: #c85c00;      /* Hyperlinks and anchors */
 
     /* Layout Dimensions */
-    --sidebar-width: 270px;                 /* Dynamic sidebar width variable */
+    --sidebar-width: 300px;                 /* Dynamic sidebar width variable */
 }
 
 /* Fix inverted color scheme for Markdown-rendered content */
@@ -46,50 +46,40 @@ html, body {
     padding: 0;
 }
 
-/* Constrain the sidebar logo height, protect aspect ratio, and center it */
-.wy-side-nav-search img,
-.wy-side-nav-search img.logo {
-    max-height: 180px !important;
-    width: auto !important;
-    max-width: 100% !important;
-    margin: 0 auto 5px auto !important;
-    display: block !important;
+/* Expands the main page text bounds to eliminate excessive right-side margins */
+.wy-nav-content {
+    max-width: 1100px !important;
+    margin: 0 auto !important;
 }
 
-/* Shrink the left sidebar navigation panel using global variable */
-.wy-nav-side {
-    width: var(--sidebar-width) !important;
+/* RESPONSIVE LAYOUT BOUNDS (Protects tablets and mobile layout shifting) */
+@media screen and (min-width: 769px) {
+    /* Apply sidebar custom width and content shifting on desktops only */
+    .wy-nav-side {
+        width: var(--sidebar-width) !important;
+    }
+    .wy-side-nav-search {
+        width: var(--sidebar-width) !important;
+    }
+    .wy-nav-content-wrap {
+        margin-left: var(--sidebar-width) !important;
+    }
 }
 
-/* Ensure the fixed search box matches the new sidebar width variable */
-.wy-side-nav-search {
-    width: var(--sidebar-width) !important;
-}
-
-/* Pull the main content window left to fill the newly opened space precisely */
-.wy-nav-content-wrap {
-    margin-left: var(--sidebar-width) !important;
-}
-
-/* Adjust the top bar header for mobile/smaller screens */
-.wy-nav-top {
-    width: 100% !important;
-}
-
-/* Force long sidebar navigation text (and sub-nested span tags) to wrap cleanly */
+/* Force long sidebar navigation text and sub-nested spans to wrap cleanly */
 .wy-menu-vertical li a,
 .wy-menu-vertical li a span,
 .wy-menu-vertical li.current a {
-    white-space: normal !important;       /* Break the theme's nowrap rule */
-    overflow-wrap: break-word !important; /* Break long filenames/paths safely */
+    white-space: normal !important;       
+    overflow-wrap: break-word !important; 
     word-break: break-word !important;
-    text-overflow: unset !important;      /* Strip the clipping '...' effect */
-    line-height: 1.4 !important;          /* Balance spacing for multi-line wrapped text */
+    text-overflow: unset !important;      
+    line-height: 1.4 !important;          
     height: auto !important;
     display: block !important;
 }
 
-/* Provide breathing room padding specifically for wrapped list entries */
+/* Provide clean padding blocks for multi-line list elements */
 .wy-menu-vertical li a {
     padding-top: 8px !important;
     padding-bottom: 8px !important;
