@@ -38,6 +38,10 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+test = [
+    "pytest"
+]
+
 surrogate = [
     "torch",
     "torcheval"
