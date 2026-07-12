@@ -15,6 +15,7 @@ __pycache__/
 .ipynb_checkpoints
 .mypy_cache/
 .pytest_cache/
+.ruff_cache/
 .virtual_documents/
 env/
 venv/
@@ -32,9 +33,6 @@ venv/
 .vscode/
 .idea/
 .DS_Store
-<<<<<<< HEAD
-Thumbs.db
-=======
 Thumbs.db
 
 # --- Documentation Build Artifacts ---
@@ -43,6 +41,12 @@ docs/_build/
 # --- Model Weights ---
 *.pth
 
-# --- Builds ---
+# --- Builds & Packaging ---
 build/
->>>>>>> 9eb95ca (updated gitignore)
+dist/
+sdist/
+wheels/
+*.egg-info/
+*.dist-info/
+.eggs/
+*.egg
