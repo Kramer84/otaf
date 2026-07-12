@@ -26,18 +26,16 @@ About The Project
 
 **OTAF (Open Tolerance Analysis Framework)** is an open-source,
 research-driven Python library designed to perform statistical tolerance
-analysis on over-constrained rigid mechanical assemblies. Developed as
-part of a PhD thesis funded by the French National Research Agency
-(ANR), the framework maps manufacturing deviations and mechanical joints
-into standard optimization matrices to evaluate assembly conditions
-under uncertainty.
-
-In industrial systems with clearances and multi-point contacts
-(over-constrained mechanisms), the relative kinematics of parts cannot
-be defined by standard algebraic equations. OTAF solves this by
-constructing a math-based **System of Constraints (SOC)**, converting 3D
-variational geometry challenges into bounded linear programming
-optimizations.
+analysis on three-dimensional over-constrained rigid mechanical
+assemblies. The tool allows to construct a linearized mathematical model
+of an assembly of parts, under the hypothsis of rigid parts and first
+oder defects (modeled by translations and rotations of the nominal
+feature). The module then maps rigid manufacturing deviations and
+clearances into a set of matrices representing a linear programing
+problem, where deviations can be fixed and the clearance space is
+explored using optimization to find valid configurations. This
+modelization can then be used to perform reliability analysis (tolerance
+analysis), construct surrogate models etc.
 
 .. raw:: html
 
@@ -46,17 +44,16 @@ optimizations.
 Key Methodology
 ~~~~~~~~~~~~~~~
 
-The framework transitions high-level assembly descriptions into rigorous
-mathematical structures through a two-layer model: 1. **Compatibility
-Loops (Equalities):** Closed kinematic chains (3D tolerance stack-ups)
-that govern global structural behavior. These are represented as linear
-matrix operations:
+The framework transforms a high-level assembly description into the
+linear programing model: 1. **Compatibility Loops (Equalities):** Closed
+kinematic chains (3D tolerance stack-ups) that model global structural
+behavior. Represented as linear matrix operations:
 
 .. math:: A_{eq,Def} \cdot X + A_{eq,Gap} \cdot Y + K_{eq} = 0
 
 2. **Interface Constraints (Inequalities):** Local contact interactions
-mapped at boundary contour points across matching feature surfaces.
-These ensure no material interpenetration occurs:
+at boundary contour points across matching feature surfaces. Ensures no
+material interpenetration occurs:
 
 .. math:: A_{ub,Def} \cdot X + A_{ub,Gap} \cdot Y + K_{ub} \ge 0
 
@@ -64,7 +61,7 @@ Where :math:`X` represents the elementar manufacturing defect vectors
 (:math:`D`), :math:`Y` captures internal clearance and gap freedoms
 (:math:`g`), and :math:`K` represents nominal constants.
 
-By injecting an auxiliary slack variable :math:`s` into the interface
+By introducing an auxiliary slack variable :math:`s` into the interface
 constraints via ``embedOptimizationVariable()``, the framework
 determines structural assemblability based on the sign of :math:`s`. If
 optimization yields :math:`s < 0`, the manufacturing defects exceed the
@@ -241,35 +238,35 @@ present on your local system:
 Framework Assumptions & Capabilities
 ------------------------------------
 
--  **Dual Probabilistic Scope:** Natively handles classical statistical
-   tolerance analyses using fixed vectors of random standard
-   distributions. For advanced reliability workflows, it supports
-   epistemic uncertainty methods (imprecise probabilities) to trace
-   upper and lower response envelopes (probability-boxes) by altering
-   standard deviation allocations (:math:`\lambda`-spaces) and internal
-   variable correlations.
--  **Rigid Variational Modeling:** Analysis is strictly bounded to rigid
-   transformations (translations and rotations). Non-rigid parameters,
-   micro-deformations, thermal growth, and volumetric stress changes are
-   excluded.
--  **Manual Feature Injections:** Custom operational requirements or
-   functional conditions can be injected manually into the optimization
-   queue as additional independent vector loops.
+-  **Dual Probabilistic Scope:** Classical statistical tolerance
+   analyses using fixed vectors of random standard distributions can be
+   performed. Additionally methods to include epistemic uncertainty
+   (imprecise probabilities) to trace upper and lower response envelopes
+   (probability-boxes) have been developed here and are part of the
+   examples to showcase the workflow.
+-  **Rigid Variational Modeling:** Analysis is currently restricted to
+   rigid transformations (translations and rotations). The linear
+   programing problem generation scripts must be modified to include
+   higher order defects.
+-  **Functionality no explicitly considered (yet):** Models for
+   tolerance analysis are usually comprised of 3 sets of equations:
+   compatibiliy, interface and functionality. The latter has not been
+   included here, but can be manually added to the set of equations
+   modeling the interfaces, as a mock interface inequality.
 -  **Computational Scaling & Surrogates:** Standard Monte Carlo studies
-   (:math:`10^6` trials) scale efficiently through the linear
-   programming backend and typically complete in under an hour via
-   ``joblib`` parallel processing. The neural network-based surrogate
-   modeling package (``otaf.surrogate``) is explicitly optimized to
-   mitigate calculation bottlenecks encountered during extensive
-   multi-dimensional optimization loops within imprecise probability
-   space exploration.
--  **Cylinder Processing Workaround:** High-level automated boundary
-   matching contains known algorithmic parsing limitations for
-   cylinder-to-cylinder interactions that still need to be resolved.
-   Users analyzing complex multi-primitive cylindrical joints should
-   bypass automated generation scripts and leverage the validated,
-   hand-coded 30-DOF and 50-DOF reference models located in
-   ``src/otaf/example_models/models_3_D/``.
+   (:math:`10^6` trials) scale well through the linear programming
+   backend and typically complete in under an hour via ``joblib``
+   parallel processing. The neural network-based surrogate modeling
+   package (``otaf.surrogate``) is provided to construct a high
+   performance surrogate (a simple MLP structure seem to work well for
+   simple examples) to reduce probability estimation time during credal
+   set explorations.
+-  **Cylinder Processing Workaround:** An issue exists regarding the
+   automatic cylinder-to-cylinder interactions handling and still needs
+   to be resolved. Users analyzing complex multi-primitive cylindrical
+   joints should bypass automated generation scripts and construct the
+   assembly model manually, as shocased in the 50-DOF reference model
+   located in ``src/otaf/example_models/models_3_D/``.
 
 .. raw:: html
 
@@ -278,10 +275,10 @@ Framework Assumptions & Capabilities
 Roadmap
 -------
 
-OTAF is fully functional for standard planar operations and customized
+OTAF is functional for standard planar operations and manual
 Torsor-based matrix allocations. The active development roadmap targets
-upgrading automated generation paths to bridge research theory with
-production-grade CAD ecosystems:
+upgrading to automated generation of graph stack-ups, and develop
+integration with classic CAD formats:
 
 -  ☐ **Graph-Theoretic Topology Engines:** Implement automated
    closed-loop kinematic path detection using topological graph theory
@@ -326,9 +323,9 @@ information.
 Contact
 -------
 
-**Kristof Attila S.** (`@Kramer84 <https://github.com/Kramer84>`__) For
-bug reports, feature requests, or scientific inquiries, please open an
-issue on the repository tracking system.
+**Kristof A. S.** (`@Kramer84 <https://github.com/Kramer84>`__) For bug
+reports, feature requests, or scientific inquiries, please open an issue
+on the repository tracking system.
 
 **Project Link:** https://github.com/Kramer84/otaf
 

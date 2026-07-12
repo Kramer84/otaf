@@ -679,36 +679,54 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate the shortest distance from a point or array of points to a line segment.</span>
 
+<span class="sd">    This function is dimension-agnostic and works for coordinates in any arbitrary</span>
+<span class="sd">    n-dimensional space (e.g., 2D, 3D, etc.). It calculates the true shortest distance </span>
+<span class="sd">    to the segment by clamping the projection factor, preventing it from treating the </span>
+<span class="sd">    segment as an infinite line.</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    point : numpy.ndarray</span>
-<span class="sd">        A 1D or 2D NumPy array representing the point(s) to compute the distance for.</span>
+<span class="sd">        A 1D array of shape (N,) representing a single point, or a 2D array</span>
+<span class="sd">        of shape (M, N) representing M points in an N-dimensional space.</span>
 <span class="sd">    segment_start : numpy.ndarray</span>
-<span class="sd">        A 1D NumPy array representing the start point of the line segment.</span>
+<span class="sd">        A 1D array of shape (N,) representing the start coordinates of the</span>
+<span class="sd">        line segment.</span>
 <span class="sd">    segment_end : numpy.ndarray</span>
-<span class="sd">        A 1D NumPy array representing the end point of the line segment.</span>
+<span class="sd">        A 1D array of shape (N,) representing the end coordinates of the</span>
+<span class="sd">        line segment.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    Union[float, np.ndarray]</span>
-<span class="sd">        The shortest distance from the point(s) to the line segment. Returns a float for a single point</span>
-<span class="sd">        or a NumPy array for multiple points.</span>
+<span class="sd">    distance : float or numpy.ndarray</span>
+<span class="sd">        The shortest distance to the line segment. Returns a scalar float if a</span>
+<span class="sd">        single point was passed, or a 1D NumPy array of shape (M,) containing</span>
+<span class="sd">        the distances for each input point.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The closest point on the line segment is found using vector projection. </span>
+<span class="sd">    For a point vector &#39;p&#39; relative to the segment start, and a segment vector </span>
+<span class="sd">    ``s``, the projection factor ``t`` is computed as:</span>
+
+<span class="sd">        ``t = dot(p, s) / ||s||^2``</span>
+
+<span class="sd">    By clipping &#39;t&#39; to the interval ``[0.0, 1.0]``, the closest point is strictly </span>
+<span class="sd">    restricted to the line segment boundary. If the start and end points of the </span>
+<span class="sd">    segment are identical, the segment is treated as a single point.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Ensure all inputs are at least 2D for consistent broadcasting</span>
     <span class="n">point</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
     <span class="n">segment_start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">segment_start</span><span class="p">)</span>
     <span class="n">segment_end</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">segment_end</span><span class="p">)</span>
-
-    <span class="c1"># Compute segment and point vectors</span>
     <span class="n">segment_vector</span> <span class="o">=</span> <span class="n">segment_end</span> <span class="o">-</span> <span class="n">segment_start</span>
     <span class="n">point_vector</span> <span class="o">=</span> <span class="n">point</span> <span class="o">-</span> <span class="n">segment_start</span>
-
-    <span class="c1"># Compute the cross product and distances</span>
-    <span class="n">cross_product</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">segment_vector</span><span class="p">,</span> <span class="n">point_vector</span><span class="p">)</span>
-    <span class="n">distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">cross_product</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">segment_vector</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-    <span class="c1"># If the input was a single point, return a scalar</span>
-    <span class="k">return</span> <span class="n">distances</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">point</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">distances</span></div>
+    <span class="n">dot_product</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">point_vector</span> <span class="o">*</span> <span class="n">segment_vector</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">segment_length_sq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">segment_vector</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">segment_length_sq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">segment_length_sq</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">,</span> <span class="n">segment_length_sq</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">dot_product</span> <span class="o">/</span> <span class="n">segment_length_sq</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">closest_point</span> <span class="o">=</span> <span class="n">segment_start</span> <span class="o">+</span> <span class="n">t</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> <span class="n">segment_vector</span>
+    <span class="n">distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">point</span> <span class="o">-</span> <span class="n">closest_point</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">distances</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="n">point</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">distances</span></div>
 
 
 

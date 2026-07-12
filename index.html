@@ -128,35 +128,33 @@
 <h2><a class="toc-backref" href="#id2" role="doc-backlink">About The Project</a><a class="headerlink" href="#about-the-project" title="Link to this heading"></a></h2>
 <p><strong>OTAF (Open Tolerance Analysis Framework)</strong> is an open-source,
 research-driven Python library designed to perform statistical tolerance
-analysis on over-constrained rigid mechanical assemblies. Developed as
-part of a PhD thesis funded by the French National Research Agency
-(ANR), the framework maps manufacturing deviations and mechanical joints
-into standard optimization matrices to evaluate assembly conditions
-under uncertainty.</p>
-<p>In industrial systems with clearances and multi-point contacts
-(over-constrained mechanisms), the relative kinematics of parts cannot
-be defined by standard algebraic equations. OTAF solves this by
-constructing a math-based <strong>System of Constraints (SOC)</strong>, converting 3D
-variational geometry challenges into bounded linear programming
-optimizations.</p>
+analysis on three-dimensional over-constrained rigid mechanical
+assemblies. The tool allows to construct a linearized mathematical model
+of an assembly of parts, under the hypothsis of rigid parts and first
+oder defects (modeled by translations and rotations of the nominal
+feature). The module then maps rigid manufacturing deviations and
+clearances into a set of matrices representing a linear programing
+problem, where deviations can be fixed and the clearance space is
+explored using optimization to find valid configurations. This
+modelization can then be used to perform reliability analysis (tolerance
+analysis), construct surrogate models etc.</p>
 <p align="right"><a href="#readme-top">back to top</a></p><section id="key-methodology">
 <h3><a class="toc-backref" href="#id3" role="doc-backlink">Key Methodology</a><a class="headerlink" href="#key-methodology" title="Link to this heading"></a></h3>
-<p>The framework transitions high-level assembly descriptions into rigorous
-mathematical structures through a two-layer model: 1. <strong>Compatibility
-Loops (Equalities):</strong> Closed kinematic chains (3D tolerance stack-ups)
-that govern global structural behavior. These are represented as linear
-matrix operations:</p>
+<p>The framework transforms a high-level assembly description into the
+linear programing model: 1. <strong>Compatibility Loops (Equalities):</strong> Closed
+kinematic chains (3D tolerance stack-ups) that model global structural
+behavior. Represented as linear matrix operations:</p>
 <div class="math notranslate nohighlight">
 \[A_{eq,Def} \cdot X + A_{eq,Gap} \cdot Y + K_{eq} = 0\]</div>
 <p>2. <strong>Interface Constraints (Inequalities):</strong> Local contact interactions
-mapped at boundary contour points across matching feature surfaces.
-These ensure no material interpenetration occurs:</p>
+at boundary contour points across matching feature surfaces. Ensures no
+material interpenetration occurs:</p>
 <div class="math notranslate nohighlight">
 \[A_{ub,Def} \cdot X + A_{ub,Gap} \cdot Y + K_{ub} \ge 0\]</div>
 <p>Where <span class="math notranslate nohighlight">\(X\)</span> represents the elementar manufacturing defect vectors
 (<span class="math notranslate nohighlight">\(D\)</span>), <span class="math notranslate nohighlight">\(Y\)</span> captures internal clearance and gap freedoms
 (<span class="math notranslate nohighlight">\(g\)</span>), and <span class="math notranslate nohighlight">\(K\)</span> represents nominal constants.</p>
-<p>By injecting an auxiliary slack variable <span class="math notranslate nohighlight">\(s\)</span> into the interface
+<p>By introducing an auxiliary slack variable <span class="math notranslate nohighlight">\(s\)</span> into the interface
 constraints via <code class="docutils literal notranslate"><span class="pre">embedOptimizationVariable()</span></code>, the framework
 determines structural assemblability based on the sign of <span class="math notranslate nohighlight">\(s\)</span>. If
 optimization yields <span class="math notranslate nohighlight">\(s &lt; 0\)</span>, the manufacturing defects exceed the
@@ -305,43 +303,43 @@ make<span class="w"> </span>html
 <section id="framework-assumptions-capabilities">
 <h2><a class="toc-backref" href="#id12" role="doc-backlink">Framework Assumptions &amp; Capabilities</a><a class="headerlink" href="#framework-assumptions-capabilities" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p><strong>Dual Probabilistic Scope:</strong> Natively handles classical statistical
-tolerance analyses using fixed vectors of random standard
-distributions. For advanced reliability workflows, it supports
-epistemic uncertainty methods (imprecise probabilities) to trace
-upper and lower response envelopes (probability-boxes) by altering
-standard deviation allocations (<span class="math notranslate nohighlight">\(\lambda\)</span>-spaces) and internal
-variable correlations.</p></li>
-<li><p><strong>Rigid Variational Modeling:</strong> Analysis is strictly bounded to rigid
-transformations (translations and rotations). Non-rigid parameters,
-micro-deformations, thermal growth, and volumetric stress changes are
-excluded.</p></li>
-<li><p><strong>Manual Feature Injections:</strong> Custom operational requirements or
-functional conditions can be injected manually into the optimization
-queue as additional independent vector loops.</p></li>
+<li><p><strong>Dual Probabilistic Scope:</strong> Classical statistical tolerance
+analyses using fixed vectors of random standard distributions can be
+performed. Additionally methods to include epistemic uncertainty
+(imprecise probabilities) to trace upper and lower response envelopes
+(probability-boxes) have been developed here and are part of the
+examples to showcase the workflow.</p></li>
+<li><p><strong>Rigid Variational Modeling:</strong> Analysis is currently restricted to
+rigid transformations (translations and rotations). The linear
+programing problem generation scripts must be modified to include
+higher order defects.</p></li>
+<li><p><strong>Functionality no explicitly considered (yet):</strong> Models for
+tolerance analysis are usually comprised of 3 sets of equations:
+compatibiliy, interface and functionality. The latter has not been
+included here, but can be manually added to the set of equations
+modeling the interfaces, as a mock interface inequality.</p></li>
 <li><p><strong>Computational Scaling &amp; Surrogates:</strong> Standard Monte Carlo studies
-(<span class="math notranslate nohighlight">\(10^6\)</span> trials) scale efficiently through the linear
-programming backend and typically complete in under an hour via
-<code class="docutils literal notranslate"><span class="pre">joblib</span></code> parallel processing. The neural network-based surrogate
-modeling package (<code class="docutils literal notranslate"><span class="pre">otaf.surrogate</span></code>) is explicitly optimized to
-mitigate calculation bottlenecks encountered during extensive
-multi-dimensional optimization loops within imprecise probability
-space exploration.</p></li>
-<li><p><strong>Cylinder Processing Workaround:</strong> High-level automated boundary
-matching contains known algorithmic parsing limitations for
-cylinder-to-cylinder interactions that still need to be resolved.
-Users analyzing complex multi-primitive cylindrical joints should
-bypass automated generation scripts and leverage the validated,
-hand-coded 30-DOF and 50-DOF reference models located in
-<code class="docutils literal notranslate"><span class="pre">src/otaf/example_models/models_3_D/</span></code>.</p></li>
+(<span class="math notranslate nohighlight">\(10^6\)</span> trials) scale well through the linear programming
+backend and typically complete in under an hour via <code class="docutils literal notranslate"><span class="pre">joblib</span></code>
+parallel processing. The neural network-based surrogate modeling
+package (<code class="docutils literal notranslate"><span class="pre">otaf.surrogate</span></code>) is provided to construct a high
+performance surrogate (a simple MLP structure seem to work well for
+simple examples) to reduce probability estimation time during credal
+set explorations.</p></li>
+<li><p><strong>Cylinder Processing Workaround:</strong> An issue exists regarding the
+automatic cylinder-to-cylinder interactions handling and still needs
+to be resolved. Users analyzing complex multi-primitive cylindrical
+joints should bypass automated generation scripts and construct the
+assembly model manually, as shocased in the 50-DOF reference model
+located in <code class="docutils literal notranslate"><span class="pre">src/otaf/example_models/models_3_D/</span></code>.</p></li>
 </ul>
 <p align="right"><a href="#readme-top">back to top</a></p></section>
 <section id="roadmap">
 <h2><a class="toc-backref" href="#id13" role="doc-backlink">Roadmap</a><a class="headerlink" href="#roadmap" title="Link to this heading"></a></h2>
-<p>OTAF is fully functional for standard planar operations and customized
+<p>OTAF is functional for standard planar operations and manual
 Torsor-based matrix allocations. The active development roadmap targets
-upgrading automated generation paths to bridge research theory with
-production-grade CAD ecosystems:</p>
+upgrading to automated generation of graph stack-ups, and develop
+integration with classic CAD formats:</p>
 <ul class="simple">
 <li><p>☐ <strong>Graph-Theoretic Topology Engines:</strong> Implement automated
 closed-loop kinematic path detection using topological graph theory
@@ -381,9 +379,9 @@ information.</p>
 </section>
 <section id="contact">
 <h2><a class="toc-backref" href="#id16" role="doc-backlink">Contact</a><a class="headerlink" href="#contact" title="Link to this heading"></a></h2>
-<p><strong>Kristof Attila S.</strong> (<a class="reference external" href="https://github.com/Kramer84">&#64;Kramer84</a>) For
-bug reports, feature requests, or scientific inquiries, please open an
-issue on the repository tracking system.</p>
+<p><strong>Kristof A. S.</strong> (<a class="reference external" href="https://github.com/Kramer84">&#64;Kramer84</a>) For bug
+reports, feature requests, or scientific inquiries, please open an issue
+on the repository tracking system.</p>
 <p><strong>Project Link:</strong> <a class="reference external" href="https://github.com/Kramer84/otaf">https://github.com/Kramer84/otaf</a></p>
 <p align="right"><a href="#readme-top">back to top</a></p></section>
 <section id="acknowledgments">

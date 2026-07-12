@@ -874,22 +874,40 @@ relative to the plane’s normal vector.</p></li>
 <dt class="sig sig-object py" id="otaf.geometry.point_to_segment_distance">
 <span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">point_to_segment_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segment_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segment_end</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#point_to_segment_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.point_to_segment_distance" title="Link to this definition"></a></dt>
 <dd><p>Calculate the shortest distance from a point or array of points to a line segment.</p>
+<p>This function is dimension-agnostic and works for coordinates in any arbitrary
+n-dimensional space (e.g., 2D, 3D, etc.). It calculates the true shortest distance
+to the segment by clamping the projection factor, preventing it from treating the
+segment as an infinite line.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>point</strong> (<em>numpy.ndarray</em>) – A 1D or 2D NumPy array representing the point(s) to compute the distance for.</p></li>
-<li><p><strong>segment_start</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the start point of the line segment.</p></li>
-<li><p><strong>segment_end</strong> (<em>numpy.ndarray</em>) – A 1D NumPy array representing the end point of the line segment.</p></li>
+<li><p><strong>point</strong> (<em>numpy.ndarray</em>) – A 1D array of shape (N,) representing a single point, or a 2D array
+of shape (M, N) representing M points in an N-dimensional space.</p></li>
+<li><p><strong>segment_start</strong> (<em>numpy.ndarray</em>) – A 1D array of shape (N,) representing the start coordinates of the
+line segment.</p></li>
+<li><p><strong>segment_end</strong> (<em>numpy.ndarray</em>) – A 1D array of shape (N,) representing the end coordinates of the
+line segment.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The shortest distance from the point(s) to the line segment. Returns a float for a single point
-or a NumPy array for multiple points.</p>
+<dd class="field-even"><p><strong>distance</strong> – The shortest distance to the line segment. Returns a scalar float if a
+single point was passed, or a 1D NumPy array of shape (M,) containing
+the distances for each input point.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Union[float, np.ndarray]</p>
+<dd class="field-odd"><p>float or numpy.ndarray</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The closest point on the line segment is found using vector projection.
+For a point vector ‘p’ relative to the segment start, and a segment vector
+<code class="docutils literal notranslate"><span class="pre">s</span></code>, the projection factor <code class="docutils literal notranslate"><span class="pre">t</span></code> is computed as:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">=</span> <span class="pre">dot(p,</span> <span class="pre">s)</span> <span class="pre">/</span> <span class="pre">||s||^2</span></code></p>
+</div></blockquote>
+<p>By clipping ‘t’ to the interval <code class="docutils literal notranslate"><span class="pre">[0.0,</span> <span class="pre">1.0]</span></code>, the closest point is strictly
+restricted to the line segment boundary. If the start and end points of the
+segment are identical, the segment is treated as a single point.</p>
 </dd></dl>
 
 <dl class="py function">
