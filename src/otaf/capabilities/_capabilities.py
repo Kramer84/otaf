@@ -56,6 +56,12 @@ def process_capability(
         If `usl` is less than `lsl`, resulting in an invalid specification range,
         or if `std_dev` is negative.
     """
+    if std_dev <= 0:
+        if std_dev == 0:
+            raise ZeroDivisionError("Standard deviation cannot be zero for capability calculations.")
+        raise ValueError("Standard deviation must be a positive number.")
+    if usl < lsl:
+        raise ValueError("Invalid specification range: Upper Specification Limit (usl) must be greater than or equal to Lower Specification Limit (lsl).")
     Cp = (usl - lsl) / (6 * std_dev)
     CPU = (usl - mean) / (3 * std_dev)
     CPL = (mean - lsl) / (3 * std_dev)

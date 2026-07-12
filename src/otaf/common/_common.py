@@ -22,11 +22,12 @@ __all__ = [
 import itertools
 import re
 import string
+from functools import wraps
 
 import numpy as np
 import sympy as sp
 from beartype import beartype
-from beartype.typing import Dict, List, Optional, Tuple, Union
+from beartype.typing import Dict, List, Optional, Tuple, Union, Callable, Any, Iterable, cast, TypeVar
 
 from otaf.constants import (
     BASIS_DICT,
@@ -40,6 +41,7 @@ from otaf.constants import (
 )
 from otaf.exceptions import MissingKeyError
 
+F = TypeVar("F", bound=Callable[..., Any])
 
 @beartype
 def inverse_mstring(matrix_str: str) -> str:
@@ -702,35 +704,66 @@ def arrays_close_enough(
     bool
         True if the arrays are equal within the given tolerance, 
         False otherwise.
+        
+    Raises
+    ------
+    ValueError
+        If the input arrays do not have the same shape.
     """
+    if arr1.shape != arr2.shape:
+        raise ValueError(
+            f"Arrays must have the same shape for comparison. Got {arr1.shape} and {arr2.shape}."
+        )
     return np.allclose(arr1, arr2, atol=tolerance)
 
 
-def scaling(scale_factor: float) -> callable:
+def scaling(scale_factor: float) -> Callable[[F], F]:
     """
-    Decorator to scale the output of a function by a factor.
+    A decorator factory that scales the output of a function by a constant factor.
+
+    This decorator safely handles scalar numeric types, nested iterables (lists,
+    tuples, sets), and preserves the original iterable type where possible. It
+    gracefully skips `None`, `str`, and `bytes` values without altering them or
+    throwing errors.
 
     Parameters
     ----------
     scale_factor : float
-        The factor by which to scale the output of the wrapped function.
+        The numerical factor by which to multiply the output of the wrapped function.
 
     Returns
     -------
     callable
-        A decorator that applies the `scale_factor` to the output of 
-        the wrapped function.
+        A decorator function capable of wrapping a target callable.
+
+    Examples
+    --------
+    >>> @scaling(2.5)
+    ... def get_prices():
+    ...     return [10.0, None, 20.0]
+    >>> get_prices()
+    [25.0, None, 50.0]
     """
-
-    def decorator(func):
-
-        def wrapper(*args, **kwargs):
+    def decorator(func: F) -> F:
+        @wraps(func)
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             result = func(*args, **kwargs)
-            if isinstance(result, tuple):
-                return tuple((r * scale_factor for r in result))
-            else:
-                return result * scale_factor
-
-        return wrapper
-
+            # Helper function to recursively scale items
+            def _scale_item(item: Any) -> Any:
+                if item is None:
+                    return None
+                # Explicitly pass strings and bytes through untouched
+                if isinstance(item, (str, bytes)):
+                    return item
+                # If it's a nested iterable, scale its elements recursively
+                if isinstance(item, Iterable):
+                    try:
+                        return type(item)(_scale_item(x) for x in item)
+                    except TypeError:
+                        # Fallback for iterables that can't be instantiated directly from a generator
+                        return list(_scale_item(x) for x in item)
+                # Base case: Scalar multiplication
+                return item * scale_factor
+            return _scale_item(result)
+        return cast(F, wrapper)
     return decorator

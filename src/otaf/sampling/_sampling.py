@@ -22,7 +22,7 @@ import re
 import numpy as np
 import openturns as ot
 from beartype import beartype
-from beartype.typing import Generator, Literal, Optional, Sequence, Union
+from beartype.typing import Generator, Literal, Optional, Sequence, Union, Any
 
 if hasattr(ot, "JointDistribution"):
     JointDistribution = ot.JointDistribution
@@ -469,7 +469,7 @@ def generate_imprecise_probabilistic_samples(
 def generate_and_transform_sequence(
     dim: int,
     samplesize: int,
-    target_distribution: ot.Distribution,
+    target_distribution: Any,
     sequence_type: Literal[
         "sobol", "halton", "reverse_halton", "faure", "haselgrove"
     ] = "halton",

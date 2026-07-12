@@ -15,7 +15,7 @@ import numpy as np
 import sympy as sp
 
 from beartype import beartype
-from beartype.typing import List, Tuple, Union, Optional
+from beartype.typing import List, Tuple, Union, Optional, Sequence
 
 from otaf.common import get_symbol_coef_map, get_symbols_in_expressions
 
@@ -79,16 +79,7 @@ class SystemOfConstraintsAssemblyModel:
         self,
         compatibility_eqs: Optional[List[sp.Expr]] = None,
         interface_eqs: Optional[List[sp.Expr]] = None,
-        matrices: Optional[
-            Iterable[
-                np.ndarray,
-                np.ndarray,
-                np.ndarray,
-                np.ndarray,
-                np.ndarray,
-                np.ndarray,
-            ]
-        ] = None,
+        matrices: Optional[Sequence[np.ndarray]] = None,
         verbose: int = 0,
     ) -> None:
         """Initialize the assembly model.
