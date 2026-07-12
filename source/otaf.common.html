@@ -148,6 +148,9 @@ False otherwise.</p>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool</p>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the input arrays do not have the same shape.</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -474,19 +477,30 @@ Keys include <code class="docutils literal notranslate"><span class="pre">type</
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.common.scaling">
 <span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">scaling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scale_factor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#scaling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.scaling" title="Link to this definition"></a></dt>
-<dd><p>Decorator to scale the output of a function by a factor.</p>
+<dd><p>A decorator factory that scales the output of a function by a constant factor.</p>
+<p>This decorator safely handles scalar numeric types, nested iterables (lists,
+tuples, sets), and preserves the original iterable type where possible. It
+gracefully skips <cite>None</cite>, <cite>str</cite>, and <cite>bytes</cite> values without altering them or
+throwing errors.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>scale_factor</strong> (<em>float</em>) – The factor by which to scale the output of the wrapped function.</p>
+<dd class="field-odd"><p><strong>scale_factor</strong> (<em>float</em>) – The numerical factor by which to multiply the output of the wrapped function.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A decorator that applies the <cite>scale_factor</cite> to the output of
-the wrapped function.</p>
+<dd class="field-even"><p>A decorator function capable of wrapping a target callable.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>callable</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@scaling</span><span class="p">(</span><span class="mf">2.5</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">def</span><span class="w"> </span><span class="nf">get_prices</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">[</span><span class="mf">10.0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_prices</span><span class="p">()</span>
+<span class="go">[25.0, None, 50.0]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
