@@ -433,8 +433,8 @@
     <span class="n">SDA</span> <span class="o">=</span> <span class="n">get_assembly_data_processor_object</span><span class="p">(</span><span class="n">get_assembly_data</span><span class="p">(</span><span class="n">hM</span><span class="p">,</span> <span class="n">hF</span><span class="p">,</span> <span class="n">L1</span><span class="p">,</span> <span class="n">L2</span><span class="p">,</span> <span class="n">L3</span><span class="p">,</span> <span class="n">lM</span><span class="p">,</span> <span class="n">lF</span><span class="p">))</span>
     <span class="n">CLH</span> <span class="o">=</span> <span class="n">get_compatibility_loop_handling_object</span><span class="p">(</span><span class="n">SDA</span><span class="p">)</span>
     <span class="n">ILH</span> <span class="o">=</span> <span class="n">get_interface_loop_handling_object</span><span class="p">(</span><span class="n">SDA</span><span class="p">,</span> <span class="n">CLH</span><span class="p">)</span>
-    <span class="n">compatibility_expressions</span> <span class="o">=</span> <span class="n">CLH</span><span class="o">.</span><span class="n">get_compatibility_expression_from_FO_matrices</span><span class="p">()</span>
-    <span class="n">interface_constraints</span> <span class="o">=</span> <span class="n">ILH</span><span class="o">.</span><span class="n">get_interface_loop_expressions</span><span class="p">()</span>
+    <span class="n">compatibility_expressions</span> <span class="o">=</span> <span class="n">CLH</span><span class="o">.</span><span class="n">get_compatibility_expressions</span><span class="p">()</span>
+    <span class="n">interface_constraints</span> <span class="o">=</span> <span class="n">ILH</span><span class="o">.</span><span class="n">get_interface_expressions</span><span class="p">()</span>
     <span class="n">SOCAM</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">SystemOfConstraintsAssemblyModel</span><span class="p">(</span>
         <span class="n">compatibility_expressions</span><span class="p">,</span> <span class="n">interface_constraints</span>
     <span class="p">)</span>

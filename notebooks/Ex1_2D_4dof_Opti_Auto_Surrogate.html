@@ -189,8 +189,8 @@
 <span class="n">CLH</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">CompatibilityLoopHandling</span><span class="p">(</span><span class="n">SDA</span><span class="p">)</span>
 <span class="n">ILH</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">InterfaceLoopHandling</span><span class="p">(</span><span class="n">SDA</span><span class="p">,</span> <span class="n">CLH</span><span class="p">,</span> <span class="n">circle_resolution</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 <span class="n">SOCAM</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">SystemOfConstraintsAssemblyModel</span><span class="p">(</span>
-    <span class="n">CLH</span><span class="o">.</span><span class="n">get_compatibility_expression_from_FO_matrices</span><span class="p">(),</span>
-    <span class="n">ILH</span><span class="o">.</span><span class="n">get_interface_loop_expressions</span><span class="p">()</span>
+    <span class="n">CLH</span><span class="o">.</span><span class="n">get_compatibility_expressions</span><span class="p">(),</span>
+    <span class="n">ILH</span><span class="o">.</span><span class="n">get_interface_expressions</span><span class="p">()</span>
 <span class="p">)</span>
 <span class="n">SOCAM</span><span class="o">.</span><span class="n">embedOptimizationVariable</span><span class="p">()</span>
 

@@ -137,7 +137,7 @@
 <span class="sd">        Retrieve a gap matrix by its identifier.</span>
 <span class="sd">    get_deviation_matrix_by_id(ID)</span>
 <span class="sd">        Retrieve a deviation matrix by its identifier.</span>
-<span class="sd">    get_compatibility_expression_from_FO_matrices()</span>
+<span class="sd">    get_compatibility_expressions()</span>
 <span class="sd">        Generate symbolic expressions for compatibility constraints.</span>
 <span class="sd">    generate_loop_id_to_matrix_list_dict()</span>
 <span class="sd">        Create a dictionary mapping loop IDs to matrix lists for compatibility loops.</span>
@@ -182,7 +182,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">compatibility_loops_matrices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_loop_id_to_matrix_list_dict</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">compatibility_loops_FO_matrices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_FO_loop_matrices</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">compatibility_expressions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_compatibility_expression_from_FO_matrices</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compatibility_expressions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_compatibility_expressions</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="CompatibilityLoopHandling.get_gap_matrix_by_id">
@@ -238,9 +238,9 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deviation_matrix_map</span><span class="p">[</span><span class="n">id_map</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">ID</span><span class="p">)]]</span></div>
 
 
-<div class="viewcode-block" id="CompatibilityLoopHandling.get_compatibility_expression_from_FO_matrices">
-<a class="viewcode-back" href="../../../source/otaf.html#otaf.CompatibilityLoopHandling.get_compatibility_expression_from_FO_matrices">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_compatibility_expression_from_FO_matrices</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">]:</span>
+<div class="viewcode-block" id="CompatibilityLoopHandling.get_compatibility_expressions">
+<a class="viewcode-back" href="../../../source/otaf.html#otaf.CompatibilityLoopHandling.get_compatibility_expressions">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_compatibility_expressions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate symbolic expressions representing compatibility constraints.</span>
 
