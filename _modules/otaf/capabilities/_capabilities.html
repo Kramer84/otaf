@@ -140,10 +140,14 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">std_dev</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">std_dev</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ZeroDivisionError</span><span class="p">(</span><span class="s2">&quot;Standard deviation cannot be zero for capability calculations.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ZeroDivisionError</span><span class="p">(</span>
+                <span class="s2">&quot;Standard deviation cannot be zero for capability calculations.&quot;</span>
+            <span class="p">)</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Standard deviation must be a positive number.&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">usl</span> <span class="o">&lt;</span> <span class="n">lsl</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid specification range: Upper Specification Limit (usl) must be greater than or equal to Lower Specification Limit (lsl).&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Invalid specification range: Upper Specification Limit (usl) must be greater than or equal to Lower Specification Limit (lsl).&quot;</span>
+        <span class="p">)</span>
     <span class="n">Cp</span> <span class="o">=</span> <span class="p">(</span><span class="n">usl</span> <span class="o">-</span> <span class="n">lsl</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">std_dev</span><span class="p">)</span>
     <span class="n">CPU</span> <span class="o">=</span> <span class="p">(</span><span class="n">usl</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">std_dev</span><span class="p">)</span>
     <span class="n">CPL</span> <span class="o">=</span> <span class="p">(</span><span class="n">mean</span> <span class="o">-</span> <span class="n">lsl</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">std_dev</span><span class="p">)</span>
