@@ -208,8 +208,8 @@ generate standard optimization targets:
 
    # 3. Extract the SymPy expressions and generate the numerical constraint matrices
    soc_model = SystemOfConstraintsAssemblyModel(
-       compatibility_eqs=comp_handler.get_compatibility_expression_from_FO_matrices(),
-       interface_eqs=inter_handler.get_interface_loop_expressions()
+       compatibility_eqs=comp_handler.get_compatibility_expressions(),
+       interface_eqs=inter_handler.get_interface_expressions()
    )
 
    # 4. Test ideal structural alignment (Zero-Deviation Case)

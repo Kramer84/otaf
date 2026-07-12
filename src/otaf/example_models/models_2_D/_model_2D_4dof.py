@@ -242,8 +242,8 @@ def get_system_of_constraints_assembly_model(
     SDA = get_assembly_data_processor_object(get_assembly_data(X1, X2, X3))
     CLH = get_compatibility_loop_handling_object(SDA)
     ILH = get_interface_loop_handling_object(SDA, CLH)
-    compatibility_expressions = CLH.get_compatibility_expression_from_FO_matrices()
-    interface_constraints = ILH.get_interface_loop_expressions()
+    compatibility_expressions = CLH.get_compatibility_expressions()
+    interface_constraints = ILH.get_interface_expressions()
     SOCAM = otaf.SystemOfConstraintsAssemblyModel(
         compatibility_expressions, interface_constraints
     )

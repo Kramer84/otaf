@@ -57,7 +57,7 @@ class CompatibilityLoopHandling:
         Retrieve a gap matrix by its identifier.
     get_deviation_matrix_by_id(ID)
         Retrieve a deviation matrix by its identifier.
-    get_compatibility_expression_from_FO_matrices()
+    get_compatibility_expressions()
         Generate symbolic expressions for compatibility constraints.
     generate_loop_id_to_matrix_list_dict()
         Create a dictionary mapping loop IDs to matrix lists for compatibility loops.
@@ -100,7 +100,7 @@ class CompatibilityLoopHandling:
 
         self.compatibility_loops_matrices = self.generate_loop_id_to_matrix_list_dict()
         self.compatibility_loops_FO_matrices = self.generate_FO_loop_matrices()
-        self.compatibility_expressions = self.get_compatibility_expression_from_FO_matrices()
+        self.compatibility_expressions = self.get_compatibility_expressions()
 
     def get_gap_matrix_by_id(
         self, ID: Union[str, int]
@@ -149,7 +149,7 @@ class CompatibilityLoopHandling:
         id_map = {str(mat[0].ID): key for key, mat in self._deviation_matrix_map.items()}
         return self._deviation_matrix_map[id_map[str(ID)]]
 
-    def get_compatibility_expression_from_FO_matrices(self) -> List[sp.Expr]:
+    def get_compatibility_expressions(self) -> List[sp.Expr]:
         """
         Generate symbolic expressions representing compatibility constraints.
 

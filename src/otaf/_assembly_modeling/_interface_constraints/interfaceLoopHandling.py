@@ -41,7 +41,7 @@ class InterfaceLoopHandling:
     def facing_point_dictionary(self):
         return self.surfaceInteractionManager.facingPointDict
 
-    def get_interface_loop_expressions(self):
+    def get_interface_expressions(self):
         return self.interfaceLoopBuilder.interface_expressions
 
     def extract_unique_gap_matrices_from_expanded_loops(self) -> Set[str]:

@@ -2,7 +2,8 @@ from __future__ import annotations
 
 __author__ = "Kramer84"
 __all__ = ["LagrangeConstraintSolver", "UniformSurfaceSampler"]
-from typing import Callable, Optional, Union
+from collections.abc import Callable
+from typing import Optional, Union
 
 import numpy as np
 from beartype import beartype
