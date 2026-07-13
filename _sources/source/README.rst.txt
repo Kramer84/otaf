@@ -132,10 +132,6 @@ subsets:
 
    <p align="right"><a href="#readme-top">back to top</a></p>
 
-.. raw:: html
-
-   <!-- START_CONTEXT -->
-
 Usage
 -----
 
@@ -216,10 +212,6 @@ generate standard optimization targets:
    # 4. Test ideal structural alignment (Zero-Deviation Case)
    ideal_test = soc_model.test_zero_deviation_feasibility()
    print("Feasible without defects:", ideal_test["success"])
-
-.. raw:: html
-
-   <!-- END_CONTEXT -->
 
 .. raw:: html
 
