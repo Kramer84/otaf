@@ -61,6 +61,7 @@
 **OTAF (Open Tolerance Analysis Framework)** is an open-source, research-driven Python library designed to perform statistical tolerance analysis on three-dimensional over-constrained rigid mechanical assemblies. The tool allows to construct a linearized mathematical model of an assembly of parts, under the hypothsis of rigid parts and first oder defects (modeled by translations and rotations of the nominal feature). 
 The module then maps rigid manufacturing deviations and clearances into a set of matrices representing a linear programing problem, where deviations can be fixed and the clearance space is explored using optimization to find valid configurations.
 This modelization can then be used to perform reliability analysis (tolerance analysis), construct surrogate models etc.
+<!-- END_CONTEXT -->
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -76,7 +77,6 @@ The framework transforms a high-level assembly description into the linear progr
 Where $X$ represents the elementar manufacturing defect vectors ($D$), $Y$ captures internal clearance and gap freedoms ($g$), and $K$ represents nominal constants. 
 
 By introducing an auxiliary slack variable $s$ into the interface constraints via `embedOptimizationVariable()`, the framework determines structural assemblability based on the sign of $s$. If optimization yields $s < 0$, the manufacturing defects exceed the system's geometric compensation capacity, signaling an assembly failure.
-<!-- END_CONTEXT -->
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -127,7 +127,6 @@ pip install .[all]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- START_CONTEXT -->
 ## Usage
 
 ### 1. High-Level Assembly Input Formats
@@ -202,7 +201,6 @@ ideal_test = soc_model.test_zero_deviation_feasibility()
 print("Feasible without defects:", ideal_test["success"])
 
 ```
-<!-- END_CONTEXT -->
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
