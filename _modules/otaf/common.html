@@ -78,11 +78,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for otaf.common</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Common utility functions and helpers for OTAF.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Common utility functions and helpers for OTAF."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">"Kramer84"</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">._common</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -108,36 +108,36 @@
 <div class="viewcode-block" id="tree">
 <a class="viewcode-back" href="../../source/otaf.common.html#otaf.common.tree">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">tree</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">defaultdict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create a recursive defaultdict that automatically creates nested dictionaries.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    defaultdict</span>
 <span class="sd">        A defaultdict that creates nested dictionaries on-the-fly.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">defaultdict</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span></div>
 
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;alphabet_generator&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;arrays_close_enough&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;bidirectional_string_to_array_conversion&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;extract_expressions_with_variables&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_SE3_base&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_SE3_matrices_from_indices&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_symbol_coef_map&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_symbols_in_expressions&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_tqdm_range&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;inverse_mstring&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;is_running_in_notebook&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;merge_with_checks&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;parse_matrix_string&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;scaling&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;threshold_for_percentile_positive_values_below&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;tree&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;validate_dict_keys&quot;</span><span class="p">,</span>
+    <span class="s2">"alphabet_generator"</span><span class="p">,</span>
+    <span class="s2">"arrays_close_enough"</span><span class="p">,</span>
+    <span class="s2">"bidirectional_string_to_array_conversion"</span><span class="p">,</span>
+    <span class="s2">"extract_expressions_with_variables"</span><span class="p">,</span>
+    <span class="s2">"get_SE3_base"</span><span class="p">,</span>
+    <span class="s2">"get_SE3_matrices_from_indices"</span><span class="p">,</span>
+    <span class="s2">"get_symbol_coef_map"</span><span class="p">,</span>
+    <span class="s2">"get_symbols_in_expressions"</span><span class="p">,</span>
+    <span class="s2">"get_tqdm_range"</span><span class="p">,</span>
+    <span class="s2">"inverse_mstring"</span><span class="p">,</span>
+    <span class="s2">"is_running_in_notebook"</span><span class="p">,</span>
+    <span class="s2">"merge_with_checks"</span><span class="p">,</span>
+    <span class="s2">"parse_matrix_string"</span><span class="p">,</span>
+    <span class="s2">"scaling"</span><span class="p">,</span>
+    <span class="s2">"threshold_for_percentile_positive_values_below"</span><span class="p">,</span>
+    <span class="s2">"tree"</span><span class="p">,</span>
+    <span class="s2">"validate_dict_keys"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 

@@ -80,20 +80,20 @@
   <h1>Source code for otaf.sampling._sampling</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">"Kramer84"</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;condition_lambda_sample&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;validate_and_extract_indices&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;condition_sample_array&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;find_best_worst_quantile&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;generate_lhs_experiment&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;generate_random_permutations_with_sampling&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;generate_scaled_permutations&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;generate_imprecise_probabilistic_samples&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;generate_and_transform_sequence&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;compose_defects_with_lambdas&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;scale_sample_with_params&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;calculate_sample_in_deviation_domain&quot;</span><span class="p">,</span>
+    <span class="s2">"condition_lambda_sample"</span><span class="p">,</span>
+    <span class="s2">"validate_and_extract_indices"</span><span class="p">,</span>
+    <span class="s2">"condition_sample_array"</span><span class="p">,</span>
+    <span class="s2">"find_best_worst_quantile"</span><span class="p">,</span>
+    <span class="s2">"generate_lhs_experiment"</span><span class="p">,</span>
+    <span class="s2">"generate_random_permutations_with_sampling"</span><span class="p">,</span>
+    <span class="s2">"generate_scaled_permutations"</span><span class="p">,</span>
+    <span class="s2">"generate_imprecise_probabilistic_samples"</span><span class="p">,</span>
+    <span class="s2">"generate_and_transform_sequence"</span><span class="p">,</span>
+    <span class="s2">"compose_defects_with_lambdas"</span><span class="p">,</span>
+    <span class="s2">"scale_sample_with_params"</span><span class="p">,</span>
+    <span class="s2">"calculate_sample_in_deviation_domain"</span><span class="p">,</span>
 <span class="p">]</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
@@ -104,7 +104,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span>
 
-<span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ot</span><span class="p">,</span> <span class="s2">&quot;JointDistribution&quot;</span><span class="p">):</span>
+<span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ot</span><span class="p">,</span> <span class="s2">"JointDistribution"</span><span class="p">):</span>
     <span class="n">JointDistribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">JointDistribution</span>
 <span class="k">else</span><span class="p">:</span>
     <span class="n">JointDistribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span>
@@ -116,7 +116,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">condition_lambda_sample</span><span class="p">(</span>
     <span class="n">sample</span><span class="p">:</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">,</span> <span class="n">squared_sum</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Condition lambda parameters to sum to 1 for each feature group.</span>
 
 <span class="sd">    This function extracts feature indices from the descriptions of the </span>
@@ -146,8 +146,8 @@
 <span class="sd">    To support both types, a more complex function is required to </span>
 <span class="sd">    inspect the structural type of each feature and apply the </span>
 <span class="sd">    corresponding mathematical constraint.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[condition_lambda_sample] Started. Checking input sample.&quot;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"[condition_lambda_sample] Started. Checking input sample."</span><span class="p">)</span>
     <span class="n">deviation_symbols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sample</span><span class="o">.</span><span class="n">getDescription</span><span class="p">())</span>
     <span class="n">feature_indices</span> <span class="o">=</span> <span class="n">validate_and_extract_indices</span><span class="p">(</span><span class="n">deviation_symbols</span><span class="p">)</span>
     <span class="n">sample_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
@@ -156,7 +156,7 @@
     <span class="p">)</span>
     <span class="n">conditioned_sample</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">conditioned_array</span><span class="p">)</span>
     <span class="n">conditioned_sample</span><span class="o">.</span><span class="n">setDescription</span><span class="p">(</span><span class="n">deviation_symbols</span><span class="p">)</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[condition_lambda_sample] Completed. Conditioned sample generated.&quot;</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"[condition_lambda_sample] Completed. Conditioned sample generated."</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">conditioned_sample</span></div>
 
 
@@ -165,7 +165,7 @@
 <a class="viewcode-back" href="../../../source/otaf.sampling.html#otaf.sampling.validate_and_extract_indices">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">validate_and_extract_indices</span><span class="p">(</span><span class="n">description</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Validate the feature descriptions and extract feature indices.</span>
 
 <span class="sd">    Parameters</span>
@@ -185,18 +185,18 @@
 <span class="sd">    ValueError</span>
 <span class="sd">        If the `description` is empty or if any individual feature name </span>
 <span class="sd">        fails to end with an integer suffix.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">description</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Description missing. Must be provided.&quot;</span><span class="p">)</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[validate_and_extract_indices] Extracting feature indices.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Description missing. Must be provided."</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"[validate_and_extract_indices] Extracting feature indices."</span><span class="p">)</span>
     <span class="n">feature_indices</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">description</span><span class="p">:</span>
-        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">d+$&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">symbol</span><span class="p">))</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">"</span><span class="se">\\</span><span class="s2">d+$"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">symbol</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
             <span class="n">feature_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">()))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Invalid description for feature &#39;</span><span class="si">{</span><span class="n">symbol</span><span class="si">}</span><span class="s2">&#39;. Each feature should end with integers.&quot;</span>
+                <span class="sa">f</span><span class="s2">"Invalid description for feature '</span><span class="si">{</span><span class="n">symbol</span><span class="si">}</span><span class="s2">'. Each feature should end with integers."</span>
             <span class="p">)</span>
     <span class="k">return</span> <span class="n">feature_indices</span></div>
 
@@ -208,7 +208,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">condition_sample_array</span><span class="p">(</span>
     <span class="n">sample_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">feature_indices</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">squared_sum</span><span class="p">:</span> <span class="nb">bool</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Condition a sample array by normalizing specified feature slices.</span>
 
 <span class="sd">    This function normalizes columns of an array grouped by identical feature</span>
@@ -236,8 +236,8 @@
 <span class="sd">    Exception</span>
 <span class="sd">        If the dimension alignment fails or division by zero occurs during </span>
 <span class="sd">        normalization.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[condition_sample_array] Conditioning sample.&quot;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"[condition_sample_array] Conditioning sample."</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">conditioned_array</span> <span class="o">=</span> <span class="n">sample_array</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">feature_id</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">feature_indices</span><span class="p">):</span>
@@ -251,9 +251,9 @@
             <span class="n">conditioned_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">conditioned_array</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">conditioned_array</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in condition_sample_array: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error in condition_sample_array: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Error encountered in condition_sample_array:</span><span class="se">\n</span><span class="s2">sample_array: </span><span class="si">{</span><span class="n">sample_array</span><span class="si">}</span><span class="se">\n</span><span class="s2">feature_indices: </span><span class="si">{</span><span class="n">feature_indices</span><span class="si">}</span><span class="se">\n</span><span class="s2">squared_sum: </span><span class="si">{</span><span class="n">squared_sum</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"Error encountered in condition_sample_array:</span><span class="se">\n</span><span class="s2">sample_array: </span><span class="si">{</span><span class="n">sample_array</span><span class="si">}</span><span class="se">\n</span><span class="s2">feature_indices: </span><span class="si">{</span><span class="n">feature_indices</span><span class="si">}</span><span class="se">\n</span><span class="s2">squared_sum: </span><span class="si">{</span><span class="n">squared_sum</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
         <span class="k">raise</span></div>
 
@@ -264,7 +264,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">find_best_worst_quantile</span><span class="p">(</span>
     <span class="n">parameters</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">results</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">quantile</span><span class="p">:</span> <span class="nb">float</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Find best and worst observations based on a given quantile.</span>
 
 <span class="sd">    This function calculates the best and worst performing observations </span>
@@ -286,7 +286,7 @@
 <span class="sd">        A tuple containing two subsets:</span>
 <span class="sd">        - `best`: Tuple of (best_params, best_res) up to the quantile.</span>
 <span class="sd">        - `worst`: Tuple of (worst_params, worst_res) down to the quantile.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">pop_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
     <span class="n">pop_quantile</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">pop_size</span> <span class="o">*</span> <span class="n">quantile</span><span class="p">)</span>
     <span class="n">sorted_result_args</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
@@ -309,7 +309,7 @@
     <span class="n">c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
     <span class="n">iMax</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Generate an optimal Latin Hypercube Sample (LHS) design.</span>
 
 <span class="sd">    Construct a space-filling design using the Simulated Annealing </span>
@@ -338,7 +338,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    ot.Sample</span>
 <span class="sd">        The optimized Latin Hypercube Sample design.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="n">SEED</span><span class="p">)</span>
     <span class="n">lhsExperimentGenerator</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LHSExperiment</span><span class="p">(</span><span class="n">composed_distribution</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
     <span class="n">spaceFilling</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SpaceFillingC2</span><span class="p">()</span>
@@ -359,7 +359,7 @@
     <span class="n">num_samples</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Generate a random subset of signed permutations for configurations.</span>
 
 <span class="sd">    Create a random subset of valid permutations for concatenated one-hot </span>
@@ -394,7 +394,7 @@
 
 <span class="sd">    Each subgroup is constrained to exactly one non-zero element per </span>
 <span class="sd">    sample.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
     <span class="n">subgroups</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">size</span> <span class="ow">in</span> <span class="n">subgroup_sizes</span><span class="p">]</span>
@@ -434,7 +434,7 @@
     <span class="n">num_samples</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Generate scaled random permutations with sign flips.</span>
 
 <span class="sd">    Create a set of random permutations for concatenated one-hot encoded </span>
@@ -467,14 +467,14 @@
 <span class="sd">    ValueError</span>
 <span class="sd">        If the length of `scaling_factors` does not match the sum of </span>
 <span class="sd">        `subgroup_sizes`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">permutations</span> <span class="o">=</span> <span class="n">generate_random_permutations_with_sampling</span><span class="p">(</span>
         <span class="n">subgroup_sizes</span><span class="p">,</span> <span class="n">num_samples</span><span class="o">=</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span>
     <span class="p">)</span>
     <span class="n">total_size</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">subgroup_sizes</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">scaling_factors</span><span class="p">)</span> <span class="o">!=</span> <span class="n">total_size</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Length of scaling_factors (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">scaling_factors</span><span class="p">)</span><span class="si">}</span><span class="s2">) must match the total number of elements (</span><span class="si">{</span><span class="n">total_size</span><span class="si">}</span><span class="s2">) in the permutation vector.&quot;</span>
+            <span class="sa">f</span><span class="s2">"Length of scaling_factors (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">scaling_factors</span><span class="p">)</span><span class="si">}</span><span class="s2">) must match the total number of elements (</span><span class="si">{</span><span class="n">total_size</span><span class="si">}</span><span class="s2">) in the permutation vector."</span>
         <span class="p">)</span>
     <span class="n">scaled_permutations</span> <span class="o">=</span> <span class="n">permutations</span> <span class="o">*</span> <span class="n">scaling_factors</span>
     <span class="k">return</span> <span class="n">scaled_permutations</span></div>
@@ -490,7 +490,7 @@
     <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">discretization</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate permutations for imprecise probabilistic models.</span>
+<span class="w">    </span><span class="sd">"""Generate permutations for imprecise probabilistic models.</span>
 
 <span class="sd">    Each subgroup in `subgroup_sizes` represents a set of variables</span>
 <span class="sd">    contributing to a probabilistic model, where the sum of elements</span>
@@ -534,7 +534,7 @@
 <span class="sd">    ... )</span>
 <span class="sd">    &gt;&gt;&gt; for sample in samples:</span>
 <span class="sd">    ...     print(sample)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
 
@@ -577,10 +577,10 @@
     <span class="n">samplesize</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">target_distribution</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="n">sequence_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span>
-        <span class="s2">&quot;sobol&quot;</span><span class="p">,</span> <span class="s2">&quot;halton&quot;</span><span class="p">,</span> <span class="s2">&quot;reverse_halton&quot;</span><span class="p">,</span> <span class="s2">&quot;faure&quot;</span><span class="p">,</span> <span class="s2">&quot;haselgrove&quot;</span>
-    <span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;halton&quot;</span><span class="p">,</span>
+        <span class="s2">"sobol"</span><span class="p">,</span> <span class="s2">"halton"</span><span class="p">,</span> <span class="s2">"reverse_halton"</span><span class="p">,</span> <span class="s2">"faure"</span><span class="p">,</span> <span class="s2">"haselgrove"</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="s2">"halton"</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Generate a low-discrepancy sequence and transform it to target.</span>
 
 <span class="sd">    Map a low-discrepancy sequence from the unit hypercube to the target </span>
@@ -595,9 +595,9 @@
 <span class="sd">    target_distribution : ot.Distribution</span>
 <span class="sd">        The target OpenTURNS distribution to transform the sequence into.</span>
 <span class="sd">    sequence_type : str, optional</span>
-<span class="sd">        Type of low-discrepancy sequence. Choices are ``&quot;sobol&quot;``, </span>
-<span class="sd">        ``&quot;halton&quot;``, ``&quot;reverse_halton&quot;``, ``&quot;faure&quot;``, or </span>
-<span class="sd">        ``&quot;haselgrove&quot;``. Default is &quot;halton&quot;.</span>
+<span class="sd">        Type of low-discrepancy sequence. Choices are ``"sobol"``, </span>
+<span class="sd">        ``"halton"``, ``"reverse_halton"``, ``"faure"``, or </span>
+<span class="sd">        ``"haselgrove"``. Default is "halton".</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -608,17 +608,17 @@
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        If an unsupported `sequence_type` is provided.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">sequences</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;sobol&quot;</span><span class="p">:</span> <span class="n">ot</span><span class="o">.</span><span class="n">SobolSequence</span><span class="p">,</span>
-        <span class="s2">&quot;halton&quot;</span><span class="p">:</span> <span class="n">ot</span><span class="o">.</span><span class="n">HaltonSequence</span><span class="p">,</span>
-        <span class="s2">&quot;reverse_halton&quot;</span><span class="p">:</span> <span class="n">ot</span><span class="o">.</span><span class="n">ReverseHaltonSequence</span><span class="p">,</span>
-        <span class="s2">&quot;faure&quot;</span><span class="p">:</span> <span class="n">ot</span><span class="o">.</span><span class="n">FaureSequence</span><span class="p">,</span>
-        <span class="s2">&quot;haselgrove&quot;</span><span class="p">:</span> <span class="n">ot</span><span class="o">.</span><span class="n">HaselgroveSequence</span><span class="p">,</span>
+        <span class="s2">"sobol"</span><span class="p">:</span> <span class="n">ot</span><span class="o">.</span><span class="n">SobolSequence</span><span class="p">,</span>
+        <span class="s2">"halton"</span><span class="p">:</span> <span class="n">ot</span><span class="o">.</span><span class="n">HaltonSequence</span><span class="p">,</span>
+        <span class="s2">"reverse_halton"</span><span class="p">:</span> <span class="n">ot</span><span class="o">.</span><span class="n">ReverseHaltonSequence</span><span class="p">,</span>
+        <span class="s2">"faure"</span><span class="p">:</span> <span class="n">ot</span><span class="o">.</span><span class="n">FaureSequence</span><span class="p">,</span>
+        <span class="s2">"haselgrove"</span><span class="p">:</span> <span class="n">ot</span><span class="o">.</span><span class="n">HaselgroveSequence</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="k">if</span> <span class="n">sequence_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sequences</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Unsupported sequence type. Choose one of </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">sequences</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="sa">f</span><span class="s2">"Unsupported sequence type. Choose one of </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">sequences</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">."</span>
         <span class="p">)</span>
     <span class="n">sequence</span> <span class="o">=</span> <span class="n">sequences</span><span class="p">[</span><span class="n">sequence_type</span><span class="p">](</span><span class="n">dim</span><span class="p">)</span>
     <span class="n">uniform_sample</span> <span class="o">=</span> <span class="n">sequence</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">samplesize</span><span class="p">)</span>
@@ -637,7 +637,7 @@
 <a class="viewcode-back" href="../../../source/otaf.sampling.html#otaf.sampling.compose_defects_with_lambdas">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">compose_defects_with_lambdas</span><span class="p">(</span><span class="n">lds</span><span class="p">:</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">,</span> <span class="n">rdv</span><span class="p">:</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate scaled defect samples by multiplying with lambda values.</span>
+<span class="w">    </span><span class="sd">"""Calculate scaled defect samples by multiplying with lambda values.</span>
 
 <span class="sd">    For each point in the lambda sample, compute a new defect sample by performing</span>
 <span class="sd">    an element-wise multiplication with the input defect sample.</span>
@@ -659,9 +659,9 @@
 <span class="sd">    ------</span>
 <span class="sd">    AssertionError</span>
 <span class="sd">        If the dimensions of the lambda sample and defect sample do not match.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">assert</span> <span class="n">rdv</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span> <span class="o">==</span> <span class="n">lds</span><span class="o">.</span><span class="n">getDimension</span><span class="p">(),</span> <span class="p">(</span>
-        <span class="s2">&quot;Lambda and defect samples must have the same dimension.&quot;</span>
+        <span class="s2">"Lambda and defect samples must have the same dimension."</span>
     <span class="p">)</span>
     <span class="n">defect_description</span> <span class="o">=</span> <span class="n">rdv</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()</span>
     <span class="n">scaled_defect_samples</span> <span class="o">=</span> <span class="p">[]</span>
@@ -679,7 +679,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">scale_sample_with_params</span><span class="p">(</span>
     <span class="n">sample</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scale a sample using mean and variance parameters.</span>
+<span class="w">    </span><span class="sd">"""Scale a sample using mean and variance parameters.</span>
 
 <span class="sd">    Transform each column of the input sample, assuming it originates</span>
 <span class="sd">    from a standard normal unit distribution, by applying the provided</span>
@@ -706,19 +706,19 @@
 <span class="sd">    ValueError</span>
 <span class="sd">        If ``sample`` is not a 2D array, if the size of ``parameters`` does</span>
 <span class="sd">        not equal ``2 * M``, or if any standard deviation is negative.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">sample</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sample must be a 2D array, but got shape </span><span class="si">{</span><span class="n">sample</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Sample must be a 2D array, but got shape </span><span class="si">{</span><span class="n">sample</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
     <span class="n">N</span><span class="p">,</span> <span class="n">M</span> <span class="o">=</span> <span class="n">sample</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">parameters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">parameters</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">M</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Parameters must have size 2 * M (expected </span><span class="si">{</span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">M</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">parameters</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">).&quot;</span>
+            <span class="sa">f</span><span class="s2">"Parameters must have size 2 * M (expected </span><span class="si">{</span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">M</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">parameters</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">)."</span>
         <span class="p">)</span>
     <span class="n">means</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span>
     <span class="n">stds</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">stds</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;All standard deviations must be positive : </span><span class="si">{</span><span class="n">stds</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"All standard deviations must be positive : </span><span class="si">{</span><span class="n">stds</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="n">scaled_sample</span> <span class="o">=</span> <span class="n">sample</span> <span class="o">*</span> <span class="n">stds</span> <span class="o">+</span> <span class="n">means</span>
     <span class="k">return</span> <span class="n">scaled_sample</span></div>
 
@@ -729,7 +729,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">calculate_sample_in_deviation_domain</span><span class="p">(</span>
     <span class="n">pos_u</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">lambda_pos</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lambda_theta</span><span class="p">:</span> <span class="nb">float</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Scale and stack position and theta arrays into a 2D coordinate array.</span>
 
 <span class="sd">    Applies independent scaling factors to both the positional and angular</span>
@@ -751,7 +751,7 @@
 <span class="sd">    array_like</span>
 <span class="sd">        An (N, 2) NumPy array where each row represents a paired</span>
 <span class="sd">        (scaled_pos, scaled_theta) coordinate.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">scaled_pos</span> <span class="o">=</span> <span class="n">lambda_pos</span> <span class="o">*</span> <span class="n">pos_u</span>
     <span class="n">scaled_theta</span> <span class="o">=</span> <span class="n">lambda_theta</span> <span class="o">*</span> <span class="n">theta</span>
     <span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">scaled_pos</span><span class="p">,</span> <span class="n">scaled_theta</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>

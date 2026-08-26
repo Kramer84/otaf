@@ -81,8 +81,8 @@
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;SystemOfConstraintsAssemblyModel&quot;</span><span class="p">]</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">"Kramer84"</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"SystemOfConstraintsAssemblyModel"</span><span class="p">]</span>
 
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
@@ -102,7 +102,7 @@
 
 <span class="nd">@beartype</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SystemOfConstraintsAssemblyModel</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prepare matrices for tolerance analysis involving deviations and gaps.</span>
+<span class="w">    </span><span class="sd">"""Prepare matrices for tolerance analysis involving deviations and gaps.</span>
 
 <span class="sd">    This class processes compatibility and interface equations to generate a</span>
 <span class="sd">    matrix representation suitable for linear programming solvers like</span>
@@ -154,7 +154,7 @@
 <span class="sd">        Stored compatibility equations.</span>
 <span class="sd">    interface_eqs : list of sympy.Expr or None</span>
 <span class="sd">        Stored interface equations.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">compatibility_eqs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -162,7 +162,7 @@
         <span class="n">matrices</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the assembly model.</span>
+<span class="w">        </span><span class="sd">"""Initialize the assembly model.</span>
 
 <span class="sd">        Processes the provided compatibility and interface equations or</span>
 <span class="sd">        direct matrices to extract variables and prepare the matrix</span>
@@ -173,20 +173,20 @@
 <span class="sd">        ValueError</span>
 <span class="sd">            If the equations are improperly formatted or variables cannot</span>
 <span class="sd">            be extracted.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">compatibility_eqs</span> <span class="o">=</span> <span class="n">compatibility_eqs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">interface_eqs</span> <span class="o">=</span> <span class="n">interface_eqs</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compatibility_eqs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface_eqs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="p">:</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Initializing SystemOfConstraintsAssemblyModel with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">compatibility_eqs</span><span class="p">)</span><span class="si">}</span><span class="s2"> compatibility equations and </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">interface_eqs</span><span class="p">)</span><span class="si">}</span><span class="s2"> interface equations.&quot;</span>
+                <span class="sa">f</span><span class="s2">"[Type: SystemOfConstraintsAssemblyModel] Initializing SystemOfConstraintsAssemblyModel with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">compatibility_eqs</span><span class="p">)</span><span class="si">}</span><span class="s2"> compatibility equations and </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">interface_eqs</span><span class="p">)</span><span class="si">}</span><span class="s2"> interface equations."</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">nC</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compatibility_eqs</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">nI</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interface_eqs</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">deviation_symbols</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extractFreeGapAndDeviationVariables</span><span class="p">()</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Derived deviation symbols: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">deviation_symbols</span><span class="si">}</span><span class="s2">, gap symbols: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"[Type: SystemOfConstraintsAssemblyModel] Derived deviation symbols: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">deviation_symbols</span><span class="si">}</span><span class="s2">, gap symbols: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">nD</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">deviation_symbols</span><span class="p">)</span>
@@ -199,10 +199,10 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">A_ub_Gap</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">K_ub</span><span class="p">,</span>
             <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generateConstraintMatrices</span><span class="p">()</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Matrix representation obtained.&quot;</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"[Type: SystemOfConstraintsAssemblyModel] Matrix representation obtained."</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">matrices</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Initializing directly from matrices.&quot;</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"[Type: SystemOfConstraintsAssemblyModel] Initializing directly from matrices."</span><span class="p">)</span>
             <span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">A_eq_Def</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">A_eq_Gap</span><span class="p">,</span>
@@ -219,47 +219,47 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">nI</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">A_ub_Def</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
             <span class="c1"># Generate dummy symbols so __repr__ and __call__ do not crash</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">deviation_symbols</span> <span class="o">=</span> <span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;d_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nD</span><span class="p">)]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span> <span class="o">=</span> <span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;g_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nG</span><span class="p">)]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deviation_symbols</span> <span class="o">=</span> <span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">(</span><span class="sa">f</span><span class="s2">"d_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nD</span><span class="p">)]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span> <span class="o">=</span> <span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">(</span><span class="sa">f</span><span class="s2">"g_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nG</span><span class="p">)]</span>
 
-            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Matrix representation loaded from direct input.&quot;</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"[Type: SystemOfConstraintsAssemblyModel] Matrix representation loaded from direct input."</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Must provide either (compatibility_eqs and interface_eqs) or matrices.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Must provide either (compatibility_eqs and interface_eqs) or matrices."</span><span class="p">)</span>
 
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Number of deviation symbols (nD): </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nD</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"[Type: SystemOfConstraintsAssemblyModel] Number of deviation symbols (nD): </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nD</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Number of gap symbols (nG): </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nG</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"[Type: SystemOfConstraintsAssemblyModel] Number of gap symbols (nG): </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nG</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
 
 
 <div class="viewcode-block" id="SystemOfConstraintsAssemblyModel.__repr__">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.__repr__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compact textual summary with matrices for the LP.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Compact textual summary with matrices for the LP."""</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">arr_str</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">a</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">return</span> <span class="s2">&quot;None&quot;</span>
+                <span class="k">return</span> <span class="s2">"None"</span>
             <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">suppress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">256</span><span class="p">):</span>
                 <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array2string</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
         <span class="n">head</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;SystemOfConstraintsAssemblyModel(&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;nD=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nD</span><span class="si">}</span><span class="s2">, nG=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nG</span><span class="si">}</span><span class="s2">, nC=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nC</span><span class="si">}</span><span class="s2">, nI=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nI</span><span class="si">}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;Deviations: [</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">deviation_symbols</span><span class="p">))</span><span class="si">}</span><span class="s2">]</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;Gaps      : [</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span><span class="p">))</span><span class="si">}</span><span class="s2">]</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="s2">&quot;Forms:  A_eq_Def·X + A_eq_Gap·Y + K_eq = 0</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="s2">&quot;        A_ub_Def·X + A_ub_Gap·Y + K_ub ≥ 0</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"SystemOfConstraintsAssemblyModel("</span>
+            <span class="sa">f</span><span class="s2">"nD=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nD</span><span class="si">}</span><span class="s2">, nG=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nG</span><span class="si">}</span><span class="s2">, nC=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nC</span><span class="si">}</span><span class="s2">, nI=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nI</span><span class="si">}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="sa">f</span><span class="s2">"Deviations: [</span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">deviation_symbols</span><span class="p">))</span><span class="si">}</span><span class="s2">]</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="sa">f</span><span class="s2">"Gaps      : [</span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span><span class="p">))</span><span class="si">}</span><span class="s2">]</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="s2">"Forms:  A_eq_Def·X + A_eq_Gap·Y + K_eq = 0</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="s2">"        A_ub_Def·X + A_ub_Gap·Y + K_ub ≥ 0</span><span class="se">\n</span><span class="s2">"</span>
         <span class="p">)</span>
         <span class="n">sections</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">(</span><span class="s2">&quot;A_eq_Def&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">A_eq_Def</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;A_eq_Gap&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">A_eq_Gap</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;K_eq&quot;</span><span class="p">,</span>     <span class="bp">self</span><span class="o">.</span><span class="n">K_eq</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;A_ub_Def&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">A_ub_Def</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;A_ub_Gap&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">A_ub_Gap</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;K_ub&quot;</span><span class="p">,</span>     <span class="bp">self</span><span class="o">.</span><span class="n">K_ub</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">"A_eq_Def"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">A_eq_Def</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">"A_eq_Gap"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">A_eq_Gap</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">"K_eq"</span><span class="p">,</span>     <span class="bp">self</span><span class="o">.</span><span class="n">K_eq</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">"A_ub_Def"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">A_ub_Def</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">"A_ub_Gap"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">A_ub_Gap</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">"K_ub"</span><span class="p">,</span>     <span class="bp">self</span><span class="o">.</span><span class="n">K_ub</span><span class="p">),</span>
         <span class="p">]</span>
-        <span class="n">body</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> =</span><span class="se">\n</span><span class="si">{</span><span class="n">arr_str</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">sections</span><span class="p">)</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> =</span><span class="se">\n</span><span class="si">{</span><span class="n">arr_str</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">sections</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">head</span> <span class="o">+</span> <span class="n">body</span></div>
 
 
@@ -273,7 +273,7 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span>
         <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
     <span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate input matrices and bounds for optimization.</span>
+<span class="w">        </span><span class="sd">"""Generate input matrices and bounds for optimization.</span>
 
 <span class="sd">        This method prepares inputs for ``scipy.optimize.linprog`` using the</span>
 <span class="sd">        deviation variables and optionally provided bounds and objective</span>
@@ -318,38 +318,38 @@
 <span class="sd">        - Gap variables must be in the same order as ``gap_symbols``.</span>
 <span class="sd">        - Default bounds are generated if `bounds` is not provided or</span>
 <span class="sd">          improperly formatted.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Invoking the __call__ method.&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"[Type: SystemOfConstraintsAssemblyModel] Invoking the __call__ method."</span><span class="p">)</span>
         <span class="n">deviation_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">deviation_array</span><span class="p">)</span>  <span class="c1"># If there is only one deviation array</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] The variables must be in the same order as in self.deviation_symbols&quot;</span>
+                <span class="s2">"[Type: SystemOfConstraintsAssemblyModel] The variables must be in the same order as in self.deviation_symbols"</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="n">deviation_array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">deviation_symbols</span><span class="p">):</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] The number of deviation variables should be </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">deviation_symbols</span><span class="p">)</span><span class="si">}</span><span class="s2">, but </span><span class="si">{</span><span class="n">deviation_array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> were provided.&quot;</span>
+                <span class="sa">f</span><span class="s2">"[Type: SystemOfConstraintsAssemblyModel] The number of deviation variables should be </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">deviation_symbols</span><span class="p">)</span><span class="si">}</span><span class="s2">, but </span><span class="si">{</span><span class="n">deviation_array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> were provided."</span>
             <span class="p">)</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] The number of deviation variables should be </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">deviation_symbols</span><span class="p">)</span><span class="si">}</span><span class="s2">, but </span><span class="si">{</span><span class="n">deviation_array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> were provided.&quot;</span>
+                <span class="sa">f</span><span class="s2">"[Type: SystemOfConstraintsAssemblyModel] The number of deviation variables should be </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">deviation_symbols</span><span class="p">)</span><span class="si">}</span><span class="s2">, but </span><span class="si">{</span><span class="n">deviation_array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> were provided."</span>
             <span class="p">)</span>
 
         <span class="c1"># Check or define objective function</span>
         <span class="k">if</span> <span class="n">C</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">or</span> <span class="n">C</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nG</span><span class="p">,):</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] The C array representing the coefficients of the linear objective function to be minimized has not been (well) defined&quot;</span>
+                <span class="s2">"[Type: SystemOfConstraintsAssemblyModel] The C array representing the coefficients of the linear objective function to be minimized has not been (well) defined"</span>
             <span class="p">)</span>
             <span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">nG</span><span class="p">,))</span>
-            <span class="k">if</span> <span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">(</span><span class="s2">&quot;s&quot;</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">(</span><span class="s2">"s"</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span><span class="p">:</span>
                 <span class="c1"># Select the first gap variable driving a translation in the x direction as the objective to be minimized.</span>
                 <span class="n">idGVarXTrans</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
-                    <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">symb</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span><span class="p">)</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">symb</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;u_g&quot;</span><span class="p">)</span>
+                    <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">symb</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span><span class="p">)</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">symb</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"u_g"</span><span class="p">)</span>
                 <span class="p">)</span>
                 <span class="n">C</span><span class="p">[</span><span class="n">idGVarXTrans</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Using s variable for objective&quot;</span><span class="p">)</span>
-                <span class="n">C</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">(</span><span class="s2">&quot;s&quot;</span><span class="p">))]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">"Using s variable for objective"</span><span class="p">)</span>
+                <span class="n">C</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">(</span><span class="s2">"s"</span><span class="p">))]</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="o">-</span><span class="mf">1.0</span>
                 <span class="p">)</span>  <span class="c1"># Cause we want to maximize s, but this is a minimization.  # Guess its that! But this is important.</span>
 
@@ -358,7 +358,7 @@
             <span class="n">bounds</span> <span class="o">=</span> <span class="n">get_gap_symbol_bounds</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nG</span><span class="p">:</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Check bounds parameter, falling back to usual behavior&quot;</span><span class="p">)</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">"Check bounds parameter, falling back to usual behavior"</span><span class="p">)</span>
                 <span class="n">bounds</span> <span class="o">=</span> <span class="n">get_gap_symbol_bounds</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span><span class="p">)</span>
 
         <span class="n">A_ub</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">A_ub_Gap</span>
@@ -373,7 +373,7 @@
         <span class="c1"># np.add(np.matmul(-1*self.A_eq_Def, deviation_array.T), np.expand_dims(-1*self.K_eq, axis=1))</span>
         <span class="n">bounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Returning matrices and bounds for scipy optimization.&quot;</span>
+            <span class="s2">"[Type: SystemOfConstraintsAssemblyModel] Returning matrices and bounds for scipy optimization."</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">C</span><span class="p">,</span> <span class="n">A_ub</span><span class="p">,</span> <span class="n">B_ub</span><span class="p">,</span> <span class="n">A_eq</span><span class="p">,</span> <span class="n">B_eq</span><span class="p">,</span> <span class="n">bounds</span></div>
 
@@ -385,7 +385,7 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span>
         <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
     <span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Decompose equations into matrix representations for constraints.</span>
+<span class="w">        </span><span class="sd">"""Decompose equations into matrix representations for constraints.</span>
 
 <span class="sd">        This method converts the equations into matrix forms suitable for</span>
 <span class="sd">        linear programming:</span>
@@ -426,9 +426,9 @@
 <span class="sd">          variables.</span>
 <span class="sd">        - Variables not explicitly included in the equations are assigned</span>
 <span class="sd">          zero coefficients in the matrices.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Generating matrix representation for constraints.&quot;</span>
+            <span class="s2">"[Type: SystemOfConstraintsAssemblyModel] Generating matrix representation for constraints."</span>
         <span class="p">)</span>
         <span class="n">A_eq_Def</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">nC</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nD</span><span class="p">))</span>
         <span class="n">A_eq_Gap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">nC</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nG</span><span class="p">))</span>
@@ -448,7 +448,7 @@
                     <span class="n">A_eq_Def</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">symb_rank_map_def</span><span class="p">[</span><span class="n">variable</span><span class="p">]]</span> <span class="o">=</span> <span class="n">coefficient</span>
                 <span class="k">elif</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">symb_rank_map_gap</span><span class="p">:</span>
                     <span class="n">A_eq_Gap</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">symb_rank_map_gap</span><span class="p">[</span><span class="n">variable</span><span class="p">]]</span> <span class="o">=</span> <span class="n">coefficient</span>
-                <span class="k">elif</span> <span class="n">variable</span> <span class="o">==</span> <span class="s2">&quot;CONST&quot;</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="n">variable</span> <span class="o">==</span> <span class="s2">"CONST"</span><span class="p">:</span>
                     <span class="n">K_eq</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">coefficient</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nI</span><span class="p">):</span>
@@ -458,9 +458,9 @@
                     <span class="n">A_ub_Def</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">symb_rank_map_def</span><span class="p">[</span><span class="n">variable</span><span class="p">]]</span> <span class="o">=</span> <span class="n">coefficient</span>
                 <span class="k">elif</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">symb_rank_map_gap</span><span class="p">:</span>
                     <span class="n">A_ub_Gap</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">symb_rank_map_gap</span><span class="p">[</span><span class="n">variable</span><span class="p">]]</span> <span class="o">=</span> <span class="n">coefficient</span>
-                <span class="k">elif</span> <span class="n">variable</span> <span class="o">==</span> <span class="s2">&quot;CONST&quot;</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="n">variable</span> <span class="o">==</span> <span class="s2">"CONST"</span><span class="p">:</span>
                     <span class="n">K_ub</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">coefficient</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Matrix representation generated.&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"[Type: SystemOfConstraintsAssemblyModel] Matrix representation generated."</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="n">A_eq_Def</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">rnd</span><span class="p">),</span>
             <span class="n">A_eq_Gap</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">rnd</span><span class="p">),</span>
@@ -476,7 +476,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">extractFreeGapAndDeviationVariables</span><span class="p">(</span>
         <span class="bp">self</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract sets of deviation and gap variables from equations.</span>
+<span class="w">        </span><span class="sd">"""Extract sets of deviation and gap variables from equations.</span>
 
 <span class="sd">        This method identifies the free variables used in the compatibility</span>
 <span class="sd">        equations and verifies that all variables appearing in the</span>
@@ -501,9 +501,9 @@
 <span class="sd">        - Deviation and gap variables are extracted separately from both</span>
 <span class="sd">          compatibility and interface equations.</span>
 <span class="sd">        - This ensures consistency between the two sets of equations.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Retrieving free gap and deviation variables.&quot;</span>
+            <span class="s2">"[Type: SystemOfConstraintsAssemblyModel] Retrieving free gap and deviation variables."</span>
         <span class="p">)</span>
         <span class="n">deviation_symbols</span><span class="p">,</span> <span class="n">gap_symbols</span> <span class="o">=</span> <span class="n">get_symbols_in_expressions</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">compatibility_eqs</span>
@@ -515,11 +515,11 @@
             <span class="n">symb_gap_interf</span>
         <span class="p">)</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">gap_symbols</span><span class="p">):</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                <span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Interface variables not included in the compatibility variables.&quot;</span>
+                <span class="s2">"[Type: SystemOfConstraintsAssemblyModel] Interface variables not included in the compatibility variables."</span>
             <span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s2">&quot;Interface variables not included in the compatibility variables.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s2">"Interface variables not included in the compatibility variables."</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Free gap and deviation variables retrieved successfully.&quot;</span>
+            <span class="s2">"[Type: SystemOfConstraintsAssemblyModel] Free gap and deviation variables retrieved successfully."</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">deviation_symbols</span><span class="p">,</span> <span class="n">gap_symbols</span></div>
 
@@ -529,7 +529,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">validateOptimizationResults</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">gap_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">deviation_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">rnd</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate optimization results using original equations.</span>
+<span class="w">        </span><span class="sd">"""Validate optimization results using original equations.</span>
 
 <span class="sd">        This method evaluates the original compatibility and interface</span>
 <span class="sd">        equations with given values for the gap and deviation variables,</span>
@@ -560,9 +560,9 @@
 <span class="sd">          while larger values suggest potential issues.</span>
 <span class="sd">        - Interface results show the satisfaction level of inequality</span>
 <span class="sd">          constraints.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Validating optimization using original equations.&quot;</span>
+            <span class="s2">"[Type: SystemOfConstraintsAssemblyModel] Validating optimization using original equations."</span>
         <span class="p">)</span>
         <span class="n">gap_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span><span class="p">),</span> <span class="n">gap_array</span><span class="p">))</span>
         <span class="n">deviation_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">deviation_symbols</span><span class="p">),</span> <span class="n">deviation_array</span><span class="p">))</span>
@@ -572,17 +572,17 @@
             <span class="n">compatibility_result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">comp_expr</span><span class="o">.</span><span class="n">evalf</span><span class="p">(</span><span class="n">subs</span><span class="o">=</span><span class="n">fixed_vars</span><span class="p">),</span> <span class="n">rnd</span><span class="p">))</span>
             <span class="k">if</span> <span class="nb">round</span><span class="p">(</span><span class="n">compatibility_result</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">rnd</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.01</span><span class="p">:</span>
                 <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Result for compatibility expression </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> is : </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">compatibility_result</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">rnd</span><span class="p">)</span><span class="si">}</span><span class="s2"> </span><span class="se">\t</span><span class="s2"> (others are close to 0)&quot;</span>
+                    <span class="sa">f</span><span class="s2">"[Type: SystemOfConstraintsAssemblyModel] Result for compatibility expression </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> is : </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">compatibility_result</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">rnd</span><span class="p">)</span><span class="si">}</span><span class="s2"> </span><span class="se">\t</span><span class="s2"> (others are close to 0)"</span>
                 <span class="p">)</span>
         <span class="n">interface_results</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">inter_expr</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interface_eqs</span><span class="p">):</span>
             <span class="n">interface_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">inter_expr</span><span class="o">.</span><span class="n">evalf</span><span class="p">(</span><span class="n">subs</span><span class="o">=</span><span class="n">fixed_vars</span><span class="p">),</span> <span class="n">rnd</span><span class="p">))</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Result for interface expression </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> is : </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">interface_results</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">rnd</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"[Type: SystemOfConstraintsAssemblyModel] Result for interface expression </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> is : </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">interface_results</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">rnd</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;[Type: SystemOfConstraintsAssemblyModel] Result for interface expression </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> is : </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">interface_results</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">rnd</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">"[Type: SystemOfConstraintsAssemblyModel] Result for interface expression </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> is : </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">interface_results</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">rnd</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
                 <span class="p">)</span>
         <span class="k">return</span> <span class="n">compatibility_result</span><span class="p">,</span> <span class="n">interface_results</span></div>
 
@@ -590,7 +590,7 @@
 <div class="viewcode-block" id="SystemOfConstraintsAssemblyModel.embedOptimizationVariable">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.embedOptimizationVariable">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">embedOptimizationVariable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Embed an auxiliary optimization variable for feasibility.</span>
+<span class="w">        </span><span class="sd">"""Embed an auxiliary optimization variable for feasibility.</span>
 
 <span class="sd">        This method adds an auxiliary variable, ``s``, to the gap</span>
 <span class="sd">        variables. The variable ``s`` ensures that a feasible solution</span>
@@ -607,8 +607,8 @@
 <span class="sd">          the new variable:</span>
 <span class="sd">          - ``A_ub_Gap`` is augmented with a column of -1.</span>
 <span class="sd">          - ``A_eq_Gap`` is augmented with a column of zeros.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">(</span><span class="s2">&quot;s&quot;</span><span class="p">))</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gap_symbols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">(</span><span class="s2">"s"</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nG</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">A_ub_Gap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">A_ub_Gap</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">nI</span><span class="p">,</span> <span class="mi">1</span><span class="p">))])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">A_eq_Gap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">A_eq_Gap</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">nC</span><span class="p">,</span> <span class="mi">1</span><span class="p">))])</span></div>
@@ -617,7 +617,7 @@
 <div class="viewcode-block" id="SystemOfConstraintsAssemblyModel.get_feature_indices_and_dimensions">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.get_feature_indices_and_dimensions">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_feature_indices_and_dimensions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract unique feature indices and sizes from deviation symbols.</span>
+<span class="w">        </span><span class="sd">"""Extract unique feature indices and sizes from deviation symbols.</span>
 
 <span class="sd">        This method processes the ``deviation_symbols`` list to identify</span>
 <span class="sd">        unique class indices based on the pattern ``_d_X`` (where ``X``</span>
@@ -638,15 +638,15 @@
 <span class="sd">          in the format ``_d_X``.</span>
 <span class="sd">        - The method uses a regular expression to extract the class</span>
 <span class="sd">          identifier and counts occurrences for each class.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">class_size_map</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
         <span class="c1"># Extract classes from the vector</span>
         <span class="n">classes</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">deviation_symbols</span><span class="p">:</span>
-            <span class="c1"># Use regular expression to extract the index after &#39;_d_&#39;</span>
-            <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;_d_(\d+)&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">element</span><span class="p">))</span>
+            <span class="c1"># Use regular expression to extract the index after '_d_'</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">"_d_(\d+)"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">element</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
                 <span class="n">class_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>  <span class="c1"># Extract the class number</span>
                 <span class="n">classes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">class_index</span><span class="p">)</span>  <span class="c1"># Append to class list</span>
@@ -664,7 +664,7 @@
 <div class="viewcode-block" id="SystemOfConstraintsAssemblyModel.test_zero_deviation_feasibility">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.SystemOfConstraintsAssemblyModel.test_zero_deviation_feasibility">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">test_zero_deviation_feasibility</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test if the assembly is feasible with zero deviations.</span>
+<span class="w">        </span><span class="sd">"""Test if the assembly is feasible with zero deviations.</span>
 
 <span class="sd">        Uses ``scipy.optimize.milp`` to solve the system where the</span>
 <span class="sd">        deviations equal 0.</span>
@@ -674,7 +674,7 @@
 <span class="sd">        dict</span>
 <span class="sd">            A dictionary containing the ``success`` status, the ``status``</span>
 <span class="sd">            code, and the resulting ``gap_values``.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">milp</span><span class="p">,</span> <span class="n">LinearConstraint</span>
         <span class="c1"># 1. Create a zero deviation array for 1 sample: shape (1, nD)</span>
         <span class="n">zero_deviations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nD</span><span class="p">))</span>
@@ -696,22 +696,22 @@
                 <span class="n">LinearConstraint</span><span class="p">(</span><span class="n">a_ub</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">b_ub</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]),</span>
                 <span class="n">LinearConstraint</span><span class="p">(</span><span class="n">a_eq</span><span class="p">,</span> <span class="n">b_eq</span><span class="p">[:,</span> <span class="n">k</span><span class="p">],</span> <span class="n">b_eq</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]),</span>
             <span class="p">),</span>
-            <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;disp&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;presolve&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">"disp"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">"presolve"</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
         <span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="n">res</span><span class="o">.</span><span class="n">success</span><span class="p">,</span>
-            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">res</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
-            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">res</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
-            <span class="s2">&quot;gap_values&quot;</span><span class="p">:</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span> <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">success</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="s2">&quot;objective&quot;</span><span class="p">:</span> <span class="n">res</span><span class="o">.</span><span class="n">fun</span> <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">success</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="s2">"success"</span><span class="p">:</span> <span class="n">res</span><span class="o">.</span><span class="n">success</span><span class="p">,</span>
+            <span class="s2">"status"</span><span class="p">:</span> <span class="n">res</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+            <span class="s2">"message"</span><span class="p">:</span> <span class="n">res</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+            <span class="s2">"gap_values"</span><span class="p">:</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span> <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">success</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">"objective"</span><span class="p">:</span> <span class="n">res</span><span class="o">.</span><span class="n">fun</span> <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">success</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="p">}</span></div>
 
 
 
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_gap_symbol_bounds</span><span class="p">(</span><span class="n">gap_symbols</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get bounds for a list of gap symbols.</span>
+<span class="w">    </span><span class="sd">"""Get bounds for a list of gap symbols.</span>
 
 <span class="sd">    This function assigns bounds to gap variables based on their naming</span>
 <span class="sd">    convention. Bounds are determined in millimeters for translational</span>
@@ -742,28 +742,28 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; get_gap_symbol_bounds([sp.Symbol(&quot;u_g1&quot;), sp.Symbol(&quot;alpha_g2&quot;)])</span>
+<span class="sd">    &gt;&gt;&gt; get_gap_symbol_bounds([sp.Symbol("u_g1"), sp.Symbol("alpha_g2")])</span>
 <span class="sd">    array([[-3.        ,  3.        ],</span>
 <span class="sd">           [-0.78539816,  0.78539816]])</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;[Type: function:get_gap_symbol_bounds] Getting bounds for gap symbols: </span><span class="si">{</span><span class="n">gap_symbols</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="sa">f</span><span class="s2">"[Type: function:get_gap_symbol_bounds] Getting bounds for gap symbols: </span><span class="si">{</span><span class="n">gap_symbols</span><span class="si">}</span><span class="s2">."</span>
     <span class="p">)</span>
     <span class="n">bounds</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">gap_symbols</span><span class="p">:</span>
         <span class="n">str_s</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">str_s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;u_g&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">str_s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"u_g"</span><span class="p">):</span>
             <span class="n">bounds</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>  <span class="c1"># mm</span>
-        <span class="k">elif</span> <span class="n">str_s</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">&quot;v_g&quot;</span><span class="p">,</span> <span class="s2">&quot;w_g&quot;</span><span class="p">)):</span>
+        <span class="k">elif</span> <span class="n">str_s</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">"v_g"</span><span class="p">,</span> <span class="s2">"w_g"</span><span class="p">)):</span>
             <span class="n">bounds</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>  <span class="c1"># mm</span>
-        <span class="k">elif</span> <span class="n">str_s</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">&quot;alpha_g&quot;</span><span class="p">,</span> <span class="s2">&quot;beta_g&quot;</span><span class="p">,</span> <span class="s2">&quot;gamma_g&quot;</span><span class="p">)):</span>
+        <span class="k">elif</span> <span class="n">str_s</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">"alpha_g"</span><span class="p">,</span> <span class="s2">"beta_g"</span><span class="p">,</span> <span class="s2">"gamma_g"</span><span class="p">)):</span>
             <span class="n">bounds</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">4</span><span class="p">])</span>  <span class="c1"># rad</span>
-        <span class="k">elif</span> <span class="n">str_s</span> <span class="o">==</span> <span class="s2">&quot;s&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">str_s</span> <span class="o">==</span> <span class="s2">"s"</span><span class="p">:</span>
             <span class="n">bounds</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[Type: function:get_gap_symbol_bounds] Unrecognized symbol: </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[Type: function:get_gap_symbol_bounds] Extracted bounds: </span><span class="si">{</span><span class="n">bounds</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float64&quot;</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[Type: function:get_gap_symbol_bounds] Unrecognized symbol: </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[Type: function:get_gap_symbol_bounds] Extracted bounds: </span><span class="si">{</span><span class="n">bounds</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">"float64"</span><span class="p">)</span>
 </pre></div>
 
            </div>

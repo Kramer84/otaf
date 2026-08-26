@@ -78,8 +78,8 @@
            <div itemprop="articleBody">
              
   <h1>Source code for otaf.sensitivity._sensitivity_plotting</h1><div class="highlight"><pre>
-<span></span><span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;plotSobolIndicesWithErr&quot;</span><span class="p">]</span>
+<span></span><span class="n">__author__</span> <span class="o">=</span> <span class="s2">"Kramer84"</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"plotSobolIndicesWithErr"</span><span class="p">]</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpatches</span>
@@ -99,7 +99,7 @@
     <span class="n">dimNames</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">figsize</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot Sobol&#39; indices with error bars.</span>
+<span class="w">    </span><span class="sd">"""Plot Sobol' indices with error bars.</span>
 
 <span class="sd">    Visualize estimator uncertainty for sensitivity analysis. Supports</span>
 <span class="sd">    plotting for scalar outputs (1D array of indices) using discrete</span>
@@ -109,7 +109,7 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    S : np.ndarray</span>
-<span class="sd">        First-order Sobol&#39; indices. Can be of a shape matching the</span>
+<span class="sd">        First-order Sobol' indices. Can be of a shape matching the</span>
 <span class="sd">        total number of input dimensions `n_dims` for scalar</span>
 <span class="sd">        outputs, or a 2D shape for vector outputs.</span>
 <span class="sd">    errS : np.ndarray</span>
@@ -121,7 +121,7 @@
 <span class="sd">    n_dims : int</span>
 <span class="sd">        The total number of input variables or dimensions analyzed.</span>
 <span class="sd">    Stot : np.ndarray, optional</span>
-<span class="sd">        Total-order Sobol&#39; indices. Must match the shape of `S`.</span>
+<span class="sd">        Total-order Sobol' indices. Must match the shape of `S`.</span>
 <span class="sd">        Default is None.</span>
 <span class="sd">    errStot : np.ndarray, optional</span>
 <span class="sd">        Confidence intervals or errors corresponding to `Stot`.</span>
@@ -137,43 +137,43 @@
 <span class="sd">    The function adapts dynamically based on the dimensionality of</span>
 <span class="sd">    `S`. For high-dimensional vector outputs, it uses heatmaps to</span>
 <span class="sd">    manage visual density.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;classic&quot;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">"classic"</span><span class="p">)</span>
     <span class="n">S</span><span class="p">,</span> <span class="n">errS</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">S</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">errS</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">Stot</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">errStot</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">Stot</span><span class="p">,</span> <span class="n">errStot</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">Stot</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">errStot</span><span class="p">))</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">S</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The output is scalar&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"The output is scalar"</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span>
-            <span class="s2">&quot;The sensitivity is measured accordingly to the&quot;</span><span class="p">,</span>
+            <span class="s2">"The sensitivity is measured accordingly to the"</span><span class="p">,</span>
             <span class="n">n_dims</span><span class="p">,</span>
-            <span class="s2">&quot;input variables, namely:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
-            <span class="s2">&quot; and &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">varNames</span><span class="p">),</span>
+            <span class="s2">"input variables, namely:</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span>
+            <span class="s2">" and "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">varNames</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="n">lgd_elems</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">mpatches</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;first order indices&quot;</span><span class="p">),</span>
-            <span class="n">mpatches</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;total order indices&quot;</span><span class="p">),</span>
+            <span class="n">mpatches</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"r"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"first order indices"</span><span class="p">),</span>
+            <span class="n">mpatches</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"b"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"total order indices"</span><span class="p">),</span>
         <span class="p">]</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_dims</span><span class="p">)</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">S</span>
         <span class="n">yerr</span> <span class="o">=</span> <span class="n">errS</span>
         <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">yerr</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">ecolor</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">yerr</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">"s"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"r"</span><span class="p">,</span> <span class="n">ecolor</span><span class="o">=</span><span class="s2">"r"</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">Stot</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">errStot</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">Stot</span><span class="p">)</span>
             <span class="n">y2err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">errStot</span><span class="p">)</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">y2err</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">ecolor</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">y2err</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"b"</span><span class="p">,</span> <span class="n">ecolor</span><span class="o">=</span><span class="s2">"b"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">lgd_elems</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="o">=</span><span class="n">lgd_elems</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="o">=</span><span class="n">lgd_elems</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">"upper right"</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">ticks</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">varNames</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">"x"</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="n">xmin</span><span class="o">=-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=-</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="mf">1.1</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">S</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The output is a vector&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"The output is a vector"</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ion</span><span class="p">()</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">n_dims</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">:</span>
@@ -203,7 +203,7 @@
                 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">dimOut</span><span class="p">)</span>
                 <span class="n">y</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
                 <span class="n">yerr</span> <span class="o">=</span> <span class="n">errS</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
-                <span class="n">graphList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">yerr</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">ecolor</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+                <span class="n">graphList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">yerr</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"r"</span><span class="p">,</span> <span class="n">ecolor</span><span class="o">=</span><span class="s2">"b"</span><span class="p">)</span>
                 <span class="n">graphList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span>
                     <span class="n">xmin</span><span class="o">=-</span><span class="mf">0.5</span><span class="p">,</span>
                     <span class="n">xmax</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span>
@@ -237,7 +237,7 @@
                 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">dimOut</span><span class="p">)</span>
                 <span class="n">y</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
                 <span class="n">yerr</span> <span class="o">=</span> <span class="n">errS</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
-                <span class="n">graphList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">yerr</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">ecolor</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+                <span class="n">graphList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">yerr</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"r"</span><span class="p">,</span> <span class="n">ecolor</span><span class="o">=</span><span class="s2">"b"</span><span class="p">)</span>
                 <span class="n">graphList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span>
                     <span class="n">xmin</span><span class="o">=-</span><span class="mf">0.5</span><span class="p">,</span>
                     <span class="n">xmax</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span>
@@ -259,42 +259,42 @@
                     <span class="n">dimNames</span><span class="p">,</span>
                     <span class="n">varNames</span><span class="p">,</span>
                     <span class="n">ax</span><span class="o">=</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;plasma&quot;</span><span class="p">,</span>
-                    <span class="n">cbarlabel</span><span class="o">=</span><span class="s2">&quot;Sobol&#39; indices&quot;</span><span class="p">,</span>
+                    <span class="n">cmap</span><span class="o">=</span><span class="s2">"plasma"</span><span class="p">,</span>
+                    <span class="n">cbarlabel</span><span class="o">=</span><span class="s2">"Sobol' indices"</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="n">S_texts</span> <span class="o">=</span> <span class="n">annotate_heatmap</span><span class="p">(</span><span class="n">S_im</span><span class="p">,</span> <span class="n">valfmt</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{x:.2f}</span><span class="s2"> t&quot;</span><span class="p">)</span>
+                <span class="n">S_texts</span> <span class="o">=</span> <span class="n">annotate_heatmap</span><span class="p">(</span><span class="n">S_im</span><span class="p">,</span> <span class="n">valfmt</span><span class="o">=</span><span class="s2">"</span><span class="si">{x:.2f}</span><span class="s2"> t"</span><span class="p">)</span>
                 <span class="n">errS_im</span><span class="p">,</span> <span class="n">errS_cbar</span> <span class="o">=</span> <span class="n">heatmap</span><span class="p">(</span>
                     <span class="n">errS</span><span class="p">,</span>
                     <span class="n">dimNames</span><span class="p">,</span>
                     <span class="n">varNames</span><span class="p">,</span>
                     <span class="n">ax</span><span class="o">=</span><span class="n">grid</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;plasma&quot;</span><span class="p">,</span>
-                    <span class="n">cbarlabel</span><span class="o">=</span><span class="s2">&quot;Sobol&#39; indices&quot;</span><span class="p">,</span>
+                    <span class="n">cmap</span><span class="o">=</span><span class="s2">"plasma"</span><span class="p">,</span>
+                    <span class="n">cbarlabel</span><span class="o">=</span><span class="s2">"Sobol' indices"</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="n">errS_texts</span> <span class="o">=</span> <span class="n">annotate_heatmap</span><span class="p">(</span><span class="n">errS_im</span><span class="p">,</span> <span class="n">valfmt</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{x:.2f}</span><span class="s2"> t&quot;</span><span class="p">)</span>
+                <span class="n">errS_texts</span> <span class="o">=</span> <span class="n">annotate_heatmap</span><span class="p">(</span><span class="n">errS_im</span><span class="p">,</span> <span class="n">valfmt</span><span class="o">=</span><span class="s2">"</span><span class="si">{x:.2f}</span><span class="s2"> t"</span><span class="p">)</span>
                 <span class="n">Stot_im</span><span class="p">,</span> <span class="n">Stot_cbar</span> <span class="o">=</span> <span class="n">heatmap</span><span class="p">(</span>
                     <span class="n">Stot</span><span class="p">,</span>
                     <span class="n">dimNames</span><span class="p">,</span>
                     <span class="n">varNames</span><span class="p">,</span>
                     <span class="n">ax</span><span class="o">=</span><span class="n">grid</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-                    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;plasma&quot;</span><span class="p">,</span>
-                    <span class="n">cbarlabel</span><span class="o">=</span><span class="s2">&quot;Total Sobol&#39; indices&quot;</span><span class="p">,</span>
+                    <span class="n">cmap</span><span class="o">=</span><span class="s2">"plasma"</span><span class="p">,</span>
+                    <span class="n">cbarlabel</span><span class="o">=</span><span class="s2">"Total Sobol' indices"</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="n">Stot_texts</span> <span class="o">=</span> <span class="n">annotate_heatmap</span><span class="p">(</span><span class="n">Stot_im</span><span class="p">,</span> <span class="n">valfmt</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{x:.2f}</span><span class="s2"> t&quot;</span><span class="p">)</span>
+                <span class="n">Stot_texts</span> <span class="o">=</span> <span class="n">annotate_heatmap</span><span class="p">(</span><span class="n">Stot_im</span><span class="p">,</span> <span class="n">valfmt</span><span class="o">=</span><span class="s2">"</span><span class="si">{x:.2f}</span><span class="s2"> t"</span><span class="p">)</span>
                 <span class="n">errStot_im</span><span class="p">,</span> <span class="n">errStot_cbar</span> <span class="o">=</span> <span class="n">heatmap</span><span class="p">(</span>
                     <span class="n">errStot</span><span class="p">,</span>
                     <span class="n">dimNames</span><span class="p">,</span>
                     <span class="n">varNames</span><span class="p">,</span>
                     <span class="n">ax</span><span class="o">=</span><span class="n">grid</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
-                    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;plasma&quot;</span><span class="p">,</span>
-                    <span class="n">cbarlabel</span><span class="o">=</span><span class="s2">&quot;Total Sobol&#39; indices&quot;</span><span class="p">,</span>
+                    <span class="n">cmap</span><span class="o">=</span><span class="s2">"plasma"</span><span class="p">,</span>
+                    <span class="n">cbarlabel</span><span class="o">=</span><span class="s2">"Total Sobol' indices"</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="n">errStot_texts</span> <span class="o">=</span> <span class="n">annotate_heatmap</span><span class="p">(</span><span class="n">errStot_im</span><span class="p">,</span> <span class="n">valfmt</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{x:.2f}</span><span class="s2"> t&quot;</span><span class="p">)</span>
+                <span class="n">errStot_texts</span> <span class="o">=</span> <span class="n">annotate_heatmap</span><span class="p">(</span><span class="n">errStot_im</span><span class="p">,</span> <span class="n">valfmt</span><span class="o">=</span><span class="s2">"</span><span class="si">{x:.2f}</span><span class="s2"> t"</span><span class="p">)</span>
                 <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
                 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">S</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
         <span class="k">pass</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">)</span></div>
+    <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">"default"</span><span class="p">)</span></div>
 
 
 
@@ -304,10 +304,10 @@
     <span class="n">col_labels</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">ax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">cbar_kw</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{},</span>
-    <span class="n">cbarlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">cbarlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a heatmap from a 2D array and axis labels.</span>
+<span class="w">    </span><span class="sd">"""Create a heatmap from a 2D array and axis labels.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -326,8 +326,8 @@
 <span class="sd">        to ``matplotlib.figure.Figure.colorbar``. Default is an empty</span>
 <span class="sd">        dictionary.</span>
 <span class="sd">    cbarlabel : str, optional</span>
-<span class="sd">        The text label assigned to the colorbar&#39;s y-axis. Default</span>
-<span class="sd">        is &quot;&quot;.</span>
+<span class="sd">        The text label assigned to the colorbar's y-axis. Default</span>
+<span class="sd">        is "".</span>
 <span class="sd">    **kwargs : dict</span>
 <span class="sd">        All other keyword arguments are forwarded directly to</span>
 <span class="sd">        ``ax.imshow``.</span>
@@ -339,38 +339,38 @@
 <span class="sd">        colormap.</span>
 <span class="sd">    cbar : matplotlib.colorbar.Colorbar</span>
 <span class="sd">        The colorbar instance tied to the image plotting axes.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">ax</span><span class="p">:</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
     <span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="n">cbar</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">cbar_kw</span><span class="p">)</span>
-    <span class="n">cbar</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">cbarlabel</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=-</span><span class="mi">90</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;bottom&quot;</span><span class="p">)</span>
+    <span class="n">cbar</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">cbarlabel</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=-</span><span class="mi">90</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">"bottom"</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">col_labels</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">row_labels</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">labeltop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">labelbottom</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">(),</span> <span class="n">rotation</span><span class="o">=-</span><span class="mi">30</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">rotation_mode</span><span class="o">=</span><span class="s2">&quot;anchor&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">(),</span> <span class="n">rotation</span><span class="o">=-</span><span class="mi">30</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"right"</span><span class="p">,</span> <span class="n">rotation_mode</span><span class="o">=</span><span class="s2">"anchor"</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[:]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">minor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">minor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s2">&quot;minor&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s2">&quot;minor&quot;</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s2">"minor"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"w"</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"-"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s2">"minor"</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cbar</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">annotate_heatmap</span><span class="p">(</span>
     <span class="n">im</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">valfmt</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{x:.3f}</span><span class="s2">&quot;</span><span class="p">,</span>
-    <span class="n">textcolors</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="s2">&quot;white&quot;</span><span class="p">),</span>
+    <span class="n">valfmt</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"</span><span class="si">{x:.3f}</span><span class="s2">"</span><span class="p">,</span>
+    <span class="n">textcolors</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"black"</span><span class="p">,</span> <span class="s2">"white"</span><span class="p">),</span>
     <span class="n">threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">textkw</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Annotate a text layer over a pre-existing heatmap image.</span>
+<span class="w">    </span><span class="sd">"""Annotate a text layer over a pre-existing heatmap image.</span>
 
 <span class="sd">    Loop through the individual cells of a heatmap grid and render a</span>
-<span class="sd">    text string displaying the cell&#39;s underlying value, adjusting</span>
+<span class="sd">    text string displaying the cell's underlying value, adjusting</span>
 <span class="sd">    the text color dynamically based on a defined threshold.</span>
 
 <span class="sd">    Parameters</span>
@@ -384,16 +384,16 @@
 <span class="sd">    valfmt : str or Any, optional</span>
 <span class="sd">        The formatting blueprint used for the text overlays. Accepts</span>
 <span class="sd">        a standard string format scheme or a Matplotlib Formatter</span>
-<span class="sd">        instance. Default is ``&quot;{x:.3f}&quot;``.</span>
+<span class="sd">        instance. Default is ``"{x:.3f}"``.</span>
 <span class="sd">    textcolors : tuple of str, optional</span>
 <span class="sd">        A pair of color definitions. The first string specifies the</span>
 <span class="sd">        color for values below `threshold`; the second handles</span>
-<span class="sd">        values above. Default is ``(&quot;black&quot;, &quot;white&quot;)``.</span>
+<span class="sd">        values above. Default is ``("black", "white")``.</span>
 <span class="sd">    threshold : float, optional</span>
 <span class="sd">        The value limit in raw data units determining when text</span>
 <span class="sd">        contrast colors switch. If `threshold` is None, the</span>
 <span class="sd">        separation boundary defaults to the center of the</span>
-<span class="sd">        colormap&#39;s range. Default is None.</span>
+<span class="sd">        colormap's range. Default is None.</span>
 <span class="sd">    **textkw : Any</span>
 <span class="sd">        All other keyword arguments are forwarded directly into each</span>
 <span class="sd">        individual ``ax.text`` rendering invocation.</span>
@@ -403,14 +403,14 @@
 <span class="sd">    list of matplotlib.text.Text</span>
 <span class="sd">        A list containing all text label instances rendered into the</span>
 <span class="sd">        heatmap grid.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">get_array</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">threshold</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">threshold</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">threshold</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">threshold</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">/</span> <span class="mf">2.0</span>
-    <span class="n">kw</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+    <span class="n">kw</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">"center"</span><span class="p">)</span>
     <span class="n">kw</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">textkw</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">valfmt</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">valfmt</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">ticker</span><span class="o">.</span><span class="n">StrMethodFormatter</span><span class="p">(</span><span class="n">valfmt</span><span class="p">)</span>

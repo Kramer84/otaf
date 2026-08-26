@@ -80,16 +80,16 @@
   <h1>Source code for otaf.example_models.models_3_D._model_3D_30_dof</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">"Kramer84"</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;get_system_of_constraints_assembly_model&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_distribution_params&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;eval_credal_set_constraints&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;eval_scaled_credal_set_constraints&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_scaled_credal_set_constraints_function&quot;</span>
-    <span class="s2">&quot;dim&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;sample_multiplier&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;no_tol&quot;</span><span class="p">,</span> 
+    <span class="s2">"get_system_of_constraints_assembly_model"</span><span class="p">,</span>
+    <span class="s2">"get_distribution_params"</span><span class="p">,</span>
+    <span class="s2">"eval_credal_set_constraints"</span><span class="p">,</span>
+    <span class="s2">"eval_scaled_credal_set_constraints"</span><span class="p">,</span>
+    <span class="s2">"get_scaled_credal_set_constraints_function"</span>
+    <span class="s2">"dim"</span><span class="p">,</span>
+    <span class="s2">"sample_multiplier"</span><span class="p">,</span>
+    <span class="s2">"no_tol"</span><span class="p">,</span> 
     <span class="p">]</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
@@ -103,9 +103,9 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">LinearizationStrategy</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="n">INSCRIBED</span> <span class="o">=</span> <span class="s2">&quot;inscribed&quot;</span>
-    <span class="n">MEAN</span> <span class="o">=</span> <span class="s2">&quot;mean&quot;</span>
-    <span class="n">CIRCUMSCRIBED</span> <span class="o">=</span> <span class="s2">&quot;circumscribed&quot;</span>
+    <span class="n">INSCRIBED</span> <span class="o">=</span> <span class="s2">"inscribed"</span>
+    <span class="n">MEAN</span> <span class="o">=</span> <span class="s2">"mean"</span>
+    <span class="n">CIRCUMSCRIBED</span> <span class="o">=</span> <span class="s2">"circumscribed"</span>
 
 
 <span class="n">MatrixBundle</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">[</span>
@@ -121,7 +121,7 @@
     <span class="n">Nd</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
     <span class="n">strategy</span><span class="p">:</span> <span class="n">LinearizationStrategy</span> <span class="o">=</span> <span class="n">LinearizationStrategy</span><span class="o">.</span><span class="n">CIRCUMSCRIBED</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MatrixBundle</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build the equality and inequality constraint matrices.</span>
+<span class="w">    </span><span class="sd">"""Build the equality and inequality constraint matrices.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -144,12 +144,12 @@
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        If `L` does not have shape (11,) or if `Nd` is less than 3.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">L</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">11</span><span class="p">,):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;L must have shape (11,), got </span><span class="si">{</span><span class="n">L</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"L must have shape (11,), got </span><span class="si">{</span><span class="n">L</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">Nd</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Nd must be &gt;= 3, got </span><span class="si">{</span><span class="n">Nd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Nd must be &gt;= 3, got </span><span class="si">{</span><span class="n">Nd</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="n">NI</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">Nd</span>
     <span class="n">A_eq_Def</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">NC</span><span class="p">,</span> <span class="n">NX</span><span class="p">))</span>
     <span class="n">A_eq_Gap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">NC</span><span class="p">,</span> <span class="n">NG</span><span class="p">))</span>
@@ -212,138 +212,138 @@
 
 
 <span class="n">x_full_labels</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;w_1a1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;alpha_1a1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;beta_1a1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;w_2a2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;alpha_2a2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;beta_2a2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_1b1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_1b1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;alpha_1b1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;beta_1b1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_2b2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_2b2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;alpha_2b2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;beta_2b2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_1c1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_1c1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;alpha_1c1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;beta_1c1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_2c2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_2c2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;alpha_2c2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;beta_2c2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;d_1b&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;d_3b&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;d_1c&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;d_4c&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_1g1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_1g1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_2g2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_2g2&quot;</span><span class="p">,</span>
+    <span class="s2">"w_1a1"</span><span class="p">,</span>
+    <span class="s2">"alpha_1a1"</span><span class="p">,</span>
+    <span class="s2">"beta_1a1"</span><span class="p">,</span>
+    <span class="s2">"w_2a2"</span><span class="p">,</span>
+    <span class="s2">"alpha_2a2"</span><span class="p">,</span>
+    <span class="s2">"beta_2a2"</span><span class="p">,</span>
+    <span class="s2">"u_1b1"</span><span class="p">,</span>
+    <span class="s2">"v_1b1"</span><span class="p">,</span>
+    <span class="s2">"alpha_1b1"</span><span class="p">,</span>
+    <span class="s2">"beta_1b1"</span><span class="p">,</span>
+    <span class="s2">"u_2b2"</span><span class="p">,</span>
+    <span class="s2">"v_2b2"</span><span class="p">,</span>
+    <span class="s2">"alpha_2b2"</span><span class="p">,</span>
+    <span class="s2">"beta_2b2"</span><span class="p">,</span>
+    <span class="s2">"u_1c1"</span><span class="p">,</span>
+    <span class="s2">"v_1c1"</span><span class="p">,</span>
+    <span class="s2">"alpha_1c1"</span><span class="p">,</span>
+    <span class="s2">"beta_1c1"</span><span class="p">,</span>
+    <span class="s2">"u_2c2"</span><span class="p">,</span>
+    <span class="s2">"v_2c2"</span><span class="p">,</span>
+    <span class="s2">"alpha_2c2"</span><span class="p">,</span>
+    <span class="s2">"beta_2c2"</span><span class="p">,</span>
+    <span class="s2">"d_1b"</span><span class="p">,</span>
+    <span class="s2">"d_3b"</span><span class="p">,</span>
+    <span class="s2">"d_1c"</span><span class="p">,</span>
+    <span class="s2">"d_4c"</span><span class="p">,</span>
+    <span class="s2">"u_1g1"</span><span class="p">,</span>
+    <span class="s2">"v_1g1"</span><span class="p">,</span>
+    <span class="s2">"u_2g2"</span><span class="p">,</span>
+    <span class="s2">"v_2g2"</span><span class="p">,</span>
 <span class="p">]</span>
 <span class="n">g_labels</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;u_1a2a&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_1a2a&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;gamma_1a2a&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_3b1b&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_3b1b&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;w_3b1b&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;alpha_3b1b&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;beta_3b1b&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;gamma_3b1b&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_4c1c&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_4c1c&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;w_4c1c&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;alpha_4c1c&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;beta_4c1c&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;gamma_4c1c&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_2g1g_1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_2g1g_2&quot;</span><span class="p">,</span>
+    <span class="s2">"u_1a2a"</span><span class="p">,</span>
+    <span class="s2">"v_1a2a"</span><span class="p">,</span>
+    <span class="s2">"gamma_1a2a"</span><span class="p">,</span>
+    <span class="s2">"u_3b1b"</span><span class="p">,</span>
+    <span class="s2">"v_3b1b"</span><span class="p">,</span>
+    <span class="s2">"w_3b1b"</span><span class="p">,</span>
+    <span class="s2">"alpha_3b1b"</span><span class="p">,</span>
+    <span class="s2">"beta_3b1b"</span><span class="p">,</span>
+    <span class="s2">"gamma_3b1b"</span><span class="p">,</span>
+    <span class="s2">"u_4c1c"</span><span class="p">,</span>
+    <span class="s2">"v_4c1c"</span><span class="p">,</span>
+    <span class="s2">"w_4c1c"</span><span class="p">,</span>
+    <span class="s2">"alpha_4c1c"</span><span class="p">,</span>
+    <span class="s2">"beta_4c1c"</span><span class="p">,</span>
+    <span class="s2">"gamma_4c1c"</span><span class="p">,</span>
+    <span class="s2">"u_2g1g_1"</span><span class="p">,</span>
+    <span class="s2">"u_2g1g_2"</span><span class="p">,</span>
 <span class="p">]</span>
 <span class="n">x_full_labels_mapping</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;w_1a1&quot;</span><span class="p">:</span> <span class="s2">&quot;u_d_0&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;alpha_1a1&quot;</span><span class="p">:</span> <span class="s2">&quot;beta_d_0&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;beta_1a1&quot;</span><span class="p">:</span> <span class="s2">&quot;gamma_d_0&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;w_2a2&quot;</span><span class="p">:</span> <span class="s2">&quot;u_d_1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;alpha_2a2&quot;</span><span class="p">:</span> <span class="s2">&quot;beta_d_1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;beta_2a2&quot;</span><span class="p">:</span> <span class="s2">&quot;gamma_d_1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_1b1&quot;</span><span class="p">:</span> <span class="s2">&quot;v_d_2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_1b1&quot;</span><span class="p">:</span> <span class="s2">&quot;w_d_2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;alpha_1b1&quot;</span><span class="p">:</span> <span class="s2">&quot;beta_d_2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;beta_1b1&quot;</span><span class="p">:</span> <span class="s2">&quot;gamma_d_2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_2b2&quot;</span><span class="p">:</span> <span class="s2">&quot;v_d_3&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_2b2&quot;</span><span class="p">:</span> <span class="s2">&quot;w_d_3&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;alpha_2b2&quot;</span><span class="p">:</span> <span class="s2">&quot;beta_d_3&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;beta_2b2&quot;</span><span class="p">:</span> <span class="s2">&quot;gamma_d_3&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_1c1&quot;</span><span class="p">:</span> <span class="s2">&quot;v_d_4&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_1c1&quot;</span><span class="p">:</span> <span class="s2">&quot;w_d_4&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;alpha_1c1&quot;</span><span class="p">:</span> <span class="s2">&quot;beta_d_4&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;beta_1c1&quot;</span><span class="p">:</span> <span class="s2">&quot;gamma_d_4&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_2c2&quot;</span><span class="p">:</span> <span class="s2">&quot;v_d_5&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_2c2&quot;</span><span class="p">:</span> <span class="s2">&quot;w_d_5&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;alpha_2c2&quot;</span><span class="p">:</span> <span class="s2">&quot;beta_d_5&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;beta_2c2&quot;</span><span class="p">:</span> <span class="s2">&quot;gamma_d_5&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;d_1b&quot;</span><span class="p">:</span> <span class="s2">&quot;d_d_2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;d_3b&quot;</span><span class="p">:</span> <span class="s2">&quot;d_d_6&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;d_1c&quot;</span><span class="p">:</span> <span class="s2">&quot;d_d_4&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;d_4c&quot;</span><span class="p">:</span> <span class="s2">&quot;d_d_7&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_1g1&quot;</span><span class="p">:</span> <span class="s2">&quot;v_d_8&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_1g1&quot;</span><span class="p">:</span> <span class="s2">&quot;w_d_8&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_2g2&quot;</span><span class="p">:</span> <span class="s2">&quot;beta_d_8&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_2g2&quot;</span><span class="p">:</span> <span class="s2">&quot;gamma_d_8&quot;</span><span class="p">,</span>
+    <span class="s2">"w_1a1"</span><span class="p">:</span> <span class="s2">"u_d_0"</span><span class="p">,</span>
+    <span class="s2">"alpha_1a1"</span><span class="p">:</span> <span class="s2">"beta_d_0"</span><span class="p">,</span>
+    <span class="s2">"beta_1a1"</span><span class="p">:</span> <span class="s2">"gamma_d_0"</span><span class="p">,</span>
+    <span class="s2">"w_2a2"</span><span class="p">:</span> <span class="s2">"u_d_1"</span><span class="p">,</span>
+    <span class="s2">"alpha_2a2"</span><span class="p">:</span> <span class="s2">"beta_d_1"</span><span class="p">,</span>
+    <span class="s2">"beta_2a2"</span><span class="p">:</span> <span class="s2">"gamma_d_1"</span><span class="p">,</span>
+    <span class="s2">"u_1b1"</span><span class="p">:</span> <span class="s2">"v_d_2"</span><span class="p">,</span>
+    <span class="s2">"v_1b1"</span><span class="p">:</span> <span class="s2">"w_d_2"</span><span class="p">,</span>
+    <span class="s2">"alpha_1b1"</span><span class="p">:</span> <span class="s2">"beta_d_2"</span><span class="p">,</span>
+    <span class="s2">"beta_1b1"</span><span class="p">:</span> <span class="s2">"gamma_d_2"</span><span class="p">,</span>
+    <span class="s2">"u_2b2"</span><span class="p">:</span> <span class="s2">"v_d_3"</span><span class="p">,</span>
+    <span class="s2">"v_2b2"</span><span class="p">:</span> <span class="s2">"w_d_3"</span><span class="p">,</span>
+    <span class="s2">"alpha_2b2"</span><span class="p">:</span> <span class="s2">"beta_d_3"</span><span class="p">,</span>
+    <span class="s2">"beta_2b2"</span><span class="p">:</span> <span class="s2">"gamma_d_3"</span><span class="p">,</span>
+    <span class="s2">"u_1c1"</span><span class="p">:</span> <span class="s2">"v_d_4"</span><span class="p">,</span>
+    <span class="s2">"v_1c1"</span><span class="p">:</span> <span class="s2">"w_d_4"</span><span class="p">,</span>
+    <span class="s2">"alpha_1c1"</span><span class="p">:</span> <span class="s2">"beta_d_4"</span><span class="p">,</span>
+    <span class="s2">"beta_1c1"</span><span class="p">:</span> <span class="s2">"gamma_d_4"</span><span class="p">,</span>
+    <span class="s2">"u_2c2"</span><span class="p">:</span> <span class="s2">"v_d_5"</span><span class="p">,</span>
+    <span class="s2">"v_2c2"</span><span class="p">:</span> <span class="s2">"w_d_5"</span><span class="p">,</span>
+    <span class="s2">"alpha_2c2"</span><span class="p">:</span> <span class="s2">"beta_d_5"</span><span class="p">,</span>
+    <span class="s2">"beta_2c2"</span><span class="p">:</span> <span class="s2">"gamma_d_5"</span><span class="p">,</span>
+    <span class="s2">"d_1b"</span><span class="p">:</span> <span class="s2">"d_d_2"</span><span class="p">,</span>
+    <span class="s2">"d_3b"</span><span class="p">:</span> <span class="s2">"d_d_6"</span><span class="p">,</span>
+    <span class="s2">"d_1c"</span><span class="p">:</span> <span class="s2">"d_d_4"</span><span class="p">,</span>
+    <span class="s2">"d_4c"</span><span class="p">:</span> <span class="s2">"d_d_7"</span><span class="p">,</span>
+    <span class="s2">"u_1g1"</span><span class="p">:</span> <span class="s2">"v_d_8"</span><span class="p">,</span>
+    <span class="s2">"v_1g1"</span><span class="p">:</span> <span class="s2">"w_d_8"</span><span class="p">,</span>
+    <span class="s2">"u_2g2"</span><span class="p">:</span> <span class="s2">"beta_d_8"</span><span class="p">,</span>
+    <span class="s2">"v_2g2"</span><span class="p">:</span> <span class="s2">"gamma_d_8"</span><span class="p">,</span>
 <span class="p">}</span>
 <span class="n">g_labels_mapping</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;u_1a2a&quot;</span><span class="p">:</span> <span class="s2">&quot;v_g_0&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_1a2a&quot;</span><span class="p">:</span> <span class="s2">&quot;w_g_0&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;gamma_1a2a&quot;</span><span class="p">:</span> <span class="s2">&quot;alpha_g_0&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_3b1b&quot;</span><span class="p">:</span> <span class="s2">&quot;u_g_1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_3b1b&quot;</span><span class="p">:</span> <span class="s2">&quot;v_g_1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;w_3b1b&quot;</span><span class="p">:</span> <span class="s2">&quot;w_g_1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;alpha_3b1b&quot;</span><span class="p">:</span> <span class="s2">&quot;alpha_g_1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;beta_3b1b&quot;</span><span class="p">:</span> <span class="s2">&quot;beta_g_1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;gamma_3b1b&quot;</span><span class="p">:</span> <span class="s2">&quot;gamma_g_1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_4c1c&quot;</span><span class="p">:</span> <span class="s2">&quot;u_g_2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_4c1c&quot;</span><span class="p">:</span> <span class="s2">&quot;v_g_2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;w_4c1c&quot;</span><span class="p">:</span> <span class="s2">&quot;w_g_2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;alpha_4c1c&quot;</span><span class="p">:</span> <span class="s2">&quot;alpha_g_2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;beta_4c1c&quot;</span><span class="p">:</span> <span class="s2">&quot;beta_g_2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;gamma_4c1c&quot;</span><span class="p">:</span> <span class="s2">&quot;gamma_g_2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_2g1g_1&quot;</span><span class="p">:</span> <span class="s2">&quot;u_g_3&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_2g1g_2&quot;</span><span class="p">:</span> <span class="s2">&quot;u_g_4&quot;</span><span class="p">,</span>
+    <span class="s2">"u_1a2a"</span><span class="p">:</span> <span class="s2">"v_g_0"</span><span class="p">,</span>
+    <span class="s2">"v_1a2a"</span><span class="p">:</span> <span class="s2">"w_g_0"</span><span class="p">,</span>
+    <span class="s2">"gamma_1a2a"</span><span class="p">:</span> <span class="s2">"alpha_g_0"</span><span class="p">,</span>
+    <span class="s2">"u_3b1b"</span><span class="p">:</span> <span class="s2">"u_g_1"</span><span class="p">,</span>
+    <span class="s2">"v_3b1b"</span><span class="p">:</span> <span class="s2">"v_g_1"</span><span class="p">,</span>
+    <span class="s2">"w_3b1b"</span><span class="p">:</span> <span class="s2">"w_g_1"</span><span class="p">,</span>
+    <span class="s2">"alpha_3b1b"</span><span class="p">:</span> <span class="s2">"alpha_g_1"</span><span class="p">,</span>
+    <span class="s2">"beta_3b1b"</span><span class="p">:</span> <span class="s2">"beta_g_1"</span><span class="p">,</span>
+    <span class="s2">"gamma_3b1b"</span><span class="p">:</span> <span class="s2">"gamma_g_1"</span><span class="p">,</span>
+    <span class="s2">"u_4c1c"</span><span class="p">:</span> <span class="s2">"u_g_2"</span><span class="p">,</span>
+    <span class="s2">"v_4c1c"</span><span class="p">:</span> <span class="s2">"v_g_2"</span><span class="p">,</span>
+    <span class="s2">"w_4c1c"</span><span class="p">:</span> <span class="s2">"w_g_2"</span><span class="p">,</span>
+    <span class="s2">"alpha_4c1c"</span><span class="p">:</span> <span class="s2">"alpha_g_2"</span><span class="p">,</span>
+    <span class="s2">"beta_4c1c"</span><span class="p">:</span> <span class="s2">"beta_g_2"</span><span class="p">,</span>
+    <span class="s2">"gamma_4c1c"</span><span class="p">:</span> <span class="s2">"gamma_g_2"</span><span class="p">,</span>
+    <span class="s2">"u_2g1g_1"</span><span class="p">:</span> <span class="s2">"u_g_3"</span><span class="p">,</span>
+    <span class="s2">"u_2g1g_2"</span><span class="p">:</span> <span class="s2">"u_g_4"</span><span class="p">,</span>
 <span class="p">}</span>
 <span class="n">x_mp_labels</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;w_1a1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;w_1a1_C&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;w_1a1_H&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;w_2a2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;w_2a2_C&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;w_2a2_H&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_1b1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_1b1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_1b1_B&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_1b1_B&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_2b2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_2b2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_2b2_E&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_2b2_E&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_1c1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_1c1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_1c1_D&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_1c1_D&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_2c2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_2c2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_2c2_F&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_2c2_F&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;d_1b&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;d_3b&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;d_1c&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;d_4c&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_1g1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_1g1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;u_2g2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;v_2g2&quot;</span><span class="p">,</span>
+    <span class="s2">"w_1a1"</span><span class="p">,</span>
+    <span class="s2">"w_1a1_C"</span><span class="p">,</span>
+    <span class="s2">"w_1a1_H"</span><span class="p">,</span>
+    <span class="s2">"w_2a2"</span><span class="p">,</span>
+    <span class="s2">"w_2a2_C"</span><span class="p">,</span>
+    <span class="s2">"w_2a2_H"</span><span class="p">,</span>
+    <span class="s2">"u_1b1"</span><span class="p">,</span>
+    <span class="s2">"v_1b1"</span><span class="p">,</span>
+    <span class="s2">"u_1b1_B"</span><span class="p">,</span>
+    <span class="s2">"v_1b1_B"</span><span class="p">,</span>
+    <span class="s2">"u_2b2"</span><span class="p">,</span>
+    <span class="s2">"v_2b2"</span><span class="p">,</span>
+    <span class="s2">"u_2b2_E"</span><span class="p">,</span>
+    <span class="s2">"v_2b2_E"</span><span class="p">,</span>
+    <span class="s2">"u_1c1"</span><span class="p">,</span>
+    <span class="s2">"v_1c1"</span><span class="p">,</span>
+    <span class="s2">"u_1c1_D"</span><span class="p">,</span>
+    <span class="s2">"v_1c1_D"</span><span class="p">,</span>
+    <span class="s2">"u_2c2"</span><span class="p">,</span>
+    <span class="s2">"v_2c2"</span><span class="p">,</span>
+    <span class="s2">"u_2c2_F"</span><span class="p">,</span>
+    <span class="s2">"v_2c2_F"</span><span class="p">,</span>
+    <span class="s2">"d_1b"</span><span class="p">,</span>
+    <span class="s2">"d_3b"</span><span class="p">,</span>
+    <span class="s2">"d_1c"</span><span class="p">,</span>
+    <span class="s2">"d_4c"</span><span class="p">,</span>
+    <span class="s2">"u_1g1"</span><span class="p">,</span>
+    <span class="s2">"v_1g1"</span><span class="p">,</span>
+    <span class="s2">"u_2g2"</span><span class="p">,</span>
+    <span class="s2">"v_2g2"</span><span class="p">,</span>
 <span class="p">]</span>
 
 
@@ -362,7 +362,7 @@
         <span class="o">-</span><span class="mi">30</span><span class="p">,</span>
     <span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the transformation matrix from MP to full defect space.</span>
+<span class="w">    </span><span class="sd">"""Compute the transformation matrix from MP to full defect space.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -374,7 +374,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    np.ndarray</span>
 <span class="sd">        A 30x30 transformation matrix.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
     <span class="n">D</span> <span class="o">=</span> <span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">L</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">-</span> <span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">L</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span>
     <span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
@@ -439,7 +439,7 @@
     <span class="n">Nd</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
     <span class="n">strategy</span><span class="p">:</span> <span class="n">LinearizationStrategy</span> <span class="o">=</span> <span class="n">LinearizationStrategy</span><span class="o">.</span><span class="n">CIRCUMSCRIBED</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">otaf</span><span class="o">.</span><span class="n">SystemOfConstraintsAssemblyModel</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct the system of constraints assembly model.</span>
+<span class="w">    </span><span class="sd">"""Construct the system of constraints assembly model.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -457,7 +457,7 @@
 <span class="sd">    otaf.SystemOfConstraintsAssemblyModel</span>
 <span class="sd">        The initialized assembly model with embedded optimization</span>
 <span class="sd">        variables.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">mats</span> <span class="o">=</span> <span class="n">build_constraint_matrices</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">Nd</span><span class="p">,</span> <span class="n">strategy</span><span class="p">)</span>
     <span class="n">SOCAM</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">SystemOfConstraintsAssemblyModel</span><span class="p">(</span><span class="n">matrices</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">mats</span><span class="p">))</span>
     <span class="n">d_labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">(</span><span class="n">x_full_labels_mapping</span><span class="p">[</span><span class="n">lab</span><span class="p">])</span> <span class="k">for</span> <span class="n">lab</span> <span class="ow">in</span> <span class="n">x_full_labels</span><span class="p">]</span>
@@ -474,7 +474,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">get_distribution_params</span><span class="p">(</span>
     <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">capa</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">param_set</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute defect distribution parameters based on the parameter set.</span>
+<span class="w">    </span><span class="sd">"""Compute defect distribution parameters based on the parameter set.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -496,7 +496,7 @@
 <span class="sd">        A 1D array of calculated standard deviations.</span>
 <span class="sd">    mu_arr : np.ndarray</span>
 <span class="sd">        A 1D array of calculated mean parameter offsets.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">param_set</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">mu_d_ext</span><span class="p">,</span> <span class="n">sigma_d_ext</span> <span class="o">=</span> <span class="p">(</span><span class="mf">20.0</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">)</span>
         <span class="n">mu_d_int</span><span class="p">,</span> <span class="n">sigma_d_int</span> <span class="o">=</span> <span class="p">(</span><span class="mf">19.8</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">)</span>
@@ -537,7 +537,7 @@
     <span class="n">capa</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">param_set</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Evaluate the normalized credal set boundary conditions.</span>
+<span class="w">    </span><span class="sd">"""Evaluate the normalized credal set boundary conditions.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -554,7 +554,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    np.ndarray</span>
 <span class="sd">        An array containing the evaluated constraint metrics.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">param_set</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">mu_d_ext</span><span class="p">,</span> <span class="n">sigma_d_ext</span> <span class="o">=</span> <span class="p">(</span><span class="mf">20.0</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">)</span>
         <span class="n">mu_d_int</span><span class="p">,</span> <span class="n">sigma_d_int</span> <span class="o">=</span> <span class="p">(</span><span class="mf">19.8</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">)</span>
@@ -621,7 +621,7 @@
     <span class="n">capa</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">param_set</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Map scaled deviations to real values and evaluate constraints.</span>
+<span class="w">    </span><span class="sd">"""Map scaled deviations to real values and evaluate constraints.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -644,7 +644,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    np.ndarray</span>
 <span class="sd">        The calculated constraint evaluation bounds array.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">x_real</span> <span class="o">=</span> <span class="n">x_scaled</span> <span class="o">*</span> <span class="n">max_std_vect</span>
     <span class="n">constraint_array</span> <span class="o">=</span> <span class="n">eval_credal_set_constraints</span><span class="p">(</span>
         <span class="n">x_real</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span> <span class="n">capa</span><span class="o">=</span><span class="n">capa</span><span class="p">,</span> <span class="n">param_set</span><span class="o">=</span><span class="n">param_set</span>
@@ -665,7 +665,7 @@
     <span class="n">capa</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">param_set</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a wrapped lambda function for scaled constraints.</span>
+<span class="w">    </span><span class="sd">"""Generate a wrapped lambda function for scaled constraints.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -687,7 +687,7 @@
 <span class="sd">    Callable[[np.ndarray], np.ndarray]</span>
 <span class="sd">        A single-argument function mapping `x_scaled` to its</span>
 <span class="sd">        evaluated constraint array.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="k">lambda</span> <span class="n">x_scaled</span><span class="p">:</span> <span class="n">eval_scaled_credal_set_constraints</span><span class="p">(</span>
         <span class="n">x_scaled</span><span class="p">,</span>
         <span class="n">max_std_vect</span><span class="p">,</span>

@@ -80,15 +80,15 @@
   <h1>Source code for otaf.example_models.models_2_D._model_2D_16_dof</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">"Kramer84"</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;get_system_of_constraints_assembly_model&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_distribution_params&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;eval_scaled_credal_set_constraints&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_scaled_credal_set_constraints_function&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;dim&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;sample_multiplier&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;no_tol&quot;</span><span class="p">,</span> 
+    <span class="s2">"get_system_of_constraints_assembly_model"</span><span class="p">,</span>
+    <span class="s2">"get_distribution_params"</span><span class="p">,</span>
+    <span class="s2">"eval_scaled_credal_set_constraints"</span><span class="p">,</span>
+    <span class="s2">"get_scaled_credal_set_constraints_function"</span><span class="p">,</span>
+    <span class="s2">"dim"</span><span class="p">,</span>
+    <span class="s2">"sample_multiplier"</span><span class="p">,</span>
+    <span class="s2">"no_tol"</span><span class="p">,</span> 
 <span class="p">]</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
@@ -106,7 +106,7 @@
     <span class="n">lM</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span>
     <span class="n">lF</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.2</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate the system configuration data for the assembly.</span>
+<span class="w">    </span><span class="sd">"""Generate the system configuration data for the assembly.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -130,7 +130,7 @@
 <span class="sd">    dict</span>
 <span class="sd">        A configuration dictionary detailing components, frames,</span>
 <span class="sd">        points, interactions, loops, and global constraints.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">P1A0</span><span class="p">,</span> <span class="n">P1A1</span><span class="p">,</span> <span class="n">P1A2</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">-</span> <span class="n">lM</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">hM</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
         <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">L1</span> <span class="o">-</span> <span class="n">lM</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
@@ -224,101 +224,101 @@
     <span class="p">)</span>
     <span class="n">TP2eE0</span><span class="p">,</span> <span class="n">TP2eE1</span> <span class="o">=</span> <span class="p">(</span><span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP2e</span><span class="p">,</span> <span class="n">P2E0</span><span class="p">),</span> <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">tfrt</span><span class="p">(</span><span class="n">RP2e</span><span class="p">,</span> <span class="n">P2E1</span><span class="p">))</span>
     <span class="n">system_data</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;PARTS&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">RP1a</span><span class="p">,</span>
-                    <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;NONE&quot;</span><span class="p">],</span>
-                    <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;A0&quot;</span><span class="p">:</span> <span class="n">P1A0</span><span class="p">,</span> <span class="s2">&quot;A1&quot;</span><span class="p">:</span> <span class="n">P1A1</span><span class="p">,</span> <span class="s2">&quot;A2&quot;</span><span class="p">:</span> <span class="n">P1A2</span><span class="p">},</span>
-                    <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;P2a&quot;</span><span class="p">],</span>
-                    <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FLOATING&quot;</span><span class="p">],</span>
+        <span class="s2">"PARTS"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"1"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"a"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">"FRAME"</span><span class="p">:</span> <span class="n">RP1a</span><span class="p">,</span>
+                    <span class="s2">"TYPE"</span><span class="p">:</span> <span class="s2">"plane"</span><span class="p">,</span>
+                    <span class="s2">"CONSTRAINTS_D"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"NONE"</span><span class="p">],</span>
+                    <span class="s2">"POINTS"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"A0"</span><span class="p">:</span> <span class="n">P1A0</span><span class="p">,</span> <span class="s2">"A1"</span><span class="p">:</span> <span class="n">P1A1</span><span class="p">,</span> <span class="s2">"A2"</span><span class="p">:</span> <span class="n">P1A2</span><span class="p">},</span>
+                    <span class="s2">"INTERACTIONS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"P2a"</span><span class="p">],</span>
+                    <span class="s2">"CONSTRAINTS_G"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"FLOATING"</span><span class="p">],</span>
                 <span class="p">},</span>
-                <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">RP1b</span><span class="p">,</span>
-                    <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;NONE&quot;</span><span class="p">],</span>
-                    <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;B0&quot;</span><span class="p">:</span> <span class="n">P1B0</span><span class="p">,</span> <span class="s2">&quot;B1&quot;</span><span class="p">:</span> <span class="n">P1B1</span><span class="p">,</span> <span class="s2">&quot;B2&quot;</span><span class="p">:</span> <span class="n">P1B2</span><span class="p">},</span>
-                    <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;P2b&quot;</span><span class="p">],</span>
-                    <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FLOATING&quot;</span><span class="p">],</span>
+                <span class="s2">"b"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">"FRAME"</span><span class="p">:</span> <span class="n">RP1b</span><span class="p">,</span>
+                    <span class="s2">"TYPE"</span><span class="p">:</span> <span class="s2">"plane"</span><span class="p">,</span>
+                    <span class="s2">"CONSTRAINTS_D"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"NONE"</span><span class="p">],</span>
+                    <span class="s2">"POINTS"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"B0"</span><span class="p">:</span> <span class="n">P1B0</span><span class="p">,</span> <span class="s2">"B1"</span><span class="p">:</span> <span class="n">P1B1</span><span class="p">,</span> <span class="s2">"B2"</span><span class="p">:</span> <span class="n">P1B2</span><span class="p">},</span>
+                    <span class="s2">"INTERACTIONS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"P2b"</span><span class="p">],</span>
+                    <span class="s2">"CONSTRAINTS_G"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"FLOATING"</span><span class="p">],</span>
                 <span class="p">},</span>
-                <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">RP1c</span><span class="p">,</span>
-                    <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;NONE&quot;</span><span class="p">],</span>
-                    <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;C0&quot;</span><span class="p">:</span> <span class="n">P1C0</span><span class="p">,</span> <span class="s2">&quot;C1&quot;</span><span class="p">:</span> <span class="n">P1C1</span><span class="p">,</span> <span class="s2">&quot;C2&quot;</span><span class="p">:</span> <span class="n">P1C2</span><span class="p">},</span>
-                    <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;P2c&quot;</span><span class="p">],</span>
-                    <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FLOATING&quot;</span><span class="p">],</span>
+                <span class="s2">"c"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">"FRAME"</span><span class="p">:</span> <span class="n">RP1c</span><span class="p">,</span>
+                    <span class="s2">"TYPE"</span><span class="p">:</span> <span class="s2">"plane"</span><span class="p">,</span>
+                    <span class="s2">"CONSTRAINTS_D"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"NONE"</span><span class="p">],</span>
+                    <span class="s2">"POINTS"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"C0"</span><span class="p">:</span> <span class="n">P1C0</span><span class="p">,</span> <span class="s2">"C1"</span><span class="p">:</span> <span class="n">P1C1</span><span class="p">,</span> <span class="s2">"C2"</span><span class="p">:</span> <span class="n">P1C2</span><span class="p">},</span>
+                    <span class="s2">"INTERACTIONS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"P2c"</span><span class="p">],</span>
+                    <span class="s2">"CONSTRAINTS_G"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"FLOATING"</span><span class="p">],</span>
                 <span class="p">},</span>
-                <span class="s2">&quot;d&quot;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">RP1d</span><span class="p">,</span>
-                    <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;NONE&quot;</span><span class="p">],</span>
-                    <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;D0&quot;</span><span class="p">:</span> <span class="n">P1D0</span><span class="p">,</span> <span class="s2">&quot;D1&quot;</span><span class="p">:</span> <span class="n">P1D1</span><span class="p">,</span> <span class="s2">&quot;D2&quot;</span><span class="p">:</span> <span class="n">P1D2</span><span class="p">},</span>
-                    <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;P2d&quot;</span><span class="p">],</span>
-                    <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FLOATING&quot;</span><span class="p">],</span>
+                <span class="s2">"d"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">"FRAME"</span><span class="p">:</span> <span class="n">RP1d</span><span class="p">,</span>
+                    <span class="s2">"TYPE"</span><span class="p">:</span> <span class="s2">"plane"</span><span class="p">,</span>
+                    <span class="s2">"CONSTRAINTS_D"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"NONE"</span><span class="p">],</span>
+                    <span class="s2">"POINTS"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"D0"</span><span class="p">:</span> <span class="n">P1D0</span><span class="p">,</span> <span class="s2">"D1"</span><span class="p">:</span> <span class="n">P1D1</span><span class="p">,</span> <span class="s2">"D2"</span><span class="p">:</span> <span class="n">P1D2</span><span class="p">},</span>
+                    <span class="s2">"INTERACTIONS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"P2d"</span><span class="p">],</span>
+                    <span class="s2">"CONSTRAINTS_G"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"FLOATING"</span><span class="p">],</span>
                 <span class="p">},</span>
-                <span class="s2">&quot;e&quot;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">RP1e</span><span class="p">,</span>
-                    <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;PERFECT&quot;</span><span class="p">],</span>
-                    <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;E0&quot;</span><span class="p">:</span> <span class="n">P1E0</span><span class="p">,</span> <span class="s2">&quot;E1&quot;</span><span class="p">:</span> <span class="n">P1E1</span><span class="p">},</span>
-                    <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;P2e&quot;</span><span class="p">],</span>
-                    <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SLIDING&quot;</span><span class="p">],</span>
+                <span class="s2">"e"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">"FRAME"</span><span class="p">:</span> <span class="n">RP1e</span><span class="p">,</span>
+                    <span class="s2">"TYPE"</span><span class="p">:</span> <span class="s2">"plane"</span><span class="p">,</span>
+                    <span class="s2">"CONSTRAINTS_D"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"PERFECT"</span><span class="p">],</span>
+                    <span class="s2">"POINTS"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"E0"</span><span class="p">:</span> <span class="n">P1E0</span><span class="p">,</span> <span class="s2">"E1"</span><span class="p">:</span> <span class="n">P1E1</span><span class="p">},</span>
+                    <span class="s2">"INTERACTIONS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"P2e"</span><span class="p">],</span>
+                    <span class="s2">"CONSTRAINTS_G"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"SLIDING"</span><span class="p">],</span>
                 <span class="p">},</span>
             <span class="p">},</span>
-            <span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">RP2a</span><span class="p">,</span>
-                    <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;NONE&quot;</span><span class="p">],</span>
-                    <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;A0&quot;</span><span class="p">:</span> <span class="n">P2A0</span><span class="p">,</span> <span class="s2">&quot;A1&quot;</span><span class="p">:</span> <span class="n">P2A1</span><span class="p">,</span> <span class="s2">&quot;A2&quot;</span><span class="p">:</span> <span class="n">P2A2</span><span class="p">},</span>
-                    <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;P1a&quot;</span><span class="p">],</span>
-                    <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FLOATING&quot;</span><span class="p">],</span>
+            <span class="s2">"2"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"a"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">"FRAME"</span><span class="p">:</span> <span class="n">RP2a</span><span class="p">,</span>
+                    <span class="s2">"TYPE"</span><span class="p">:</span> <span class="s2">"plane"</span><span class="p">,</span>
+                    <span class="s2">"CONSTRAINTS_D"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"NONE"</span><span class="p">],</span>
+                    <span class="s2">"POINTS"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"A0"</span><span class="p">:</span> <span class="n">P2A0</span><span class="p">,</span> <span class="s2">"A1"</span><span class="p">:</span> <span class="n">P2A1</span><span class="p">,</span> <span class="s2">"A2"</span><span class="p">:</span> <span class="n">P2A2</span><span class="p">},</span>
+                    <span class="s2">"INTERACTIONS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"P1a"</span><span class="p">],</span>
+                    <span class="s2">"CONSTRAINTS_G"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"FLOATING"</span><span class="p">],</span>
                 <span class="p">},</span>
-                <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">RP2b</span><span class="p">,</span>
-                    <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;NONE&quot;</span><span class="p">],</span>
-                    <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;B0&quot;</span><span class="p">:</span> <span class="n">P2B0</span><span class="p">,</span> <span class="s2">&quot;B1&quot;</span><span class="p">:</span> <span class="n">P2B1</span><span class="p">,</span> <span class="s2">&quot;B2&quot;</span><span class="p">:</span> <span class="n">P2B2</span><span class="p">},</span>
-                    <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;P1b&quot;</span><span class="p">],</span>
-                    <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FLOATING&quot;</span><span class="p">],</span>
+                <span class="s2">"b"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">"FRAME"</span><span class="p">:</span> <span class="n">RP2b</span><span class="p">,</span>
+                    <span class="s2">"TYPE"</span><span class="p">:</span> <span class="s2">"plane"</span><span class="p">,</span>
+                    <span class="s2">"CONSTRAINTS_D"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"NONE"</span><span class="p">],</span>
+                    <span class="s2">"POINTS"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"B0"</span><span class="p">:</span> <span class="n">P2B0</span><span class="p">,</span> <span class="s2">"B1"</span><span class="p">:</span> <span class="n">P2B1</span><span class="p">,</span> <span class="s2">"B2"</span><span class="p">:</span> <span class="n">P2B2</span><span class="p">},</span>
+                    <span class="s2">"INTERACTIONS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"P1b"</span><span class="p">],</span>
+                    <span class="s2">"CONSTRAINTS_G"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"FLOATING"</span><span class="p">],</span>
                 <span class="p">},</span>
-                <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">RP2c</span><span class="p">,</span>
-                    <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;NONE&quot;</span><span class="p">],</span>
-                    <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;C0&quot;</span><span class="p">:</span> <span class="n">P2C0</span><span class="p">,</span> <span class="s2">&quot;C1&quot;</span><span class="p">:</span> <span class="n">P2C1</span><span class="p">,</span> <span class="s2">&quot;C2&quot;</span><span class="p">:</span> <span class="n">P2C2</span><span class="p">},</span>
-                    <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;P1c&quot;</span><span class="p">],</span>
-                    <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FLOATING&quot;</span><span class="p">],</span>
+                <span class="s2">"c"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">"FRAME"</span><span class="p">:</span> <span class="n">RP2c</span><span class="p">,</span>
+                    <span class="s2">"TYPE"</span><span class="p">:</span> <span class="s2">"plane"</span><span class="p">,</span>
+                    <span class="s2">"CONSTRAINTS_D"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"NONE"</span><span class="p">],</span>
+                    <span class="s2">"POINTS"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"C0"</span><span class="p">:</span> <span class="n">P2C0</span><span class="p">,</span> <span class="s2">"C1"</span><span class="p">:</span> <span class="n">P2C1</span><span class="p">,</span> <span class="s2">"C2"</span><span class="p">:</span> <span class="n">P2C2</span><span class="p">},</span>
+                    <span class="s2">"INTERACTIONS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"P1c"</span><span class="p">],</span>
+                    <span class="s2">"CONSTRAINTS_G"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"FLOATING"</span><span class="p">],</span>
                 <span class="p">},</span>
-                <span class="s2">&quot;d&quot;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">RP2d</span><span class="p">,</span>
-                    <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;NONE&quot;</span><span class="p">],</span>
-                    <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;D0&quot;</span><span class="p">:</span> <span class="n">P2D0</span><span class="p">,</span> <span class="s2">&quot;D1&quot;</span><span class="p">:</span> <span class="n">P2D1</span><span class="p">,</span> <span class="s2">&quot;D2&quot;</span><span class="p">:</span> <span class="n">P2D2</span><span class="p">},</span>
-                    <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;P1d&quot;</span><span class="p">],</span>
-                    <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FLOATING&quot;</span><span class="p">],</span>
+                <span class="s2">"d"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">"FRAME"</span><span class="p">:</span> <span class="n">RP2d</span><span class="p">,</span>
+                    <span class="s2">"TYPE"</span><span class="p">:</span> <span class="s2">"plane"</span><span class="p">,</span>
+                    <span class="s2">"CONSTRAINTS_D"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"NONE"</span><span class="p">],</span>
+                    <span class="s2">"POINTS"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"D0"</span><span class="p">:</span> <span class="n">P2D0</span><span class="p">,</span> <span class="s2">"D1"</span><span class="p">:</span> <span class="n">P2D1</span><span class="p">,</span> <span class="s2">"D2"</span><span class="p">:</span> <span class="n">P2D2</span><span class="p">},</span>
+                    <span class="s2">"INTERACTIONS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"P1d"</span><span class="p">],</span>
+                    <span class="s2">"CONSTRAINTS_G"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"FLOATING"</span><span class="p">],</span>
                 <span class="p">},</span>
-                <span class="s2">&quot;e&quot;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">RP2e</span><span class="p">,</span>
-                    <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;PERFECT&quot;</span><span class="p">],</span>
-                    <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;E0&quot;</span><span class="p">:</span> <span class="n">P2E0</span><span class="p">,</span> <span class="s2">&quot;E1&quot;</span><span class="p">:</span> <span class="n">P2E1</span><span class="p">},</span>
-                    <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;P1e&quot;</span><span class="p">],</span>
-                    <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SLIDING&quot;</span><span class="p">],</span>
+                <span class="s2">"e"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">"FRAME"</span><span class="p">:</span> <span class="n">RP2e</span><span class="p">,</span>
+                    <span class="s2">"TYPE"</span><span class="p">:</span> <span class="s2">"plane"</span><span class="p">,</span>
+                    <span class="s2">"CONSTRAINTS_D"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"PERFECT"</span><span class="p">],</span>
+                    <span class="s2">"POINTS"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"E0"</span><span class="p">:</span> <span class="n">P2E0</span><span class="p">,</span> <span class="s2">"E1"</span><span class="p">:</span> <span class="n">P2E1</span><span class="p">},</span>
+                    <span class="s2">"INTERACTIONS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"P1e"</span><span class="p">],</span>
+                    <span class="s2">"CONSTRAINTS_G"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"SLIDING"</span><span class="p">],</span>
                 <span class="p">},</span>
             <span class="p">},</span>
         <span class="p">},</span>
-        <span class="s2">&quot;LOOPS&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;COMPATIBILITY&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;L0&quot;</span><span class="p">:</span> <span class="s2">&quot;P1eE0 -&gt; P2eE0 -&gt; P2aA0 -&gt; P1aA0&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;L1&quot;</span><span class="p">:</span> <span class="s2">&quot;P1eE0 -&gt; P2eE0 -&gt; P2dD0 -&gt; P1dD0&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;L2&quot;</span><span class="p">:</span> <span class="s2">&quot;P1cC0 -&gt; P2cC0 -&gt; P2bB0 -&gt; P1bB0&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;L3&quot;</span><span class="p">:</span> <span class="s2">&quot;P1bB0 -&gt; P2bB0 -&gt; P2aA0 -&gt; P1aA0&quot;</span><span class="p">,</span>
+        <span class="s2">"LOOPS"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"COMPATIBILITY"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"L0"</span><span class="p">:</span> <span class="s2">"P1eE0 -&gt; P2eE0 -&gt; P2aA0 -&gt; P1aA0"</span><span class="p">,</span>
+                <span class="s2">"L1"</span><span class="p">:</span> <span class="s2">"P1eE0 -&gt; P2eE0 -&gt; P2dD0 -&gt; P1dD0"</span><span class="p">,</span>
+                <span class="s2">"L2"</span><span class="p">:</span> <span class="s2">"P1cC0 -&gt; P2cC0 -&gt; P2bB0 -&gt; P1bB0"</span><span class="p">,</span>
+                <span class="s2">"L3"</span><span class="p">:</span> <span class="s2">"P1bB0 -&gt; P2bB0 -&gt; P2aA0 -&gt; P1aA0"</span><span class="p">,</span>
             <span class="p">}</span>
         <span class="p">},</span>
-        <span class="s2">&quot;GLOBAL_CONSTRAINTS&quot;</span><span class="p">:</span> <span class="s2">&quot;2D_NZ&quot;</span><span class="p">,</span>
+        <span class="s2">"GLOBAL_CONSTRAINTS"</span><span class="p">:</span> <span class="s2">"2D_NZ"</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">system_data</span>
 
@@ -326,7 +326,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">get_assembly_data_processor_object</span><span class="p">(</span>
     <span class="n">system_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">otaf</span><span class="o">.</span><span class="n">AssemblyDataProcessor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize and prepare an AssemblyDataProcessor instance.</span>
+<span class="w">    </span><span class="sd">"""Initialize and prepare an AssemblyDataProcessor instance.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -338,7 +338,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    otaf.AssemblyDataProcessor</span>
 <span class="sd">        The data processor with generated expanded loops.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">SDA</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">AssemblyDataProcessor</span><span class="p">(</span><span class="n">system_data</span><span class="p">)</span>
     <span class="n">SDA</span><span class="o">.</span><span class="n">generate_expanded_loops</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">SDA</span>
@@ -347,7 +347,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">get_compatibility_loop_handling_object</span><span class="p">(</span>
     <span class="n">SDA</span><span class="p">:</span> <span class="n">otaf</span><span class="o">.</span><span class="n">AssemblyDataProcessor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">otaf</span><span class="o">.</span><span class="n">CompatibilityLoopHandling</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a CompatibilityLoopHandling instance for assembly loops.</span>
+<span class="w">    </span><span class="sd">"""Create a CompatibilityLoopHandling instance for assembly loops.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -359,7 +359,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    otaf.CompatibilityLoopHandling</span>
 <span class="sd">        The configured compatibility loop handler object.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">SDA</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">SDA</span> <span class="k">if</span> <span class="n">SDA</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">get_assembly_data_processor_object</span><span class="p">(</span><span class="n">get_assembly_data</span><span class="p">())</span>
     <span class="p">)</span>
@@ -371,7 +371,7 @@
     <span class="n">SDA</span><span class="p">:</span> <span class="n">otaf</span><span class="o">.</span><span class="n">AssemblyDataProcessor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">CLH</span><span class="p">:</span> <span class="n">otaf</span><span class="o">.</span><span class="n">CompatibilityLoopHandling</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">otaf</span><span class="o">.</span><span class="n">InterfaceLoopHandling</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create an InterfaceLoopHandling instance with set resolution.</span>
+<span class="w">    </span><span class="sd">"""Create an InterfaceLoopHandling instance with set resolution.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -386,7 +386,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    otaf.InterfaceLoopHandling</span>
 <span class="sd">        The initialized interface loop handler object.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">SDA</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">CLH</span><span class="p">:</span>
         <span class="n">SDA</span> <span class="o">=</span> <span class="n">get_assembly_data_processor_object</span><span class="p">(</span><span class="n">get_assembly_data</span><span class="p">())</span>
         <span class="n">CLH</span> <span class="o">=</span> <span class="n">get_compatibility_loop_handling_object</span><span class="p">(</span><span class="n">SDA</span><span class="p">)</span>
@@ -405,7 +405,7 @@
     <span class="n">lM</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span>
     <span class="n">lF</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.2</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">otaf</span><span class="o">.</span><span class="n">SystemOfConstraintsAssemblyModel</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct the complete system of constraints assembly model.</span>
+<span class="w">    </span><span class="sd">"""Construct the complete system of constraints assembly model.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -429,7 +429,7 @@
 <span class="sd">    otaf.SystemOfConstraintsAssemblyModel</span>
 <span class="sd">        The initialized assembly model with embedded optimization</span>
 <span class="sd">        variables.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">SDA</span> <span class="o">=</span> <span class="n">get_assembly_data_processor_object</span><span class="p">(</span><span class="n">get_assembly_data</span><span class="p">(</span><span class="n">hM</span><span class="p">,</span> <span class="n">hF</span><span class="p">,</span> <span class="n">L1</span><span class="p">,</span> <span class="n">L2</span><span class="p">,</span> <span class="n">L3</span><span class="p">,</span> <span class="n">lM</span><span class="p">,</span> <span class="n">lF</span><span class="p">))</span>
     <span class="n">CLH</span> <span class="o">=</span> <span class="n">get_compatibility_loop_handling_object</span><span class="p">(</span><span class="n">SDA</span><span class="p">)</span>
     <span class="n">ILH</span> <span class="o">=</span> <span class="n">get_interface_loop_handling_object</span><span class="p">(</span><span class="n">SDA</span><span class="p">,</span> <span class="n">CLH</span><span class="p">)</span>
@@ -451,7 +451,7 @@
     <span class="n">hM</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span>
     <span class="n">hF</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.2</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute defect distribution parameters and variance vectors.</span>
+<span class="w">    </span><span class="sd">"""Compute defect distribution parameters and variance vectors.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -474,10 +474,10 @@
 <span class="sd">        A 1D array of calculated maximum standard deviations.</span>
 <span class="sd">    np.ndarray</span>
 <span class="sd">        A 1D array of zero-initialized mean parameter offsets.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">deviation_symbols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
         <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span>
-            <span class="s2">&quot;u_d_2 gamma_d_2 u_d_3 gamma_d_3 u_d_4 gamma_d_4 u_d_5 gamma_d_5 u_d_6 gamma_d_6 u_d_7 gamma_d_7 u_d_8 gamma_d_8 u_d_9 gamma_d_9&quot;</span>
+            <span class="s2">"u_d_2 gamma_d_2 u_d_3 gamma_d_3 u_d_4 gamma_d_4 u_d_5 gamma_d_5 u_d_6 gamma_d_6 u_d_7 gamma_d_7 u_d_8 gamma_d_8 u_d_9 gamma_d_9"</span>
         <span class="p">)</span>
     <span class="p">)</span>
     <span class="n">sigma_e_pos</span> <span class="o">=</span> <span class="n">tol</span> <span class="o">/</span> <span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">capa</span><span class="p">)</span>
@@ -488,15 +488,15 @@
     <span class="n">RandDeviationVect</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">get_composed_normal_defect_distribution</span><span class="p">(</span>
         <span class="n">defect_names</span><span class="o">=</span><span class="n">deviation_symbols</span><span class="p">,</span>
         <span class="n">sigma_dict</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;gamma_d_2&quot;</span><span class="p">:</span> <span class="n">sigma_e_theta_f</span><span class="p">,</span>
-            <span class="s2">&quot;gamma_d_3&quot;</span><span class="p">:</span> <span class="n">sigma_e_theta_m</span><span class="p">,</span>
-            <span class="s2">&quot;gamma_d_4&quot;</span><span class="p">:</span> <span class="n">sigma_e_theta_f</span><span class="p">,</span>
-            <span class="s2">&quot;gamma_d_5&quot;</span><span class="p">:</span> <span class="n">sigma_e_theta_m</span><span class="p">,</span>
-            <span class="s2">&quot;gamma_d_6&quot;</span><span class="p">:</span> <span class="n">sigma_e_theta_m</span><span class="p">,</span>
-            <span class="s2">&quot;gamma_d_7&quot;</span><span class="p">:</span> <span class="n">sigma_e_theta_f</span><span class="p">,</span>
-            <span class="s2">&quot;gamma_d_8&quot;</span><span class="p">:</span> <span class="n">sigma_e_theta_f</span><span class="p">,</span>
-            <span class="s2">&quot;gamma_d_9&quot;</span><span class="p">:</span> <span class="n">sigma_e_theta_m</span><span class="p">,</span>
-            <span class="s2">&quot;u&quot;</span><span class="p">:</span> <span class="n">sigma_e_pos</span><span class="p">,</span>
+            <span class="s2">"gamma_d_2"</span><span class="p">:</span> <span class="n">sigma_e_theta_f</span><span class="p">,</span>
+            <span class="s2">"gamma_d_3"</span><span class="p">:</span> <span class="n">sigma_e_theta_m</span><span class="p">,</span>
+            <span class="s2">"gamma_d_4"</span><span class="p">:</span> <span class="n">sigma_e_theta_f</span><span class="p">,</span>
+            <span class="s2">"gamma_d_5"</span><span class="p">:</span> <span class="n">sigma_e_theta_m</span><span class="p">,</span>
+            <span class="s2">"gamma_d_6"</span><span class="p">:</span> <span class="n">sigma_e_theta_m</span><span class="p">,</span>
+            <span class="s2">"gamma_d_7"</span><span class="p">:</span> <span class="n">sigma_e_theta_f</span><span class="p">,</span>
+            <span class="s2">"gamma_d_8"</span><span class="p">:</span> <span class="n">sigma_e_theta_f</span><span class="p">,</span>
+            <span class="s2">"gamma_d_9"</span><span class="p">:</span> <span class="n">sigma_e_theta_m</span><span class="p">,</span>
+            <span class="s2">"u"</span><span class="p">:</span> <span class="n">sigma_e_pos</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">)</span>
     <span class="n">max_std_vect</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
@@ -540,7 +540,7 @@
     <span class="n">hM</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span>
     <span class="n">hF</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.2</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Map scaled deviations to real values and evaluate constraints.</span>
+<span class="w">    </span><span class="sd">"""Map scaled deviations to real values and evaluate constraints.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -565,7 +565,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    np.ndarray</span>
 <span class="sd">        The calculated constraint evaluation bounds array.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">target</span> <span class="o">=</span> <span class="n">tol</span> <span class="o">/</span> <span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">capa</span><span class="p">)</span>
     <span class="n">constraint1</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">sigma_delta_3D_plane</span><span class="p">(</span><span class="n">hF</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x_std</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x_std</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="n">target</span>
@@ -615,7 +615,7 @@
     <span class="n">hM</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span>
     <span class="n">hF</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.2</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a wrapped lambda function for scaled constraints.</span>
+<span class="w">    </span><span class="sd">"""Generate a wrapped lambda function for scaled constraints.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -639,7 +639,7 @@
 <span class="sd">    Callable[[np.ndarray], np.ndarray]</span>
 <span class="sd">        A single-argument function mapping `x_scaled` to its</span>
 <span class="sd">        evaluated constraint array.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">x_real</span> <span class="o">=</span> <span class="n">x_scaled</span> <span class="o">*</span> <span class="n">max_std_vect</span>
     <span class="n">constraint_array</span> <span class="o">=</span> <span class="n">eval_credal_set_constraints</span><span class="p">(</span>
         <span class="n">x_real</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span> <span class="n">capa</span><span class="o">=</span><span class="n">capa</span><span class="p">,</span> <span class="n">hM</span><span class="o">=</span><span class="n">hM</span><span class="p">,</span> <span class="n">hF</span><span class="o">=</span><span class="n">hF</span>

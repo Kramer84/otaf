@@ -81,8 +81,8 @@
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;CompatibilityLoopHandling&quot;</span><span class="p">]</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">"Kramer84"</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"CompatibilityLoopHandling"</span><span class="p">]</span>
 
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
@@ -104,7 +104,7 @@
 
 <span class="nd">@beartype</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">CompatibilityLoopHandling</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Class for processing system data and constructing compatibility constraint matrices.</span>
 
 <span class="sd">    This class processes system data to generate and manage compatibility loops, constructing the</span>
@@ -156,11 +156,11 @@
 <span class="sd">    calculate_nominal_gap_transform(el_info, ID, nullify_x=True, nullify_y=True, nullify_z=True)</span>
 <span class="sd">        Calculate the nominal transformation matrix between two surfaces in a gap, with options</span>
 <span class="sd">        to nullify specific translation components.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="CompatibilityLoopHandling.__init__">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.CompatibilityLoopHandling.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">assemblyDataProcessor</span><span class="p">:</span> <span class="n">AssemblyDataProcessor</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Initialize the `CompatibilityLoopHandling` object with system data.</span>
 
 <span class="sd">        Parameters</span>
@@ -172,8 +172,8 @@
 <span class="sd">        -----</span>
 <span class="sd">        - Caches for deviation, gap, and transformation matrices are initialized.</span>
 <span class="sd">        - Compatibility loop matrices and their first-order expansions are precomputed.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Initializing CompatibilityLoopHandling object.&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Initializing CompatibilityLoopHandling object."</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span> <span class="o">=</span> <span class="n">assemblyDataProcessor</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_deviation_matrix_map</span> <span class="o">=</span> <span class="p">{}</span>
@@ -191,7 +191,7 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">ID</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">GapMatrix</span><span class="p">,</span> <span class="n">TransformationMatrix</span><span class="p">]]:</span>
 
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Retrieve a gap matrix by its identifier.</span>
 
 <span class="sd">        Parameters</span>
@@ -208,7 +208,7 @@
 <span class="sd">        ------</span>
 <span class="sd">        KeyError</span>
 <span class="sd">            If the specified ID does not exist in the gap matrix map.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">id_map</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ID</span><span class="p">):</span> <span class="n">key</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">mat</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gap_matrix_map</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gap_matrix_map</span><span class="p">[</span><span class="n">id_map</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">ID</span><span class="p">)]]</span></div>
 
@@ -216,7 +216,7 @@
 <div class="viewcode-block" id="CompatibilityLoopHandling.get_deviation_matrix_by_id">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.CompatibilityLoopHandling.get_deviation_matrix_by_id">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_deviation_matrix_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ID</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">DeviationMatrix</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Retrieve a deviation matrix by its identifier.</span>
 
 <span class="sd">        Parameters</span>
@@ -233,7 +233,7 @@
 <span class="sd">        ------</span>
 <span class="sd">        KeyError</span>
 <span class="sd">            If the specified ID does not exist in the deviation matrix map.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">id_map</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ID</span><span class="p">):</span> <span class="n">key</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">mat</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deviation_matrix_map</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deviation_matrix_map</span><span class="p">[</span><span class="n">id_map</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">ID</span><span class="p">)]]</span></div>
 
@@ -241,7 +241,7 @@
 <div class="viewcode-block" id="CompatibilityLoopHandling.get_compatibility_expressions">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.CompatibilityLoopHandling.get_compatibility_expressions">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_compatibility_expressions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Expr</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Generate symbolic expressions representing compatibility constraints.</span>
 
 <span class="sd">        Returns</span>
@@ -249,8 +249,8 @@
 <span class="sd">        list of sympy.Expr</span>
 <span class="sd">            A list of symbolic expressions for the compatibility constraints derived from</span>
 <span class="sd">            the first-order expanded matrices.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Generating list of equations representing the compatibility loop&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Generating list of equations representing the compatibility loop"</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span>
             <span class="n">x</span>
             <span class="k">for</span> <span class="n">expr_f</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compatibility_loops_FO_matrices</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
@@ -263,7 +263,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">generate_loop_id_to_matrix_list_dict</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">TransformationMatrix</span><span class="p">,</span> <span class="n">DeviationMatrix</span><span class="p">,</span> <span class="n">GapMatrix</span><span class="p">,</span> <span class="n">I4</span><span class="p">,</span> <span class="n">J4</span><span class="p">]]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a dictionary mapping compatibility loop IDs to lists of matrices.</span>
 
 <span class="sd">        Returns</span>
@@ -271,8 +271,8 @@
 <span class="sd">        dict</span>
 <span class="sd">            A dictionary where keys are compatibility loop IDs, and values are lists</span>
 <span class="sd">            of matrices representing the corresponding compatibility loops.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Generating loop ID to matrix list dictionary&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Generating loop ID to matrix list dictionary"</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="n">key</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_matrices_from_expanded_loop</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="o">.</span><span class="n">compatibility_loops_expanded</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
@@ -282,15 +282,15 @@
 <div class="viewcode-block" id="CompatibilityLoopHandling.generate_FO_loop_matrices">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.CompatibilityLoopHandling.generate_FO_loop_matrices">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate_FO_loop_matrices</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Generate first-order expanded matrices for compatibility loops.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        dict</span>
 <span class="sd">            A dictionary mapping compatibility loop IDs to their first-order expanded matrices.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Generating loop ID to first order expanded matrices dictionary&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Generating loop ID to first order expanded matrices dictionary"</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="n">key</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_FO_matrix_expansion_to_matrix_loop_list</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compatibility_loops_matrices</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
@@ -305,7 +305,7 @@
             <span class="n">Union</span><span class="p">[</span><span class="n">TransformationMatrix</span><span class="p">,</span> <span class="n">DeviationMatrix</span><span class="p">,</span> <span class="n">GapMatrix</span><span class="p">,</span> <span class="n">I4</span><span class="p">,</span> <span class="n">J4</span><span class="p">]</span>
         <span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">MatrixBase</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Apply first-order matrix expansion to a list of compatibility loop matrices.</span>
 
 <span class="sd">        Parameters</span>
@@ -317,7 +317,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        sympy.MatrixBase</span>
 <span class="sd">            The first-order expansion of the compatibility loop matrices.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">FirstOrderMatrixExpansion</span><span class="p">(</span>
             <span class="n">compatibility_loop_matrix_list</span>
         <span class="p">)</span><span class="o">.</span><span class="n">compute_first_order_expansion</span><span class="p">()</span></div>
@@ -328,7 +328,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">generate_matrices_from_expanded_loop</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">expanded_loop_str</span><span class="p">:</span> <span class="nb">str</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">TransformationMatrix</span><span class="p">,</span> <span class="n">DeviationMatrix</span><span class="p">,</span> <span class="n">GapMatrix</span><span class="p">,</span> <span class="n">I4</span><span class="p">,</span> <span class="n">J4</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Generate matrices for a compatibility loop from its expanded string representation.</span>
 
 <span class="sd">        Parameters</span>
@@ -345,22 +345,22 @@
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
 <span class="sd">            If the matrix type in the string is unknown.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">matrix_list</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">matrix_strings</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">strip</span><span class="p">,</span> <span class="n">expanded_loop_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&gt;&quot;</span><span class="p">)))</span>
+        <span class="n">matrix_strings</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">strip</span><span class="p">,</span> <span class="n">expanded_loop_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"-&gt;"</span><span class="p">)))</span>
         <span class="k">for</span> <span class="n">mstring</span> <span class="ow">in</span> <span class="n">matrix_strings</span><span class="p">:</span>
             <span class="n">elinfo</span> <span class="o">=</span> <span class="n">parse_matrix_string</span><span class="p">(</span><span class="n">mstring</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">elinfo</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;T&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">elinfo</span><span class="p">[</span><span class="s2">"type"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"T"</span><span class="p">:</span>
                 <span class="n">t_mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_transformation_matrix</span><span class="p">(</span><span class="n">elinfo</span><span class="p">)</span>
                 <span class="n">matrix_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">t_mat</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">elinfo</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;D&quot;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">elinfo</span><span class="p">[</span><span class="s2">"type"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"D"</span><span class="p">:</span>
                 <span class="n">d_mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_deviation_matrix</span><span class="p">(</span><span class="n">elinfo</span><span class="p">)</span>
                 <span class="n">matrix_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">d_mat</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">elinfo</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;G&quot;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">elinfo</span><span class="p">[</span><span class="s2">"type"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"G"</span><span class="p">:</span>
                 <span class="n">g_mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_gap_matrix</span><span class="p">(</span><span class="n">elinfo</span><span class="p">)</span>
                 <span class="n">matrix_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">g_mat</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">exc</span> <span class="o">=</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown matrix type </span><span class="si">{</span><span class="n">elinfo</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">exc</span> <span class="o">=</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown matrix type </span><span class="si">{</span><span class="n">elinfo</span><span class="p">[</span><span class="s1">'type'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
                 <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">exc_info</span><span class="o">=</span><span class="n">exc</span><span class="p">)</span>
                 <span class="k">raise</span> <span class="n">exc</span>
         <span class="k">return</span> <span class="n">matrix_list</span></div>
@@ -369,7 +369,7 @@
 <div class="viewcode-block" id="CompatibilityLoopHandling.generate_transformation_matrix">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.CompatibilityLoopHandling.generate_transformation_matrix">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate_transformation_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">el_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">TransformationMatrix</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Generate a transformation matrix from loop element information.</span>
 
 <span class="sd">        Parameters</span>
@@ -388,35 +388,35 @@
 <span class="sd">        - If the matrix already exists in the transformation matrix map, it is retrieved</span>
 <span class="sd">          from the cache.</span>
 <span class="sd">        - The inverse of the generated transformation matrix is also cached.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;mstring&quot;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transformation_matrix_map</span><span class="p">:</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">el_info</span><span class="p">[</span><span class="s2">"mstring"</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transformation_matrix_map</span><span class="p">:</span>
             <span class="c1"># The transformation matrix has to be generated.</span>
-            <span class="n">point_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;part&quot;</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;surface1&quot;</span><span class="p">]][</span><span class="s2">&quot;POINTS&quot;</span><span class="p">][</span>
-                <span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;point1&quot;</span><span class="p">]</span>
+            <span class="n">point_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">"PARTS"</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"part"</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"surface1"</span><span class="p">]][</span><span class="s2">"POINTS"</span><span class="p">][</span>
+                <span class="n">el_info</span><span class="p">[</span><span class="s2">"point1"</span><span class="p">]</span>
             <span class="p">]</span>
-            <span class="n">frame_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;part&quot;</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;surface1&quot;</span><span class="p">]][</span><span class="s2">&quot;FRAME&quot;</span><span class="p">]</span>
-            <span class="n">point_end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;part&quot;</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;surface2&quot;</span><span class="p">]][</span><span class="s2">&quot;POINTS&quot;</span><span class="p">][</span>
-                <span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;point2&quot;</span><span class="p">]</span>
+            <span class="n">frame_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">"PARTS"</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"part"</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"surface1"</span><span class="p">]][</span><span class="s2">"FRAME"</span><span class="p">]</span>
+            <span class="n">point_end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">"PARTS"</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"part"</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"surface2"</span><span class="p">]][</span><span class="s2">"POINTS"</span><span class="p">][</span>
+                <span class="n">el_info</span><span class="p">[</span><span class="s2">"point2"</span><span class="p">]</span>
             <span class="p">]</span>
-            <span class="n">frame_end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;part&quot;</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;surface2&quot;</span><span class="p">]][</span><span class="s2">&quot;FRAME&quot;</span><span class="p">]</span>
+            <span class="n">frame_end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">"PARTS"</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"part"</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"surface2"</span><span class="p">]][</span><span class="s2">"FRAME"</span><span class="p">]</span>
             <span class="n">t_mat</span> <span class="o">=</span> <span class="n">TransformationMatrix</span><span class="p">(</span>
                 <span class="n">initial</span><span class="o">=</span><span class="n">tfrt</span><span class="p">(</span><span class="n">frame_start</span><span class="p">,</span> <span class="n">point_start</span><span class="p">),</span>
                 <span class="n">final</span><span class="o">=</span><span class="n">tfrt</span><span class="p">(</span><span class="n">frame_end</span><span class="p">,</span> <span class="n">point_end</span><span class="p">),</span>
-                <span class="n">name</span><span class="o">=</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;mstring&quot;</span><span class="p">],</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"mstring"</span><span class="p">],</span>
             <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_transformation_matrix_map</span><span class="p">[</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;mstring&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="n">t_mat</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_transformation_matrix_map</span><span class="p">[</span><span class="n">inverse_mstring</span><span class="p">(</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;mstring&quot;</span><span class="p">])]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_transformation_matrix_map</span><span class="p">[</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"mstring"</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="n">t_mat</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_transformation_matrix_map</span><span class="p">[</span><span class="n">inverse_mstring</span><span class="p">(</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"mstring"</span><span class="p">])]</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="n">t_mat</span><span class="o">.</span><span class="n">get_inverse</span><span class="p">()</span>
             <span class="p">]</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">t_mat</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transformation_matrix_map</span><span class="p">[</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;mstring&quot;</span><span class="p">]]</span></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transformation_matrix_map</span><span class="p">[</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"mstring"</span><span class="p">]]</span></div>
 
 
 <div class="viewcode-block" id="CompatibilityLoopHandling.generate_deviation_matrix">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.CompatibilityLoopHandling.generate_deviation_matrix">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate_deviation_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">el_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">DeviationMatrix</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Generate a deviation matrix based on loop element information.</span>
 
 <span class="sd">        This method creates a deviation matrix for a specified element in the compatibility loop,</span>
@@ -444,8 +444,8 @@
 <span class="sd">        ------</span>
 <span class="sd">        KeyError</span>
 <span class="sd">            If required surface or global constraints are missing in the input data.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;mstring&quot;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deviation_matrix_map</span><span class="p">:</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">el_info</span><span class="p">[</span><span class="s2">"mstring"</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deviation_matrix_map</span><span class="p">:</span>
             <span class="c1"># Deviation matrix has to be generated.</span>
             <span class="n">d_mat_id_max</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="nb">max</span><span class="p">([</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ID</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deviation_matrix_map</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>
@@ -453,29 +453,29 @@
                 <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
             <span class="p">)</span>
             <span class="n">index</span> <span class="o">=</span> <span class="n">d_mat_id_max</span> <span class="o">+</span> <span class="mi">1</span>
-            <span class="n">is_inverse</span> <span class="o">=</span> <span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;inverse&quot;</span><span class="p">]</span>
-            <span class="n">constraints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;part&quot;</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;surface&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;NONE&quot;</span><span class="p">]</span>
+            <span class="n">is_inverse</span> <span class="o">=</span> <span class="n">el_info</span><span class="p">[</span><span class="s2">"inverse"</span><span class="p">]</span>
+            <span class="n">constraints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">"PARTS"</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"part"</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"surface"</span><span class="p">]]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="s2">"CONSTRAINTS_D"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"NONE"</span><span class="p">]</span>
             <span class="p">)</span>
-            <span class="n">surf_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;part&quot;</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;surface&quot;</span><span class="p">]][</span><span class="s2">&quot;TYPE&quot;</span><span class="p">]</span>
-            <span class="n">surf_type</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="p">[</span><span class="n">surf_type</span><span class="p">,</span> <span class="o">*</span><span class="n">constraints</span><span class="p">]))</span>
-            <span class="n">translations</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">surf_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">"PARTS"</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"part"</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"surface"</span><span class="p">]][</span><span class="s2">"TYPE"</span><span class="p">]</span>
+            <span class="n">surf_type</span> <span class="o">=</span> <span class="s2">"-"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="p">[</span><span class="n">surf_type</span><span class="p">,</span> <span class="o">*</span><span class="n">constraints</span><span class="p">]))</span>
+            <span class="n">translations</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                 <span class="nb">sorted</span><span class="p">(</span>
-                    <span class="nb">set</span><span class="p">(</span><span class="n">SURF_TYPE_TO_DEVIATION_DOF</span><span class="p">[</span><span class="n">surf_type</span><span class="p">][</span><span class="s2">&quot;translations&quot;</span><span class="p">])</span>
+                    <span class="nb">set</span><span class="p">(</span><span class="n">SURF_TYPE_TO_DEVIATION_DOF</span><span class="p">[</span><span class="n">surf_type</span><span class="p">][</span><span class="s2">"translations"</span><span class="p">])</span>
                     <span class="o">-</span> <span class="nb">set</span><span class="p">(</span>
                         <span class="n">GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF</span><span class="p">[</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">&quot;GLOBAL_CONSTRAINTS&quot;</span><span class="p">]</span>
-                        <span class="p">][</span><span class="s2">&quot;translations_2remove&quot;</span><span class="p">]</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">"GLOBAL_CONSTRAINTS"</span><span class="p">]</span>
+                        <span class="p">][</span><span class="s2">"translations_2remove"</span><span class="p">]</span>
                     <span class="p">)</span>
                 <span class="p">)</span>
             <span class="p">)</span>
-            <span class="n">rotations</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">rotations</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                 <span class="nb">sorted</span><span class="p">(</span>
-                    <span class="nb">set</span><span class="p">(</span><span class="n">SURF_TYPE_TO_DEVIATION_DOF</span><span class="p">[</span><span class="n">surf_type</span><span class="p">][</span><span class="s2">&quot;rotations&quot;</span><span class="p">])</span>
+                    <span class="nb">set</span><span class="p">(</span><span class="n">SURF_TYPE_TO_DEVIATION_DOF</span><span class="p">[</span><span class="n">surf_type</span><span class="p">][</span><span class="s2">"rotations"</span><span class="p">])</span>
                     <span class="o">-</span> <span class="nb">set</span><span class="p">(</span>
                         <span class="n">GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF</span><span class="p">[</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">&quot;GLOBAL_CONSTRAINTS&quot;</span><span class="p">]</span>
-                        <span class="p">][</span><span class="s2">&quot;rotations_2remove&quot;</span><span class="p">]</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">"GLOBAL_CONSTRAINTS"</span><span class="p">]</span>
+                        <span class="p">][</span><span class="s2">"rotations_2remove"</span><span class="p">]</span>
                     <span class="p">)</span>
                 <span class="p">)</span>
             <span class="p">)</span>
@@ -484,15 +484,15 @@
                 <span class="n">translations</span><span class="o">=</span><span class="n">translations</span><span class="p">,</span>
                 <span class="n">rotations</span><span class="o">=</span><span class="n">rotations</span><span class="p">,</span>
                 <span class="n">inverse</span><span class="o">=</span><span class="n">is_inverse</span><span class="p">,</span>
-                <span class="n">name</span><span class="o">=</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;mstring&quot;</span><span class="p">],</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"mstring"</span><span class="p">],</span>
             <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_deviation_matrix_map</span><span class="p">[</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;mstring&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="n">d_mat</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_deviation_matrix_map</span><span class="p">[</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"mstring"</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="n">d_mat</span><span class="p">]</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">d_mat</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deviation_matrix_map</span><span class="p">[</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;mstring&quot;</span><span class="p">]][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">inverse</span> <span class="o">==</span> <span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;inverse&quot;</span><span class="p">]:</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deviation_matrix_map</span><span class="p">[</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;mstring&quot;</span><span class="p">]]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deviation_matrix_map</span><span class="p">[</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"mstring"</span><span class="p">]][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">inverse</span> <span class="o">==</span> <span class="n">el_info</span><span class="p">[</span><span class="s2">"inverse"</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deviation_matrix_map</span><span class="p">[</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"mstring"</span><span class="p">]]</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_deviation_matrix_map</span><span class="p">[</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;mstring&quot;</span><span class="p">]][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_inverse</span><span class="p">()]</span></div>
+                <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_deviation_matrix_map</span><span class="p">[</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"mstring"</span><span class="p">]][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_inverse</span><span class="p">()]</span></div>
 
 
 <div class="viewcode-block" id="CompatibilityLoopHandling.generate_gap_matrix">
@@ -500,7 +500,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">generate_gap_matrix</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">el_info</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">GapMatrix</span><span class="p">,</span> <span class="n">TransformationMatrix</span><span class="p">,</span> <span class="n">I4</span><span class="p">,</span> <span class="n">J4</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Generate a gap matrix based on loop element information.</span>
 
 <span class="sd">        This method creates a gap matrix for the specified pair of surfaces in the compatibility loop,</span>
@@ -529,69 +529,69 @@
 <span class="sd">        ------</span>
 <span class="sd">        KeyError</span>
 <span class="sd">            If required surface or contact constraints are missing in the input data.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;mstring&quot;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gap_matrix_map</span><span class="p">:</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">el_info</span><span class="p">[</span><span class="s2">"mstring"</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gap_matrix_map</span><span class="p">:</span>
             <span class="n">g_mat_id_max</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="nb">max</span><span class="p">([</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ID</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gap_matrix_map</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>
                 <span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_gap_matrix_map</span><span class="p">)</span>
                 <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
             <span class="p">)</span>
             <span class="n">index</span> <span class="o">=</span> <span class="n">g_mat_id_max</span> <span class="o">+</span> <span class="mi">1</span>
-            <span class="n">constraints1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;part1&quot;</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;surface1&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;FLOATING&quot;</span><span class="p">]</span>
+            <span class="n">constraints1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">"PARTS"</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"part1"</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"surface1"</span><span class="p">]]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="s2">"CONSTRAINTS_G"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"FLOATING"</span><span class="p">]</span>
             <span class="p">)</span>
-            <span class="n">constraints2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;part2&quot;</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;surface2&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;FLOATING&quot;</span><span class="p">]</span>
+            <span class="n">constraints2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">"PARTS"</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"part2"</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"surface2"</span><span class="p">]]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="s2">"CONSTRAINTS_G"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"FLOATING"</span><span class="p">]</span>
             <span class="p">)</span>
-            <span class="n">rotations_blocked_manual_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;part1&quot;</span><span class="p">]][</span>
-                <span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;surface1&quot;</span><span class="p">]</span>
-            <span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;BLOCK_ROTATIONS_G&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-            <span class="n">rotations_blocked_manual_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;part2&quot;</span><span class="p">]][</span>
-                <span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;surface2&quot;</span><span class="p">]</span>
-            <span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;BLOCK_ROTATIONS_G&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-            <span class="n">translations_blocked_manual_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;part1&quot;</span><span class="p">]][</span>
-                <span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;surface1&quot;</span><span class="p">]</span>
-            <span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;BLOCK_TRANSLATIONS_G&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-            <span class="n">translations_blocked_manual_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;part2&quot;</span><span class="p">]][</span>
-                <span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;surface2&quot;</span><span class="p">]</span>
-            <span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;BLOCK_TRANSLATIONS_G&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-            <span class="n">surf_type1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;part1&quot;</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;surface1&quot;</span><span class="p">]][</span><span class="s2">&quot;TYPE&quot;</span><span class="p">]</span>
-            <span class="n">surf_type2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;part2&quot;</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;surface2&quot;</span><span class="p">]][</span><span class="s2">&quot;TYPE&quot;</span><span class="p">]</span>
+            <span class="n">rotations_blocked_manual_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">"PARTS"</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"part1"</span><span class="p">]][</span>
+                <span class="n">el_info</span><span class="p">[</span><span class="s2">"surface1"</span><span class="p">]</span>
+            <span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"BLOCK_ROTATIONS_G"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+            <span class="n">rotations_blocked_manual_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">"PARTS"</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"part2"</span><span class="p">]][</span>
+                <span class="n">el_info</span><span class="p">[</span><span class="s2">"surface2"</span><span class="p">]</span>
+            <span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"BLOCK_ROTATIONS_G"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+            <span class="n">translations_blocked_manual_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">"PARTS"</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"part1"</span><span class="p">]][</span>
+                <span class="n">el_info</span><span class="p">[</span><span class="s2">"surface1"</span><span class="p">]</span>
+            <span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"BLOCK_TRANSLATIONS_G"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+            <span class="n">translations_blocked_manual_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">"PARTS"</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"part2"</span><span class="p">]][</span>
+                <span class="n">el_info</span><span class="p">[</span><span class="s2">"surface2"</span><span class="p">]</span>
+            <span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"BLOCK_TRANSLATIONS_G"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+            <span class="n">surf_type1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">"PARTS"</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"part1"</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"surface1"</span><span class="p">]][</span><span class="s2">"TYPE"</span><span class="p">]</span>
+            <span class="n">surf_type2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">"PARTS"</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"part2"</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"surface2"</span><span class="p">]][</span><span class="s2">"TYPE"</span><span class="p">]</span>
 
             <span class="n">gap_transform_kwargs</span> <span class="o">=</span> <span class="n">GAP_TYPE_TO_NULLIFIED_NOMINAL_COMPONENTS</span><span class="p">[</span>
-                <span class="s2">&quot;-&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="p">[</span><span class="n">surf_type1</span><span class="p">,</span> <span class="n">surf_type2</span><span class="p">]))</span>
+                <span class="s2">"-"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="p">[</span><span class="n">surf_type1</span><span class="p">,</span> <span class="n">surf_type2</span><span class="p">]))</span>
             <span class="p">]</span>
             <span class="n">nominal_gap_transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_nominal_gap_transform</span><span class="p">(</span>
                 <span class="n">el_info</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="o">**</span><span class="n">gap_transform_kwargs</span>
             <span class="p">)</span>
 
-            <span class="n">is_inverse</span> <span class="o">=</span> <span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;inverse&quot;</span><span class="p">]</span>
+            <span class="n">is_inverse</span> <span class="o">=</span> <span class="n">el_info</span><span class="p">[</span><span class="s2">"inverse"</span><span class="p">]</span>
             <span class="n">gap_constraints</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">((</span><span class="o">*</span><span class="n">constraints1</span><span class="p">,</span> <span class="o">*</span><span class="n">constraints2</span><span class="p">)))</span>
-            <span class="n">contact_type</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="p">[</span><span class="n">surf_type1</span><span class="p">,</span> <span class="n">surf_type2</span><span class="p">,</span> <span class="o">*</span><span class="n">gap_constraints</span><span class="p">]))</span>
-            <span class="n">manual_constraints_translation</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">contact_type</span> <span class="o">=</span> <span class="s2">"-"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="p">[</span><span class="n">surf_type1</span><span class="p">,</span> <span class="n">surf_type2</span><span class="p">,</span> <span class="o">*</span><span class="n">gap_constraints</span><span class="p">]))</span>
+            <span class="n">manual_constraints_translation</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                 <span class="nb">set</span><span class="p">(</span><span class="n">translations_blocked_manual_1</span> <span class="o">+</span> <span class="n">translations_blocked_manual_2</span><span class="p">)</span>
             <span class="p">)</span>
-            <span class="n">manual_constraints_rotation</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">manual_constraints_rotation</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                 <span class="nb">set</span><span class="p">(</span><span class="n">rotations_blocked_manual_1</span> <span class="o">+</span> <span class="n">rotations_blocked_manual_2</span><span class="p">)</span>
             <span class="p">)</span>
-            <span class="n">translations_blocked</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">translations_blocked</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                 <span class="nb">sorted</span><span class="p">(</span>
                     <span class="nb">set</span><span class="p">(</span>
-                        <span class="n">CONTACT_TYPE_TO_GAP_DOF</span><span class="p">[</span><span class="n">contact_type</span><span class="p">][</span><span class="s2">&quot;translations_blocked&quot;</span><span class="p">]</span>
+                        <span class="n">CONTACT_TYPE_TO_GAP_DOF</span><span class="p">[</span><span class="n">contact_type</span><span class="p">][</span><span class="s2">"translations_blocked"</span><span class="p">]</span>
                         <span class="o">+</span> <span class="n">GLOBAL_CONSTRAINTS_TO_GAP_DOF</span><span class="p">[</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">&quot;GLOBAL_CONSTRAINTS&quot;</span><span class="p">]</span>
-                        <span class="p">][</span><span class="s2">&quot;translations_blocked&quot;</span><span class="p">]</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">"GLOBAL_CONSTRAINTS"</span><span class="p">]</span>
+                        <span class="p">][</span><span class="s2">"translations_blocked"</span><span class="p">]</span>
                         <span class="o">+</span> <span class="n">manual_constraints_translation</span>
                     <span class="p">)</span>
                 <span class="p">)</span>
             <span class="p">)</span>
-            <span class="n">rotations_blocked</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">rotations_blocked</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                 <span class="nb">sorted</span><span class="p">(</span>
                     <span class="nb">set</span><span class="p">(</span>
-                        <span class="n">CONTACT_TYPE_TO_GAP_DOF</span><span class="p">[</span><span class="n">contact_type</span><span class="p">][</span><span class="s2">&quot;rotations_blocked&quot;</span><span class="p">]</span>
+                        <span class="n">CONTACT_TYPE_TO_GAP_DOF</span><span class="p">[</span><span class="n">contact_type</span><span class="p">][</span><span class="s2">"rotations_blocked"</span><span class="p">]</span>
                         <span class="o">+</span> <span class="n">GLOBAL_CONSTRAINTS_TO_GAP_DOF</span><span class="p">[</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">&quot;GLOBAL_CONSTRAINTS&quot;</span><span class="p">]</span>
-                        <span class="p">][</span><span class="s2">&quot;rotations_blocked&quot;</span><span class="p">]</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">"GLOBAL_CONSTRAINTS"</span><span class="p">]</span>
+                        <span class="p">][</span><span class="s2">"rotations_blocked"</span><span class="p">]</span>
                         <span class="o">+</span> <span class="n">manual_constraints_rotation</span>
                     <span class="p">)</span>
                 <span class="p">)</span>
@@ -601,10 +601,10 @@
                 <span class="n">translations_blocked</span><span class="o">=</span><span class="n">translations_blocked</span><span class="p">,</span>
                 <span class="n">rotations_blocked</span><span class="o">=</span><span class="n">rotations_blocked</span><span class="p">,</span>
                 <span class="n">inverse</span><span class="o">=</span><span class="n">is_inverse</span><span class="p">,</span>
-                <span class="n">name</span><span class="o">=</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;mstring&quot;</span><span class="p">],</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"mstring"</span><span class="p">],</span>
             <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_gap_matrix_map</span><span class="p">[</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;mstring&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="n">g_mat</span><span class="p">,</span> <span class="n">nominal_gap_transform</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_gap_matrix_map</span><span class="p">[</span><span class="n">inverse_mstring</span><span class="p">(</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;mstring&quot;</span><span class="p">])]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_gap_matrix_map</span><span class="p">[</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"mstring"</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="n">g_mat</span><span class="p">,</span> <span class="n">nominal_gap_transform</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_gap_matrix_map</span><span class="p">[</span><span class="n">inverse_mstring</span><span class="p">(</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"mstring"</span><span class="p">])]</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="n">nominal_gap_transform</span><span class="o">.</span><span class="n">get_inverse</span><span class="p">(),</span>
                 <span class="n">g_mat</span><span class="o">.</span><span class="n">get_inverse</span><span class="p">(),</span>
             <span class="p">]</span>
@@ -613,7 +613,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">[</span><span class="n">nominal_gap_transform</span><span class="o">.</span><span class="n">get_inverse</span><span class="p">(),</span> <span class="n">g_mat</span><span class="o">.</span><span class="n">get_inverse</span><span class="p">()]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gap_matrix_map</span><span class="p">[</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;mstring&quot;</span><span class="p">]]</span></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gap_matrix_map</span><span class="p">[</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"mstring"</span><span class="p">]]</span></div>
 
 
 <div class="viewcode-block" id="CompatibilityLoopHandling.calculate_nominal_gap_transform">
@@ -626,7 +626,7 @@
         <span class="n">nullify_y</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">nullify_z</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">TransformationMatrix</span><span class="p">,</span> <span class="n">I4</span><span class="p">,</span> <span class="n">J4</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Calculate the nominal transformation matrix between two surfaces in a gap.</span>
 
 <span class="sd">        This method computes the nominal transformation matrix between two surfaces in the</span>
@@ -660,16 +660,16 @@
 <span class="sd">        ------</span>
 <span class="sd">        KeyError</span>
 <span class="sd">            If required surface or frame information is missing in the input data.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">point_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;part1&quot;</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;surface1&quot;</span><span class="p">]][</span><span class="s2">&quot;POINTS&quot;</span><span class="p">][</span>
-            <span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;point1&quot;</span><span class="p">]</span>
+<span class="sd">        """</span>
+        <span class="n">point_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">"PARTS"</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"part1"</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"surface1"</span><span class="p">]][</span><span class="s2">"POINTS"</span><span class="p">][</span>
+            <span class="n">el_info</span><span class="p">[</span><span class="s2">"point1"</span><span class="p">]</span>
         <span class="p">]</span>
-        <span class="n">frame_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;part1&quot;</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;surface1&quot;</span><span class="p">]][</span><span class="s2">&quot;FRAME&quot;</span><span class="p">]</span>
+        <span class="n">frame_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">"PARTS"</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"part1"</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"surface1"</span><span class="p">]][</span><span class="s2">"FRAME"</span><span class="p">]</span>
 
-        <span class="n">point_end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;part2&quot;</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;surface2&quot;</span><span class="p">]][</span><span class="s2">&quot;POINTS&quot;</span><span class="p">][</span>
-            <span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;point2&quot;</span><span class="p">]</span>
+        <span class="n">point_end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">"PARTS"</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"part2"</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"surface2"</span><span class="p">]][</span><span class="s2">"POINTS"</span><span class="p">][</span>
+            <span class="n">el_info</span><span class="p">[</span><span class="s2">"point2"</span><span class="p">]</span>
         <span class="p">]</span>
-        <span class="n">frame_end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">&quot;PARTS&quot;</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;part2&quot;</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">&quot;surface2&quot;</span><span class="p">]][</span><span class="s2">&quot;FRAME&quot;</span><span class="p">]</span>
+        <span class="n">frame_end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">"PARTS"</span><span class="p">][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"part2"</span><span class="p">]][</span><span class="n">el_info</span><span class="p">[</span><span class="s2">"surface2"</span><span class="p">]][</span><span class="s2">"FRAME"</span><span class="p">]</span>
         <span class="c1"># Calculate the nominal transformation matrix between the two surfaces</span>
         <span class="n">nominal_transform</span> <span class="o">=</span> <span class="n">TransformationMatrix</span><span class="p">(</span>
             <span class="n">initial</span><span class="o">=</span><span class="n">tfrt</span><span class="p">(</span><span class="n">frame_start</span><span class="p">,</span> <span class="n">point_start</span><span class="p">),</span>
@@ -686,7 +686,7 @@
             <span class="n">nominal_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
 
         <span class="k">if</span> <span class="nb">bool</span><span class="p">((</span><span class="n">nominal_matrix</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">all</span><span class="p">()):</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;The nominal transformation at the gap transformation </span><span class="si">{ID}</span><span class="s2"> is the indentity&quot;</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"The nominal transformation at the gap transformation </span><span class="si">{ID}</span><span class="s2"> is the indentity"</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">I4</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">TransformationMatrix</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">ID</span><span class="p">,</span> <span class="n">matrix</span><span class="o">=</span><span class="n">nominal_matrix</span><span class="p">)</span></div>

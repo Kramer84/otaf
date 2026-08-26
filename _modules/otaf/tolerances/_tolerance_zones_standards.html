@@ -80,11 +80,11 @@
   <h1>Source code for otaf.tolerances._tolerance_zones_standards</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">"Kramer84"</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;sigma_delta_circular_feature&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;sigma_delta_3D_plane&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;sigma_delta_cylindrical_feature&quot;</span><span class="p">,</span>
+    <span class="s2">"sigma_delta_circular_feature"</span><span class="p">,</span>
+    <span class="s2">"sigma_delta_3D_plane"</span><span class="p">,</span>
+    <span class="s2">"sigma_delta_cylindrical_feature"</span><span class="p">,</span>
 <span class="p">]</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
@@ -98,7 +98,7 @@
     <span class="n">su</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">sv</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate defect standard deviation for a circular feature.</span>
+<span class="w">    </span><span class="sd">"""Calculate defect standard deviation for a circular feature.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -117,7 +117,7 @@
 <span class="sd">    float or np.ndarray</span>
 <span class="sd">        The calculated standard deviation. If `theta` is an array,</span>
 <span class="sd">        the output shape matches the shape of `theta`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sr</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">su</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">sv</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></div>
 
 
@@ -131,7 +131,7 @@
     <span class="n">sa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">sb</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate defect standard deviation for a 3D plane feature.</span>
+<span class="w">    </span><span class="sd">"""Calculate defect standard deviation for a 3D plane feature.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -154,7 +154,7 @@
 <span class="sd">    float or np.ndarray</span>
 <span class="sd">        The calculated standard deviation. If `x` or `y` are arrays,</span>
 <span class="sd">        the output shape matches their broadcasted shape.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sw</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sa</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sb</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></div>
 
 
@@ -170,7 +170,7 @@
     <span class="n">sv</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">sbeta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate defect standard deviation for a cylindrical feature.</span>
+<span class="w">    </span><span class="sd">"""Calculate defect standard deviation for a cylindrical feature.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -198,7 +198,7 @@
 <span class="sd">    float or np.ndarray</span>
 <span class="sd">        The calculated standard deviation. If `z` or `theta` are</span>
 <span class="sd">        arrays, the output shape matches their broadcasted shape.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
         <span class="n">sr</span><span class="o">**</span><span class="mi">2</span>
         <span class="o">+</span> <span class="p">(</span><span class="n">su</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">sbeta</span> <span class="o">*</span> <span class="n">z</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>

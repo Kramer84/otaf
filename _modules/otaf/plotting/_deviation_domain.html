@@ -80,8 +80,8 @@
   <h1>Source code for otaf.plotting._deviation_domain</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Kramer84&quot;</span>
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;plot_deviation_domain&quot;</span><span class="p">]</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">"Kramer84"</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"plot_deviation_domain"</span><span class="p">]</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.ticker</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ticker</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -97,8 +97,8 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_deviation_domain</span><span class="p">(</span>
     <span class="n">ax</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="n">sample</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-    <span class="n">x_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;X&quot;</span><span class="p">,</span>
-    <span class="n">y_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span>
+    <span class="n">x_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"X"</span><span class="p">,</span>
+    <span class="n">y_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"Y"</span><span class="p">,</span>
     <span class="n">x_bounds</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">),</span>
     <span class="n">y_bounds</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
     <span class="n">ratio_bounds</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">,</span>
@@ -106,7 +106,7 @@
     <span class="n">style</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">style_kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot sample coordinates on a Matplotlib axis with a diamond-shaped tolerance polygon.</span>
 
 <span class="sd">    Draws a 4-sided boundary polygon using the specified limits, splits data points</span>
@@ -119,9 +119,9 @@
 <span class="sd">        The Matplotlib axis object where the polygon and data points will be rendered.</span>
 <span class="sd">    sample : np.ndarray</span>
 <span class="sd">        An (N, 2) array containing the coordinate points to plot.</span>
-<span class="sd">    x_label : str, default=&quot;X&quot;</span>
+<span class="sd">    x_label : str, default="X"</span>
 <span class="sd">        The text label for the horizontal X-axis.</span>
-<span class="sd">    y_label : str, default=&quot;Y&quot;</span>
+<span class="sd">    y_label : str, default="Y"</span>
 <span class="sd">        The text label for the vertical Y-axis.</span>
 <span class="sd">    x_bounds : Tuple[float, float], default=(-0.15, 0.15)</span>
 <span class="sd">        The minimum and maximum horizontal intercept coordinates for the polygon.</span>
@@ -140,22 +140,22 @@
 <span class="sd">    -------</span>
 <span class="sd">    matplotlib.axes.Axes</span>
 <span class="sd">        The modified axis object containing the rendered polygon, scatter plots, and text.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">_merge_style</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="o">**</span><span class="n">style_kwargs</span><span class="p">)</span>
-    <span class="n">c_poly</span> <span class="o">=</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;colors&quot;</span><span class="p">][</span><span class="s2">&quot;c2&quot;</span><span class="p">]</span>
-    <span class="n">c_inside</span> <span class="o">=</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;colors&quot;</span><span class="p">][</span><span class="s2">&quot;c1&quot;</span><span class="p">]</span>
-    <span class="n">c_outside</span> <span class="o">=</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;colors&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;c7&quot;</span><span class="p">,</span> <span class="s2">&quot;#7f7f7f&quot;</span><span class="p">)</span>
-    <span class="n">f_size</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;font_size&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;grid&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="n">c_poly</span> <span class="o">=</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">"colors"</span><span class="p">][</span><span class="s2">"c2"</span><span class="p">]</span>
+    <span class="n">c_inside</span> <span class="o">=</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">"colors"</span><span class="p">][</span><span class="s2">"c1"</span><span class="p">]</span>
+    <span class="n">c_outside</span> <span class="o">=</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">"colors"</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"c7"</span><span class="p">,</span> <span class="s2">"#7f7f7f"</span><span class="p">)</span>
+    <span class="n">f_size</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"font_size"</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"grid"</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;labels&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"labels"</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">x_label</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">f_size</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">y_label</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">f_size</span><span class="p">)</span>
     <span class="n">polygon_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
         <span class="p">[[</span><span class="n">x_bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">y_bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="p">[</span><span class="n">x_bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">y_bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]]]</span>
     <span class="p">)</span>
     <span class="n">polygon</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span>
-        <span class="n">polygon_points</span><span class="p">,</span> <span class="n">closed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">c_poly</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span>
+        <span class="n">polygon_points</span><span class="p">,</span> <span class="n">closed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">c_poly</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">"none"</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span>
     <span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">polygon</span><span class="p">)</span>
     <span class="n">inside</span> <span class="o">=</span> <span class="p">[]</span>
@@ -186,10 +186,10 @@
     <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
         <span class="mf">0.05</span><span class="p">,</span>
         <span class="mf">0.95</span><span class="p">,</span>
-        <span class="sa">f</span><span class="s2">&quot;$n_</span><span class="se">{{</span><span class="s2">failed</span><span class="se">}}</span><span class="s2"> = </span><span class="si">{</span><span class="n">n_failed</span><span class="si">}</span><span class="s2">$&quot;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">"$n_</span><span class="se">{{</span><span class="s2">failed</span><span class="se">}}</span><span class="s2"> = </span><span class="si">{</span><span class="n">n_failed</span><span class="si">}</span><span class="s2">$"</span><span class="p">,</span>
         <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span>
         <span class="n">fontsize</span><span class="o">=</span><span class="n">f_size</span> <span class="o">+</span> <span class="mi">4</span><span class="p">,</span>
-        <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span>
+        <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">"top"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">ax</span></div>
 

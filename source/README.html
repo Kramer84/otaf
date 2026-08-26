@@ -217,34 +217,34 @@ reference frames or mapped relative to local surfaces.</p>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="n">system_data</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;PARTS&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>  <span class="c1"># Surface frame orientation matrix</span>
-                <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;A0&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span> <span class="s2">&quot;A1&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])},</span>
-                <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;P2a&quot;</span><span class="p">],</span>
-                <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;PERFECT&quot;</span><span class="p">],</span>
-                <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FLOATING&quot;</span><span class="p">],</span>
+    <span class="s2">"PARTS"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"1"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"a"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"FRAME"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>  <span class="c1"># Surface frame orientation matrix</span>
+                <span class="s2">"POINTS"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"A0"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span> <span class="s2">"A1"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])},</span>
+                <span class="s2">"TYPE"</span><span class="p">:</span> <span class="s2">"plane"</span><span class="p">,</span>
+                <span class="s2">"INTERACTIONS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"P2a"</span><span class="p">],</span>
+                <span class="s2">"CONSTRAINTS_D"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"PERFECT"</span><span class="p">],</span>
+                <span class="s2">"CONSTRAINTS_G"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"FLOATING"</span><span class="p">],</span>
             <span class="p">},</span>
         <span class="p">},</span>
-        <span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;FRAME&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
-                <span class="s2">&quot;POINTS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;A0&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span> <span class="s2">&quot;A1&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])},</span>
-                <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;INTERACTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;P1a&quot;</span><span class="p">],</span>
-                <span class="s2">&quot;CONSTRAINTS_D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;PERFECT&quot;</span><span class="p">],</span>
-                <span class="s2">&quot;CONSTRAINTS_G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FLOATING&quot;</span><span class="p">],</span>
+        <span class="s2">"2"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"a"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"FRAME"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+                <span class="s2">"POINTS"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"A0"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span> <span class="s2">"A1"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])},</span>
+                <span class="s2">"TYPE"</span><span class="p">:</span> <span class="s2">"plane"</span><span class="p">,</span>
+                <span class="s2">"INTERACTIONS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"P1a"</span><span class="p">],</span>
+                <span class="s2">"CONSTRAINTS_D"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"PERFECT"</span><span class="p">],</span>
+                <span class="s2">"CONSTRAINTS_G"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"FLOATING"</span><span class="p">],</span>
             <span class="p">},</span>
         <span class="p">}</span>
     <span class="p">},</span>
-    <span class="s2">&quot;LOOPS&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;COMPATIBILITY&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;L0&quot;</span><span class="p">:</span> <span class="s2">&quot;P1aA0 -&gt; P2aA0&quot;</span>  <span class="c1"># Compact kinematic chain loop sequence</span>
+    <span class="s2">"LOOPS"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"COMPATIBILITY"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"L0"</span><span class="p">:</span> <span class="s2">"P1aA0 -&gt; P2aA0"</span>  <span class="c1"># Compact kinematic chain loop sequence</span>
         <span class="p">}</span>
     <span class="p">},</span>
-    <span class="s2">&quot;GLOBAL_CONSTRAINTS&quot;</span><span class="p">:</span> <span class="s2">&quot;2D_NZ&quot;</span><span class="p">,</span>
+    <span class="s2">"GLOBAL_CONSTRAINTS"</span><span class="p">:</span> <span class="s2">"2D_NZ"</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -276,7 +276,7 @@ generate standard optimization targets:</p>
 
 <span class="c1"># 4. Test ideal structural alignment (Zero-Deviation Case)</span>
 <span class="n">ideal_test</span> <span class="o">=</span> <span class="n">soc_model</span><span class="o">.</span><span class="n">test_zero_deviation_feasibility</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Feasible without defects:&quot;</span><span class="p">,</span> <span class="n">ideal_test</span><span class="p">[</span><span class="s2">&quot;success&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Feasible without defects:"</span><span class="p">,</span> <span class="n">ideal_test</span><span class="p">[</span><span class="s2">"success"</span><span class="p">])</span>
 </pre></div>
 </div>
 <p align="right"><a href="#readme-top">back to top</a></p></section>
