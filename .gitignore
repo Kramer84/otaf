@@ -51,3 +51,6 @@ wheels/
 *.dist-info/
 .eggs/
 *.egg
+
+# --- Logs ---
+*.log
