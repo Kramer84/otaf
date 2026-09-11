@@ -19,25 +19,48 @@ from otaf.geometry import is_affine_transformation_matrix
 
 @beartype
 class DeviationMatrix:
-    """
-    Represents a deviation matrix used in structural analysis.
+    """Represents a deviation matrix used in structural analysis.
 
-    A deviation matrix defines deviations in translation and rotation for parts and assemblies.
-    It can be compared to a small deviation torsor.
+    A deviation matrix defines deviations in translation and rotation
+    for parts and assemblies. It can be compared to a small deviation
+    torsor.
 
     Parameters
     ----------
     index : int, optional
-        An index used to differentiate variable names. The same index can be used multiple times.
+        An index used to differentiate variable names. The same index
+        can be used multiple times (the default is -1).
     translations : str, optional
-        Degrees of freedom for translation ('x', 'y', 'z'). Example: "xyz" for all three degrees.
+        Degrees of freedom for translation ('x', 'y', 'z'). Example:
+        "xyz" for all three degrees (the default is "xyz").
     rotations : str, optional
-        Degrees of freedom for rotation ('x', 'y', 'z').
+        Degrees of freedom for rotation ('x', 'y', 'z') (the default
+        is "xyz").
     inverse : bool, optional
-        Indicates whether the matrix represents deviations from nominal to real (True) or vice versa (False).
-        This affects the signs of the matrices and is necessary if a matrix is used in two directions.
+        Indicates whether the matrix represents deviations from
+        nominal to real (True) or vice versa (False) (the default
+        is False).
     name : str, optional
-        Name of the matrix for identification (default is an empty string).
+        Name of the matrix for identification (the default is "").
+
+    Attributes
+    ----------
+    ID : int
+        An index used to differentiate variable names.
+    TYPE : str
+        The type identifier, always "D".
+    name : str
+        Name of the matrix for identification.
+    inverse : bool
+        Indicates whether the matrix represents deviations from nominal
+        to real.
+    SE3_basis_indices : list of int
+        The SE(3) basis indices matching the active degrees
+        of freedom.
+    variables : list of sympy.Symbol
+        The symbolic variables representing the degrees of freedom.
+    n_variables : int
+        The total number of symbolic variables initialized.
     """
 
     def __init__(
@@ -48,28 +71,7 @@ class DeviationMatrix:
         inverse: bool = False,
         name: str = "",
     ):
-        """
-        Initialize a DeviationMatrix instance.
-
-        Parameters
-        ----------
-        index : int, optional
-            An index used to differentiate variable names. The same index can be used multiple times (default is -1).
-        translations : str, optional
-            Degrees of freedom for translation ('x', 'y', 'z'). Example: "xyz" for all three degrees (default is "xyz").
-        rotations : str, optional
-            Degrees of freedom for rotation ('x', 'y', 'z') (default is "xyz").
-        inverse : bool, optional
-            Indicates whether the matrix represents deviations from nominal to real (True) or vice versa (False).
-            This affects the signs of the matrices (default is False).
-        name : str, optional
-            Name of the matrix for identification (default is an empty string).
-
-        Raises
-        ------
-        AssertionError
-            If the `index` is not an integer.
-        """
+        """Initialize a DeviationMatrix instance."""
         logging.info(
             f"Initializing DeviationMatrix with index: {index}, translations: {translations}, rotations: {rotations}, inverse: {inverse}"
         )
@@ -86,9 +88,8 @@ class DeviationMatrix:
         logging.debug(f"Initialized {len(self.variables)} variables for the deviation matrix.")
         self.n_variables = len(self.variables)
 
-    def __repr__(self):
-        """
-        Generate a string representation of the DeviationMatrix.
+    def __repr__(self) -> str:
+        """A string representation of the DeviationMatrix.
 
         Returns
         -------
@@ -98,16 +99,17 @@ class DeviationMatrix:
         logging.debug(f"Generating string representation for DeviationMatrix with index {self.ID}.")
         return f"DeviationMatrix(index={self.ID}, translations='{self._translations}', rotations='{self._rotations}', inverse={self.inverse}, name={self.name})"
 
-    def _initialize_basis_variables(self):
-        """
-        Initialize the symbolic basis variables for the deviation matrix.
+    def _initialize_basis_variables(self) -> None:
+        """Initialize the symbolic basis variables.
 
-        This method sets up the variables based on the specified translations and rotations.
-        It uses the SE(3) basis indices defined in `otaf.constants.BASIS_DICT`.
+        This method sets up the variables based on the specified
+        translations and rotations. It uses the SE(3) basis indices
+        defined in ``otaf.constants.BASIS_DICT``.
 
         Notes
         -----
-        The variables are stored as symbolic `sympy.Symbol` instances and indexed by the provided `index`.
+        The variables are stored as symbolic ``sympy.Symbol``
+        instances and indexed by ``self.ID``.
         """
         logging.info("Initializing basis variables.")
         self.SE3_basis_indices.clear()
@@ -129,17 +131,18 @@ class DeviationMatrix:
                         sp.Symbol(f"{var_name}_{self.ID}" if self.ID >= 0 else var_name)
                     )
 
-    def get_inverse(self):
-        """
-        Generate the inverse of the current DeviationMatrix.
+    def get_inverse(self) -> "DeviationMatrix":
+        """Generate the inverse of the current DeviationMatrix.
 
-        The inverse matrix has the same degrees of freedom (translations and rotations)
-        but with reversed directionality.
+        The inverse matrix has the same degrees of freedom
+        (translations and rotations) but with reversed
+        directionality.
 
         Returns
         -------
         DeviationMatrix
-            A new instance of `DeviationMatrix` representing the inverse of the current matrix.
+            A new instance of ``DeviationMatrix`` representing the
+            inverse of the current matrix.
         """
         logging.info(f"[Type: 'D', ID: {self.ID}] Generating inverse DeviationMatrix.")
         return DeviationMatrix(
@@ -151,46 +154,47 @@ class DeviationMatrix:
         )
 
     def get_variables(self) -> List[sp.Symbol]:
-        """
-        Retrieve the symbolic variables associated with the deviation matrix.
+        """Retrieve symbolic variables associated with the matrix.
 
-        These variables correspond to the degrees of freedom in translations and rotations,
-        defined during initialization.
+        These variables correspond to the degrees of freedom in
+        translations and rotations, defined during initialization.
 
         Returns
         -------
-        List[sympy.Symbol]
-            A list of symbolic variables representing the degrees of freedom.
+        list of sympy.Symbol
+            A list of symbolic variables representing the degrees of
+            freedom.
         """
         logging.debug(f"[Type: 'D', ID: {self.ID}] Retrieving variables.")
         return self.variables
 
     def get_matrix(self) -> List[sp.MatrixBase]:
-        """
-        Generate the SE(3) matrix for the deviation matrix.
+        """Generate the SE(3) matrix for the deviation matrix.
 
-        The SE(3) matrix is constructed using the indices of the degrees of freedom specified
-        during initialization.
+        The SE(3) matrix is constructed using the indices of the
+        degrees of freedom specified during initialization.
 
         Returns
         -------
-        List[sympy.MatrixBase]
-            A list of symbolic matrices corresponding to the SE(3) basis elements.
+        list of sympy.MatrixBase
+            A list of symbolic matrices corresponding to the SE(3)
+            basis elements.
         """
         logging.info(f"[Type: 'D', ID: {self.ID}] Generating SE3 matrix.")
         return get_SE3_matrices_from_indices(self.SE3_basis_indices)
 
     def get_matrix_inverse(self) -> List[sp.MatrixBase]:
-        """
-        Generate the inverse SE(3) matrix for the deviation matrix.
+        """Generate the inverse SE(3) matrix for the deviation matrix.
 
-        The inverse SE(3) matrix is constructed by reversing the directionality
-        of the degrees of freedom (i.e., multiplying by -1).
+        The inverse SE(3) matrix is constructed by reversing the
+        directionality of the degrees of freedom (i.e., multiplying
+        by ``-1``).
 
         Returns
         -------
-        List[sympy.MatrixBase]
-            A list of symbolic matrices corresponding to the inverse SE(3) basis elements.
+        list of sympy.MatrixBase
+            A list of symbolic matrices corresponding to the inverse
+            SE(3) basis elements.
         """
         logging.info(f"[Type: 'D', ID: {self.ID}] Generating inverse SE3 matrix.")
         return get_SE3_matrices_from_indices(self.SE3_basis_indices, multiplier=-1)
@@ -198,23 +202,47 @@ class DeviationMatrix:
 
 @beartype
 class GapMatrix:
-    """
-    Represents a gap matrix used in structural analysis.
+    """Represents a gap matrix used in structural analysis.
 
-    A gap matrix defines gaps or clearances in translation and rotation for parts and assemblies.
+    A gap matrix defines gaps or clearances in translation and
+    rotation for parts and assemblies.
 
     Parameters
     ----------
     index : int, optional
-        An index used to differentiate variable names. The same index can be used multiple times (default is -1).
+        An index used to differentiate variable names. The same index
+        can be used multiple times (the default is -1).
     translations_blocked : str, optional
-        Degrees of freedom for translation that are blocked ('x', 'y', 'z') (default is an empty string).
+        Degrees of freedom for translation that are blocked ('x',
+        'y', 'z') (the default is "").
     rotations_blocked : str, optional
-        Degrees of freedom for rotation that are blocked ('x', 'y', 'z') (default is an empty string).
+        Degrees of freedom for rotation that are blocked ('x', 'y',
+        'z') (the default is "").
     inverse : bool, optional
-        Indicates whether the matrix represents gaps or clearances (True) or blocked degrees of freedom (False).
+        Indicates whether the matrix represents gaps or clearances
+        (True) or blocked degrees of freedom (False) (the default
+        is False).
     name : str, optional
-        Name of the matrix for identification (default is an empty string).
+        Name of the matrix for identification (the default is "").
+
+    Attributes
+    ----------
+    ID : int
+        An index used to differentiate variable names.
+    TYPE : str
+        The type identifier, always "G".
+    name : str
+        Name of the matrix for identification.
+    inverse : bool
+        Indicates whether the matrix represents gaps or clearances.
+    SE3_basis_indices : list of int
+        The SE(3) basis indices matching the unblocked degrees of
+        freedom.
+    variables : list of sympy.Symbol
+        The symbolic variables representing the unblocked degrees of
+        freedom.
+    n_variables : int
+        The total number of symbolic variables initialized.
     """
 
     def __init__(
@@ -224,28 +252,8 @@ class GapMatrix:
         rotations_blocked: str = "",
         inverse: bool = False,
         name: str = "",
-    ):
-        """
-        Initialize a GapMatrix instance.
-
-        Parameters
-        ----------
-        index : int, optional
-            An index used to differentiate variable names. The same index can be used multiple times (default is -1).
-        translations_blocked : str, optional
-            Degrees of freedom for translation that are blocked ('x', 'y', 'z') (default is an empty string).
-        rotations_blocked : str, optional
-            Degrees of freedom for rotation that are blocked ('x', 'y', 'z') (default is an empty string).
-        inverse : bool, optional
-            Indicates whether the matrix represents gaps or clearances (True) or blocked degrees of freedom (False).
-        name : str, optional
-            Name of the matrix for identification (default is an empty string).
-
-        Raises
-        ------
-        AssertionError
-            If the `index` is not an integer.
-        """
+    ) -> None:
+        """Initialize a GapMatrix instance."""
         logging.info(
             f"[Type: 'G', ID: {index}] Initializing GapMatrix with blocked translations: {translations_blocked}, blocked rotations: {rotations_blocked}, inverse: {inverse}"
         )
@@ -264,16 +272,17 @@ class GapMatrix:
             f"[Type: 'G', ID: {self.ID}] Initialized {len(self.variables)} variables for the gap matrix."
         )
 
-    def _initialize_basis_variables(self):
-        """
-        Initialize the symbolic basis variables for the gap matrix.
+    def _initialize_basis_variables(self) -> None:
+        """Initialize the symbolic basis variables for the gap matrix.
 
-        This method sets up variables based on the degrees of freedom that are not blocked
-        in translations and rotations, as defined during initialization.
+        This method sets up variables based on the degrees of freedom
+        that are not blocked in translations and rotations, as defined
+        during initialization.
 
         Notes
         -----
-        The variables are stored as symbolic `sympy.Symbol` instances and indexed by the provided `index`.
+        The variables are stored as symbolic ``sympy.Symbol``
+        instances and indexed by ``self.ID``.
         """
         self.SE3_basis_indices.clear()
         self.variables.clear()
@@ -295,9 +304,8 @@ class GapMatrix:
                     )
         logging.debug(f"[Type: 'G', ID: {self.ID}] Added {len(self.variables)} basis variables.")
 
-    def __repr__(self):
-        """
-        Generate a string representation of the GapMatrix.
+    def __repr__(self) -> str:
+        """A string representation of the GapMatrix.
 
         Returns
         -------
@@ -306,17 +314,18 @@ class GapMatrix:
         """
         return f"GapMatrix(index={self.ID}, translations_blocked='{self._translations_blocked}', rotations_blocked='{self._rotations_blocked}', inverse={self.inverse}, name={self.name})"
 
-    def get_inverse(self):
-        """
-        Generate the inverse of the current GapMatrix.
+    def get_inverse(self) -> "GapMatrix":
+        """Generate the inverse of the current GapMatrix.
 
-        The inverse matrix has the same blocked degrees of freedom for translations and rotations
-        but reverses the directionality (gaps versus clearances).
+        The inverse matrix has the same blocked degrees of freedom for
+        translations and rotations but reverses the directionality
+        (gaps versus clearances).
 
         Returns
         -------
         GapMatrix
-            A new instance of `GapMatrix` representing the inverse of the current matrix.
+            A new instance of ``GapMatrix`` representing the inverse
+            of the current matrix.
         """
         logging.info(f"[Type: 'G', ID: {self.ID}] Generating inverse DeviationMatrix.")
         return GapMatrix(
@@ -328,46 +337,49 @@ class GapMatrix:
         )
 
     def get_variables(self) -> List[sp.Symbol]:
-        """
-        Retrieve the symbolic variables associated with the gap matrix.
+        """Retrieve symbolic variables associated with the gap matrix.
 
-        These variables correspond to the degrees of freedom in translations and rotations
-        that are not blocked, as defined during initialization.
+        These variables correspond to the degrees of freedom in
+        translations and rotations that are not blocked, as defined
+        during initialization.
 
         Returns
         -------
-        List[sympy.Symbol]
-            A list of symbolic variables representing the degrees of freedom.
+        list of sympy.Symbol
+            A list of symbolic variables representing the degrees of
+            freedom.
         """
         logging.debug(f"[Type: 'G', ID: {self.ID}] Retrieving variables.")
         return self.variables
 
     def get_matrix(self) -> List[sp.MatrixBase]:
-        """
-        Generate the SE(3) matrix for the gap matrix.
+        """Generate the SE(3) matrix for the gap matrix.
 
-        The SE(3) matrix is constructed using the indices of the degrees of freedom
-        that are not blocked, specified during initialization.
+        The SE(3) matrix is constructed using the indices of the
+        degrees of freedom that are not blocked, specified during
+        initialization.
 
         Returns
         -------
-        List[sympy.MatrixBase]
-            A list of symbolic matrices corresponding to the SE(3) basis elements.
+        list of sympy.MatrixBase
+            A list of symbolic matrices corresponding to the SE(3)
+            basis elements.
         """
         logging.info(f"[Type: 'G', ID: {self.ID}] Generating SE3 matrix.")
         return get_SE3_matrices_from_indices(self.SE3_basis_indices)
 
     def get_matrix_inverse(self) -> List[sp.MatrixBase]:
-        """
-        Generate the inverse SE(3) matrix for the gap matrix.
+        """Generate the inverse SE(3) matrix for the gap matrix.
 
-        The inverse SE(3) matrix is constructed by reversing the directionality of the degrees of freedom
-        (i.e., multiplying by -1).
+        The inverse SE(3) matrix is constructed by reversing the
+        directionality of the degrees of freedom (i.e., multiplying
+        by ``-1``).
 
         Returns
         -------
-        List[sympy.MatrixBase]
-            A list of symbolic matrices corresponding to the inverse SE(3) basis elements.
+        list of sympy.MatrixBase
+            A list of symbolic matrices corresponding to the inverse
+            SE(3) basis elements.
         """
         logging.info(f"[Type: 'G', ID: {self.ID}] Generating inverse SE3 matrix.")
         return get_SE3_matrices_from_indices(self.SE3_basis_indices, multiplier=-1)
@@ -375,28 +387,37 @@ class GapMatrix:
 
 @beartype
 class TransformationMatrix:
-    """
-    Class representing transformation matrices within the nominal geometry of a part.
+    """Transformation matrices within the nominal geometry of a part.
 
-    Transformation matrices define the transformation between two coordinate systems.
+    Transformation matrices define the transformation between two
+    coordinate systems.
 
     Parameters
     ----------
     index : int, optional
-        An index used to differentiate transformation matrices. The same index can be used multiple times (default is -1).
+        An index used to differentiate transformation matrices. The same
+        index can be used multiple times (the default is -1).
     initial : np.ndarray, optional
-        The initial 4x4 matrix representing the initial coordinate system (default is the identity matrix).
+        The initial 4x4 matrix representing the initial coordinate
+        system (the default is the identity matrix).
     final : np.ndarray, optional
-        The final 4x4 matrix representing the final coordinate system (default is the identity matrix).
+        The final 4x4 matrix representing the final coordinate
+        system (the default is the identity matrix).
     name : str, optional
-        Name of the transformation matrix for identification (default is an empty string).
-    matrix : Optional[Union[np.ndarray, sympy.MatrixBase]], optional
-        The explicit transformation matrix. If provided, it overrides `initial` and `final` matrices (default is None).
+        Name of the transformation matrix for identification (the default
+        is "").
+    matrix : np.ndarray or sympy.MatrixBase, optional
+        The explicit transformation matrix. If provided, it overrides
+        `initial` and `final` matrices (the default is ``None``).
 
-    Raises
-    ------
-    AssertionError
-        If the provided matrix is not a valid affine transformation matrix.
+    Attributes
+    ----------
+    ID : int
+        An index used to differentiate transformation matrices.
+    TYPE : str
+        The type identifier, always "T".
+    name : str
+        Name of the transformation matrix for identification.
     """
 
     def __init__(
@@ -406,28 +427,8 @@ class TransformationMatrix:
         final: np.ndarray = np.identity(4),
         name: str = "",
         matrix: Optional[Union[np.ndarray, sp.MatrixBase]] = None,
-    ):
-        """
-        Initialize a TransformationMatrix instance.
-
-        Parameters
-        ----------
-        index : int, optional
-            An index used to differentiate transformation matrices. The same index can be used multiple times (default is -1).
-        initial : np.ndarray, optional
-            The initial 4x4 matrix representing the initial coordinate system (default is the identity matrix).
-        final : np.ndarray, optional
-            The final 4x4 matrix representing the final coordinate system (default is the identity matrix).
-        name : str, optional
-            Name of the transformation matrix for identification (default is an empty string).
-        matrix : Optional[Union[np.ndarray, sympy.MatrixBase]], optional
-            The explicit transformation matrix. If provided, it overrides `initial` and `final` matrices (default is None).
-
-        Raises
-        ------
-        AssertionError
-            If the provided matrix is not a valid affine transformation matrix.
-        """
+    ) -> None:
+        """Initialize a TransformationMatrix instance."""
         logging.info(f"[Type: 'T', ID: {index}] Initializing TransformationMatrix.")
         assert isinstance(index, int), "Wrong index, check class init parameters"
         self.ID = index
@@ -444,28 +445,29 @@ class TransformationMatrix:
             self._matrix = None
         self._check_affine_validity_and_inverse()
 
-    def __repr__(self):
-        """
-        Generate a string representation of the TransformationMatrix.
+    def __repr__(self) -> str:
+        """A string representation of the TransformationMatrix.
 
         Returns
         -------
         str
-            String representation of the TransformationMatrix instance, including its index and matrix values.
+            String representation of the TransformationMatrix instance,
+            including its index and matrix values.
         """
         return f"TransformationMatrix with index {self.ID} and values:\n{self.get_matrix().__repr__()} and name : {self.name}"
 
-    def _check_affine_validity_and_inverse(self):
-        """
-        Validate the affine transformation matrix and compute its inverse.
+    def _check_affine_validity_and_inverse(self) -> None:
+        """Validate the affine transformation matrix and compute its inverse.
 
-        Ensures the provided or calculated transformation matrix is a valid affine transformation,
-        and verifies the computed inverse matrix for consistency.
+        Ensures the provided or calculated transformation matrix is a
+        valid affine transformation, and verifies the computed inverse
+        matrix for consistency.
 
         Raises
         ------
         AssertionError
-            If the matrix or its inverse is not a valid affine transformation matrix.
+            If the matrix or its inverse is not a valid affine
+            transformation matrix.
         """
         if self._matrix is not None and self._matrix.shape == (4, 4):
             matrix = self._matrix.copy()
@@ -487,25 +489,28 @@ class TransformationMatrix:
     def get_change_of_basis_matrix(
         self, initial: np.ndarray, final: np.ndarray, as_array: bool = False
     ) -> Union[sp.MatrixBase, np.ndarray]:
-        """
-        Calculate the change of basis matrix between two coordinate systems.
+        """Calculate change of basis matrix between coordinate systems.
 
-        The change of basis matrix is computed as the relative transformation from the
-        initial coordinate system to the final coordinate system.
+        The change of basis matrix is computed as the relative
+        transformation from the initial coordinate system to the
+        final coordinate system.
 
         Parameters
         ----------
         initial : np.ndarray
-            The initial 4x4 matrix representing the initial coordinate system.
+            The initial 4x4 matrix representing the initial coordinate
+            system.
         final : np.ndarray
             The final 4x4 matrix representing the final coordinate system.
         as_array : bool, optional
-            If True, returns the matrix as a NumPy array; otherwise, returns a sympy.Matrix (default is False).
+            If ``True``, returns the matrix as a NumPy array; otherwise,
+            returns a ``sympy.Matrix`` (the default is ``False``).
 
         Returns
         -------
-        Union[sympy.MatrixBase, np.ndarray]
-            The change of basis matrix between the initial and final coordinate systems.
+        sympy.MatrixBase or np.ndarray
+            The change of basis matrix between the initial and final
+            coordinate systems.
         """
         logging.debug(f"[Type: 'T', ID: {self.ID}] Calculating change of basis matrix.")
 
@@ -524,17 +529,18 @@ class TransformationMatrix:
             return T
         return sp.Matrix(T.tolist())
 
-    def get_inverse(self):
-        """
-        Generate the inverse of the current TransformationMatrix.
+    def get_inverse(self) -> "TransformationMatrix":
+        """Generate the inverse of the current TransformationMatrix.
 
-        The inverse transformation matrix swaps the initial and final coordinate systems,
-        or directly computes the inverse of the provided matrix.
+        The inverse transformation matrix swaps the initial and final
+        coordinate systems, or directly computes the inverse of the
+        provided matrix.
 
         Returns
         -------
         TransformationMatrix
-            A new instance of `TransformationMatrix` representing the inverse transformation.
+            A new instance of ``TransformationMatrix`` representing the
+            inverse transformation.
         """
         if self._matrix is not None and self._matrix.shape == (4, 4):
             return TransformationMatrix(
@@ -551,16 +557,17 @@ class TransformationMatrix:
             )
 
     def get_matrix(self) -> sp.MatrixBase:
-        """
-        Retrieve the transformation matrix.
+        """Retrieve the transformation matrix.
 
-        If the transformation matrix was explicitly provided during initialization, it is returned.
-        Otherwise, it is computed as the change of basis matrix between the initial and final coordinate systems.
+        If the transformation matrix was explicitly provided during
+        initialization, it is returned. Otherwise, it is computed as
+        the change of basis matrix between the initial and final
+        coordinate systems.
 
         Returns
         -------
         sympy.MatrixBase
-            The transformation matrix as a symbolic sympy.Matrix.
+            The transformation matrix as a symbolic ``sympy.Matrix``.
         """
         logging.info(f"[Type: 'T', ID: {self.ID}] Generating transformation matrix.")
         if self._matrix is not None and self._matrix.shape == (4, 4):
@@ -569,16 +576,18 @@ class TransformationMatrix:
             return self.get_change_of_basis_matrix(self._initial, self._final)
 
     def get_matrix_inverse(self) -> sp.MatrixBase:
-        """
-        Retrieve the inverse of the transformation matrix.
+        """Retrieve the inverse of the transformation matrix.
 
-        If the transformation matrix was explicitly provided during initialization, its inverse is computed.
-        Otherwise, the inverse is calculated as the change of basis matrix between the final and initial coordinate systems.
+        If the transformation matrix was explicitly provided during
+        initialization, its inverse is computed. Otherwise, the
+        inverse is calculated as the change of basis matrix between
+        the final and initial coordinate systems.
 
         Returns
         -------
         sympy.MatrixBase
-            The inverse transformation matrix as a symbolic sympy.Matrix.
+            The inverse transformation matrix as a symbolic
+            ``sympy.Matrix``.
         """
         logging.info(f"[Type: 'T', ID: {self.ID}] Generating inverse transformation matrix.")
         if self._matrix is not None and self._matrix.shape == (4, 4):
@@ -588,29 +597,36 @@ class TransformationMatrix:
 
 
 class I4:
+    """A 4x4 identity matrix.
+
+    The identity matrix is commonly used in transformations as a
+    neutral element, where no translation or rotation is applied.
+
+    Attributes
+    ----------
+    TYPE : str
+        The type identifier, always ``"I4"``.
+    ID : int
+        The matrix identifier, always ``-1``.
     """
-    Class representing a 4x4 identity matrix.
 
-    The identity matrix is commonly used in transformations as a neutral element, where no
-    translation or rotation is applied.
-    """
-
-    def __init__(self):
-        """
-        Initialize a 4x4 identity matrix.
-
-        Sets the matrix type to "I4".
-        """
+    def __init__(self) -> None:
+        """Initialize an I4 instance."""
         self.TYPE = "I4"
         self.ID = -1
 
-    def __repr__(self):
-        """Generate a string representation of I4."""
+    def __repr__(self) -> str:
+        """A string representation of the I4 identity matrix.
+
+        Returns
+        -------
+        str
+            String representation of the I4 instance.
+        """
         return f"I4 Identity Matrix"
 
     def get_matrix(self) -> sp.MatrixBase:
-        """
-        Generate a 4x4 identity matrix.
+        """Generate a 4x4 identity matrix.
 
         Returns
         -------
@@ -620,14 +636,21 @@ class I4:
         logging.info("[Type: I4] Generating 4x4 identity matrix.")
         return sp.Matrix(np.identity(4).tolist())
 
-    def get_inverse(self):
+    def get_inverse(self) -> "I4":
+        """Retrieve the inverse of the I4 instance.
+
+        Returns
+        -------
+        I4
+            The identity matrix instance itself.
+        """
         return self
 
     def get_matrix_inverse(self) -> sp.MatrixBase:
-        """
-        Generate the inverse of the 4x4 identity matrix.
+        """Generate the inverse of the 4x4 identity matrix.
 
-        Since the inverse of an identity matrix is itself, this method returns the same matrix.
+        Since the inverse of an identity matrix is itself, this
+        method returns the same matrix.
 
         Returns
         -------
@@ -639,38 +662,45 @@ class I4:
 
 
 class J4:
+    """A 4x4 rotation matrix for a 180° rotation around the z-axis.
+
+    This matrix is often used to represent a transformation involving a
+    half-turn rotation in a Cartesian coordinate system.
+
+    Attributes
+    ----------
+    TYPE : str
+        The type identifier, always ``"J4"``.
+    ID : int
+        The matrix identifier, always ``-1``.
     """
-    Class representing a 4x4 rotation matrix for a 180° rotation around the z-axis.
 
-    This matrix is often used to represent a transformation involving a half-turn
-    rotation in a Cartesian coordinate system.
-    """
-
-    def __init__(self):
-        """
-        Initialize a 4x4 rotation matrix representing a 180° rotation around the z-axis.
-
-        Sets the matrix type to "J4".
-        """
+    def __init__(self) -> None:
+        """Initialize a J4 instance."""
         self.TYPE = "J4"
         self.ID = -1
 
-    def __repr__(self):
-        """Generate a string representation of J4."""
+    def __repr__(self) -> str:
+        """A string representation of the J4 rotation matrix.
+
+        Returns
+        -------
+        str
+            String representation of the J4 instance.
+        """
         return f"J4 Rotation Matrix"
 
     def get_matrix(self) -> sp.MatrixBase:
-        """
-        Generate a 4x4 rotation matrix representing a 180° rotation around the z-axis.
+        """Generate a 4x4 rotation matrix for a 180° z-axis rotation.
 
-        The matrix is constructed as follows:
-            - The x-axis and y-axis are negated.
-            - The z-axis and translation remain unchanged.
+        The matrix negates the x-axis and y-axis, while the z-axis and
+        the translation components remain unchanged.
 
         Returns
         -------
         sympy.MatrixBase
-            A symbolic representation of a 4x4 rotation matrix for a 180° z-axis rotation.
+            A symbolic representation of a 4x4 rotation matrix for a
+            180-degree z-axis rotation.
         """
         logging.info("[Type: J4] Generating 4x4 rotation matrix for 180° z-axis rotation.")
         J4 = np.identity(4)
@@ -678,20 +708,27 @@ class J4:
         J4[1, 1] *= -1
         return sp.Matrix(J4)
 
-    def get_inverse(self):
+    def get_inverse(self) -> "J4":
+        """Retrieve the inverse of the J4 instance.
+
+        Returns
+        -------
+        J4
+            The rotation matrix instance itself.
+        """
         return self
 
     def get_matrix_inverse(self) -> sp.MatrixBase:
-        """
-        Generate the inverse of the 4x4 rotation matrix.
+        """Generate the inverse of the 4x4 rotation matrix.
 
-        Since the inverse of a 180° rotation around the z-axis is the same rotation,
-        this method returns the same matrix.
+        Since the inverse of a 180-degree rotation around the z-axis
+        is the same rotation, this method returns the same matrix.
 
         Returns
         -------
         sympy.MatrixBase
-            A symbolic representation of the 4x4 rotation matrix for a 180° z-axis rotation.
+            A symbolic representation of the 4x4 rotation matrix for a
+            180-degree z-axis rotation.
         """
         logging.info("[Type: J4] Generating inverse 4x4 rotation matrix.")
         return self.get_matrix()

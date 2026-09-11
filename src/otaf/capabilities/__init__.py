@@ -1,9 +1,8 @@
 """Capability assessment and process analysis tools."""
+
 from __future__ import annotations
-# -*- coding: utf-8 -*-
 
 __author__ = "Kramer84"
+from ._capabilities import process_capability
 
-from ._capabilities import *
-
-__all__ = _capabilities.__all__
+__all__ = ["process_capability"]

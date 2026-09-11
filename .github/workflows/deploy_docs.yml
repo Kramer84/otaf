@@ -3,7 +3,7 @@ name: Deploy Documentation to GitHub Pages
 on:
   push:
     branches:
-      - main  # Or whichever branch you want to trigger the build from
+      - main  
 
 jobs:
   build-and-deploy:
@@ -14,34 +14,124 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # Step 2: Set up Python
+    # Step 2: Set up Python with automatic caching enabled
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.9'
+        python-version: '3.12'
+        cache: 'pip'
 
     - name: Install Pandoc
       run: sudo apt-get install -y pandoc
 
-    # Step 3: Install dependencies
+    # Step 3: Fast, CPU-isolated dependency installation
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install sphinx sphinx-autodoc-typehints sphinx_rtd_theme myst-parser nbsphinx notebook
-        pip install beartype numpy scipy sympy openturns pandas torch torcheval matplotlib tqdm joblib trimesh gldpy pytransform3d[all]
+        pip install beartype numpy scipy>=1.14.0 sympy openturns pandas matplotlib tqdm joblib trimesh gldpy
+        pip3 install torch --index-url https://download.pytorch.org/whl/cpu
+        pip install torcheval
 
-    - name: Convert README.md to README.rst
+    # Step 4: Asset Copy Operations & Automated RST Generation
+    - name: Prepare Assets and Generate API Layouts
       run: |
+        mkdir -p docs/source/logo
+        if [ -f logo/logo.png ]; then cp logo/logo.png docs/source/logo/logo.png; fi
+        rm -f docs/source/otaf*.rst docs/source/modules.rst
+        
         pandoc README.md -f markdown -t rst -o docs/source/README.rst
+        
+        python3 -c 'content = open("docs/source/README.rst").read(); marker = "About The Project\n-----------------"; body = content.split(marker)[1] if marker in content else content; mangled = ".. raw:: html\n\n   <p align=\"right\">\n\n(back to top)\n\n.. raw:: html\n\n   </p>"; working = ".. raw:: html\n\n   <p align=\"right\"><a href=\"#readme-top\">back to top</a></p>"; body = body.replace(mangled, working); header = ".. _readme-top:\n\n|Contributors| |Forks| |Stargazers| |Issues| |MIT License|\n\n.. image:: logo/logo.png\n   :width: 240px\n   :align: center\n   :alt: OTAF Logo\n\n.. role:: center\n   :class: center\n\n**OTAF: Open Tolerance Analysis Framework**\n\nA scientific Python framework for statistical tolerance analysis of over-constrained mechanical assemblies using linear system-of-constraints optimization.\n\n`Explore the Docs <https://kramer84.github.io/otaf/>`_ | `Report Bug <https://github.com/Kramer84/otaf/issues>`_ | `Request Feature <https://github.com/Kramer84/otaf/issues>`_\n\n.. contents:: Table of Contents\n   :depth: 3\n\n----"; open("docs/source/README.rst", "w").write(header + "\n\n" + marker + body)'
 
-    # Step 4: Build the documentation
+        sphinx-apidoc -f -o docs/source/ src/otaf
+
+        cat << 'EOF' > docs/source/otaf.example_models.models_2_D.rst
+        otaf.example_models.models_2_D package
+        ======================================
+
+        .. automodule:: otaf.example_models.models_2_D
+           :members:
+           :undoc-members:
+           :show-inheritance:
+
+        Available Models
+        ----------------
+
+        .. toctree::
+           :maxdepth: 1
+
+           otaf.example_models.models_2_D.model1
+           otaf.example_models.models_2_D.model2
+        EOF
+
+        cat << 'EOF' > docs/source/otaf.example_models.models_2_D.model1.rst
+        Model 1: 2D 4-DOF Analytical Reference
+        ======================================
+
+        .. automodule:: otaf.example_models.models_2_D.model1
+           :members:
+           :undoc-members:
+           :show-inheritance:
+        EOF
+
+        cat << 'EOF' > docs/source/otaf.example_models.models_2_D.model2.rst
+        Model 2: 2D 16-DOF Reference Assembly
+        =====================================
+
+        .. automodule:: otaf.example_models.models_2_D.model2
+           :members:
+           :undoc-members:
+           :show-inheritance:
+        EOF
+
+        cat << 'EOF' > docs/source/otaf.example_models.models_3_D.rst
+        otaf.example_models.models_3_D package
+        ======================================
+
+        .. automodule:: otaf.example_models.models_3_D
+           :members:
+           :undoc-members:
+           :show-inheritance:
+
+        Available Models
+        ----------------
+
+        .. toctree::
+           :maxdepth: 1
+
+           otaf.example_models.models_3_D.model3
+           otaf.example_models.models_3_D.model4
+        EOF
+
+        cat << 'EOF' > docs/source/otaf.example_models.models_3_D.model3.rst
+        Model 3: 3D 30-DOF Mechanical System
+        ====================================
+
+        .. automodule:: otaf.example_models.models_3_D.model3
+           :members:
+           :undoc-members:
+           :show-inheritance:
+        EOF
+
+        cat << 'EOF' > docs/source/otaf.example_models.models_3_D.model4.rst
+        Model 4: 50-DOF Complex Hyperplane Assembly
+        ============================================
+
+        .. automodule:: otaf.example_models.models_3_D.model4
+           :members:
+           :undoc-members:
+           :show-inheritance:
+        EOF
+
+    # Step 5: Build the final documentation
     - name: Build documentation
       run: |
         cd docs
         make clean
         make html
 
-    # Step 5: Deploy to GitHub Pages
+    # Step 6: Deploy to GitHub Pages
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:

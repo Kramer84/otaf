@@ -53,6 +53,13 @@ def __getattr__(name: str):
     if modname is not None:
         mod = _importlib.import_module(f".{modname}", __name__)
         obj = getattr(mod, name)
+        
+        # Explicitly mask the private module paths for clean API generation
+        try:
+            obj.__module__ = __name__
+        except AttributeError:
+            pass
+            
         globals()[name] = obj
         return obj
 

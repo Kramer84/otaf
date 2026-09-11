@@ -1,5 +1,4 @@
 from __future__ import annotations
-# -*- coding: utf-8 -*-
 
 __author__ = "Kramer84"
 __all__ = [
@@ -28,18 +27,18 @@ __all__ = [
     "CylindricalInterferenceGeometricException",
     "NoAxialOverlapException",
     "InvalidAffineTransformException",
-    "_raise_missing_dependency"
+    "_raise_missing_dependency",
 ]
-
 import numpy as np
 
-from otaf.constants import SURFACE_DIRECTIONS, BASE_SURFACE_TYPES
+from otaf.constants import BASE_SURFACE_TYPES, SURFACE_DIRECTIONS
+
 
 def _raise_missing_dependency(library_name, method_name):
     raise ImportError(
-        f"The '{library_name}' library is required for '{method_name}'. "
-        f"Please install it with `pip install {library_name}`."
+        f"The '{library_name}' library is required for '{method_name}'. Please install it with `pip install {library_name}`."
     )
+
 
 class MissingSurfaceTypeKeyError(KeyError):
     def __init__(self, part_id, surf_id):
@@ -50,17 +49,23 @@ class MissingSurfaceTypeKeyError(KeyError):
 
 class MissingKeyError(KeyError):
     def __init__(self, key, dictionary_name):
-        super().__init__(f"Required key '{key}' is missing in '{dictionary_name}' dictionary.")
+        super().__init__(
+            f"Required key '{key}' is missing in '{dictionary_name}' dictionary."
+        )
 
 
 class InvalidPartLabelError(ValueError):
     def __init__(self):
-        super().__init__("All parts must be labelled by the string representation of an integer.")
+        super().__init__(
+            "All parts must be labelled by the string representation of an integer."
+        )
 
 
 class InvalidSurfaceLabelError(ValueError):
     def __init__(self):
-        super().__init__("All surfaces must be labelled by a lowercase alphabetical character.")
+        super().__init__(
+            "All surfaces must be labelled by a lowercase alphabetical character."
+        )
 
 
 class InvalidInteractionFormatError(ValueError):
@@ -133,24 +138,19 @@ class DuplicatePointError(ValueError):
             formatted_existing_value = np.array2string(
                 np.array(existing_point_value), precision=2, separator=","
             )
-            value_message = (
-                f" New value: {formatted_new_value}. Existing value: {formatted_existing_value}."
-            )
-
+            value_message = f" New value: {formatted_new_value}. Existing value: {formatted_existing_value}."
         if exact_match:
             message = f"Duplicate point name '{point_name}' for surface {surf_id}, part {part_id}.\n{value_message}"
         else:
-            message = (
-                f"Point '{point_name}' conflicts with existing point '{existing_point}' "
-                f"on surface {surf_id}, part {part_id} due to similar coordinates.\n{value_message}"
-            )
-
+            message = f"Point '{point_name}' conflicts with existing point '{existing_point}' on surface {surf_id}, part {part_id} due to similar coordinates.\n{value_message}"
         super().__init__(message)
 
 
 class LabelPatternError(ValueError):
     def __init__(self):
-        super().__init__("Some labels in the point dict do not comply to the expected pattern.")
+        super().__init__(
+            "Some labels in the point dict do not comply to the expected pattern."
+        )
 
 
 class LabelPrefixError(ValueError):
@@ -223,11 +223,7 @@ class NoAxialOverlapException(Exception):
     """Exception raised when two interacting cylinders have no physical overlap along their axis."""
 
     def __init__(self, part_id1, surface_id1, part_id2, surface_id2):
-        message = (
-            f"No axial overlap in cylindrical interaction: "
-            f"Part {part_id1}, Surface {surface_id1} and "
-            f"Part {part_id2}, Surface {surface_id2} are separated along their axis."
-        )
+        message = f"No axial overlap in cylindrical interaction: Part {part_id1}, Surface {surface_id1} and Part {part_id2}, Surface {surface_id2} are separated along their axis."
         super().__init__(message)
 
 
@@ -241,7 +237,9 @@ class InvalidAffineTransformException(Exception):
         message (str): Explanation of the error.
     """
 
-    def __init__(self, matrix, message="Matrix is not a valid affine transformation matrix."):
+    def __init__(
+        self, matrix, message="Matrix is not a valid affine transformation matrix."
+    ):
         self.matrix = matrix
         self.message = message
         super().__init__(self.message)

@@ -30,23 +30,21 @@ respect_dunder_all = true
 # Patterns used to skip files and folders.
 # Providing a directory name (e.g., "build") will exclude that entire folder tree.
 exclude_patterns = [
-    "*__init__.py",
     "_assembly_modeling",
     "example_models",
-    "optimization",
     "plotting",
-    "_hyperPlaneSampler.py",
-    "_hyperSurfaceSampler.py",
     "sensitivity",
     "surrogate",
     "tests",
-    "*test_*.py"
+    "*test_*.py",
+    "scripts"
 ]
 
 # Explicit names of functions or methods you want to skip.
 exclude_functions = [
     "is_running_in_notebook",
     "inverse_mstring",
+    "get_tqdm_range"
     ]
 
 [llm]

@@ -13,10 +13,8 @@
     <img src="logo/logo.png" alt="Logo" width="333" height="333" onerror="this.style.display='none'">
   </a>
 
-<h3 align="center">OTAF</h3>
-
   <p align="center">
-    <strong>Open Tolerance Analysis Framework</strong>
+    <strong>OTAF: Open Tolerance Analysis Framework</strong>
     <br />
     A scientific Python framework for statistical tolerance analysis of over-constrained mechanical assemblies using linear system-of-constraints optimization.
     <br />
@@ -57,23 +55,30 @@
   </ol>
 </details>
 
+<!-- START_CONTEXT --> 
 ## About The Project
 
-**OTAF (Open Tolerance Analysis Framework)** is an open-source, research-driven Python library designed to perform statistical tolerance analysis on over-constrained rigid mechanical assemblies. Developed as part of a PhD thesis funded by the French National Research Agency (ANR), the framework maps manufacturing deviations and mechanical joints into standard optimization matrices to evaluate assembly conditions under uncertainty.
+**OTAF (Open Tolerance Analysis Framework)** is an open-source, research-driven Python library designed to perform statistical tolerance analysis on three-dimensional over-constrained rigid mechanical assemblies. The tool allows to construct a linearized mathematical model of an assembly of parts, under the hypothsis of rigid parts and first oder defects (modeled by translations and rotations of the nominal feature). 
+The module then maps rigid manufacturing deviations and clearances into a set of matrices representing a linear programing problem, where deviations can be fixed and the clearance space is explored using optimization to find valid configurations.
+This modelization can then be used to perform reliability analysis (tolerance analysis), construct surrogate models etc.
+<!-- END_CONTEXT -->
 
-In industrial systems with clearances and multi-point contacts (over-constrained mechanisms), the relative kinematics of parts cannot be defined by standard algebraic equations. OTAF solves this by constructing a math-based **System of Constraints (SOC)**, converting 3D variational geometry challenges into bounded linear programming optimizations.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Key Methodology
 
-The framework transitions high-level assembly descriptions into rigorous mathematical structures through a two-layer model:
-1. **Compatibility Loops (Equalities):** Closed kinematic chains (3D tolerance stack-ups) that govern global structural behavior. These are represented as linear matrix operations:
+The framework transforms a high-level assembly description into the linear programing model:
+1. **Compatibility Loops (Equalities):** Closed kinematic chains (3D tolerance stack-ups) that model global structural behavior. Represented as linear matrix operations:
    $$A_{eq,Def} \cdot X + A_{eq,Gap} \cdot Y + K_{eq} = 0$$
-2. **Interface Constraints (Inequalities):** Local contact interactions mapped at boundary contour points across matching feature surfaces. These ensure no material interpenetration occurs:
+2. **Interface Constraints (Inequalities):** Local contact interactions at boundary contour points across matching feature surfaces. Ensures no material interpenetration occurs:
+
    $$A_{ub,Def} \cdot X + A_{ub,Gap} \cdot Y + K_{ub} \ge 0$$
 
 Where $X$ represents the elementar manufacturing defect vectors ($D$), $Y$ captures internal clearance and gap freedoms ($g$), and $K$ represents nominal constants. 
 
-By injecting an auxiliary slack variable $s$ into the interface constraints via `embedOptimizationVariable()`, the framework determines structural assemblability based on the sign of $s$. If optimization yields $s < 0$, the manufacturing defects exceed the system's geometric compensation capacity, signaling an assembly failure.
+
+By introducing an auxiliary slack variable $s$ into the interface constraints via `embedOptimizationVariable()`, the framework determines structural assemblability based on the sign of $s$. If optimization yields $s < 0$, the manufacturing defects exceed the system's geometric compensation capacity, signaling an assembly failure.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -83,7 +88,7 @@ By injecting an auxiliary slack variable $s$ into the interface constraints via 
 * **Uncertainty Quantification:** [OpenTURNS](https://openturns.github.io/www/)
 * **Execution & Parallelization:** [Joblib](https://joblib.readthedocs.io/)
 * **Type Integrity Checking:** [Beartype](https://github.com/beartype/beartype)
-* **3D Mesh Rendering & Visualization:** [Trimesh](https://github.com/mikedh/trimesh), [Pytransform3d](https://github.com/dfki-ric/pytransform3d)
+* **3D Mesh Rendering & Visualization:** [Trimesh](https://github.com/mikedh/trimesh)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -121,6 +126,8 @@ pip install .[surrogate]
 pip install .[all]
 
 ```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Usage
 
@@ -187,8 +194,8 @@ inter_handler = InterfaceLoopHandling(processor, comp_handler)
 
 # 3. Extract the SymPy expressions and generate the numerical constraint matrices
 soc_model = SystemOfConstraintsAssemblyModel(
-    compatibility_eqs=comp_handler.get_compatibility_expression_from_FO_matrices(),
-    interface_eqs=inter_handler.get_interface_loop_expressions()
+    compatibility_eqs=comp_handler.get_compatibility_expressions(),
+    interface_eqs=inter_handler.get_interface_expressions()
 )
 
 # 4. Test ideal structural alignment (Zero-Deviation Case)
@@ -197,7 +204,9 @@ print("Feasible without defects:", ideal_test["success"])
 
 ```
 
-### Local Documentation Compilation
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Local Documentation Compilation
 
 To build full API reference catalogs locally, verify `pandoc` is present on your local system:
 
@@ -210,23 +219,29 @@ make html
 
 ```
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ## Framework Assumptions & Capabilities
 
-* **Dual Probabilistic Scope:** Natively handles classical statistical tolerance analyses using fixed vectors of random standard distributions. For advanced reliability workflows, it supports epistemic uncertainty methods (imprecise probabilities) to trace upper and lower response envelopes (probability-boxes) by altering standard deviation allocations ($\lambda$-spaces) and internal variable correlations.
-* **Rigid Variational Modeling:** Analysis is strictly bounded to rigid transformations (translations and rotations). Non-rigid parameters, micro-deformations, thermal growth, and volumetric stress changes are excluded.
-* **Manual Feature Injections:** Custom operational requirements or functional conditions can be injected manually into the optimization queue as additional independent vector loops.
-* **Computational Scaling & Surrogates:** Standard Monte Carlo studies ($10^6$ trials) scale efficiently through the linear programming backend and typically complete in under an hour via `joblib` parallel processing. The neural network-based surrogate modeling package (`otaf.surrogate`) is explicitly optimized to mitigate calculation bottlenecks encountered during extensive multi-dimensional optimization loops within imprecise probability space exploration.
-* **Cylinder Processing Workaround:** High-level automated boundary matching contains known algorithmic parsing limitations for cylinder-to-cylinder interactions that still need to be resolved. Users analyzing complex multi-primitive cylindrical joints should bypass automated generation scripts and leverage the validated, hand-coded 30-DOF and 50-DOF reference models located in `src/otaf/example_models/models_3_D/`.
+* **Dual Probabilistic Scope:** Classical statistical tolerance analyses using fixed vectors of random standard distributions can be performed. Additionally methods to include epistemic uncertainty (imprecise probabilities) to trace upper and lower response envelopes (probability-boxes) have been developed here and are part of the examples to showcase the workflow.
+* **Rigid Variational Modeling:** Analysis is currently restricted to rigid transformations (translations and rotations). The linear programing problem generation scripts must be modified to include higher order defects.
+* **Functionality no explicitly considered (yet):** Models for tolerance analysis are usually comprised of 3 sets of equations: compatibiliy, interface and functionality. The latter has not been included here, but can be manually added to the set of equations modeling the interfaces, as a mock interface inequality.
+* **Computational Scaling & Surrogates:** Standard Monte Carlo studies ($10^6$ trials) scale well through the linear programming backend and typically complete in under an hour via `joblib` parallel processing. The neural network-based surrogate modeling package (`otaf.surrogate`) is provided to construct a high performance surrogate (a simple MLP structure seem to work well for simple examples) to reduce probability estimation time during credal set explorations. 
+* **Cylinder Processing Workaround:** An issue exists regarding the automatic cylinder-to-cylinder interactions handling and still needs to be resolved. Users analyzing complex multi-primitive cylindrical joints should bypass automated generation scripts and construct the assembly model manually, as shocased in the 50-DOF reference model located in `src/otaf/example_models/models_3_D/`.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Roadmap
 
-OTAF is fully functional for standard planar operations and customized Torsor-based matrix allocations. The active development roadmap targets upgrading automated generation paths to bridge research theory with production-grade CAD ecosystems:
+OTAF is functional for standard planar operations and manual Torsor-based matrix allocations. The active development roadmap targets upgrading to automated generation of graph stack-ups, and develop integration with classic CAD formats:
 
 * [ ] **Graph-Theoretic Topology Engines:** Implement automated closed-loop kinematic path detection using topological graph theory to eliminate manual loop configurations.
 * [ ] **Generalized Surface Joint Parsers:** Abstract boundary interface mechanics to support direct geometric contact extraction across arbitrary matching surface normals.
 * [ ] **Intrinsic Dimension Variability:** Support intrinsic component variance tracking (e.g., individual part radius changes) as stochastically independent parameters alongside rigid-body displacement profiles.
 * [ ] **Part-Internal Joint Tracking:** Enable the generation of isolated clearance loops for interdependent matching surfaces residing entirely inside a single complex physical part.
 * [ ] **CAD Ecosystem Integration:** Develop open APIs to directly extract geometric coordinates and surface topology bounds from modern open CAD formats.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Contributing
 
@@ -244,10 +259,12 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 
 ## Contact
 
-**Kristof Attila S.** ([@Kramer84](https://github.com/Kramer84))
+**Kristof A. S.** ([@Kramer84](https://github.com/Kramer84))
 For bug reports, feature requests, or scientific inquiries, please open an issue on the repository tracking system.
 
 **Project Link:** [https://github.com/Kramer84/otaf](https://github.com/Kramer84/otaf)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Acknowledgments
 
@@ -279,6 +296,8 @@ The theoretical, mathematical, and optimization concepts executed inside OTAF ar
   * *Links:* [[Resolve via DOI]](https://doi.org/10.7712/120223.10344.19792) | Copy DOI: `10.7712/120223.10344.19792`
 
 ---
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 [contributors-shield]: https://img.shields.io/github/contributors/Kramer84/otaf.svg?style=for-the-badge
 [contributors-url]: https://github.com/Kramer84/otaf/graphs/contributors

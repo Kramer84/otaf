@@ -13,8 +13,8 @@ def test_load_example_models():
         # Test if the model can be loaded without errors
         assert model is not None, f"Failed to load {model_name}"
         # Test if the model has the expected attributes
-        system_of_constraints = model.getSystemOfConstraintsAssemblyModel()
-        distribution_function = model.getDistributionParams
+        system_of_constraints = model.get_system_of_constraints_assembly_model()
+        distribution_function = model.get_distribution_params()
         dimension = int(model.dim)
         assert system_of_constraints is not None, f"{model_name} does not have a system of constraints"
         assert distribution_function is not None, f"{model_name} does not have a distribution function"

@@ -1,5 +1,4 @@
 from __future__ import annotations
-# -*- coding: utf-8 -*-
 
 __author__ = "Kramer84"
 __all__ = [
@@ -18,22 +17,31 @@ __all__ = [
     "threshold_for_percentile_positive_values_below",
     "bidirectional_string_to_array_conversion",
     "arrays_close_enough",
-    "scaling"
+    "scaling",
 ]
-
-import re
 import itertools
+import re
 import string
+from functools import wraps
 
-import sympy as sp
 import numpy as np
-
+import sympy as sp
 from beartype import beartype
-from beartype.typing import List, Union, Dict, Tuple, Optional
+from beartype.typing import Dict, List, Optional, Tuple, Union, Callable, Any, Iterable, cast, TypeVar
 
-from otaf.constants import T_MATRIX_PATTERN, G_MATRIX_MSTRING_PATTERN, BASIS_DICT, D_MATRIX_PATTERN1, D_MATRIX_PATTERN2, D_MATRIX_PATTERN3, G_MATRIX_PATTERN1, G_MATRIX_PATTERN2
+from otaf.constants import (
+    BASIS_DICT,
+    D_MATRIX_PATTERN1,
+    D_MATRIX_PATTERN2,
+    D_MATRIX_PATTERN3,
+    G_MATRIX_MSTRING_PATTERN,
+    G_MATRIX_PATTERN1,
+    G_MATRIX_PATTERN2,
+    T_MATRIX_PATTERN,
+)
 from otaf.exceptions import MissingKeyError
 
+F = TypeVar("F", bound=Callable[..., Any])
 
 @beartype
 def inverse_mstring(matrix_str: str) -> str:
@@ -75,21 +83,20 @@ def inverse_mstring(matrix_str: str) -> str:
     """
     if matrix_str:
         matrix_type = matrix_str[0]
-
         if matrix_type == "T":
             match = T_MATRIX_PATTERN.fullmatch(matrix_str)
             if not match:
-                raise ValueError(f"Invalid format for Transformation matrix: {matrix_str}")
+                raise ValueError(
+                    f"Invalid format for Transformation matrix: {matrix_str}"
+                )
             part, surface1, point1, surface2, point2 = match.groups()
             return f"TP{part}{surface2}{point2}{surface1}{point1}"
-
         elif matrix_type == "G":
             match = G_MATRIX_MSTRING_PATTERN.fullmatch(matrix_str)
             if not match:
                 raise ValueError(f"Invalid format for Gap matrix: {matrix_str}")
             part1, surface1, point1, part2, surface2, point2 = match.groups()
             return f"GP{part2}{surface2}{point2}P{part1}{surface1}{point1}"
-
         else:
             raise ValueError(f"Unsupported matrix type: {matrix_type}")
     else:
@@ -151,10 +158,10 @@ def parse_matrix_string(matrix_str: str) -> Dict[str, Union[str, bool]]:
     """
     Parse a matrix string into its components.
 
-    This function processes a string representation of a matrix, identifying its type
-    (Transformation, Deviation, or Gap) based on the first character. It extracts and returns
-    the relevant components in a structured dictionary format. The function also handles
-    specific rules and patterns associated with each type.
+    This function processes a string representation of a matrix,
+    identifying its type (Transformation, Deviation, or Gap) based on
+    the first character. It extracts and returns the relevant components
+    in a structured dictionary format.
 
     Parameters
     ----------
@@ -163,20 +170,16 @@ def parse_matrix_string(matrix_str: str) -> Dict[str, Union[str, bool]]:
 
     Returns
     -------
-    Dict[str, Union[str, bool]]
-        A dictionary containing the parsed components of the matrix. The keys depend on the
-        type of matrix but typically include:
-        - 'type': The matrix type ('T', 'D', or 'G').
-        - 'part', 'surface1', 'point1', 'surface2', 'point2': Components specific to
-          Transformation or Gap matrices.
-        - 'inverse': Boolean indicating if the matrix is an inverse (for Deviation and Gap types).
-        - 'mstring': The reconstructed matrix string based on parsed components.
+    dict
+        A dictionary containing the parsed components of the matrix. 
+        Keys include ``type``, ``part``, ``surface1``, ``point1``, 
+        ``surface2``, ``point2``, ``inverse``, and ``mstring``.
 
     Raises
     ------
     ValueError
-        If the matrix string does not conform to the expected pattern for its type or
-        if an unsupported matrix type is encountered.
+        If the matrix string does not conform to the expected pattern 
+        for its type or if an unsupported matrix type is encountered.
 
     Examples
     --------
@@ -189,14 +192,13 @@ def parse_matrix_string(matrix_str: str) -> Dict[str, Union[str, bool]]:
      'point': 'K0', 'mstring': 'D1k'}
 
     >>> parse_matrix_string('GP1kK0P2aA0')
-    {'type': 'G', 'inverse': False, 'part1': '1', 'surface1': 'k', 'point1': 'K0',
-     'part2': '2', 'surface2': 'a', 'point2': 'A0', 'mstring': 'GP1kK0P2aA0'}
+    {'type': 'G', 'inverse': False, 'part1': '1', 'surface1': 'k',
+     'point1': 'K0', 'part2': '2', 'surface2': 'a', 'point2': 'A0',
+     'mstring': 'GP1kK0P2aA0'}
     """
     result = {"type": matrix_str[0]}
-
     if result["type"] not in ["D", "T", "G"]:
         raise ValueError(f"Wrong type for matrix string {matrix_str}")
-
     if result["type"] == "T":
         match = T_MATRIX_PATTERN.fullmatch(matrix_str)
         if not match:
@@ -213,7 +215,6 @@ def parse_matrix_string(matrix_str: str) -> Dict[str, Union[str, bool]]:
                 "mstring": f"TP{part}{surface1}{point1}{surface2}{point2}",
             }
         )
-
     elif result["type"] == "D":
         match1 = D_MATRIX_PATTERN1.fullmatch(matrix_str)
         match2 = D_MATRIX_PATTERN2.fullmatch(matrix_str)
@@ -227,7 +228,9 @@ def parse_matrix_string(matrix_str: str) -> Dict[str, Union[str, bool]]:
             is_inverse, part, surface, point = match2.groups()
         elif match3:
             is_inverse, part, surface, partbis, surfacebis = match3.groups()
-            assert part == partbis and surface == surfacebis, f"Check definition of {matrix_str}"
+            assert part == partbis and surface == surfacebis, (
+                f"Check definition of {matrix_str}"
+            )
             point = surface[0].upper() + "0"
         result.update(
             {
@@ -238,17 +241,18 @@ def parse_matrix_string(matrix_str: str) -> Dict[str, Union[str, bool]]:
                 "mstring": f"D{part}{surface}",
             }
         )
-
     elif result["type"] == "G":
         match1 = G_MATRIX_PATTERN1.fullmatch(matrix_str)
         match2 = G_MATRIX_PATTERN2.fullmatch(matrix_str)
         if not any([match1, match2]):
             raise ValueError(f"Invalid format for Gap matrix: {matrix_str}")
         if match1:
-            (is_inverse, part1, surface1, point1, part2, surface2, point2) = match1.groups()
+            is_inverse, part1, surface1, point1, part2, surface2, point2 = (
+                match1.groups()
+            )
         elif match2:
             is_inverse, part1, surface1, part2, surface2 = match2.groups()
-            point1, point2 = surface1[0].upper() + "0", surface2[0].upper() + "0"
+            point1, point2 = (surface1[0].upper() + "0", surface2[0].upper() + "0")
         result.update(
             {
                 "inverse": bool(is_inverse),
@@ -265,7 +269,9 @@ def parse_matrix_string(matrix_str: str) -> Dict[str, Union[str, bool]]:
 
 
 @beartype
-def get_symbols_in_expressions(expr_list: List[sp.Expr]) -> Tuple[List[sp.Symbol], List[sp.Symbol]]:
+def get_symbols_in_expressions(
+    expr_list: List[sp.Expr],
+) -> Tuple[List[sp.Symbol], List[sp.Symbol]]:
     """Extract and sort unique symbols from a list of sympy expressions.
 
     This function processes a list of sympy expressions, extracts the free symbols, and
@@ -304,25 +310,23 @@ def get_symbols_in_expressions(expr_list: List[sp.Expr]) -> Tuple[List[sp.Symbol
     ([u_d_1, w_d_3], [v_g_2])
     """
     sort_order = ["u_", "v_", "w_", "alpha_", "beta_", "gamma_"]
+
     def sort_key(x):
-        id_var = int(re.search(r"(\d+)$", x.name).group(1))
+        id_var = int(re.search("(\\d+)$", x.name).group(1))
         idx_s = [x.name.startswith(prefix) for prefix in sort_order].index(True)
         return (id_var, idx_s)
 
     free_symbols = {symb for expr in expr_list for symb in expr.free_symbols}
-    try :
+    try:
         deviation_symbols = sorted(
-            (symb for symb in free_symbols if "_d_" in str(symb)),
-            key=sort_key,
+            (symb for symb in free_symbols if "_d_" in str(symb)), key=sort_key
         )
         gap_symbols = sorted(
-            (symb for symb in free_symbols if "_g_" in str(symb)),
-            key=sort_key,
+            (symb for symb in free_symbols if "_g_" in str(symb)), key=sort_key
         )
     except ValueError as exc:
         raise ValueError("Symbols must follow naming guidelines") from exc
-
-    return deviation_symbols, gap_symbols
+    return (deviation_symbols, gap_symbols)
 
 
 @beartype
@@ -350,6 +354,7 @@ def extract_expressions_with_variables(m: sp.MatrixBase) -> List[sp.Expr]:
     """
     indices = [(0, 1), (0, 2), (1, 2), (0, 3), (1, 3), (2, 3)]
     return [m[i, j] for i, j in indices if len(m[i, j].free_symbols) > 0]
+
 
 @beartype
 def get_symbol_coef_map(expr: sp.Expr, rnd: int = 8) -> Dict[str, float]:
@@ -414,66 +419,68 @@ def get_SE3_base(index: str) -> sp.MatrixBase:
 
 
 def get_SE3_matrices_from_indices(
-    se3_indices: List[Union[str, int]], multiplier: Union[float, int] = 1.0
-) -> List[sp.MatrixBase]:
+    se3_indices: list[str | int], multiplier: float | int = 1.0
+) -> list[sp.MatrixBase]:
     """
-    Retrieve SE(3) matrices corresponding to a list of indices, optionally scaled by a multiplier.
+    Retrieve SE(3) matrices corresponding to a list of indices.
 
     Parameters
     ----------
-    se3_indices : List[Union[str, int]]
+    se3_indices : list of str or int
         List of indices representing SE(3) base matrices.
-    multiplier : Union[float, int], optional
-        A scalar multiplier applied to each matrix (default is 1.0).
+    multiplier : float or int, optional
+        A scalar multiplier applied to each matrix. Default is 1.0.
 
     Returns
     -------
-    List[sympy.MatrixBase]
-        A list of SE(3) base matrices, each scaled by the specified multiplier.
+    list of sympy.MatrixBase
+        A list of SE(3) base matrices, each scaled by the specified 
+        multiplier.
 
     Notes
     -----
-    The indices are converted to strings and used to retrieve the corresponding SE(3) base matrices
-    from the predefined `BASIS_DICT` in the `otaf.constants` module.
+    The indices are converted to strings and used to retrieve the 
+    corresponding SE(3) base matrices from the predefined ``BASIS_DICT`` 
+    in the ``otaf.constants`` module.
     """
     return [multiplier * get_SE3_base(str(i)) for i in se3_indices]
 
 
 def validate_dict_keys(
-    dictionary: dict, keys: List[str], dictionary_name: str, value_checks: dict = {}
+    dictionary: dict, keys: list[str], dictionary_name: str, value_checks: dict = {}
 ) -> None:
     """
-    Validate the presence of specific keys in a dictionary and optionally check their values.
+    Validate presence of specific keys and optionally check their values.
 
     Parameters
     ----------
     dictionary : dict
         The dictionary to validate.
-    keys : List[str]
+    keys : list of str
         A list of keys that must be present in the dictionary.
     dictionary_name : str
-        The name of the dictionary (used in error messages for clarity).
+        The name of the dictionary used in error messages for clarity.
     value_checks : dict, optional
-        A dictionary where keys are the dictionary keys to validate and values are functions
-        that take the dictionary's value as input and return a boolean indicating whether the value is valid.
-        If None, value validation is skipped (default is None).
+        A dictionary where keys map to validation functions. Each 
+        function takes a value as input and returns a boolean indicating 
+        validity. Default is {}.
 
     Raises
     ------
     MissingKeyError
         If a required key is missing from the dictionary.
     ValueError
-        If a value associated with a key fails the validation function provided in `value_checks`.
+        If a value associated with a key fails the validation function 
+        provided in `value_checks`.
 
     Notes
     -----
-    - `value_checks` is an optional mechanism to enforce additional constraints on dictionary values.
-    - This function is designed for use cases where strict key and value validation is required.
+    The `value_checks` parameter acts as an optional mechanism to 
+    enforce additional constraints on nested dictionary values.
     """
     for key in keys:
         if key not in dictionary:
             raise MissingKeyError(key, dictionary_name)
-
         if value_checks and key in value_checks:
             validator = value_checks[key]
             if not validator(dictionary[key]):
@@ -486,49 +493,54 @@ def is_running_in_notebook() -> bool:
     """
     Check if the current code is running in a Jupyter notebook environment.
 
-    This function detects the type of IPython shell to determine whether the code is
-    executed in a Jupyter notebook, a terminal, or a standard Python interpreter.
+    This function detects the type of IPython shell to determine whether 
+    the code is executed in a Jupyter notebook, a terminal, or a standard 
+    Python interpreter.
 
     Returns
     -------
     bool
-        True if the code is running in a Jupyter notebook or qtconsole, False otherwise.
+        True if running in a Jupyter notebook or qtconsole, False otherwise.
 
     Notes
     -----
-    - If the IPython shell cannot be detected, it is assumed the code is running
-      in a standard Python interpreter.
-    - This function relies on the `get_ipython()` function, which is available
-      only in IPython environments.
+    If the IPython shell cannot be detected, it is assumed the code is 
+    running in a standard Python interpreter.
+
+    This function relies on the built-in ``get_ipython()`` function, 
+    which is available exclusively within IPython environments.
     """
     try:
         shell = get_ipython().__class__.__name__
         if shell == "ZMQInteractiveShell":
-            return True  # Jupyter notebook or qtconsole
+            return True
         elif shell == "TerminalInteractiveShell":
-            return False  # Terminal running IPython
+            return False
         else:
-            return False  # Other type (?)
+            return False
     except NameError:
-        return False  # Probably standard Python interpreter
+        return False
 
 
-def get_tqdm_range():
+def get_tqdm_range() -> callable:
     """
-    Retrieve the appropriate tqdm range function based on the execution environment.
+    Retrieve the appropriate tqdm range function based on environment.
 
     Returns
     -------
-    function
-        `trange_notebook` if running in a Jupyter notebook, otherwise `trange`.
+    callable
+        ``trange_notebook`` if running in a Jupyter notebook, 
+        otherwise ``trange``.
 
     Notes
     -----
-    - This function checks the execution environment using `is_running_in_notebook`.
-    - `trange_notebook` is used for better rendering in notebook environments.
+    This function checks the execution environment using the utility
+    ``is_running_in_notebook``. The ``trange_notebook`` variant is 
+    selected for cleaner HTML progress bar rendering inside notebooks.
     """
     from tqdm import trange
     from tqdm.notebook import trange as trange_notebook
+
     return trange_notebook if is_running_in_notebook() else trange
 
 
@@ -550,14 +562,10 @@ def alphabet_generator():
       with multi-letter combinations (e.g., 'aa', 'ab', ..., 'zz', 'aaa', etc.).
     - It produces strings indefinitely, making it suitable for cases where infinite sequences are needed.
     """
-    n = 1  # Start with single-letter combinations
-    # Infinite loop to keep generating sequences
+    n = 1
     while True:
-        # Generate all combinations for the current length `n`
         for s in itertools.product(string.ascii_lowercase, repeat=n):
-            # Join tuple into a string and yield
             yield "".join(s)
-        # Increment to generate sequences of increased length
         n += 1
 
 
@@ -605,63 +613,157 @@ def threshold_for_percentile_positive_values_below(
     None
     """
     arr = np.squeeze(np.asarray(arr))
-
     if arr.ndim != 1:
-        raise ValueError("Input must be one-dimensional or squeezable to one-dimensional.")
+        raise ValueError(
+            "Input must be one-dimensional or squeezable to one-dimensional."
+        )
     if not 0 <= percentile <= 100:
         raise ValueError("Percentile must be between 0 and 100.")
     if arr.size == 0:
         raise ValueError("Input array is empty.")
-
     positive_values = arr[arr > 0]
     if positive_values.size == 0:
-        return None  # No positive values in the array
-
+        return None
     threshold_value = np.percentile(positive_values, percentile)
     return threshold_value
 
 
-def arr_to_str(x):
-    """Convert a numeric array to a formatted string representation."""
-    return "[" + " ".join(f"{num:.6f}" for num in x) + "]"
+def arr_to_str(x: np.ndarray | list[float]) -> str:
+    """
+    Convert a numeric array to a formatted string representation.
 
-def str_to_arr(s):
-    """Convert a formatted string representation back to a list of floats."""
+    Parameters
+    ----------
+    x : array_like
+        The input numeric array or sequence to format.
+
+    Returns
+    -------
+    str
+        The string representation of the array with 6 decimal places.
+    """
+    return "[" + " ".join((f"{num:.6f}" for num in x)) + "]"
+
+
+def str_to_arr(s: str) -> list[float]:
+    """
+    Convert a formatted string representation back to a list of floats.
+
+    Parameters
+    ----------
+    s : str
+        The string representation of the numeric array, bounded by
+        brackets.
+
+    Returns
+    -------
+    list of str
+        The parsed floats extracted from the string.
+    """
     return [float(_) for _ in s[1:-1].split()]
 
-def bidirectional_string_to_array_conversion(x):
-    """Convert input between a numeric array and its string representation."""
+
+def bidirectional_string_to_array_conversion(
+    x: str | np.ndarray | list[float],
+) -> str | list[float]:
+    """
+    Convert input between a numeric array and its string representation.
+
+    Parameters
+    ----------
+    x : str or array_like
+        The input to transform. If a string is provided, it is parsed
+        into a list of floats. Otherwise, it is formatted into a string.
+
+    Returns
+    -------
+    str or list of str
+        The converted representation.
+    """
     if isinstance(x, str):
         return str_to_arr(x)
     else:
         return arr_to_str(x)
 
-def arrays_close_enough(arr1, arr2, tolerance=1e-6):
-    """Check if two arrays are element-wise equal within a specified tolerance."""
+
+def arrays_close_enough(
+    arr1: np.ndarray, arr2: np.ndarray, tolerance: float = 1e-06
+) -> bool:
+    """
+    Check if two arrays are element-wise equal within a tolerance.
+
+    Parameters
+    ----------
+    arr1, arr2 : array_like
+        The input arrays to compare.
+    tolerance : float, optional
+        The absolute tolerance threshold for comparison. Default is 1e-06.
+
+    Returns
+    -------
+    bool
+        True if the arrays are equal within the given tolerance, 
+        False otherwise.
+        
+    Raises
+    ------
+    ValueError
+        If the input arrays do not have the same shape.
+    """
+    if arr1.shape != arr2.shape:
+        raise ValueError(
+            f"Arrays must have the same shape for comparison. Got {arr1.shape} and {arr2.shape}."
+        )
     return np.allclose(arr1, arr2, atol=tolerance)
 
-def scaling(scale_factor):
+
+def scaling(scale_factor: float) -> Callable[[F], F]:
     """
-    Decorator to scale the output of a function by a specified scaling factor.
+    A decorator factory that scales the output of a function by a constant factor.
+
+    This decorator safely handles scalar numeric types, nested iterables (lists,
+    tuples, sets), and preserves the original iterable type where possible. It
+    gracefully skips `None`, `str`, and `bytes` values without altering them or
+    throwing errors.
 
     Parameters
     ----------
     scale_factor : float
-        The factor by which to scale the output of the wrapped function.
+        The numerical factor by which to multiply the output of the wrapped function.
 
     Returns
     -------
-    function
-        A decorator that applies the scaling to the output of the wrapped function.
+    callable
+        A decorator function capable of wrapping a target callable.
+
+    Examples
+    --------
+    >>> @scaling(2.5)
+    ... def get_prices():
+    ...     return [10.0, None, 20.0]
+    >>> get_prices()
+    [25.0, None, 50.0]
     """
-    def decorator(func):
-        def wrapper(*args, **kwargs):
+    def decorator(func: F) -> F:
+        @wraps(func)
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             result = func(*args, **kwargs)
-            if isinstance(result, tuple):
-                # Scale both objective and Jacobian if it's a tuple (result and Jacobian)
-                return tuple(r * scale_factor for r in result)
-            else:
-                # Scale only the result
-                return result * scale_factor
-        return wrapper
+            # Helper function to recursively scale items
+            def _scale_item(item: Any) -> Any:
+                if item is None:
+                    return None
+                # Explicitly pass strings and bytes through untouched
+                if isinstance(item, (str, bytes)):
+                    return item
+                # If it's a nested iterable, scale its elements recursively
+                if isinstance(item, Iterable):
+                    try:
+                        return type(item)(_scale_item(x) for x in item)
+                    except TypeError:
+                        # Fallback for iterables that can't be instantiated directly from a generator
+                        return list(_scale_item(x) for x in item)
+                # Base case: Scalar multiplication
+                return item * scale_factor
+            return _scale_item(result)
+        return cast(F, wrapper)
     return decorator

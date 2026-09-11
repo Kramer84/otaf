@@ -555,36 +555,54 @@ def point_to_segment_distance(
     """
     Calculate the shortest distance from a point or array of points to a line segment.
 
+    This function is dimension-agnostic and works for coordinates in any arbitrary
+    n-dimensional space (e.g., 2D, 3D, etc.). It calculates the true shortest distance 
+    to the segment by clamping the projection factor, preventing it from treating the 
+    segment as an infinite line.
+
     Parameters
     ----------
     point : numpy.ndarray
-        A 1D or 2D NumPy array representing the point(s) to compute the distance for.
+        A 1D array of shape (N,) representing a single point, or a 2D array
+        of shape (M, N) representing M points in an N-dimensional space.
     segment_start : numpy.ndarray
-        A 1D NumPy array representing the start point of the line segment.
+        A 1D array of shape (N,) representing the start coordinates of the
+        line segment.
     segment_end : numpy.ndarray
-        A 1D NumPy array representing the end point of the line segment.
+        A 1D array of shape (N,) representing the end coordinates of the
+        line segment.
 
     Returns
     -------
-    Union[float, np.ndarray]
-        The shortest distance from the point(s) to the line segment. Returns a float for a single point
-        or a NumPy array for multiple points.
+    distance : float or numpy.ndarray
+        The shortest distance to the line segment. Returns a scalar float if a
+        single point was passed, or a 1D NumPy array of shape (M,) containing
+        the distances for each input point.
+
+    Notes
+    -----
+    The closest point on the line segment is found using vector projection. 
+    For a point vector 'p' relative to the segment start, and a segment vector 
+    ``s``, the projection factor ``t`` is computed as:
+
+        ``t = dot(p, s) / ||s||^2``
+
+    By clipping 't' to the interval ``[0.0, 1.0]``, the closest point is strictly 
+    restricted to the line segment boundary. If the start and end points of the 
+    segment are identical, the segment is treated as a single point.
     """
-    # Ensure all inputs are at least 2D for consistent broadcasting
     point = np.atleast_2d(point)
     segment_start = np.atleast_2d(segment_start)
     segment_end = np.atleast_2d(segment_end)
-
-    # Compute segment and point vectors
     segment_vector = segment_end - segment_start
     point_vector = point - segment_start
-
-    # Compute the cross product and distances
-    cross_product = np.cross(segment_vector, point_vector)
-    distances = np.abs(cross_product) / np.linalg.norm(segment_vector, axis=1)
-
-    # If the input was a single point, return a scalar
-    return distances[0] if point.shape[0] == 1 else distances
+    dot_product = np.sum(point_vector * segment_vector, axis=-1)
+    segment_length_sq = np.sum(segment_vector**2, axis=-1)
+    segment_length_sq = np.where(segment_length_sq == 0, 1e-12, segment_length_sq)
+    t = np.clip(dot_product / segment_length_sq, 0.0, 1.0)
+    closest_point = segment_start + t[:, np.newaxis] * segment_vector
+    distances = np.linalg.norm(point - closest_point, axis=-1)
+    return float(distances[0]) if point.shape[0] == 1 else distances
 
 
 @beartype
