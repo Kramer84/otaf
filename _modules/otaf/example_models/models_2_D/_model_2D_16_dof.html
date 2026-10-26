@@ -84,12 +84,15 @@
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">"get_system_of_constraints_assembly_model"</span><span class="p">,</span>
     <span class="s2">"get_distribution_params"</span><span class="p">,</span>
+    <span class="s2">"eval_credal_set_constraints"</span><span class="p">,</span>
     <span class="s2">"eval_scaled_credal_set_constraints"</span><span class="p">,</span>
     <span class="s2">"get_scaled_credal_set_constraints_function"</span><span class="p">,</span>
     <span class="s2">"dim"</span><span class="p">,</span>
     <span class="s2">"sample_multiplier"</span><span class="p">,</span>
-    <span class="s2">"no_tol"</span><span class="p">,</span> 
+    <span class="s2">"no_tol"</span><span class="p">,</span>
 <span class="p">]</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
 
@@ -528,30 +531,21 @@
 <span class="n">no_tol</span> <span class="o">=</span> <span class="kc">False</span>
 
 
-<div class="viewcode-block" id="eval_scaled_credal_set_constraints">
-<a class="viewcode-back" href="../../../../source/otaf.example_models.models_2_D.model2.html#otaf.example_models.models_2_D.model2.eval_scaled_credal_set_constraints">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">eval_scaled_credal_set_constraints</span><span class="p">(</span>
-    <span class="n">x_scaled</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-    <span class="n">max_std_vect</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-    <span class="n">tracker</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">experiment_key</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="eval_credal_set_constraints">
+<a class="viewcode-back" href="../../../../source/otaf.example_models.models_2_D.model2.html#otaf.example_models.models_2_D.model2.eval_credal_set_constraints">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">eval_credal_set_constraints</span><span class="p">(</span>
+    <span class="n">x_std</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.16</span><span class="p">,</span>
     <span class="n">capa</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="n">hM</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span>
     <span class="n">hF</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.2</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Map scaled deviations to real values and evaluate constraints.</span>
+<span class="w">    </span><span class="sd">"""Evaluate the normalized credal set boundary conditions.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    x_scaled : np.ndarray</span>
-<span class="sd">        The scaled standard deviation vector inputs.</span>
-<span class="sd">    max_std_vect : np.ndarray</span>
-<span class="sd">        The upper-bound limits for standard deviation mapping.</span>
-<span class="sd">    tracker : Any, optional</span>
-<span class="sd">        Data logging tracker instance. Default is None.</span>
-<span class="sd">    experiment_key : Any, optional</span>
-<span class="sd">        Unique identifier key for tracking logs. Default is None.</span>
+<span class="sd">    x_std : np.ndarray</span>
+<span class="sd">        A 1D array of 16 standard deviation values (two per plane feature).</span>
 <span class="sd">    tol : float, default 0.16</span>
 <span class="sd">        The baseline design tolerance.</span>
 <span class="sd">    capa : float, default 1.0</span>
@@ -564,7 +558,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    np.ndarray</span>
-<span class="sd">        The calculated constraint evaluation bounds array.</span>
+<span class="sd">        An array of 8 normalized constraint values, one per plane feature.</span>
 <span class="sd">    """</span>
     <span class="n">target</span> <span class="o">=</span> <span class="n">tol</span> <span class="o">/</span> <span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">capa</span><span class="p">)</span>
     <span class="n">constraint1</span> <span class="o">=</span> <span class="p">(</span>
@@ -606,6 +600,58 @@
 
 
 
+<div class="viewcode-block" id="eval_scaled_credal_set_constraints">
+<a class="viewcode-back" href="../../../../source/otaf.example_models.models_2_D.model2.html#otaf.example_models.models_2_D.model2.eval_scaled_credal_set_constraints">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">eval_scaled_credal_set_constraints</span><span class="p">(</span>
+    <span class="n">x_scaled</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">max_std_vect</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">tracker</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">experiment_key</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.16</span><span class="p">,</span>
+    <span class="n">capa</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">hM</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span>
+    <span class="n">hF</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.2</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Map scaled deviations to real values and evaluate constraints.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x_scaled : np.ndarray</span>
+<span class="sd">        The scaled standard deviation vector inputs.</span>
+<span class="sd">    max_std_vect : np.ndarray</span>
+<span class="sd">        The upper-bound limits for standard deviation mapping.</span>
+<span class="sd">    tracker : Any, optional</span>
+<span class="sd">        Data logging tracker instance. Default is None.</span>
+<span class="sd">    experiment_key : Any, optional</span>
+<span class="sd">        Unique identifier key for tracking logs. Default is None.</span>
+<span class="sd">    tol : float, default 0.16</span>
+<span class="sd">        The baseline design tolerance.</span>
+<span class="sd">    capa : float, default 1.0</span>
+<span class="sd">        The process capability standard multiplier.</span>
+<span class="sd">    hM : float, default 10.0</span>
+<span class="sd">        Height parameter for the male component.</span>
+<span class="sd">    hF : float, default 10.2</span>
+<span class="sd">        Height parameter for the female component.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        The calculated constraint evaluation bounds array.</span>
+<span class="sd">    """</span>
+    <span class="n">x_real</span> <span class="o">=</span> <span class="n">x_scaled</span> <span class="o">*</span> <span class="n">max_std_vect</span>
+    <span class="n">constraint_array</span> <span class="o">=</span> <span class="n">eval_credal_set_constraints</span><span class="p">(</span>
+        <span class="n">x_real</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span> <span class="n">capa</span><span class="o">=</span><span class="n">capa</span><span class="p">,</span> <span class="n">hM</span><span class="o">=</span><span class="n">hM</span><span class="p">,</span> <span class="n">hF</span><span class="o">=</span><span class="n">hF</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">tracker</span><span class="p">:</span>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">update_constraint_data</span><span class="p">(</span>
+            <span class="n">exp_key</span><span class="o">=</span><span class="n">experiment_key</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x_scaled</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="n">constraint_array</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">constraint_array</span></div>
+
+
+
+<div class="viewcode-block" id="get_scaled_credal_set_constraints_function">
+<a class="viewcode-back" href="../../../../source/otaf.example_models.models_2_D.model2.html#otaf.example_models.models_2_D.model2.get_scaled_credal_set_constraints_function">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_scaled_credal_set_constraints_function</span><span class="p">(</span>
     <span class="n">max_std_vect</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">tracker</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -640,22 +686,6 @@
 <span class="sd">        A single-argument function mapping `x_scaled` to its</span>
 <span class="sd">        evaluated constraint array.</span>
 <span class="sd">    """</span>
-    <span class="n">x_real</span> <span class="o">=</span> <span class="n">x_scaled</span> <span class="o">*</span> <span class="n">max_std_vect</span>
-    <span class="n">constraint_array</span> <span class="o">=</span> <span class="n">eval_credal_set_constraints</span><span class="p">(</span>
-        <span class="n">x_real</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span> <span class="n">capa</span><span class="o">=</span><span class="n">capa</span><span class="p">,</span> <span class="n">hM</span><span class="o">=</span><span class="n">hM</span><span class="p">,</span> <span class="n">hF</span><span class="o">=</span><span class="n">hF</span>
-    <span class="p">)</span>
-    <span class="k">if</span> <span class="n">tracker</span><span class="p">:</span>
-        <span class="n">tracker</span><span class="o">.</span><span class="n">update_constraint_data</span><span class="p">(</span>
-            <span class="n">exp_key</span><span class="o">=</span><span class="n">experiment_key</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x_scaled</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="n">constraint_array</span>
-        <span class="p">)</span>
-    <span class="k">return</span> <span class="n">constraint_array</span>
-
-
-<div class="viewcode-block" id="get_scaled_credal_set_constraints_function">
-<a class="viewcode-back" href="../../../../source/otaf.example_models.models_2_D.model2.html#otaf.example_models.models_2_D.model2.get_scaled_credal_set_constraints_function">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_scaled_credal_set_constraints_function</span><span class="p">(</span>
-    <span class="n">max_std_vect</span><span class="p">,</span> <span class="n">tracker</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">experiment_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.16</span><span class="p">,</span> <span class="n">capa</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">hM</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">hF</span><span class="o">=</span><span class="mf">10.2</span>
-<span class="p">):</span>
     <span class="k">return</span> <span class="k">lambda</span> <span class="n">x_scaled</span><span class="p">:</span> <span class="n">eval_scaled_credal_set_constraints</span><span class="p">(</span>
         <span class="n">x_scaled</span><span class="p">,</span>
         <span class="n">max_std_vect</span><span class="p">,</span>

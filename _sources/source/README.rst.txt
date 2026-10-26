@@ -95,7 +95,7 @@ Getting Started
 Prerequisites
 ~~~~~~~~~~~~~
 
-OTAF requires Python :math:`\ge` 3.8. It is highly recommended to
+OTAF requires Python :math:`\ge` 3.10. It is highly recommended to
 isolate installation dependencies inside a virtual environment or Conda
 environment.
 
@@ -113,7 +113,7 @@ subsets:
 .. code:: bash
 
    # Clone the repository
-   git clone [https://github.com/Kramer84/otaf.git](https://github.com/Kramer84/otaf.git)
+   git clone https://github.com/Kramer84/otaf.git
    cd otaf
 
    # Install the base structural engine

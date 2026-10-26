@@ -157,6 +157,37 @@
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="otaf.example_models.models_3_D.model4.get_distribution_params">
+<span class="sig-prename descclassname"><span class="pre">otaf.example_models.models_3_D.model4.</span></span><span class="sig-name descname"><span class="pre">get_distribution_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.21</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capa</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hPlate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">EH</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">LB</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Dext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Dint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">19.8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/example_models/models_3_D/_model_3D_50_dof.html#get_distribution_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.example_models.models_3_D.model4.get_distribution_params" title="Link to this definition"></a></dt>
+<dd><p>Compute defect distribution parameters and variance vectors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tol</strong> (<em>float</em><em>, </em><em>default 0.21</em>) – Tolerance limit value used to compute standard deviations.</p></li>
+<li><p><strong>capa</strong> (<em>float</em><em>, </em><em>default 1.0</em>) – Process capability index factor.</p></li>
+<li><p><strong>hPlate</strong> (<em>float</em><em>, </em><em>default 30.0</em>) – The height parameter of the plate component.</p></li>
+<li><p><strong>EH</strong> (<em>float</em><em>, </em><em>default 50.0</em>) – The embedment height component.</p></li>
+<li><p><strong>LB</strong> (<em>float</em><em>, </em><em>default 25.0</em>) – The length parameter of the base section.</p></li>
+<li><p><strong>Dext</strong> (<em>float</em><em>, </em><em>default 20.0</em>) – The nominal external component diameter.</p></li>
+<li><p><strong>Dint</strong> (<em>float</em><em>, </em><em>default 19.8</em>) – The nominal internal component diameter.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>RandDeviationVect</strong> (<em>otaf.distribution.ComposedDistribution</em>) – The joint normal defect distribution model.</p></li>
+<li><p><strong>mapped_defects</strong> (<em>list of sympy.Symbol</em>) – The descriptive tracking labels for standard deviations.</p></li>
+<li><p><strong>std_vect</strong> (<em>np.ndarray</em>) – A 1D array of calculated maximum standard deviations.</p></li>
+<li><p><strong>mu_vect</strong> (<em>np.ndarray</em>) – A 1D array of calculated mean parameter offsets.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[<em>Any</em>, list[<em>Symbol</em>], <em>ndarray</em>, <em>ndarray</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="otaf.example_models.models_3_D.model4.get_scaled_credal_set_constraints_function">
 <span class="sig-prename descclassname"><span class="pre">otaf.example_models.models_3_D.model4.</span></span><span class="sig-name descname"><span class="pre">get_scaled_credal_set_constraints_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_std_vect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.21</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capa</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hPlate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/example_models/models_3_D/_model_3D_50_dof.html#get_scaled_credal_set_constraints_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.example_models.models_3_D.model4.get_scaled_credal_set_constraints_function" title="Link to this definition"></a></dt>
 <dd><p>Generate a wrapped lambda function for scaled constraints.</p>
@@ -177,6 +208,33 @@ evaluated constraint array.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Callable[[np.ndarray], np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.example_models.models_3_D.model4.get_system_of_constraints_assembly_model">
+<span class="sig-prename descclassname"><span class="pre">otaf.example_models.models_3_D.model4.</span></span><span class="sig-name descname"><span class="pre">get_system_of_constraints_assembly_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[50,</span> <span class="pre">50,</span> <span class="pre">30,</span> <span class="pre">30]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CIRCLE_RESOLUTION</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">LinearizationStrategy.CIRCUMSCRIBED</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/example_models/models_3_D/_model_3D_50_dof.html#get_system_of_constraints_assembly_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.example_models.models_3_D.model4.get_system_of_constraints_assembly_model" title="Link to this definition"></a></dt>
+<dd><p>Construct the system of constraints assembly model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>L</strong> (<em>array_like</em><em>, </em><em>optional</em>) – An array containing geometric parameters l0, l1, l2, l3.
+The default is [50, 50, 30, 30].</p></li>
+<li><p><strong>CIRCLE_RESOLUTION</strong> (<em>int</em><em>, </em><em>default 64</em>) – The number of discretization points for linearization.</p></li>
+<li><p><strong>strategy</strong> (<em>LinearizationStrategy</em><em>, </em><em>optional</em>) – The linearization strategy applied to circular constraints.
+Default is <code class="docutils literal notranslate"><span class="pre">LinearizationStrategy.CIRCUMSCRIBED</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The initialized assembly model with embedded optimization
+variables.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="otaf.html#otaf.SystemOfConstraintsAssemblyModel" title="otaf.SystemOfConstraintsAssemblyModel">otaf.SystemOfConstraintsAssemblyModel</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If <cite>L</cite> does not contain exactly 4 elements.</p>
 </dd>
 </dl>
 </dd></dl>

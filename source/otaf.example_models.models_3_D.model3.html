@@ -185,6 +185,31 @@ Options are 1, 2, or 3.</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="otaf.example_models.models_3_D.model3.get_scaled_credal_set_constraints_function">
+<span class="sig-prename descclassname"><span class="pre">otaf.example_models.models_3_D.model3.</span></span><span class="sig-name descname"><span class="pre">get_scaled_credal_set_constraints_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_std_vect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capa</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_set</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/example_models/models_3_D/_model_3D_30_dof.html#get_scaled_credal_set_constraints_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.example_models.models_3_D.model3.get_scaled_credal_set_constraints_function" title="Link to this definition"></a></dt>
+<dd><p>Generate a wrapped lambda function for scaled constraints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>max_std_vect</strong> (<em>np.ndarray</em>) – The upper-bound limits for standard deviation mapping.</p></li>
+<li><p><strong>tracker</strong> (<em>Any</em><em>, </em><em>optional</em>) – Data logging tracker instance. Default is None.</p></li>
+<li><p><strong>experiment_key</strong> (<em>Any</em><em>, </em><em>optional</em>) – Unique identifier key for tracking logs. Default is None.</p></li>
+<li><p><strong>tol</strong> (<em>float</em><em>, </em><em>optional</em>) – Tolerance parameter (unused in this configuration).</p></li>
+<li><p><strong>capa</strong> (<em>float</em><em>, </em><em>optional</em>) – Process capability index (unused in this configuration).</p></li>
+<li><p><strong>param_set</strong> (<em>int</em><em>, </em><em>default 1</em>) – The active parameter configuration variant index.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A single-argument function mapping <cite>x_scaled</cite> to its
+evaluated constraint array.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Callable[[np.ndarray], np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="otaf.example_models.models_3_D.model3.get_system_of_constraints_assembly_model">
 <span class="sig-prename descclassname"><span class="pre">otaf.example_models.models_3_D.model3.</span></span><span class="sig-name descname"><span class="pre">get_system_of_constraints_assembly_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[100,</span> <span class="pre">40,</span> <span class="pre">30,</span> <span class="pre">30,</span> <span class="pre">20,</span> <span class="pre">20,</span> <span class="pre">120,</span> <span class="pre">50,</span> <span class="pre">40,</span> <span class="pre">50,</span> <span class="pre">-30]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Nd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">LinearizationStrategy.CIRCUMSCRIBED</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/example_models/models_3_D/_model_3D_30_dof.html#get_system_of_constraints_assembly_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.example_models.models_3_D.model3.get_system_of_constraints_assembly_model" title="Link to this definition"></a></dt>
 <dd><p>Construct the system of constraints assembly model.</p>

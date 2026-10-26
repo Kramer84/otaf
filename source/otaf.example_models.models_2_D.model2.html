@@ -110,6 +110,29 @@
   <section id="module-otaf.example_models.models_2_D.model2">
 <span id="model-2-2d-16-dof-reference-assembly"></span><h1>Model 2: 2D 16-DOF Reference Assembly<a class="headerlink" href="#module-otaf.example_models.models_2_D.model2" title="Link to this heading"></a></h1>
 <dl class="py function">
+<dt class="sig sig-object py" id="otaf.example_models.models_2_D.model2.eval_credal_set_constraints">
+<span class="sig-prename descclassname"><span class="pre">otaf.example_models.models_2_D.model2.</span></span><span class="sig-name descname"><span class="pre">eval_credal_set_constraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_std</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capa</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hM</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hF</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/example_models/models_2_D/_model_2D_16_dof.html#eval_credal_set_constraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.example_models.models_2_D.model2.eval_credal_set_constraints" title="Link to this definition"></a></dt>
+<dd><p>Evaluate the normalized credal set boundary conditions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_std</strong> (<em>np.ndarray</em>) – A 1D array of 16 standard deviation values (two per plane feature).</p></li>
+<li><p><strong>tol</strong> (<em>float</em><em>, </em><em>default 0.16</em>) – The baseline design tolerance.</p></li>
+<li><p><strong>capa</strong> (<em>float</em><em>, </em><em>default 1.0</em>) – The process capability standard multiplier.</p></li>
+<li><p><strong>hM</strong> (<em>float</em><em>, </em><em>default 10.0</em>) – Height parameter for the male component.</p></li>
+<li><p><strong>hF</strong> (<em>float</em><em>, </em><em>default 10.2</em>) – Height parameter for the female component.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An array of 8 normalized constraint values, one per plane feature.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="otaf.example_models.models_2_D.model2.eval_scaled_credal_set_constraints">
 <span class="sig-prename descclassname"><span class="pre">otaf.example_models.models_2_D.model2.</span></span><span class="sig-name descname"><span class="pre">eval_scaled_credal_set_constraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_scaled</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_std_vect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capa</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hM</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hF</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/example_models/models_2_D/_model_2D_16_dof.html#eval_scaled_credal_set_constraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.example_models.models_2_D.model2.eval_scaled_credal_set_constraints" title="Link to this definition"></a></dt>
 <dd><p>Map scaled deviations to real values and evaluate constraints.</p>
@@ -158,15 +181,36 @@
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple[Any, list[sp.Symbol], np.ndarray, np.ndarray]</p>
+<dd class="field-odd"><p>tuple[<em>Any</em>, list[<em>Symbol</em>], <em>ndarray</em>, <em>ndarray</em>]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.example_models.models_2_D.model2.get_scaled_credal_set_constraints_function">
-<span class="sig-prename descclassname"><span class="pre">otaf.example_models.models_2_D.model2.</span></span><span class="sig-name descname"><span class="pre">get_scaled_credal_set_constraints_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_std_vect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capa</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hM</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hF</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/example_models/models_2_D/_model_2D_16_dof.html#get_scaled_credal_set_constraints_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.example_models.models_2_D.model2.get_scaled_credal_set_constraints_function" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">otaf.example_models.models_2_D.model2.</span></span><span class="sig-name descname"><span class="pre">get_scaled_credal_set_constraints_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_std_vect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capa</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hM</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hF</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/example_models/models_2_D/_model_2D_16_dof.html#get_scaled_credal_set_constraints_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.example_models.models_2_D.model2.get_scaled_credal_set_constraints_function" title="Link to this definition"></a></dt>
+<dd><p>Generate a wrapped lambda function for scaled constraints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>max_std_vect</strong> (<em>np.ndarray</em>) – The upper-bound limits for standard deviation mapping.</p></li>
+<li><p><strong>tracker</strong> (<em>Any</em><em>, </em><em>optional</em>) – Data logging tracker instance. Default is None.</p></li>
+<li><p><strong>experiment_key</strong> (<em>Any</em><em>, </em><em>optional</em>) – Unique identifier key for tracking logs. Default is None.</p></li>
+<li><p><strong>tol</strong> (<em>float</em><em>, </em><em>default 0.16</em>) – The baseline design tolerance.</p></li>
+<li><p><strong>capa</strong> (<em>float</em><em>, </em><em>default 1.0</em>) – The process capability index multiplier.</p></li>
+<li><p><strong>hM</strong> (<em>float</em><em>, </em><em>default 10.0</em>) – Height parameter for the male component.</p></li>
+<li><p><strong>hF</strong> (<em>float</em><em>, </em><em>default 10.2</em>) – Height parameter for the female component.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A single-argument function mapping <cite>x_scaled</cite> to its
+evaluated constraint array.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Callable[[np.ndarray], np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.example_models.models_2_D.model2.get_system_of_constraints_assembly_model">
