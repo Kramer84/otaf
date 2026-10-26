@@ -53,22 +53,17 @@ class InterfaceLoopHandling:
                 if token.startswith("G"):
                     gap_matrices.add(token)
 
-        # Sometimes we have the gap in two directions,but ony want one, soooo:
-        inverse_gap_matrices = set(map(inverse_mstring, gap_matrices))
-        intersection = gap_matrices.intersection(inverse_gap_matrices)
-        intersection_list = list(intersection)
-        intersection_list_index_map = {inter: i for i, inter in enumerate(intersection_list)}
-        inverse_intersection_list = list(map(inverse_mstring, intersection_list))
-        inverse_intersection_list_indexes = [
-            intersection_list_index_map[inter] for inter in inverse_intersection_list
-        ]
-        gap_matrices_to_remove = set(
-            [
-                inverse_intersection_list[num]
-                for index, num in enumerate(inverse_intersection_list_indexes)
-                if num > index
-            ]
-        )
+        # Sometimes we have the gap in two directions, but only want one.
+        # The choice must not depend on set iteration order (i.e. on the hash seed):
+        # both directions should describe the same contact, yet they currently yield
+        # different interface constraints (see tests/test_physical_invariants.py).
+        # Keeping the lexicographically greater name reproduces the variant with
+        # symmetric lever arms on model2; which variant is correct is still open.
+        gap_matrices_to_remove = {
+            min(gap, inverse_mstring(gap))
+            for gap in gap_matrices
+            if inverse_mstring(gap) in gap_matrices and inverse_mstring(gap) != gap
+        }
         gap_matrices -= gap_matrices_to_remove
         return gap_matrices
 

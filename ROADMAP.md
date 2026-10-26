@@ -20,11 +20,16 @@ imprecise-probability sweeps) is marked `@pytest.mark.gpu` and runs elsewhere.
 
 ## Phase 1: Characterization tests (before changing any numerics)
 
-- [ ] Golden-master snapshots: save `A_eq_Def, A_eq_Gap, K_eq, A_ub_Def, A_ub_Gap, K_ub` of models 1–4 to `tests/data/*.npz`; assert equality on each run.
-- [ ] Analytical oracle: compare SOC failure probability of `model1` with the analytical reference (`notebooks/Ex1_Pocket/*Analytical_Ref*`) within Monte Carlo confidence bounds (≤ few thousand samples, fixed seed).
-- [ ] Hand-coded baselines: use the manual models (`model3`/`model4`, `ManualImplementation4Pins2plates.ipynb`) as references. Their variable and constraint ordering differs from the automatic pipeline, so first write a mapping helper that matches matrices **up to row/column permutation and row scaling** (compare by variable label, not index).
-- [ ] Physical-invariant tests: zero deviation ⇒ feasible (`s ≥ 0`); Pf non-decreasing in tolerance; invariance to part/surface relabelling; 2D models embedded in 3D give the same result.
-- [ ] LP vs MILP agreement on the same samples.
+- [x] Golden-master snapshots of the constraint matrices of models 1–4 (`tests/data/matrix_snapshots/`, regenerate with `OTAF_UPDATE_SNAPSHOTS=1`).
+- [x] Order-independent comparison helper (`tests/matrix_utils.py`): matches columns by variable name, rows up to permutation.
+- [x] **Model construction made independent of the Python hash seed.** Interface rows were ordered by `set` iteration, and in `model2` the direction kept for a gap used both ways (`GP1bB0P2bB0` / `GP2bB0P1bB0`) was a coin flip per process (30/60 seeds). The two variants differ (lever arms ±5 vs −5.2/+5): at ×1.21 dispersion Pf is 14.40 % vs 14.65 % (5/2000 samples differ). The choice is now deterministic; which variant is correct is **open** (strict-xfail test documents it).
+- [x] Removed duplicated plane interaction loops (each was added twice and hidden by a `set`).
+- [x] Analytical oracle for `model1`: SOC slack equals half the analytical clearance (`s = j/2`, to 1e-7) on every sample. Mutation check: catches sign, lever-arm and nominal-size errors.
+- [x] Invariants on all models: nominal assembly feasible with positive margin; failures persist when the dispersion grows (follows from LP concavity); distribution labels match solver variables (models 1, 2, 4).
+- [ ] **Resolve the gap-direction bug** (both directions must give the same constraints), then remove the xfail.
+- [ ] Hand-coded baselines: map `ManualImplementation4Pins2plates.ipynb` and the 16-DOF analytical LP notebook onto the automatic models' variables and compare with `matrix_utils` (needs row scaling support).
+- [ ] `model3` samples a reduced parameter space mapped by position (`sample_multiplier`); add explicit labels so the mapping can be checked by name.
+- [ ] Remaining invariants: invariance to part/surface relabelling; 2D models embedded in 3D give the same result; LP vs MILP agreement.
 
 ## Phase 2: Cylinder–cylinder interfaces (top priority; core purpose of the library)
 
@@ -54,7 +59,9 @@ Known differences between the automatic path (`_interfaceLoopBuilder._cylinder_i
 - [ ] **pydantic models for the input dictionary** (`SystemData`, `Part`, `Surface`, `Loops`, …): validate types, labels, frames (orthonormal), required keys per surface type (e.g. `RADIUS` for cylinders) up front with clear errors; keep accepting plain dicts.
 - [ ] Replace `print` (54 calls) with `logging`.
 - [ ] Explicit RNG seeds everywhere; named numerical tolerances instead of literals.
-- [ ] Make solver failures explicit (status codes surfaced, not silently treated as failure).
+- [ ] Make solver failures explicit: today a single failed `milp` in a batch returns `x=None` and crashes the whole batch with `ValueError: setting an array element with a sequence` (`uncertainty/_reliability.py`). Surface status codes per sample instead.
+- [ ] `PointsNotOnPlaneError(...)` is instantiated but never raised in `_surfaceInteractionManager.process_plane_plane_interaction`, so non-planar point sets pass silently.
+- [ ] `compute_gap_optimizations_on_sample_batch` defaults to `float32` output; the sign of `s` near 0 deserves `float64`.
 
 ## Phase 5: Release and validation
 

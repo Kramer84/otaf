@@ -129,13 +129,13 @@ class InterfaceLoopBuilder:
                         expa_f.multiply_elementwise(self.x_component_mask_matrix)
                         for expa_f in interface_equation_matrix_list
                     ]
+                    # Order-preserving deduplication (a set would make the row order
+                    # depend on the hash seed).
                     interface_equations_plane = list(
-                        set(
-                            [
-                                x
-                                for expr in interface_equation_matrix_list
-                                for x in extract_expressions_with_variables(expr)
-                            ]
+                        dict.fromkeys(
+                            x
+                            for expr in interface_equation_matrix_list
+                            for x in extract_expressions_with_variables(expr)
                         )
                     )
                     interface_equations.extend(interface_equations_plane)
@@ -180,14 +180,14 @@ class InterfaceLoopBuilder:
         BPSP, GMMP = BASE_PART_SURF_PATTERN, G_MATRIX_MSTRING_PATTERN
         self._print(f"Processing part {idPart}, surface {idSurf} for plane-to-plane interactions.")
 
-        usedGMat = list(self.filtered_gap_matrices[idPart][idSurf]["USED"])
+        usedGMat = sorted(self.filtered_gap_matrices[idPart][idSurf]["USED"])
         usedGMatDat = [list(GMMP.fullmatch(ug).groups()) for ug in usedGMat]
         usedInteractingParts = [X[3] for X in usedGMatDat]
         usedInteractingSurfs = [X[4] for X in usedGMatDat]
         self._print("usedGMatDat", usedGMatDat)
         self._print(f"Found {len(usedGMat)} used gap matrices.")
 
-        unusedGMat = list(self.filtered_gap_matrices[idPart][idSurf]["UNUSED"])
+        unusedGMat = sorted(self.filtered_gap_matrices[idPart][idSurf]["UNUSED"])
         unusedGMatDat = [list(GMMP.fullmatch(uug).groups()) for uug in unusedGMat]
         unusedInteractingParts = [X[3] for X in unusedGMatDat]
         unusedInteractingSurfs = [X[4] for X in unusedGMatDat]
@@ -215,7 +215,6 @@ class InterfaceLoopBuilder:
                 self._print(
                     f"Generated {len(interactionMatrixLoopList)} interaction matrix loops for current matching."
                 )
-            facingPlaneInteractionMatrixList.extend(interactionMatrixLoopList)
 
         return facingPlaneInteractionMatrixList
 
@@ -322,14 +321,14 @@ class InterfaceLoopBuilder:
 
         BPSP, GMMP = BASE_PART_SURF_PATTERN, G_MATRIX_MSTRING_PATTERN
 
-        usedGMat = list(self.filtered_gap_matrices[idPart][idSurf]["USED"])
+        usedGMat = sorted(self.filtered_gap_matrices[idPart][idSurf]["USED"])
         usedGMatDat = [list(GMMP.fullmatch(ug).groups()) for ug in usedGMat]
         usedInteractingParts = [X[3] for X in usedGMatDat]
         usedInteractingSurfs = [X[4] for X in usedGMatDat]
         self._print("usedGMatDat", usedGMatDat)
         self._print(f"Found {len(usedGMat)} used gap matrices.")
 
-        unusedGMat = list(self.filtered_gap_matrices[idPart][idSurf]["UNUSED"])
+        unusedGMat = sorted(self.filtered_gap_matrices[idPart][idSurf]["UNUSED"])
         unusedGMatDat = [list(GMMP.fullmatch(uug).groups()) for uug in unusedGMat]
         unusedInteractingParts = [X[3] for X in unusedGMatDat]
         unusedInteractingSurfs = [X[4] for X in unusedGMatDat]
