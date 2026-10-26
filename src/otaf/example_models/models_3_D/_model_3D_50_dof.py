@@ -2,7 +2,7 @@ from __future__ import annotations
 
 __author__ = "Kramer84"
 __all__ = [
-    "get_system_of_constraints_assembly_model"
+    "get_system_of_constraints_assembly_model",
     "get_distribution_params",
     "eval_credal_set_constraints",
     "eval_scaled_credal_set_constraints",

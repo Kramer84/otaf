@@ -4,12 +4,15 @@ __author__ = "Kramer84"
 __all__ = [
     "get_system_of_constraints_assembly_model",
     "get_distribution_params",
+    "eval_credal_set_constraints",
     "eval_scaled_credal_set_constraints",
     "get_scaled_credal_set_constraints_function",
     "dim",
     "sample_multiplier",
-    "no_tol", 
+    "no_tol",
 ]
+from typing import Any, Callable
+
 import numpy as np
 import sympy as sp
 
@@ -442,28 +445,19 @@ sample_multiplier = np.eye(dim)
 no_tol = False
 
 
-def eval_scaled_credal_set_constraints(
-    x_scaled: np.ndarray,
-    max_std_vect: np.ndarray,
-    tracker: Any | None = None,
-    experiment_key: Any | None = None,
+def eval_credal_set_constraints(
+    x_std: np.ndarray,
     tol: float = 0.16,
     capa: float = 1.0,
     hM: float = 10.0,
     hF: float = 10.2,
 ) -> np.ndarray:
-    """Map scaled deviations to real values and evaluate constraints.
+    """Evaluate the normalized credal set boundary conditions.
 
     Parameters
     ----------
-    x_scaled : np.ndarray
-        The scaled standard deviation vector inputs.
-    max_std_vect : np.ndarray
-        The upper-bound limits for standard deviation mapping.
-    tracker : Any, optional
-        Data logging tracker instance. Default is None.
-    experiment_key : Any, optional
-        Unique identifier key for tracking logs. Default is None.
+    x_std : np.ndarray
+        A 1D array of 16 standard deviation values (two per plane feature).
     tol : float, default 0.16
         The baseline design tolerance.
     capa : float, default 1.0
@@ -476,7 +470,7 @@ def eval_scaled_credal_set_constraints(
     Returns
     -------
     np.ndarray
-        The calculated constraint evaluation bounds array.
+        An array of 8 normalized constraint values, one per plane feature.
     """
     target = tol / (6 * capa)
     constraint1 = (
@@ -517,6 +511,53 @@ def eval_scaled_credal_set_constraints(
     )
 
 
+def eval_scaled_credal_set_constraints(
+    x_scaled: np.ndarray,
+    max_std_vect: np.ndarray,
+    tracker: Any | None = None,
+    experiment_key: Any | None = None,
+    tol: float = 0.16,
+    capa: float = 1.0,
+    hM: float = 10.0,
+    hF: float = 10.2,
+) -> np.ndarray:
+    """Map scaled deviations to real values and evaluate constraints.
+
+    Parameters
+    ----------
+    x_scaled : np.ndarray
+        The scaled standard deviation vector inputs.
+    max_std_vect : np.ndarray
+        The upper-bound limits for standard deviation mapping.
+    tracker : Any, optional
+        Data logging tracker instance. Default is None.
+    experiment_key : Any, optional
+        Unique identifier key for tracking logs. Default is None.
+    tol : float, default 0.16
+        The baseline design tolerance.
+    capa : float, default 1.0
+        The process capability standard multiplier.
+    hM : float, default 10.0
+        Height parameter for the male component.
+    hF : float, default 10.2
+        Height parameter for the female component.
+
+    Returns
+    -------
+    np.ndarray
+        The calculated constraint evaluation bounds array.
+    """
+    x_real = x_scaled * max_std_vect
+    constraint_array = eval_credal_set_constraints(
+        x_real, tol=tol, capa=capa, hM=hM, hF=hF
+    )
+    if tracker:
+        tracker.update_constraint_data(
+            exp_key=experiment_key, x=x_scaled, constraints=constraint_array
+        )
+    return constraint_array
+
+
 def get_scaled_credal_set_constraints_function(
     max_std_vect: np.ndarray,
     tracker: Any | None = None,
@@ -551,20 +592,6 @@ def get_scaled_credal_set_constraints_function(
         A single-argument function mapping `x_scaled` to its
         evaluated constraint array.
     """
-    x_real = x_scaled * max_std_vect
-    constraint_array = eval_credal_set_constraints(
-        x_real, tol=tol, capa=capa, hM=hM, hF=hF
-    )
-    if tracker:
-        tracker.update_constraint_data(
-            exp_key=experiment_key, x=x_scaled, constraints=constraint_array
-        )
-    return constraint_array
-
-
-def get_scaled_credal_set_constraints_function(
-    max_std_vect, tracker=None, experiment_key=None, tol=0.16, capa=1.0, hM=10, hF=10.2
-):
     return lambda x_scaled: eval_scaled_credal_set_constraints(
         x_scaled,
         max_std_vect,

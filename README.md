@@ -91,7 +91,7 @@ By injecting an auxiliary slack variable $s$ into the interface constraints via 
 
 ### Prerequisites
 
-OTAF requires Python $\ge$ 3.8. It is highly recommended to isolate installation dependencies inside a virtual environment or Conda environment.
+OTAF requires Python $\ge$ 3.10. It is highly recommended to isolate installation dependencies inside a virtual environment or Conda environment.
 
 ```bash
 python3 -m venv otaf_env
@@ -105,7 +105,7 @@ Install OTAF directly from source along with your required dependency subsets:
 
 ```bash
 # Clone the repository
-git clone [https://github.com/Kramer84/otaf.git](https://github.com/Kramer84/otaf.git)
+git clone https://github.com/Kramer84/otaf.git
 cd otaf
 
 # Install the base structural engine

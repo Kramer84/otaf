@@ -1,7 +1,10 @@
+import pytest
+
 import otaf
 
 # These tests are to see if the basic functionalities work, by loading the four basic example models. 
 
+@pytest.mark.slow
 def test_load_example_models():
     available_models = {  #previous optimization results:
         "model1_4_dof": otaf.example_models.model1, #tol: 0.31 mult: 1.35 

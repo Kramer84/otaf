@@ -39,7 +39,13 @@ dependencies = [
 
 [project.optional-dependencies]
 test = [
-    "pytest"
+    "pytest",
+    "pytest-cov",
+]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "ruff",
 ]
 
 surrogate = [
@@ -73,5 +79,23 @@ all = [
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.ruff]
+src = ["src", "tests"]
+target-version = "py310"
+
+[tool.ruff.lint]
+# Bug-catching rules only for now (syntax errors, undefined names, bad __all__,
+# redefinitions). Widened step by step as the roadmap progresses; see ROADMAP.md.
+select = ["E9", "F63", "F7", "F82", "F811"]
+# Lets ruff understand `Literal[...]` etc. imported from beartype.typing.
+typing-modules = ["beartype.typing"]
+
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "slow: takes more than a few seconds (model construction, small Monte Carlo runs)",
+    "gpu: needs torch and/or a GPU; never run in CI or on small machines",
+]
