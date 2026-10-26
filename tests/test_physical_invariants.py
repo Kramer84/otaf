@@ -91,23 +91,46 @@ def test_failures_persist_when_deviations_grow(name, soc_model):
     assert failed_before.any(), "largest dispersion should produce failures"
 
 
-@pytest.mark.xfail(strict=True, reason="open bug: the two directions of a gap give different interface constraints")
-def test_model2_gap_direction_does_not_change_the_model(monkeypatch):
-    # model2 uses the gap between surfaces P1b and P2b in both directions in its
-    # compatibility loops; only one direction is kept. Physically both describe the
-    # same contact, so keeping either one must give the same constraint system.
-    from matrix_utils import assert_same_constraint_system, system_from_model
+def _model2_slack_keeping_gap_direction(monkeypatch, keep, hM, hF, size=500):
+    """Optimal slack of model2 when the P1b/P2b gap is kept in direction ``keep``."""
     from otaf._assembly_modeling._interface_constraints import interfaceLoopHandling as ilh
 
     original = ilh.InterfaceLoopHandling.extract_unique_gap_matrices_from_expanded_loops
-    forward, backward = "GP1bB0P2bB0", "GP2bB0P1bB0"
+    both = {"GP1bB0P2bB0", "GP2bB0P1bB0"}
 
-    def build(keep):
-        def forced(self):
-            gaps = set(original(self)) - {forward, backward}
-            return gaps | {keep}
+    def forced(self):
+        return (set(original(self)) - both) | {keep}
 
-        monkeypatch.setattr(ilh.InterfaceLoopHandling, "extract_unique_gap_matrices_from_expanded_loops", forced)
-        return system_from_model(otaf.example_models.model2.get_system_of_constraints_assembly_model())
+    monkeypatch.setattr(ilh.InterfaceLoopHandling, "extract_unique_gap_matrices_from_expanded_loops", forced)
+    model = otaf.example_models.model2
+    soc = model.get_system_of_constraints_assembly_model(hM=hM, hF=hF)
+    distribution, *_ = model.get_distribution_params(hM=hM, hF=hF)
+    distribution = otaf.distribution.multiply_composed_distribution_standard_with_constants(
+        distribution, [1.21] * model.dim
+    )
+    ot.RandomGenerator.SetSeed(0)
+    return solve_slack(soc, np.array(distribution.getSample(size)))
 
-    assert_same_constraint_system(build(forward), build(backward))
+
+# model2 uses the gap between surfaces P1b and P2b in both directions in its compatibility
+# loops and keeps only one. Each direction pivots the gap at a different origin, so the raw
+# coefficients may differ, but the physical answer (the optimal slack) must not.
+
+
+def test_model2_gap_direction_is_irrelevant_when_points_face_exactly(monkeypatch):
+    # Equal heights: the facing points of P1b and P2b coincide, both directions agree.
+    forward = _model2_slack_keeping_gap_direction(monkeypatch, "GP1bB0P2bB0", hM=10.0, hF=10.0)
+    backward = _model2_slack_keeping_gap_direction(monkeypatch, "GP2bB0P1bB0", hM=10.0, hF=10.0)
+    np.testing.assert_allclose(forward, backward, atol=1e-9)
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="open bug: facing plane points are paired by proximity (0.25 mm) instead of projecting "
+    "the overlap of the two faces, so with hM=10, hF=10.2 one direction places a contact at "
+    "y=10.2, outside the overlap [0, 10] (lever arm 5.2 instead of 5)",
+)
+def test_model2_gap_direction_is_irrelevant_with_unequal_heights(monkeypatch):
+    forward = _model2_slack_keeping_gap_direction(monkeypatch, "GP1bB0P2bB0", hM=10.0, hF=10.2)
+    backward = _model2_slack_keeping_gap_direction(monkeypatch, "GP2bB0P1bB0", hM=10.0, hF=10.2)
+    np.testing.assert_allclose(forward, backward, atol=1e-9)

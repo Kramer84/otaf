@@ -54,11 +54,11 @@ class InterfaceLoopHandling:
                     gap_matrices.add(token)
 
         # Sometimes we have the gap in two directions, but only want one.
-        # The choice must not depend on set iteration order (i.e. on the hash seed):
-        # both directions should describe the same contact, yet they currently yield
-        # different interface constraints (see tests/test_physical_invariants.py).
-        # Keeping the lexicographically greater name reproduces the variant with
-        # symmetric lever arms on model2; which variant is correct is still open.
+        # The choice must not depend on set iteration order (i.e. on the hash seed).
+        # Both directions agree when the facing points coincide, but not when plane
+        # points are only paired by proximity (see tests/test_physical_invariants.py).
+        # Keeping the lexicographically greater name reproduces, on model2, the
+        # variant whose contact points stay within the overlap of the two faces.
         gap_matrices_to_remove = {
             min(gap, inverse_mstring(gap))
             for gap in gap_matrices
