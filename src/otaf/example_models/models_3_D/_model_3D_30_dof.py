@@ -6,7 +6,7 @@ __all__ = [
     "get_distribution_params",
     "eval_credal_set_constraints",
     "eval_scaled_credal_set_constraints",
-    "get_scaled_credal_set_constraints_function"
+    "get_scaled_credal_set_constraints_function",
     "dim",
     "sample_multiplier",
     "no_tol", 
