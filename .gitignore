@@ -25,6 +25,7 @@ venv/
 
 # --- Data & Weights ---
 *.npz
+!tests/data/**/*.npz
 *.npy
 *.bak
 *.dat
