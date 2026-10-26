@@ -233,7 +233,7 @@ def run_reduced_analysis(m_name, model_class, args, base_model_fun, max_std_vect
     # 2. Wrap the Constraints & Handle Tracker Manually
     def get_reduced_constraint_fun(tr, expKey):
         # Instantiate base constraint WITHOUT the tracker so it doesn't log the full_dim vector
-        base_cons = model_class.getScaledCredalSetConstraintsFunction(
+        base_cons = model_class.get_scaled_credal_set_constraints_function(
             max_std_vect, tracker=None, experiment_key=None
         )
         
@@ -319,7 +319,7 @@ if __name__ == "__main__":
         model_path = f"{args.surrogate_dir}/{m_name}_surrogate.pth"
         model_sur = otaf.surrogate.NeuralRegressorNetwork.from_checkpoint(model_path)
         
-        jointDist, symbols, max_std_vect, mu_vect = model.getDistributionParams()
+        jointDist, symbols, max_std_vect, mu_vect = model.get_distribution_params()
         sample_gld = np.array(jointDist.getSample(args.mc_size))
         
         # Base full-dimensional model evaluator
@@ -342,7 +342,7 @@ if __name__ == "__main__":
                 lb = 0.0 if is_minimization else -np.inf
                 ub = np.inf if is_minimization else 0.0
                 return NonlinearConstraint(
-                    fun=model.getScaledCredalSetConstraintsFunction(max_std_vect, tr, expKey),
+                    fun=model.get_scaled_credal_set_constraints_function(max_std_vect, tr, expKey),
                     lb=lb,
                     ub=ub,
                     keep_feasible=True
@@ -350,7 +350,7 @@ if __name__ == "__main__":
 
             print("\nFinding feasible start (x0)...")
             x0 = optimize_scaling_vector(
-                model.getScaledCredalSetConstraintsFunction(max_std_vect), 
+                model.get_scaled_credal_set_constraints_function(max_std_vect), 
                 n_vars=model.dim
             )
 

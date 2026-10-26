@@ -32,7 +32,7 @@ class HyperparameterTuning:
         with the multiplicator we have 15 % failures (we'll may pass these as parameters.
         
         system_of_constraints is on of the 4 models in otaf.example_models. The functions qre
-        usuqlly called getSystemOfConstraintsAssemblyModel()
+        usuqlly called get_system_of_constraints_assembly_model()
         distribution_function is the function that returns the vector of random variables,
         the variable names and vector of standard deviations and means.)
         The sample multiplier is a matrix performing a variable change"""
@@ -265,8 +265,8 @@ if __name__ == "__main__":
             sys.exit(1)
 
         model_module = available_models[model_name]
-        system_of_constraints = model_module.getSystemOfConstraintsAssemblyModel()
-        distribution_function = model_module.getDistributionParams
+        system_of_constraints = model_module.get_system_of_constraints_assembly_model()
+        distribution_function = model_module.get_distribution_params
         dimension = int(model_module.dim)
         
         tuner = HyperparameterTuning(

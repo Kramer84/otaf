@@ -1,0 +1,11 @@
+# Exclude all Jupyter Notebooks from language statistics
+*.ipynb linguist-detectable=false
+
+# Mark the documentation folder as documentation (ignored by default in stats)
+docs/** linguist-documentation
+
+# Ignore the dry run prompts markdown files
+dry_run_prompts/** linguist-detectable=false
+
+# Mark temporary test output directories as generated code
+_tests.tmp/** linguist-generated

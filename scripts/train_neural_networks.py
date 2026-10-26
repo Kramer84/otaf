@@ -171,8 +171,8 @@ if __name__ == "__main__":
             continue
 
         model_module = available_models[model_name]
-        system_of_constraints = model_module.getSystemOfConstraintsAssemblyModel()
-        distribution_function = model_module.getDistributionParams
+        system_of_constraints = model_module.get_system_of_constraints_assembly_model()
+        distribution_function = model_module.get_distribution_params
         dimension = int(model_module.dim)
 
         tol = get_param(args.tols, i, 0.1)
