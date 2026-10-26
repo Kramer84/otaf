@@ -1,9 +1,11 @@
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
+from matplotlib.colors import ListedColormap
+from matplotlib.ticker import FuncFormatter
 from gldpy import GLD
 import otaf
-from matplotlib.colors import LogNorm
 
 # Import the model definition you provided
 from otaf.example_models import model1
@@ -11,9 +13,9 @@ from otaf.example_models import model1
 
 DEFAULT_FIG_STYLE = {
     "figsize_cm": (16, 9),          # width, height in cm
-    "font_size": 10,
+    "font_size": 13,
     "font_family": "serif",
-    "usetex": False,                # set True if you want LaTeX-rendered text
+    "usetex": True,                # set True if you want LaTeX-rendered text
 
     # Generic color slots you can reuse everywhere
     "colors": {
@@ -30,8 +32,8 @@ DEFAULT_FIG_STYLE = {
     "grid": True,
     "legend": True,
     "tight_layout": True,
-    "title": True,
-    "labels":True,
+    "title": False,
+    "labels": False,
     
     # Saving options
     "save": False,
@@ -91,8 +93,8 @@ def _setup_mpl_from_style(cfg):
         rc["text.latex.preamble"] = r"""
 \usepackage[T1]{fontenc}
 \usepackage{amsmath}
-\usepackage{libertinus}        % wrapper, picks libertinus-type1 under pdfLaTeX
-\usepackage{libertinust1math}  % Libertinus Math for pdfLaTeX
+\usepackage{libertinus}
+\usepackage{libertinust1math}
 """
     else:
         rc["text.usetex"] = False
@@ -110,7 +112,7 @@ def _new_fig_ax(cfg):
 def _finalize_figure(fig, ax, cfg):
     """Apply grid, x/y limits, saving and showing."""
     if cfg.get("grid", True):
-        ax.grid(True)
+        ax.grid(True, linestyle=":", alpha=0.6)
 
     if cfg.get("xlim") is not None:
         ax.set_xlim(*cfg["xlim"])
@@ -133,71 +135,152 @@ def _finalize_figure(fig, ax, cfg):
 
     return fig, ax
 
-def format_prob_tex(p: float) -> str:
+def format_prob_tex(p: float, digits: int = 2, notation: int = 1) -> str:
     """Return a LaTeX-friendly scientific notation string for a probability."""
     if p == 0:
         return "0"
     exp = int(np.floor(np.log10(p)))
     mant = p / 10**exp
-    return rf"{mant:.2f} \times 10^{{{exp}}}"
+    # Use nested f-string interpolation to dynamically set the decimal precision
+    if notation == 1 :
+        return rf"{mant:.{digits}f} \times 10^{{{exp}}}"
+    if notation == 2 :
+        return rf"{mant:.{digits}f}e^{{{exp}}}"
 
 
-def plot_single_pf_grid(U4_grid, U5_grid, PF_grid, alpha, style=None, use_lognorm=True, **kwargs):
+def build_peak_highlight_cmap(base_cmap_name: str = "viridis", n_colors: int = 200, highlight_color: str = "#FF0000"):
     """
-    Plots a single Probability of Failure grid for a given alpha limit.
+    Builds a colormap of n_colors where the bottom n_colors-1 colors
+    come from base_cmap and the top color is set to highlight_color.
     """
-    # 1. Merge configurations
+    base_cmap = plt.get_cmap(base_cmap_name)
+    colors = base_cmap(np.linspace(0.0, 1.0, n_colors - 1))
+    red_rgba = np.array([mcolors.to_rgba(highlight_color)])
+    spliced_colors = np.vstack([colors, red_rgba])
+    return ListedColormap(spliced_colors)
+
+
+def plot_single_pf_grid(
+    U4_grid,
+    U5_grid,
+    PF_grid,
+    alpha,
+    style=None,
+    norm_type="power",
+    n_levels=200,
+    highlight_pct=0.05,
+    highlight_mode="value",
+    highlight_color="#FF0000",
+    base_cmap="viridis",
+    log_min_floor=1e-5,
+    **kwargs,
+):
+    """
+    Plots a single Probability of Failure grid with:
+      - 200 contour levels
+      - Pure red highlight for peak probabilities mapped strictly to the top bin.
+      - Dynamic gradient resolution (log, power, or linear)
+    """
     cfg = _merge_style(style, **kwargs)
-    
-    # 2. Create Figure and Axes
     fig, ax = _new_fig_ax(cfg)
+
+    vmax = float(np.max(PF_grid))
     
-    # 3. Plot Data
-    pf_safe = np.clip(PF_grid, 1e-16, 1.0)
+    # 1. Determine meaningful vmin to prevent dynamic range collapse
+    pos_vals = PF_grid[PF_grid > 0]
+    if len(pos_vals) > 0:
+        vmin = float(max(np.min(pos_vals), log_min_floor))
+    else:
+        vmin = log_min_floor
     
-    if use_lognorm:
-        try:
-            contour = ax.contourf(
-                U4_grid, U5_grid, pf_safe, 
-                levels=50, 
-                cmap='viridis',
-                norm=LogNorm(vmin=pf_safe.min(), vmax=pf_safe.max())
-            )
-        except ValueError:
-            use_lognorm = False
-            
-    if not use_lognorm:
-        contour = ax.contourf(
-            U4_grid, U5_grid, PF_grid, 
-            levels=50, 
-            cmap='viridis'
-        )
+    if vmax <= vmin:
+        vmax = vmin + 1e-4
+
+    # 2. Compute the threshold boundary for the red highlight
+    pct = highlight_pct if highlight_pct < 1.0 else highlight_pct / 100.0
+
+    if highlight_mode == "quantile":
+        threshold_val = float(np.percentile(PF_grid, 100.0 * (1.0 - pct)))
+    else:
+        # Value-based: top pct band near the maximum
+        threshold_val = vmax - pct * (vmax - vmin)
+
+    # Ensure threshold does not collapse levels
+    threshold_val = max(vmin + 1e-6, min(threshold_val, vmax - 1e-6))
+
+    # 3. Build Level Spacing strictly for n_levels total bins
+    # We need n_levels + 1 boundaries to create exactly n_levels bins
+    if norm_type == "log":
+        sub_levels = np.geomspace(vmin, threshold_val, n_levels)
+    elif norm_type == "power":
+        # Power law clustering at the top (expanding contrast for high Pf)
+        t = np.linspace(0, 1, n_levels)
+        sub_levels = threshold_val - (threshold_val - vmin) * ((1 - t)**2)
+    else:
+        sub_levels = np.linspace(vmin, threshold_val, n_levels)
+
+    # Append absolute maximum to form the final red bin
+    levels = np.append(sub_levels, vmax)
+
+    # Create colormap with exactly n_levels colors
+    custom_cmap = build_peak_highlight_cmap(
+        base_cmap_name=base_cmap,
+        n_colors=n_levels,
+        highlight_color=highlight_color
+    )
     
-    # 4. Colorbar
-    cbar = fig.colorbar(contour, ax=ax)
+    # Force 1-to-1 mapping of bin index to colormap index
+    norm = mcolors.BoundaryNorm(boundaries=levels, ncolors=n_levels)
+
+    # Clip data strictly into [vmin, vmax] for contouring
+    pf_plot = np.clip(PF_grid, vmin, vmax)
+
+    # 4. Render Contour Plot
+    contour = ax.contourf(
+        U4_grid,
+        U5_grid,
+        pf_plot,
+        levels=levels,
+        cmap=custom_cmap,
+        norm=norm,
+        extend="neither"
+    )
+
+    # 5. Colorbar Setup
+    # Limit ticks to 6 evenly spaced markers to avoid rendering 200 black lines
+    cb_ticks = np.linspace(vmin, vmax, 6)
     
-    # 5. Apply Labels and Titles based on usetex preference
+    # Wrap existing format_prob_tex in math-mode delimiters ($...$)
+    def tex_tick_formatter(x, pos):
+        return f"${format_prob_tex(x, digits=1, notation=2)}$"
+
+    cbar = fig.colorbar(
+        contour, 
+        ax=ax, 
+        ticks=cb_ticks, 
+        format=FuncFormatter(tex_tick_formatter)
+    )
+
+    # 6. Apply Labels and Titles
     usetex = cfg.get("usetex", False)
-    
     if cfg.get("labels", True):
         if usetex:
             cbar.set_label(rf"Probability of Failure ($P_f$) [$\alpha = {alpha}$]")
-            ax.set_xlabel(r"$u_{d,4}$ Allocation Scale")
-            ax.set_ylabel(r"$u_{d,5}$ Allocation Scale")
+            ax.set_xlabel(r"$\lambda_{d,1}$")
+            ax.set_ylabel(r"$\lambda_{d,2}$")
         else:
             cbar.set_label(f"Probability of Failure (Pf) [alpha = {alpha}]")
             ax.set_xlabel("u_d_4 Allocation Scale (0=Max Rot, 1=Max Trans)")
             ax.set_ylabel("u_d_5 Allocation Scale (0=Max Rot, 1=Max Trans)")
 
     if cfg.get("title", True):
+        peak_str = format_prob_tex(vmax) if usetex else f"{vmax:.2e}"
         if usetex:
-            ax.set_title(rf"Failure Probability ($\alpha = {alpha}$)")
+            ax.set_title(rf"$\alpha = {alpha}$, Max $P_f \approx {peak_str}$")
         else:
-            ax.set_title(f"Failure Probability (alpha = {alpha})")
-            
-    # 6. Finalize (Grid, Limits, Save, Show)
+            ax.set_title(f"Failure Probability (alpha = {alpha}, Peak Pf approx {peak_str})")
+
     fig, ax = _finalize_figure(fig, ax, cfg)
-    
     return fig, ax
 
 ###################################################
@@ -215,6 +298,9 @@ def main():
     parser.add_argument("--alphas", type=float, nargs="+", default=[0.0, 0.5, 1.0], help="List of failure limits/alphas")
     parser.add_argument("--grid-res", type=int, default=20, help="Resolution of the 2D grid")
     parser.add_argument("--mc-size", type=int, default=100000, help="Monte Carlo sample size")
+    parser.add_argument("--norm-type", type=str, choices=["log", "linear", "power"], default="log", help="Contour normalization type")
+    parser.add_argument("--highlight-pct", type=float, default=0.05, help="Top percentage to color in red (e.g. 0.05 or 5.0)")
+    parser.add_argument("--highlight-mode", type=str, choices=["value", "quantile"], default="value", help="Method to compute peak threshold")
     args = parser.parse_args()
 
     # 1. Setup Models and Distributions
@@ -257,11 +343,20 @@ def main():
             for alpha in args.alphas:
                 if np.any(np.isnan(gld_params)):
                     # Fallback to empirical probability if GLD fails
-                    pf = np.where(eval_vals < alpha, 1, 0).mean()
+                    pf_raw = (eval_vals < alpha).mean()
                 else:
-                    pf = gld.CDF_num(alpha, gld_params, xtol=1e-6)
+                    try:
+                        pf_raw = gld.CDF_num(alpha, gld_params, xtol=1e-6)
+                    except Exception:
+                        pf_raw = (eval_vals < alpha).mean()
+                
+                # Extract scalar float (gld.CDF_num returns a tuple (cdf_val, abserr))
+                if isinstance(pf_raw, (tuple, list, np.ndarray)):
+                    pf_val = float(pf_raw[0])
+                else:
+                    pf_val = float(pf_raw)
                     
-                PF_grids[alpha][i, j] = pf
+                PF_grids[alpha][i, j] = float(np.clip(pf_val, 0.0, 1.0))
                 
         print(f"Row {i+1}/{args.grid_res} completed.")
 
@@ -277,8 +372,14 @@ def main():
             U5_grid, 
             PF_grids[alpha], 
             alpha=alpha,
+            norm_type=args.norm_type,
+            n_levels=200,
+            highlight_pct=args.highlight_pct,
+            highlight_mode=args.highlight_mode,
+            highlight_color="#FF0000",
+            base_cmap="viridis",
+            log_min_floor=1e-5,
             save=True, 
-            use_lognorm=False,
             save_path=plot_filename, 
             dpi=600,
             show=False,
@@ -286,7 +387,6 @@ def main():
             transparent=True
         )
         
-        # Free up memory explicitly after saving each plot
         plt.close(fig)
 
 if __name__ == "__main__":

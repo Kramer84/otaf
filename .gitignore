@@ -6,6 +6,7 @@ dry_run_prompts/
 _tests.tmp/
 _tests/
 notebooks/OptimizationBasedModels/STORAGE/
+uv.lock
 
 # --- Python & Environments ---
 __pycache__/
@@ -144,3 +145,6 @@ wheels/
 *.dist-info/
 .eggs/
 *.egg
+
+# --- Logs ---
+*.log
