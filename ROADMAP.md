@@ -26,7 +26,7 @@ imprecise-probability sweeps) is marked `@pytest.mark.gpu` and runs elsewhere.
 - [x] Removed duplicated plane interaction loops (each was added twice and hidden by a `set`).
 - [x] Analytical oracle for `model1`: SOC slack equals half the analytical clearance (`s = j/2`, to 1e-7) on every sample. Mutation check: catches sign, lever-arm and nominal-size errors.
 - [x] Invariants on all models: nominal assembly feasible with positive margin; failures persist when the dispersion grows (follows from LP concavity); distribution labels match solver variables (models 1, 2, 4).
-- [ ] **Project the overlap of facing planes instead of pairing points by proximity.** `SurfaceInteractionManager.is_point_facing` pairs points within 0.25 mm. With unequal faces (model2: heights 10 vs 10.2) one gap direction then places a contact at y = 10.2, outside the overlap [0, 10] (lever arm 5.2). With aligned points both directions agree to 1e-16, so the loop algebra itself is consistent. Also: faces differing by more than 0.25 mm silently lose the contact. Remove the strict xfail once fixed.
+- [ ] **Project the overlap of facing planes instead of pairing points by proximity.** Cylinders already do this (`approximate_cylinders_populate_facingPointDict` projects the axial extents and creates points at the overlap ends); planes only pair existing points within 0.25 mm (`is_point_facing`). Consequences, covered by strict-xfail tests in `tests/test_surface_interactions.py`: with model2's faces (10 vs 10.2) one contact sits at y = 10.2, outside the overlap [0, 10] (lever arm 5.2); with 10 vs 11 the top contact disappears silently. In 2D the overlap is a segment intersection (same logic as cylinders); in 3D it is a polygon intersection. Once fixed, remove the xfails here and in `test_physical_invariants.py`.
 - [ ] Hand-coded baselines: map `ManualImplementation4Pins2plates.ipynb` and the 16-DOF analytical LP notebook onto the automatic models' variables and compare with `matrix_utils` (needs row scaling support).
 - [ ] `model3` samples a reduced parameter space mapped by position (`sample_multiplier`); add explicit labels so the mapping can be checked by name.
 - [ ] Remaining invariants: invariance to part/surface relabelling; 2D models embedded in 3D give the same result; LP vs MILP agreement.
@@ -41,6 +41,10 @@ Known differences between the automatic path (`_interfaceLoopBuilder._cylinder_i
 | Polygon linearization | none | inscribed / mean / circumscribed factor `rf` |
 | Contact sections | from fragile overlap cases in `_surfaceInteractionManager` (incl. a `NotImplementedError` branch) | both cylinder ends, explicit |
 
+- [x] Axial overlap pairing reviewed and tested (`tests/test_surface_interactions.py`). It is correct for same and opposed axes, with either cylinder longer and for staggered overlaps; the opposed-axes branch is complete despite its "I have begun here" comment.
+- [ ] Fix: an overlap end that coincides with an existing point (e.g. the cylinder origin) is skipped as a duplicate and its contact is not paired (strict xfail).
+- [ ] An origin placed at a cylinder end is rejected with `NonUniqueCoordinatesError` (A0 = A2); accept it.
+- [ ] Mixed interactions (plane–cylinder) are silently ignored by `process_surface_interactions`; raise instead.
 - [ ] Failing differential test: one pin/hole joint, automatic vs hand-coded matrices (via the Phase 1 mapping helper).
 - [ ] Add diameter-defect variables for cylinders (ties into "intrinsic dimension variability").
 - [ ] Add `LinearizationStrategy` to the automatic builder.
