@@ -29,7 +29,9 @@ imprecise-probability sweeps) is marked `@pytest.mark.gpu` and runs elsewhere.
 - [x] **Contact points at the overlap of facing surfaces, not by proximity.** The 0.25 mm pairing radius (`is_point_facing`) is removed. Planes now intersect the two faces (segments in 2D, convex hulls in 3D: `otaf.geometry.planar_overlap_vertices`) and pair points at the overlap vertices. Cylinders use the same helper logic on their axial extents. In both cases an existing point at a vertex is reused (e.g. the origin) and new points are created otherwise. Before the fix, model2 with female faces 0.3 mm taller lost 4 of 8 contacts (Pf 5.35 % instead of 14.15 %), and 1 mm taller lost all of them (every solve unbounded).
 - [x] **Interface loops no longer end with `JCor⁻¹`.** It re-applied the in-plane offset between the two surface origins after the gap rotation, so lever arms were off by that offset (model2: 0.1 mm) and depended on the gap direction. Both directions now give identical slack at every face height. Effect on model2 (×1.21): Pf 14.40 % → 14.20 %, |Δs| ≤ 0.0026. Models 1, 3 and 4 are unchanged.
 - [x] Baselines and comparison notebook: `scripts/baselines/` (`pre-fix`, `post-overlap-fix`) and `notebooks/Baselines/Compare_To_Baseline.ipynb`.
-- [x] Hand-coded references checked against the automatic models (`notebooks/REVIEW.md`): the four-pin model (`model4`, from `ManualImplementation4Pins2plates.ipynb`) sample by sample (`tests/test_cylinder_interfaces.py`); the 16-DOF analytical LP against `model2` with `hF = 10` in distribution (same Pf within Monte Carlo error).
+- [x] Hand-coded references checked against the automatic models (`notebooks/REVIEW.md`): the four-pin model (`model4`, from `ManualImplementation4Pins2plates.ipynb`) sample by sample (`tests/test_cylinder_interfaces.py`); the 16-DOF analytical reference against `model2` in distribution (same Pf within Monte Carlo error).
+- [x] Reference notebooks aligned with the revised thesis (Ch. 4): thesis parameters and normalized parametrization, credal sets from the model functions instead of the removed MI-SDOF classes, directional half-space constraints, seeds; stale API references fixed (all `otaf.*` names in the notebooks resolve). The 16-DOF analytical notebook is rebuilt (closed-form slack) and reproduces the thesis bounds of Ex2 (`notebooks/REVIEW.md`).
+- [x] `model4` plate rotations normalized as in the thesis (`σ_max = target / 50`, the plate corner where the capability constraint is evaluated; was `/ 37.5`). Baseline `plate-capability`: `model4` Pf 6.05 % → 5.40 %, other cases unchanged.
 - [ ] `model3` samples a reduced parameter space mapped by position (`sample_multiplier`); add explicit labels so the mapping can be checked by name.
 - [ ] Remaining invariants: invariance to part/surface relabelling; 2D models embedded in 3D give the same result; LP vs MILP agreement.
 
@@ -50,8 +52,8 @@ The automatic path now reproduces the hand-coded `model4` (two plates, four pins
 - [x] `LinearizationStrategy` in `otaf.geometry`, used by the automatic builder and by `model3`/`model4` (their separate enums made `model4` silently ignore a strategy passed from elsewhere).
 - [x] Differential test: automatic vs hand-coded `model4` (max |Δs| ≈ 1e-8 over 60 samples, diameters included).
 - [x] `model4` evaluated the lower-plate holes at ±l2/2 instead of ±l3/2 (no effect with the default l2 = l3).
-- [ ] `model3` (30 DOF) from the automatic pipeline: needs a description of its geometry (not in the repository).
-- [ ] Plane–cylinder contacts.
+- `model3` (30 DOF) stays hand-coded: it re-implements Dumas (2014) with its own parametrization (measured points), which the automatic pipeline does not use.
+- [ ] Plane–cylinder contacts (later; they raise `NotImplementedError` meanwhile).
 
 ## Phase 3: Documentation
 
@@ -64,7 +66,8 @@ The automatic path now reproduces the hand-coded `model4` (two plates, four pins
 
 - [ ] **pydantic models for the input dictionary** (`SystemData`, `Part`, `Surface`, `Loops`, …): validate types, labels, frames (orthonormal), required keys per surface type (e.g. `RADIUS` for cylinders) up front with clear errors; keep accepting plain dicts.
 - [ ] Replace `print` (54 calls) with `logging`.
-- [ ] Explicit RNG seeds everywhere; named numerical tolerances instead of literals.
+- [x] Every random draw can be seeded: `otaf.common.set_seed` (NumPy, OpenTURNS, PyTorch) and `seed` arguments where the library samples.
+- [ ] Named numerical tolerances instead of literals.
 - [ ] Make solver failures explicit: today a single failed `milp` in a batch returns `x=None` and crashes the whole batch with `ValueError: setting an array element with a sequence` (`uncertainty/_reliability.py`). Surface status codes per sample instead.
 - [x] `PointsNotOnPlaneError` is now raised for non-coplanar face points.
 - [ ] `compute_gap_optimizations_on_sample_batch` defaults to `float32` output; the sign of `s` near 0 deserves `float64`.

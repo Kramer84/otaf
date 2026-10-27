@@ -1,130 +1,156 @@
 # Review of the reference notebooks
 
-Checks of the notebooks that serve as references for the library (October 2026).
-For each one: what was checked, how, and what was found. "Fixed" items are
-changed in the notebook; the others are left to the author because they change
-the reference results or are modelling choices.
+Checks of the notebooks that serve as references for the library (October 2026), against
+the revised thesis manuscript (Ch. 4, *Application of the Proposed Methodology*, and the
+4-pin appendix). For each notebook: what was checked, how, what was changed, and what is
+left to the author. Outputs of cells whose code changed were cleared; the former outputs
+are in the git history (commit `7314be8`).
 
-## `Ex1_Pocket/Ex1_2D_4dof_Analytical_Ref.ipynb`
+## Shared conventions (thesis, Ch. 4)
 
-**The model is correct.** The sign conventions of the defects (translations and
-rotations of the two facing planes, female frame rotated by 180°) were checked by
-hand. The clearance is the smaller of the two face-end clearances; rigid motions of the
-male part do not change it to first order, so it is the exact condition. The
-automatic `model1` matches it (`s = j / 2`, `tests/test_physical_invariants.py`).
+- Centred, independent normal defects; capability $C_{q,p} = 1$; one tolerance per example,
+  chosen so that $P_f = 5\,\%$ when every component is at its largest standard deviation
+  ($\lambda = 1$, the "max sigma" point, also used to train the surrogates).
+- Normalized parametrization: $\sigma_i = \lambda_i\,\sigma_{i,\max}$, $\lambda \in [0, 1]^n$,
+  where $\sigma_{i,\max}$ is the standard deviation component $i$ may have alone at the
+  capability target. The credal set is implicit: the capability constraint of each feature.
+- Optimizations at constant capability: the capability constraint holds on every feature.
+  The thesis relaxes it into a half-space whose side depends on the direction of the
+  optimization ($\geq 0$ when minimizing $P_f$, $\leq 0$ when maximizing).
+- Failure thresholds $\alpha_k \in \{0, 0.025, 0.05, 0.075\}$.
 
-Open point:
+Every random draw can now be seeded: `otaf.common.set_seed(seed)` seeds NumPy, OpenTURNS and
+PyTorch (`np.random.seed` alone does not seed OpenTURNS samples), and the functions that
+sample take a `seed` argument (`NeuralRegressorNetwork`, `UniformSurfaceSampler`, the Sobol
+experiment, `generate_correlated_samples`). The notebooks use them.
 
-- **The "max sigma" baseline is outside the capability constraint.** Both
-  `sigma_u_max = t / 6` and `sigma_gamma_max = t / (6 y_max)` are used at once, so the
-  standard deviation of the deviation at a face end is `sqrt(2) t / 6`: an
-  effective capability of `1 / sqrt(2) ≈ 0.71`, not 1. The text calls this point
-  "the boundary of the capability constraint". With the credal set of the optimisation
-  notebook (`squared_sum=True`, `λ_u² + λ_γ² = 1`), every point has end
-  deviations of standard deviation `t / 6`, and Pf is about an order of magnitude below
-  the ≈ 5 % obtained here. The ≈ 5 % is a valid figure for this distribution, but it
-  is not a point of the credal set.
+## Ex1: `Ex1_Pocket/`
 
-## `Ex1_Pocket/Ex1_2D_4dof_Opti_Manual.ipynb`
+**The models are correct** (sign conventions checked by hand; the automatic `model1` matches
+the analytical solution, `tests/test_physical_invariants.py`). The thesis values are used:
+$L_1 = 99.8$, $L_2 = 100$, $h = 10$, $t = 0.31$; at $\lambda = 1$, $P_f \approx 5\,\%$.
 
-**The model is correct.** The interface loops end with a pure rotation (`J4`), which
-does not change the translation they measure. The automatic builder used to end with
-the gap's nominal transform instead, which also contains a translation; that was the
-lever-arm bug fixed in Phase 1.
+- `Ex1_2D_4dof_Analytical_Ref`: the "max sigma" point ($\lambda = 1$) is outside the credal
+  set by construction; it is the calibration point of the tolerance, as in the thesis.
+- `Ex1_2D_4dof_Opti_Manual`, fixed:
+  - failed solves (`NaN`) were replaced by the worst slack of the batch, so they could count
+    as passes; they now count as failures and are reported;
+  - the $\lambda$ sample was drawn twice and unseeded; it is drawn once, seeded;
+  - `ot.ComposedDistribution` (removed from OpenTURNS) → `ot.JointDistribution`;
+    `otaf.uncertainty.find_best_worst_quantile` → `otaf.sampling.find_best_worst_quantile`.
+- `Ex1_2D_4dof_Opti_Auto_Surrogate`, fixed: renamed functions of `model1`
+  (`get_distribution_params`, `get_scaled_credal_set_constraints_function`) and
+  `otaf.common.scaling`; seeds (training sample, surrogate, $P_f$ sample).
 
-Open points:
+## Ex2 (16 components)
 
-- Failed solves (`NaN`) are replaced by the worst slack of the batch,
-  `np.nan_to_num(s_vals, nan=np.nanmax(s_vals)) * -1`. If every other sample passes,
-  a failed solve is counted as a pass. Count failed solves explicitly instead.
-- The λ sample is generated twice in cell 15; the first one is unused (harmless).
+### `AnalyticalModels/Analytical_2D_Reference_Assembly_16DOF.ipynb`: rebuilt
 
-## `AnalyticalModels/Analytical_2D_Reference_Assembly_16DOF.ipynb`
+The former notebook used the deprecated $(\lambda, 1-\lambda)$ parametrization, other
+parameters ($t = 0.1$, $C_m = 0.3$) and one height for all faces. It is rebuilt with the
+thesis geometry ($h_M = 10$, $h_F = 10.2$, $L_1 = 30$, $L_2 = 70$, $l_M = 10$, $l_F = 10.2$),
+$t = 0.16$, the normalized $\lambda$ and the thesis credal set. Each face rotates about its own
+centre and the clearances are taken at the ends of the overlap of the faces, as in OTAF.
 
-**The model is correct.** The notebook writes 7 equalities on the 8 face-end
-clearances and only tests feasibility. Row 5 forbids relative rotation of the parts,
-which matches the sliding planar contact `e` of `model2`. To compare,
-`scripts/reference_checks/analytical_16dof_vs_model2.py` solves the same equalities for
-the largest common clearance, which is the slack OTAF maximises. It then compares this
-slack with `model2` built with `hF = 10` (all faces 10 mm high, as in the notebook),
-on independent samples of the same distribution:
+The 7 equations leave one degree of freedom (the male part sliding along $x$), so the slack
+has a closed form: no linear program per sample, $2 \times 10^5$ samples in 0.3 s. Checks:
 
-| | analytical LP | OTAF `model2(hF=10)` |
+| | |
+|---|---|
+| closed form vs linear program | max $|\Delta s| = 10^{-16}$ |
+| vs `model2` (6000 samples each, $\lambda = 1$) | $P_f$ 4.88 % vs 4.72 %, KS $p = 0.39$ |
+| $P_f$ at $\lambda = 1$ ($2 \times 10^5$ samples) | 4.81 %: $t = 0.16$ satisfies the 5 % rule |
+
+Exploration of the credal set (8 angles: share of each face's variance given to the
+translation), $\alpha_k = 0$, bounds re-estimated on an independent $10^6$ sample:
+
+| | thesis (surrogate + GLD) | analytical reference |
 |---|---|---|
-| nominal slack | 0.100000 | 0.100000 |
-| Pf (12 000 samples each) | 5.03 % | 5.07 % |
-| slack quantiles 1 / 5 / 50 / 95 % | −0.0201 / −0.0001 / 0.0456 / 0.0868 | −0.0198 / −0.0003 / 0.0460 / 0.0878 |
+| $\underline{P_f}$ | $2.54 \times 10^{-4}$ | $3.55 \times 10^{-4}$, pure translation |
+| $\overline{P_f}$ | $1.16 \times 10^{-3}$ | $1.25 \times 10^{-3}$, mixed allocation (pure rotation: $1.16 \times 10^{-3}$) |
 
-The difference is within Monte Carlo noise: two-sample Kolmogorov–Smirnov p = 0.13.
+The thesis result is reproduced in location (minimum at pure translation, maximum at a mixed
+allocation) and within 8 % for the upper bound; the lower bound differs by 40 % (GLD tail fit
+against empirical fraction). `scripts/reference_checks/analytical_16dof_vs_model2.py` runs the
+same comparison without Jupyter.
 
-Open points:
+### `OptimizationBasedModels/2D_Model_16DOF_Auto_GLD*.ipynb`: ported
 
-- **The λ parametrisation does not stay on the capability boundary.** It uses
-  `e_pos = λ N(0, σ_pos)` and `e_ori = (1 − λ) N(0, σ_θ)`. With
-  `(h / 2) σ_θ = σ_pos`, the standard deviation at a face end is
-  `σ_pos sqrt(λ² + (1 − λ)²)`. That is `σ_pos` only for λ = 0 or 1, and falls to
-  `σ_pos / √2` at λ = 0.5. The explored set therefore lies inside the capability
-  constraint used by `model2.eval_credal_set_constraints`
-  (`sqrt(σ_u² + (h/2)² σ_γ²) = target`) and by the Ex1 notebook (`squared_sum=True`).
-  The upper Pf bound is then underestimated. With `sqrt(λ)` and `sqrt(1 − λ)` as
-  factors, every point would lie on the boundary.
-- The parameters differ from the defaults of `model2`: `t = 0.1`, `Cm = 0.3` and all
-  faces 10 mm high, whereas `model2` uses `tol = 0.16`, `capa = 1` and female faces
-  10.2 mm high. Compare with `model2` only with matching parameters.
-- `method = "highs-ds"` is unused (`milp` has no method argument).
-- Fixed: passing `defect_sample` to `get_failure_prob_MC` raised a `NameError`.
-  The sample was never assigned.
+Both notebooks used the MI-SDOF statistical constraint classes removed in `2587e56`
+(`MiSdofToleranceZones`, `FeatureLevelStatisticalConstraint`, ...), $t = 0.1\sqrt{2}$
+($P_f = 2.0\,\%$ at $\lambda = 1$, not 5 %) and, without the surrogate, $\lambda$ scaling the
+variances. Now:
 
-## `OptimizationBasedModels/ManualImplementation4Pins2plates.ipynb`
+- distribution from `model2.get_distribution_params(tol=0.16)` (5.0 % at $\lambda = 1$);
+- credal set from `model2.get_scaled_credal_set_constraints_function`, relaxed into the
+  thesis half-spaces, both optimizations starting on its boundary;
+- $\lambda$ scales the standard deviations;
+- seeds (MLP notebook).
 
-**The model is correct.** Its equations are those of `example_models.model4`. The
-automatic pipeline now builds the same assembly from an input dictionary
-(`example_models.model4_auto`), and the two give the same slack sample by sample,
-diameters included, for the circumscribed, inscribed and mean polygons
-(`tests/test_cylinder_interfaces.py`). The cylinder constraint was also checked by
-hand: the pin axis displacement at each hole end, projected on N directions, is at
-most `rf (D_hole − D_pin) / 2`.
+Not run here (the surrogate needs torch; the direct model is too slow for this PC). The
+stored results came from the former constraint, so they were cleared; the analytical
+reference above suggests the thesis figures were computed with $t = 0.16$ and the thesis
+credal set.
 
-Fixed:
+## Ex3 (`model3`, 2 pins)
 
-- The notebook failed at its third cell because it called
-  `otaf.example_models.models_3_D.defect_vars`, `.get_kinematic_loop_expressions` and
-  similar names, which now live in `otaf.example_models.model4`.
-  Model construction (cells 1–8) runs again.
-- The comment on the plate constraints said the plate corner is at
-  `(x = 120, y = 50)`; it is at 50 mm from the plate centre along x and y, which is
-  what the code uses.
-- In `model4`, the holes of the lower plate were evaluated at ±l2/2 instead of
-  their own ±l3/2. The default l2 = l3 hid it.
+Re-implementation of the example of Dumas (2014) with its own parametrization (measured
+points). Kept hand-coded, as decided.
 
-Open points:
+## Ex4 (4 pins)
 
-- **The maximal standard deviation of the plate rotations violates the plate's own
-  capability constraint.** `sigma_e_theta_plate = 2 tol / (EH + LB) / 6` gives
-  `50 σ_θ = 0.22 tol` at the corner where `cons0`/`cons1` evaluate, against the
-  target `tol / 6 ≈ 0.167 tol`. There is no effect on the 32-dimensional study,
-  where plate deviations are zero, but there is one on any 50-dimensional use.
-  `model4.get_distribution_params` has the same values.
-- `NonlinearConstraint(lb=-1e-5, ub=1e-5)` makes the capability constraints
-  equalities: every hole is exactly at the capability target. This is consistent
-  with a credal set defined as "capability equal to the target", but then the
-  minimum of Pf is also taken on that boundary. Check that this is intended.
-- `np.random.seed(SEED)` does not seed OpenTURNS, so the training and test samples
-  are not reproducible. Use `ot.RandomGenerator.SetSeed`.
+### `OptimizationBasedModels/ManualImplementation4Pins2plates.ipynb`
 
-## `OptimizationBasedModels/3D_Model_32DOF_Auto_GLD_EX2.ipynb`
+**The model is correct**: its equations are those of the thesis appendix (pins blocked
+axially and in rotation in the lower plate) and of `model4`. The automatic pipeline builds
+the same assembly (`model4_auto`) and gives the same slack sample by sample
+(`tests/test_cylinder_interfaces.py`).
 
-The automatic version of the same assembly, which was infeasible at nominal (stored
-output: "The problem is infeasible", inconsistent equalities). There were two causes:
+Plate rotation. The capability constraints `cons0`/`cons1` evaluate each plate at its corner,
+50 mm from its centre along $x$ and $y$, so an optimization never leaves the credal set.
+What was inconsistent was the normalization: $\sigma_{\theta,\max}$ was
+$t / (6 C_{q,p}) / 37.5$ instead of the thesis' $t / (6 C_{q,p}) / 50$
+($1/x_{\max}$, eq. *max_std_expressions*). A plate rotation alone could then only reach
+$\lambda = 0.75$, and the $\lambda = 1$ point (tolerance calibration, surrogate training) had
+plate rotations 1.33 times the thesis maximum. Fixed in the notebook and in
+`model4.get_distribution_params`. Effect (baseline `plate-capability` vs `phase2-cylinders`):
+`model4` $P_f$ 6.05 % → 5.40 %, `model4_x1.15` 16.35 % → 14.90 %; every other case unchanged
+bit for bit. No effect on the 32-dimensional study (plates perfect).
 
-- **Library bug, fixed:** the nominal transform of a cylinder–cylinder gap dropped
-  the axial offset between the hole and pin origins. The pins are blocked axially,
-  so the loops could not close.
-- **Modelling, fixed in cell 9:** every pin was blocked in rotation about its axis in
-  both plates, which also forbade any relative rotation of the plates about the pin
-  axes. That rotation is only limited by the radial clearances. The pins are now
-  blocked in the lower plate only, as in `model4`.
+Also fixed: seeds (`np.random.seed` did not seed the OpenTURNS samples; the surrogate now
+takes `seed`); the binary-classifier cells, whose module was removed in `2587e56`, were
+deleted. The stored outputs (the thesis 32-dimensional run) were kept: they predate
+the plate normalization and the seeds, which do not change the 32-dimensional model but do
+change the 50-dimensional training sample of its surrogate.
 
-The nominal assembly is now feasible (the equalities are consistent: rank 24 = 24).
-The stale outputs of cells 13–18 were cleared. The surrogate and imprecise-probability
-cells were not run (torch).
+### `OptimizationBasedModels/3D_Model_32DOF_Auto_GLD_EX2.ipynb`: ported
+
+The automatic version of the 32-dimensional study. Besides the two fixes of Phase 2
+(cylinder gaps, pins blocked in the lower plate only), it is aligned with the thesis:
+$t = 0.25$, distribution and credal set from `model4_auto` (new
+`eval_credal_set_constraints`: worst standard deviation at the hole ends,
+$z = \pm h_{plate}/2$, as `model4`), half-space constraints, $\lambda$ scaling the standard
+deviations, the four $\alpha_k$. The MI-SDOF cells and a basinhopping draft were removed.
+Checked on a reduced sample (600 points): symbols identical to `model4_auto`, boundary
+start point $\lambda = 1/\sqrt{2}$, $P_f(\lambda = 1) \approx 3\,\%$.
+
+## Left to the author
+
+- **Optimization constraint, 4-pin notebook**: `NonlinearConstraint(lb=-1e-5, ub=1e-5)` (an
+  equality) for both directions, whereas the thesis text, Ex1 and the ported notebooks use
+  the directional half-spaces. Both keep the capability constant; the thesis should describe
+  what produced its figures.
+- **Tolerance of Ex4**: at $\lambda = 1$, $t = 0.25$ gives $P_f = 2.75\,\%$ (32 dimensions) and
+  20 % (50 dimensions) with `model4` (2000 samples), not the 5 % of the shared rule;
+  `model4.get_distribution_params` defaults to $t = 0.21$ (6 % with 50 dimensions). The thesis
+  says $t = 0.25$ was "selected through optimizations"; worth stating which criterion.
+- **Ex2 tolerance**: the thesis does not state it; $t = 0.16$ follows from its rule.
+- **50-dimensional optimization**: the thesis reports its bounds, but the repository only
+  contains the 32-dimensional run (the $\lambda$ matrices of Ex4 are also empty in the
+  manuscript). With the corrected plate normalization, a rerun would also fill them.
+- **Variable names**: `model4` names the hole defects $(\beta, \gamma, v, w)$; the thesis uses
+  $(\alpha, \beta, u, v)$ for the same rotations and translations.
+- **Thesis, OTAF chapter** (matrices of the 2D example): they match the generated ones, except
+  that the column of $v_{g,1}$ is dropped although the second equation uses it (its 1 is
+  printed in the $u_{g,1}$ column), and the interface constraints are written $\leq 0$ in the
+  text and $\geq 0$ in the matrix form.
