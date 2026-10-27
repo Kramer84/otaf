@@ -12,7 +12,11 @@ from beartype.typing import Any, Dict, List, Optional, Set
 
 from otaf.common import extract_expressions_with_variables, parse_matrix_string
 from otaf.constants import G_MATRIX_MSTRING_PATTERN
-from otaf.geometry import generate_circle_points
+from otaf.geometry import (
+    LinearizationStrategy,
+    circle_linearization_factor,
+    generate_circle_points,
+)
 
 from ..assemblyDataProcessor import AssemblyDataProcessor
 from ..firstOrderMatrixExpansion import FirstOrderMatrixExpansion
@@ -35,6 +39,8 @@ class InterfaceLoopBuilder:
         Filtered gap matrices for each part and surface.
     CIRCLE_RESOLUTION : int
         Resolution for approximating circular interactions.
+    linearization : LinearizationStrategy
+        Polygon replacing the circular clearance zone of cylinder pairs.
     interface_expressions : Optional[List[Any]]
         Generated interface expressions after processing.
     """
@@ -51,6 +57,7 @@ class InterfaceLoopBuilder:
         circle_resolution: int = 8,
         silence_prints=True,
         contact_gap_names: Optional[Set[str]] = None,
+        linearization: LinearizationStrategy = LinearizationStrategy.CIRCUMSCRIBED,
     ) -> None:
         """
         Initialize the InterfaceLoopBuilder.
@@ -71,6 +78,9 @@ class InterfaceLoopBuilder:
             Gap matrix names of the point pairs where contact can occur (see
             ``SurfaceInteractionManager.contactGapNames``). Contact constraints are
             written only for these pairs. If None, every facing pair is a contact.
+        linearization : LinearizationStrategy, optional
+            Polygon replacing the circular clearance zone of cylinder pairs
+            (default ``CIRCUMSCRIBED``, the polygon tangent to the circle).
         """
         self.ADP = assemblyDataProcessor
         self.CLH = compatibility_loop_handling
@@ -79,6 +89,8 @@ class InterfaceLoopBuilder:
         self.interface_expressions = None
         self.sp = bool(silence_prints)
         self.contact_gap_names = contact_gap_names
+        self.linearization = LinearizationStrategy(linearization)
+        self._diameter_feature_index: Dict[tuple, int] = {}
 
     def _contact_partners(
         self, used_name: str, used_dat: List[str], unused_names: List[str], unused_dats: List[List[str]]
@@ -403,21 +415,52 @@ class InterfaceLoopBuilder:
         The method calculates cos/sin pairs for angles between 0 and 2π, representing
         points on the circular cross-section of the cylinders. These pairs are used
         to compute the maximum interaction distance in the y-z plane. The computed
-        equations ensure that this maximum distance does not exceed the difference
-        in radii between the cylinders.
+        equations ensure that this maximum distance does not exceed the radial
+        clearance (`radial_clearance`) times the factor of the linearization
+        strategy (`otaf.geometry.circle_linearization_factor`).
         """
-        radius1 = self.ADP["PARTS"][datGUsed[0]][datGUsed[1]]["RADIUS"]
-        radius2 = self.ADP["PARTS"][datGUsed[3]][datGUsed[4]]["RADIUS"]
-        effective_radius = radius1 - radius2 if (radius1 > radius2) else radius2 - radius1
-        cosSinPairs = generate_circle_points(
-            1, self.CIRCLE_RESOLUTION
-        )  # Generate N,2 array of coordinates
-        cylinder_interaction_equations = []
-        for i in range(cosSinPairs.shape[0]):
-            cos_val = cosSinPairs[i, 0]
-            sin_val = cosSinPairs[i, 1]
-            y_val = cylinder_edge_center_interaction_matrix[1, 3]
-            z_val = cylinder_edge_center_interaction_matrix[2, 3]
-            equation = effective_radius - (cos_val * y_val + sin_val * z_val)
-            cylinder_interaction_equations.append(equation)
-        return cylinder_interaction_equations
+        clearance = self.radial_clearance(datGUsed[0], datGUsed[1], datGUsed[3], datGUsed[4])
+        rf = circle_linearization_factor(self.linearization, self.CIRCLE_RESOLUTION)
+        cosSinPairs = generate_circle_points(1, self.CIRCLE_RESOLUTION)
+        y_val = cylinder_edge_center_interaction_matrix[1, 3]
+        z_val = cylinder_edge_center_interaction_matrix[2, 3]
+        return [rf * clearance - (cos_val * y_val + sin_val * z_val) for cos_val, sin_val in cosSinPairs]
+
+    def radial_clearance(self, part1: str, surf1: str, part2: str, surf2: str) -> Any:
+        """Radial clearance of a cylinder pair, with diameter deviations if modelled.
+
+        The clearance is ``R_hole - R_pin`` (the hole is the larger cylinder), plus
+        ``(d_hole - d_pin) / 2`` for each cylinder whose ``DIAMETER_DEVIATION`` is
+        true, where ``d`` is the deviation of its diameter from nominal (see
+        `diameter_symbol`).
+        """
+        surfaces = [(part1, surf1), (part2, surf2)]
+        radii = [float(self.ADP["PARTS"][p][s]["RADIUS"]) for p, s in surfaces]
+        hole, pin = (0, 1) if radii[0] > radii[1] else (1, 0)
+        clearance = sp.Float(radii[hole] - radii[pin])
+        for index, sign in ((hole, 1), (pin, -1)):
+            part, surf = surfaces[index]
+            if self.ADP["PARTS"][part][surf].get("DIAMETER_DEVIATION", False):
+                clearance += sign * self.diameter_symbol(part, surf) / 2
+        return clearance
+
+    def diameter_symbol(self, part: str, surf: str) -> sp.Symbol:
+        """Deviation variable ``d_d_<k>`` of the diameter of cylinder `surf` of `part`.
+
+        ``k`` is the feature index of the surface: that of its deviation matrix when
+        it has one (so the diameter is grouped with the position and orientation
+        deviations of the same feature), otherwise a new index after all the
+        deviation matrices (e.g. a pin, which the compatibility loops cross at a
+        single point and which therefore has no deviation matrix).
+        """
+        key = (part, surf)
+        if key not in self._diameter_feature_index:
+            deviation_matrices = self.CLH._deviation_matrix_map
+            if f"D{part}{surf}" in deviation_matrices:
+                index = deviation_matrices[f"D{part}{surf}"][0].ID
+            else:
+                used = [m[0].ID for m in deviation_matrices.values()]
+                used += list(self._diameter_feature_index.values())
+                index = max(used, default=-1) + 1
+            self._diameter_feature_index[key] = index
+        return sp.Symbol(f"d_d_{self._diameter_feature_index[key]}")

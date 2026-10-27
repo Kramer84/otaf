@@ -1,0 +1,265 @@
+{
+  "tag": "phase2-cylinders",
+  "git_revision": "00dce79+dirty",
+  "created": "2026-10-27 08:24:41",
+  "cases": {
+    "model1": {
+      "name": "model1",
+      "model": "model1",
+      "note": "automatic pipeline, analytical reference exists",
+      "build_kwargs": {},
+      "dist_kwargs": {},
+      "multiplier": 1.0,
+      "size": 2000,
+      "seed": 0,
+      "pf": 0.0535,
+      "n_solver_failures": 0,
+      "solver_statuses": [],
+      "n_interface": 4,
+      "n_compatibility": 6,
+      "solve_seconds": 2.5442216350056697
+    },
+    "model1_x1.35": {
+      "name": "model1_x1.35",
+      "model": "model1",
+      "note": "automatic pipeline",
+      "build_kwargs": {},
+      "dist_kwargs": {},
+      "multiplier": 1.35,
+      "size": 2000,
+      "seed": 0,
+      "pf": 0.15,
+      "n_solver_failures": 0,
+      "solver_statuses": [],
+      "n_interface": 4,
+      "n_compatibility": 6,
+      "solve_seconds": 2.5024274769821204
+    },
+    "model2": {
+      "name": "model2",
+      "model": "model2",
+      "note": "automatic pipeline, female faces 10.2 vs male 10",
+      "build_kwargs": {},
+      "dist_kwargs": {},
+      "multiplier": 1.0,
+      "size": 2000,
+      "seed": 0,
+      "pf": 0.052,
+      "n_solver_failures": 0,
+      "solver_statuses": [],
+      "n_interface": 8,
+      "n_compatibility": 12,
+      "solve_seconds": 2.631964367988985
+    },
+    "model2_x1.21": {
+      "name": "model2_x1.21",
+      "model": "model2",
+      "note": "automatic pipeline",
+      "build_kwargs": {},
+      "dist_kwargs": {},
+      "multiplier": 1.21,
+      "size": 2000,
+      "seed": 0,
+      "pf": 0.142,
+      "n_solver_failures": 0,
+      "solver_statuses": [],
+      "n_interface": 8,
+      "n_compatibility": 12,
+      "solve_seconds": 2.8519153299857862
+    },
+    "model2_hF10.0_x1.21": {
+      "name": "model2_hF10.0_x1.21",
+      "model": "model2",
+      "note": "female faces as high as male faces: facing points coincide (control)",
+      "build_kwargs": {
+        "hF": 10.0
+      },
+      "dist_kwargs": {
+        "hF": 10.0
+      },
+      "multiplier": 1.21,
+      "size": 2000,
+      "seed": 0,
+      "pf": 0.1455,
+      "n_solver_failures": 0,
+      "solver_statuses": [],
+      "n_interface": 8,
+      "n_compatibility": 12,
+      "solve_seconds": 2.7731365409854334
+    },
+    "model2_hF10.24_x1.21": {
+      "name": "model2_hF10.24_x1.21",
+      "model": "model2",
+      "note": "height difference just inside the 0.25 mm pairing radius",
+      "build_kwargs": {
+        "hF": 10.24
+      },
+      "dist_kwargs": {
+        "hF": 10.24
+      },
+      "multiplier": 1.21,
+      "size": 2000,
+      "seed": 0,
+      "pf": 0.1415,
+      "n_solver_failures": 0,
+      "solver_statuses": [],
+      "n_interface": 8,
+      "n_compatibility": 12,
+      "solve_seconds": 2.760403841995867
+    },
+    "model2_hF10.3_x1.21": {
+      "name": "model2_hF10.3_x1.21",
+      "model": "model2",
+      "note": "height difference beyond the pairing radius: top contacts lost today",
+      "build_kwargs": {
+        "hF": 10.3
+      },
+      "dist_kwargs": {
+        "hF": 10.3
+      },
+      "multiplier": 1.21,
+      "size": 2000,
+      "seed": 0,
+      "pf": 0.1415,
+      "n_solver_failures": 0,
+      "solver_statuses": [],
+      "n_interface": 8,
+      "n_compatibility": 12,
+      "solve_seconds": 2.7959986649802886
+    },
+    "model2_hF11.0_x1.21": {
+      "name": "model2_hF11.0_x1.21",
+      "model": "model2",
+      "note": "height difference beyond the pairing radius: top contacts lost today",
+      "build_kwargs": {
+        "hF": 11.0
+      },
+      "dist_kwargs": {
+        "hF": 11.0
+      },
+      "multiplier": 1.21,
+      "size": 2000,
+      "seed": 0,
+      "pf": 0.1325,
+      "n_solver_failures": 0,
+      "solver_statuses": [],
+      "n_interface": 8,
+      "n_compatibility": 12,
+      "solve_seconds": 2.788177340000402
+    },
+    "model3": {
+      "name": "model3",
+      "model": "model3",
+      "note": "hand-coded matrices (control)",
+      "build_kwargs": {},
+      "dist_kwargs": {},
+      "multiplier": 1.0,
+      "size": 2000,
+      "seed": 0,
+      "pf": 0.0575,
+      "n_solver_failures": 0,
+      "solver_statuses": [],
+      "n_interface": 256,
+      "n_compatibility": 14,
+      "solve_seconds": 6.878235892014345
+    },
+    "model3_x1.26": {
+      "name": "model3_x1.26",
+      "model": "model3",
+      "note": "hand-coded matrices (control)",
+      "build_kwargs": {},
+      "dist_kwargs": {},
+      "multiplier": 1.26,
+      "size": 2000,
+      "seed": 0,
+      "pf": 0.15,
+      "n_solver_failures": 0,
+      "solver_statuses": [],
+      "n_interface": 256,
+      "n_compatibility": 14,
+      "solve_seconds": 6.351608972006943
+    },
+    "model4": {
+      "name": "model4",
+      "model": "model4",
+      "note": "hand-coded matrices (control)",
+      "build_kwargs": {},
+      "dist_kwargs": {},
+      "multiplier": 1.0,
+      "size": 2000,
+      "seed": 0,
+      "pf": 0.0605,
+      "n_solver_failures": 0,
+      "solver_statuses": [],
+      "n_interface": 1024,
+      "n_compatibility": 24,
+      "solve_seconds": 19.40769325598376
+    },
+    "model4_x1.15": {
+      "name": "model4_x1.15",
+      "model": "model4",
+      "note": "hand-coded matrices (control)",
+      "build_kwargs": {},
+      "dist_kwargs": {},
+      "multiplier": 1.15,
+      "size": 2000,
+      "seed": 0,
+      "pf": 0.1635,
+      "n_solver_failures": 0,
+      "solver_statuses": [],
+      "n_interface": 1024,
+      "n_compatibility": 24,
+      "solve_seconds": 21.610045387002174
+    },
+    "model4_auto": {
+      "name": "model4_auto",
+      "model": "model4_auto",
+      "note": "automatic pipeline, same assembly as model4 (plates perfect)",
+      "build_kwargs": {},
+      "dist_kwargs": {},
+      "multiplier": 1.0,
+      "size": 2000,
+      "seed": 0,
+      "pf": 0.0335,
+      "n_solver_failures": 0,
+      "solver_statuses": [],
+      "n_interface": 1024,
+      "n_compatibility": 24,
+      "solve_seconds": 18.659111538989237
+    },
+    "model4_auto_x1.15": {
+      "name": "model4_auto_x1.15",
+      "model": "model4_auto",
+      "note": "automatic pipeline",
+      "build_kwargs": {},
+      "dist_kwargs": {},
+      "multiplier": 1.15,
+      "size": 2000,
+      "seed": 0,
+      "pf": 0.123,
+      "n_solver_failures": 0,
+      "solver_statuses": [],
+      "n_interface": 1024,
+      "n_compatibility": 24,
+      "solve_seconds": 19.28719985598582
+    },
+    "model4_auto_inscribed_x1.15": {
+      "name": "model4_auto_inscribed_x1.15",
+      "model": "model4_auto",
+      "note": "automatic pipeline, inscribed polygon (conservative)",
+      "build_kwargs": {
+        "strategy": "inscribed"
+      },
+      "dist_kwargs": {},
+      "multiplier": 1.15,
+      "size": 2000,
+      "seed": 0,
+      "pf": 0.123,
+      "n_solver_failures": 0,
+      "solver_statuses": [],
+      "n_interface": 1024,
+      "n_compatibility": 24,
+      "solve_seconds": 19.18894241200178
+    }
+  }
+}

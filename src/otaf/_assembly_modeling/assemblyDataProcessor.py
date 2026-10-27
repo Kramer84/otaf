@@ -250,6 +250,15 @@ class AssemblyDataProcessor:
                                         part_surf_dict["SURFACE_DIRECTION"]
                                     )
 
+                            if "DIAMETER_DEVIATION" in surf_params and (
+                                part_surf_dict.get("TYPE") != "cylinder"
+                                or not isinstance(part_surf_dict["DIAMETER_DEVIATION"], bool)
+                            ):
+                                raise ValueError(
+                                    f"DIAMETER_DEVIATION of surface {surf_id} on part {part_id} "
+                                    "must be a bool and is only valid for cylinders."
+                                )
+
                 if key == "GLOBAL_CONSTRAINTS":
                     if (
                         self.system_data["GLOBAL_CONSTRAINTS"]

@@ -387,46 +387,39 @@ class SystemOfConstraintsAssemblyModel:
     ) -> Tuple[List[sp.Symbol], List[sp.Symbol]]:
         """Extract sets of deviation and gap variables from equations.
 
-        This method identifies the free variables used in the compatibility
-        equations and verifies that all variables appearing in the
-        interface equations are included.
+        Gap variables are those of the compatibility equations; every gap
+        variable of the interface equations must be one of them. Deviation
+        variables are those of both sets of equations: some only act on the
+        interfaces (e.g. diameter deviations of cylinders, ``d_d_<k>``).
 
         Returns
         -------
         deviation_symbols : list of sympy.Symbol
-            List of deviation variables present in the compatibility
-            equations.
+            Sorted deviation variables of all the equations.
         gap_symbols : list of sympy.Symbol
-            List of gap variables present in the compatibility equations.
+            Sorted gap variables of the compatibility equations.
 
         Raises
         ------
         AssertionError
-            If any variable in the interface equations is not included in
+            If a gap variable of the interface equations does not appear in
             the compatibility equations.
-
-        Notes
-        -----
-        - Deviation and gap variables are extracted separately from both
-          compatibility and interface equations.
-        - This ensures consistency between the two sets of equations.
         """
         logging.info(
             "[Type: SystemOfConstraintsAssemblyModel] Retrieving free gap and deviation variables."
         )
-        deviation_symbols, gap_symbols = get_symbols_in_expressions(
-            self.compatibility_eqs
-        )
+        _, gap_symbols = get_symbols_in_expressions(self.compatibility_eqs)
         symb_dev_interf, symb_gap_interf = get_symbols_in_expressions(
             self.interface_eqs
         )
-        if not set(symb_dev_interf).issubset(deviation_symbols) or not set(
-            symb_gap_interf
-        ).issubset(gap_symbols):
+        if not set(symb_gap_interf).issubset(gap_symbols):
             logging.error(
-                "[Type: SystemOfConstraintsAssemblyModel] Interface variables not included in the compatibility variables."
+                "[Type: SystemOfConstraintsAssemblyModel] Interface gap variables not included in the compatibility variables."
             )
-            raise AssertionError("Interface variables not included in the compatibility variables.")
+            raise AssertionError("Interface gap variables not included in the compatibility variables.")
+        deviation_symbols, _ = get_symbols_in_expressions(
+            [*self.compatibility_eqs, *self.interface_eqs]
+        )
         logging.info(
             "[Type: SystemOfConstraintsAssemblyModel] Free gap and deviation variables retrieved successfully."
         )

@@ -10,6 +10,7 @@ EXAMPLE_MODELS = {
     "model2": otaf.example_models.model2,
     "model3": otaf.example_models.model3,
     "model4": otaf.example_models.model4,
+    "model4_auto": otaf.example_models.model4_auto,
 }
 
 

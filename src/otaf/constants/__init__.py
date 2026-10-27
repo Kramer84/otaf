@@ -199,7 +199,7 @@ dict of str to dict of str to str
 
 GAP_TYPE_TO_NULLIFIED_NOMINAL_COMPONENTS = {
     "plane-plane": {"nullify_x": True, "nullify_y": False, "nullify_z": False},
-    "cylinder-cylinder": {"nullify_x": True, "nullify_y": True, "nullify_z": True},
+    "cylinder-cylinder": {"nullify_x": False, "nullify_y": True, "nullify_z": True},
 }
 """Mapping from gap topology variants to inactive perfect matrix items.
 
@@ -208,6 +208,15 @@ Structure
 dict of str to dict of str to bool
     Determines whether individual translational tracking axes must be
     nullified within nominal configuration models.
+
+Notes
+-----
+For planes, the normal offset (local x) between the two surface origins is the
+nominal clearance, carried by the gap; the in-plane offset is geometry and is
+kept. For cylinders, the radial offset (local y, z) is the clearance and the
+axial offset (local x) between the two origins is geometry: it must be kept,
+otherwise loops through a gap with blocked axial translation (e.g. a pin that
+cannot slide in a hole) do not close.
 
 :meta hide-value:
 """

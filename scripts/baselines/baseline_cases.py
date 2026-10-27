@@ -62,6 +62,15 @@ CASES = [
     Case("model3_x1.26", "model3", "hand-coded matrices (control)", multiplier=1.26),
     Case("model4", "model4", "hand-coded matrices (control)"),
     Case("model4_x1.15", "model4", "hand-coded matrices (control)", multiplier=1.15),
+    Case("model4_auto", "model4_auto", "automatic pipeline, same assembly as model4 (plates perfect)"),
+    Case("model4_auto_x1.15", "model4_auto", "automatic pipeline", multiplier=1.15),
+    Case(
+        "model4_auto_inscribed_x1.15",
+        "model4_auto",
+        "automatic pipeline, inscribed polygon (conservative)",
+        build_kwargs={"strategy": "inscribed"},
+        multiplier=1.15,
+    ),
 ]
 
 

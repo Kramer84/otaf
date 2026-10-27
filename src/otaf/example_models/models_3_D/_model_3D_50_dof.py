@@ -14,7 +14,6 @@ __all__ = [
 
 import copy
 import re
-from enum import Enum
 from typing import Sequence, Any, Callable, Iterable
 
 import numpy as np
@@ -35,12 +34,8 @@ _PREFIX_MAP: dict[str, str] = {
 }
 
 
-class LinearizationStrategy(Enum):
-    """Linearization strategy choices for circular features."""
-    INSCRIBED = "inscribed"
-    MEAN = "mean"
-    CIRCUMSCRIBED = "circumscribed"
-
+# Shared with the automatic builder (InterfaceLoopHandling(linearization=...)).
+LinearizationStrategy = otaf.geometry.LinearizationStrategy
 
 class SmallDispTorsor:
     """Small displacement torsor representation.
@@ -896,7 +891,8 @@ def get_system_of_constraints_assembly_model(
     interf_exprs = get_interface_constraint_expressions(
         num_points=CIRCLE_RESOLUTION,
         strategy=strategy,
-        z_eval_points=[-L[2] / 2, L[2] / 2],
+        # Each hole is evaluated at its own ends (+-l2/2 upper plate, +-l3/2 lower plate).
+        z_eval_points=None,
     )
     otaf_mapping = create_dynamic_mapping(defect_vars_glob, clearance_vars_glob)
     mapped_loop_exprs = rename_variables(loop_exprs, otaf_mapping)

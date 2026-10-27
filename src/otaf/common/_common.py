@@ -298,7 +298,7 @@ def get_symbols_in_expressions(
     Notes
     -----
     - Sorting prioritizes symbols with a specific prefix order (`"u_", "v_", "w_", "alpha_",
-      "beta_", "gamma_"`) followed by numerical suffixes.
+      "beta_", "gamma_", "d_"` (diameter)) followed by numerical suffixes.
     - The function assumes symbols are named consistently with the expected patterns.
 
     Examples
@@ -309,7 +309,7 @@ def get_symbols_in_expressions(
     >>> get_symbols_in_expressions(expr_list)
     ([u_d_1, w_d_3], [v_g_2])
     """
-    sort_order = ["u_", "v_", "w_", "alpha_", "beta_", "gamma_"]
+    sort_order = ["u_", "v_", "w_", "alpha_", "beta_", "gamma_", "d_"]
 
     def sort_key(x):
         id_var = int(re.search("(\\d+)$", x.name).group(1))
