@@ -8,10 +8,10 @@ import numpy as np
 import sympy as sp
 
 from beartype import beartype
-from beartype.typing import Dict, List, Any
+from beartype.typing import Any, Dict, List, Optional, Set
 
 from otaf.common import extract_expressions_with_variables, parse_matrix_string
-from otaf.constants import BASE_PART_SURF_PATTERN, G_MATRIX_MSTRING_PATTERN
+from otaf.constants import G_MATRIX_MSTRING_PATTERN
 from otaf.geometry import generate_circle_points
 
 from ..assemblyDataProcessor import AssemblyDataProcessor
@@ -49,7 +49,8 @@ class InterfaceLoopBuilder:
         compatibility_loop_handling: Any,
         filtered_gap_matrices: Dict[str, Dict[str, Any]],
         circle_resolution: int = 8,
-        silence_prints=True
+        silence_prints=True,
+        contact_gap_names: Optional[Set[str]] = None,
     ) -> None:
         """
         Initialize the InterfaceLoopBuilder.
@@ -64,6 +65,12 @@ class InterfaceLoopBuilder:
             Filtered gap matrices for parts and surfaces.
         circle_resolution : int, optional
             Resolution for approximating circular interactions (default is 8).
+        silence_prints : bool, optional
+            Suppress debug prints (default is True).
+        contact_gap_names : set of str, optional
+            Gap matrix names of the point pairs where contact can occur (see
+            ``SurfaceInteractionManager.contactGapNames``). Contact constraints are
+            written only for these pairs. If None, every facing pair is a contact.
         """
         self.ADP = assemblyDataProcessor
         self.CLH = compatibility_loop_handling
@@ -71,6 +78,27 @@ class InterfaceLoopBuilder:
         self.CIRCLE_RESOLUTION = circle_resolution
         self.interface_expressions = None
         self.sp = bool(silence_prints)
+        self.contact_gap_names = contact_gap_names
+
+    def _contact_partners(
+        self, used_name: str, used_dat: List[str], unused_names: List[str], unused_dats: List[List[str]]
+    ) -> List[List[str]]:
+        """Point pairs of the same two surfaces as `used_name` at which to write contact constraints.
+
+        The reference pair itself is included when it is a contact location (e.g. a
+        surface origin lying at an end of the overlap).
+        """
+        partners = [
+            dat
+            for name, dat in zip(unused_names, unused_dats)
+            if dat[3] == used_dat[3] and dat[4] == used_dat[4] and self._is_contact(name)
+        ]
+        if self.contact_gap_names is not None and used_name in self.contact_gap_names:
+            partners.append(used_dat)
+        return partners
+
+    def _is_contact(self, gap_name: str) -> bool:
+        return self.contact_gap_names is None or gap_name in self.contact_gap_names
 
     def _print(self, *args):
         if self.sp:
@@ -129,13 +157,13 @@ class InterfaceLoopBuilder:
                         expa_f.multiply_elementwise(self.x_component_mask_matrix)
                         for expa_f in interface_equation_matrix_list
                     ]
+                    # Order-preserving deduplication (a set would make the row order
+                    # depend on the hash seed).
                     interface_equations_plane = list(
-                        set(
-                            [
-                                x
-                                for expr in interface_equation_matrix_list
-                                for x in extract_expressions_with_variables(expr)
-                            ]
+                        dict.fromkeys(
+                            x
+                            for expr in interface_equation_matrix_list
+                            for x in extract_expressions_with_variables(expr)
                         )
                     )
                     interface_equations.extend(interface_equations_plane)
@@ -177,45 +205,29 @@ class InterfaceLoopBuilder:
         to ensure that all potential plane interactions are accounted for. Matching is
         performed based on part and surface identifiers.
         """
-        BPSP, GMMP = BASE_PART_SURF_PATTERN, G_MATRIX_MSTRING_PATTERN
+        GMMP = G_MATRIX_MSTRING_PATTERN
         self._print(f"Processing part {idPart}, surface {idSurf} for plane-to-plane interactions.")
 
-        usedGMat = list(self.filtered_gap_matrices[idPart][idSurf]["USED"])
+        usedGMat = sorted(self.filtered_gap_matrices[idPart][idSurf]["USED"])
         usedGMatDat = [list(GMMP.fullmatch(ug).groups()) for ug in usedGMat]
-        usedInteractingParts = [X[3] for X in usedGMatDat]
-        usedInteractingSurfs = [X[4] for X in usedGMatDat]
         self._print("usedGMatDat", usedGMatDat)
         self._print(f"Found {len(usedGMat)} used gap matrices.")
 
-        unusedGMat = list(self.filtered_gap_matrices[idPart][idSurf]["UNUSED"])
+        unusedGMat = sorted(self.filtered_gap_matrices[idPart][idSurf]["UNUSED"])
         unusedGMatDat = [list(GMMP.fullmatch(uug).groups()) for uug in unusedGMat]
-        unusedInteractingParts = [X[3] for X in unusedGMatDat]
-        unusedInteractingSurfs = [X[4] for X in unusedGMatDat]
         self._print("unusedGMatDat", unusedGMatDat)
         self._print(f"Found {len(unusedGMat)} unused gap matrices.")
 
         facingPlaneInteractionMatrixList = []
-
         for i, datGUsed in enumerate(usedGMatDat):
-            idPu, idSu = datGUsed[3], datGUsed[4]
-            unused_match = [
-                bool(idPu == datGUnused[3] and idSu == datGUnused[4])
-                for datGUnused in unusedGMatDat
-            ]
-            interactionMatrixLoopList = []
-            for j, datGUnused in enumerate(unusedGMatDat):
-                if unused_match[j]:
-                    interactionMatrixLoopList.append(
-                        self._generate_surface_interaction_loop(
-                            unusedGMatDat[j], usedGMatDat[i], self.CLH._gap_matrix_map[usedGMat[i]]
-                        )
+            partners = self._contact_partners(usedGMat[i], datGUsed, unusedGMat, unusedGMatDat)
+            for partner in partners:
+                facingPlaneInteractionMatrixList.append(
+                    self._generate_surface_interaction_loop(
+                        partner, datGUsed, self.CLH._gap_matrix_map[usedGMat[i]]
                     )
-            facingPlaneInteractionMatrixList.extend(interactionMatrixLoopList)
-            if interactionMatrixLoopList:
-                self._print(
-                    f"Generated {len(interactionMatrixLoopList)} interaction matrix loops for current matching."
                 )
-            facingPlaneInteractionMatrixList.extend(interactionMatrixLoopList)
+            self._print(f"Generated {len(partners)} interaction matrix loops for {usedGMat[i]}.")
 
         return facingPlaneInteractionMatrixList
 
@@ -245,21 +257,24 @@ class InterfaceLoopBuilder:
         Returns
         -------
         List[Any]
-            Sequence of matrices describing the interaction. This includes
-            transformation matrices, the used gap matrix, and its inverse transformation.
+            Sequence of matrices describing the interaction: T1, the used gap
+            matrix with its nominal transform, and T2.
 
         Notes
         -----
-        The method constructs two transformation matrices (T1 and T2) to align
-        the interacting surfaces, followed by the application of the used gap matrix
-        and its inverse transformation (JCor inverse). The generated sequence of
-        matrices forms a complete interaction loop.
-        """
-        if usedGapMatrix[0].TYPE == "G":
-            GMat, JCor = usedGapMatrix
-        else:
-            GMat, JCor = reversed(usedGapMatrix)
+        The loop goes from the contact point on the first surface to its origin
+        (T1), across the gap exactly as the compatibility loops represent it
+        (gap matrix and nominal transform JCor, in their stored order), then from
+        the origin of the second surface to its contact point (T2). The translation
+        of the product is the position of the second contact point in the frame of
+        the first, so the gap rotation acts on the same pivot as in the
+        compatibility loops.
 
+        A trailing ``JCor`` inverse must not be appended: it re-applies the
+        in-plane offset between the two surface origins after the gap rotation,
+        which moves the pivot and makes the result depend on the direction in
+        which the gap is used (lever arms off by that offset).
+        """
         T1_name = (
             f"TP{unusedMatch[0]}{unusedMatch[1]}{unusedMatch[2]}{unusedMatch[1]}{usedMatch[2]}"
         )
@@ -273,7 +288,7 @@ class InterfaceLoopBuilder:
         T1 = self.CLH.generate_transformation_matrix(T1_info)[0]
         T2 = self.CLH.generate_transformation_matrix(T2_info)[0]
 
-        return [T1, *usedGapMatrix, T2, JCor.get_inverse()]
+        return [T1, *usedGapMatrix, T2]
 
     def get_interface_equations_facing_cylinders(self, idPart, idSurf):
         """
@@ -320,51 +335,34 @@ class InterfaceLoopBuilder:
         """
         self._print(f"Processing part {idPart}, surface {idSurf} for cylinder-to-cylinder interactions.")
 
-        BPSP, GMMP = BASE_PART_SURF_PATTERN, G_MATRIX_MSTRING_PATTERN
+        GMMP = G_MATRIX_MSTRING_PATTERN
 
-        usedGMat = list(self.filtered_gap_matrices[idPart][idSurf]["USED"])
+        usedGMat = sorted(self.filtered_gap_matrices[idPart][idSurf]["USED"])
         usedGMatDat = [list(GMMP.fullmatch(ug).groups()) for ug in usedGMat]
-        usedInteractingParts = [X[3] for X in usedGMatDat]
-        usedInteractingSurfs = [X[4] for X in usedGMatDat]
         self._print("usedGMatDat", usedGMatDat)
         self._print(f"Found {len(usedGMat)} used gap matrices.")
 
-        unusedGMat = list(self.filtered_gap_matrices[idPart][idSurf]["UNUSED"])
+        unusedGMat = sorted(self.filtered_gap_matrices[idPart][idSurf]["UNUSED"])
         unusedGMatDat = [list(GMMP.fullmatch(uug).groups()) for uug in unusedGMat]
-        unusedInteractingParts = [X[3] for X in unusedGMatDat]
-        unusedInteractingSurfs = [X[4] for X in unusedGMatDat]
         self._print("unusedGMatDat", unusedGMatDat)
         self._print(f"Found {len(unusedGMat)} unused gap matrices.")
 
         facingCylinderInteractionEquationList = []
-
         for i, datGUsed in enumerate(usedGMatDat):
-            idPu, idSu = datGUsed[3], datGUsed[4]
-            unused_match = [
-                bool(idPu == datGUnused[3] and idSu == datGUnused[4])
-                for datGUnused in unusedGMatDat
-            ]
-            interactionEquationLoopList = []
-            for j, datGUnused in enumerate(unusedGMatDat):
-                if unused_match[j]:
-                    self._print(
-                        f"Matching used and unused gap matrices: {usedGMat[i]} with {unusedGMat[j]}"
+            partners = self._contact_partners(usedGMat[i], datGUsed, unusedGMat, unusedGMatDat)
+            for partner in partners:
+                cylinder_edge_center_interaction_loop = self._generate_surface_interaction_loop(
+                    partner, datGUsed, self.CLH._gap_matrix_map[usedGMat[i]]
+                )
+                cylinder_edge_center_interaction_matrix = self.matrix_list_taylor_expansion(
+                    cylinder_edge_center_interaction_loop
+                )
+                facingCylinderInteractionEquationList.extend(
+                    self._cylinder_interaction_approximation(
+                        idPart, idSurf, datGUsed, cylinder_edge_center_interaction_matrix
                     )
-                    cylinder_edge_center_interaction_loop = self._generate_surface_interaction_loop(
-                        unusedGMatDat[j], usedGMatDat[i], self.CLH._gap_matrix_map[usedGMat[i]]
-                    )
-                    cylinder_edge_center_interaction_matrix = self.matrix_list_taylor_expansion(
-                        cylinder_edge_center_interaction_loop
-                    )
-                    cylinder_edge_interaction_equations = self._cylinder_interaction_approximation(
-                        idPart, idSurf, usedGMatDat[i], cylinder_edge_center_interaction_matrix
-                    )
-                    interactionEquationLoopList.extend(cylinder_edge_interaction_equations)
-
-            facingCylinderInteractionEquationList.extend(interactionEquationLoopList)
-            self._print(
-                f"Generated {len(interactionEquationLoopList)} interaction equations for current matching."
-            )
+                )
+            self._print(f"Generated interaction equations at {len(partners)} contact pairs for {usedGMat[i]}.")
         self._print(
             f"Total interaction equations generated: {len(facingCylinderInteractionEquationList)}"
         )

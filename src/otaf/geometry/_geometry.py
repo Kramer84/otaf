@@ -36,7 +36,9 @@ __all__ = [
     "are_normals_aligned_and_facing",
     "calculate_scalar_projection_factor",
     "rotation_matrix_from_vectors",
-    "are_lines_collinear"
+    "are_lines_collinear",
+    "interval_overlap",
+    "planar_overlap_vertices",
 ]
 
 import math
@@ -1335,3 +1337,161 @@ def are_lines_collinear(
     # This proves there is no radial shift between the two infinite lines
     cross_points_dir = np.cross(point_vector, dir1)
     return bool(np.linalg.norm(cross_points_dir) <= atol)
+
+
+@beartype
+def interval_overlap(
+    interval_a: Tuple[float, float], interval_b: Tuple[float, float], atol: float = 1e-9
+) -> Union[Tuple[float, float], None]:
+    """
+    Intersect two closed 1D intervals.
+
+    Parameters
+    ----------
+    interval_a, interval_b : tuple of float
+        Intervals ``(start, end)``; the bounds may be given in any order.
+    atol : float, optional
+        Overlaps shorter than this are treated as empty (default is 1e-9).
+
+    Returns
+    -------
+    tuple of float or None
+        ``(start, end)`` of the overlap, or None if the intervals do not overlap
+        over more than `atol`.
+
+    Examples
+    --------
+    >>> interval_overlap((0.0, 10.0), (0.0, 10.2))
+    (0.0, 10.0)
+    >>> interval_overlap((0.0, 1.0), (2.0, 3.0)) is None
+    True
+    """
+    start = max(min(interval_a), min(interval_b))
+    end = min(max(interval_a), max(interval_b))
+    if end - start <= atol:
+        return None
+    return (float(start), float(end))
+
+
+def _clip_convex_polygon(subject: np.ndarray, clip: np.ndarray) -> np.ndarray:
+    """Sutherland–Hodgman clipping of a polygon by a counter-clockwise convex polygon."""
+    output = list(subject)
+    for i in range(len(clip)):
+        edge_start, edge_end = clip[i], clip[(i + 1) % len(clip)]
+        edge = edge_end - edge_start
+
+        def inside(p):
+            return edge[0] * (p[1] - edge_start[1]) - edge[1] * (p[0] - edge_start[0]) >= 0.0
+
+        def crossing(p, q):
+            d = q - p
+            denom = edge[0] * d[1] - edge[1] * d[0]
+            t = (edge[1] * (p[0] - edge_start[0]) - edge[0] * (p[1] - edge_start[1])) / denom
+            return p + t * d
+
+        polygon, output = output, []
+        for j in range(len(polygon)):
+            current, previous = polygon[j], polygon[j - 1]
+            if inside(current):
+                if not inside(previous):
+                    output.append(crossing(previous, current))
+                output.append(current)
+            elif inside(previous):
+                output.append(crossing(previous, current))
+        if not output:
+            break
+    return np.array(output).reshape(-1, 2)
+
+
+@beartype
+def planar_overlap_vertices(
+    points_a: np.ndarray, points_b: np.ndarray, atol: float = 1e-9
+) -> np.ndarray:
+    """
+    Vertices of the overlap of two flat faces expressed in the same 2D plane coordinates.
+
+    Each face is described by points in a common 2D coordinate system of the
+    plane (e.g. the two in-plane axes of a surface frame). Two cases are handled:
+
+    - all points of both faces are collinear (faces of 2D assemblies seen edge-on):
+      the faces are segments and the overlap is a segment, returned as its 2 end points;
+    - otherwise each face is replaced by the convex hull of its points and the
+      overlap is the intersection of the two hulls, returned as its vertices in
+      counter-clockwise order. Non-convex faces are therefore over-approximated.
+
+    Parameters
+    ----------
+    points_a, points_b : numpy.ndarray
+        Arrays of shape ``(N, 2)`` with the in-plane coordinates of each face.
+    atol : float, optional
+        Geometric tolerance (default is 1e-9). Overlaps of length or area below it
+        are treated as empty.
+
+    Returns
+    -------
+    numpy.ndarray
+        Array of shape ``(K, 2)`` with the overlap vertices; ``K = 0`` when the
+        faces do not overlap.
+
+    Raises
+    ------
+    ValueError
+        If one face is degenerate (collinear points) while the other is not.
+
+    Examples
+    --------
+    >>> male = np.array([[5.0, 0.0], [0.0, 0.0], [10.0, 0.0]])
+    >>> female = np.array([[5.1, 0.0], [0.0, 0.0], [10.2, 0.0]])
+    >>> planar_overlap_vertices(male, female)
+    array([[ 0.,  0.],
+           [10.,  0.]])
+    """
+    points_a = np.atleast_2d(np.asarray(points_a, dtype=float))
+    points_b = np.atleast_2d(np.asarray(points_b, dtype=float))
+    combined = np.vstack([points_a, points_b])
+    center = combined.mean(axis=0)
+    _, singular_values, vt = np.linalg.svd(combined - center)
+    scale = max(1.0, float(np.max(np.abs(combined - center))))
+
+    if singular_values.size < 2 or singular_values[1] <= atol * scale * np.sqrt(len(combined)):
+        direction = vt[0]
+        span_a = (points_a - center) @ direction
+        span_b = (points_b - center) @ direction
+        overlap = interval_overlap((span_a.min(), span_a.max()), (span_b.min(), span_b.max()), atol)
+        if overlap is None:
+            return np.empty((0, 2))
+        ends = _snap_to_points(np.array([center + t * direction for t in overlap]), combined, atol * scale)
+        return ends[np.lexsort(ends.T[::-1])]
+
+    def hull(points):
+        try:
+            return points[ConvexHull(points).vertices]
+        except Exception as exc:  # scipy raises QhullError for degenerate inputs
+            raise ValueError(
+                "Cannot intersect a flat face with a degenerate (collinear) one."
+            ) from exc
+
+    overlap = _clip_convex_polygon(hull(points_a), hull(points_b))
+    if len(overlap) < 3:
+        return np.empty((0, 2))
+    # Drop repeated vertices produced by clipping along shared edges.
+    unique = [overlap[0]]
+    for vertex in overlap[1:]:
+        if np.linalg.norm(vertex - unique[-1]) > atol * scale and np.linalg.norm(vertex - unique[0]) > atol * scale:
+            unique.append(vertex)
+    overlap = np.array(unique)
+    x, y = overlap[:, 0], overlap[:, 1]
+    area = 0.5 * abs(np.dot(x, np.roll(y, -1)) - np.dot(y, np.roll(x, -1)))
+    if len(overlap) < 3 or area <= atol * scale:
+        return np.empty((0, 2))
+    return _snap_to_points(overlap, combined, atol * scale)
+
+
+def _snap_to_points(vertices: np.ndarray, points: np.ndarray, atol: float) -> np.ndarray:
+    """Replace each vertex by an input point lying within `atol` of it (removes round-off)."""
+    snapped = vertices.copy()
+    for i, vertex in enumerate(vertices):
+        distances = np.linalg.norm(points - vertex, axis=1)
+        if distances.min() <= atol:
+            snapped[i] = points[distances.argmin()]
+    return snapped

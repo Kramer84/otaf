@@ -14,10 +14,13 @@ from beartype.typing import Union
 
 from otaf.common import tree, merge_with_checks
 from otaf.constants import BASE_PART_SURF_PATTERN
-from otaf.geometry import point_dict_to_arrays, are_points_on_2d_plane, are_planes_facing, are_planes_parallel, line_plane_intersection, euclidean_distance, are_lines_collinear
-from otaf.exceptions import PointsNotOnPlaneError, NonConcentricCylindersException, ConflictingSurfaceDirectionsException, CylindricalInterferenceGeometricException, NoAxialOverlapException
+from otaf.geometry import point_dict_to_arrays, are_points_on_2d_plane, are_planes_facing, are_planes_parallel, are_lines_collinear, interval_overlap, planar_overlap_vertices
+from otaf.exceptions import PointsNotOnPlaneError, NonConcentricCylindersException, ConflictingSurfaceDirectionsException, CylindricalInterferenceGeometricException, NoAxialOverlapException, NoPlanarOverlapException
 
 from ..assemblyDataProcessor import AssemblyDataProcessor
+
+# Two points closer than this (in model length units) are the same point.
+POINT_MATCH_ATOL = 1e-9
 
 
 @beartype
@@ -34,6 +37,10 @@ class SurfaceInteractionManager:
     def __init__(self, assemblyDataProcessor:AssemblyDataProcessor):
         self.ADP = assemblyDataProcessor
         self.facingPointDict = tree()
+        # Gap matrix names (both directions) of point pairs where contact can occur,
+        # i.e. the vertices of the overlap of two interacting surfaces. The other
+        # facing pairs (surface origins) only serve as loop references.
+        self.contactGapNames = set()
 
     def get_facing_point_dictionary(self) -> None:
         """
@@ -50,6 +57,7 @@ class SurfaceInteractionManager:
             - This method iterates over all parts and their surfaces to establish facing relationships.
         """
         self.facingPointDict.clear()
+        self.contactGapNames.clear()
         for part_id, part in self.ADP["PARTS"].items():
             for surface_id, surface_data in part.items():
                 self.process_surface_interactions(part_id, surface_id, surface_data)
@@ -90,7 +98,7 @@ class SurfaceInteractionManager:
                     surf_id_interact,
                     surf_data_interact,
                 )
-            if type_current == "cylinder" and type_interact == "cylinder":
+            elif type_current == "cylinder" and type_interact == "cylinder":
                 self.process_cylinder_cylinder_interaction(
                     part_id,
                     surface_id,
@@ -99,6 +107,39 @@ class SurfaceInteractionManager:
                     surf_id_interact,
                     surf_data_interact,
                 )
+            else:
+                raise NotImplementedError(
+                    f"Interaction between a {type_current} (P{part_id}{surface_id}) and a "
+                    f"{type_interact} (P{part_id_interact}{surf_id_interact}) is not supported."
+                )
+
+
+    def _find_or_add_point(self, part_id: str, surf_id: str, point: np.ndarray) -> str:
+        """Return the label of the surface point at `point`, creating it if needed.
+
+        Reusing an existing point (e.g. the surface origin) when a contact location
+        coincides with it avoids duplicate coordinates on the surface.
+        """
+        points = self.ADP.get_surface_points(part_id, surf_id)
+        for label, existing in points.items():
+            if np.linalg.norm(np.asarray(existing, dtype=float) - point) <= POINT_MATCH_ATOL:
+                return label
+        index = max(int(re.search(r"(\d+)$", label).group(1)) for label in points) + 1
+        label = f"{surf_id.upper()}{index}"
+        self.ADP.add_surface_points(part_id, surf_id, {label: point})
+        return label
+
+    def _register_facing_pair(self, part_a, surf_a, label_a, part_b, surf_b, label_b, contact: bool) -> None:
+        """Record that point `label_a` of surface a faces point `label_b` of surface b."""
+        self.facingPointDict[part_a][surf_a].setdefault(label_a, set()).add(f"{part_b}{surf_b}{label_b}")
+        if contact:
+            self.contactGapNames.add(f"GP{part_a}{surf_a}{label_a}P{part_b}{surf_b}{label_b}")
+            self.contactGapNames.add(f"GP{part_b}{surf_b}{label_b}P{part_a}{surf_a}{label_a}")
+
+    def _register_origin_pair(self, part_a, surf_a, part_b, surf_b) -> None:
+        """Pair the two surface origins, used as reference by the compatibility loops."""
+        origin_a, origin_b = f"{surf_a.upper()}0", f"{surf_b.upper()}0"
+        self._register_facing_pair(part_a, surf_a, origin_a, part_b, surf_b, origin_b, contact=False)
 
     def process_plane_plane_interaction(
         self,
@@ -108,121 +149,86 @@ class SurfaceInteractionManager:
         part_id_interact,
         surf_id_interact,
         surf_data_interact,
-        point_search_radius: Union[float, int] = 0.5,
     ):
         """
-        Process interactions between two plane surfaces.
+        Pair the contact points of two facing planes.
 
-        This method identifies facing relationships between points on two planar surfaces.
-        It validates the geometric alignment of the planes, checks if they are parallel and facing,
-        and establishes facing relationships between individual points if conditions are met.
+        The two faces are projected onto the plane of the current surface and
+        intersected. The vertices of the overlap are where contact can occur: a
+        point is placed at each vertex on both surfaces (reusing an existing point
+        at that location) and the two points are paired. Points of either face that
+        lie outside the overlap are not paired. The surface origins are paired as
+        well, as reference for the compatibility loops.
+
+        In 2D assemblies the faces are segments and the overlap has 2 end points;
+        in 3D each face is taken as the convex hull of its points (see
+        :func:`otaf.geometry.planar_overlap_vertices`).
 
         Parameters
         ----------
-            part_id_current (str): ID of the current part.
-            surf_id_current (str): ID of the current surface.
-            surf_data_current (dict): Data of the current surface.
-            part_id_interact (str): ID of the interacting part.
-            surf_id_interact (str): ID of the interacting surface.
-            surf_data_interact (dict): Data of the interacting surface.
-            point_search_radius (float|int, optional): Radius for determining point-facing relationships. Defaults to 0.5.
+        part_id_current : str
+            ID of the current part.
+        surf_id_current : str
+            ID of the current surface.
+        surf_data_current : dict
+            Data of the current surface.
+        part_id_interact : str
+            ID of the interacting part.
+        surf_id_interact : str
+            ID of the interacting surface.
+        surf_data_interact : dict
+            Data of the interacting surface.
+
+        Raises
+        ------
+        PointsNotOnPlaneError
+            If the points of a surface are not coplanar.
+        NoPlanarOverlapException
+            If the two faces do not overlap.
 
         Notes
         -----
-            - Surfaces must be parallel and facing to establish relationships.
-            - Points on both surfaces must be geometrically on the respective planes.
-            - If surfaces are not aligned, a warning is logged, and no relationships are established.
+        Surfaces that are not parallel and facing are skipped with a warning.
         """
-        labels_current, points_current = point_dict_to_arrays(
-            surf_data_current["POINTS"]
-        )
-        labels_interact, points_interact = point_dict_to_arrays(
-            surf_data_interact["POINTS"]
-        )
-        if points_current.shape[0] > 2:
-            if not are_points_on_2d_plane(points_current):
-                PointsNotOnPlaneError(part_id_current, surf_id_current)
-        if points_interact.shape[0] > 2:
-            if not are_points_on_2d_plane(points_interact):
-                PointsNotOnPlaneError(part_id_interact, surf_id_interact)
+        _, points_current = point_dict_to_arrays(surf_data_current["POINTS"])
+        _, points_interact = point_dict_to_arrays(surf_data_interact["POINTS"])
+        if points_current.shape[0] > 2 and not are_points_on_2d_plane(points_current):
+            raise PointsNotOnPlaneError(part_id_current, surf_id_current)
+        if points_interact.shape[0] > 2 and not are_points_on_2d_plane(points_interact):
+            raise PointsNotOnPlaneError(part_id_interact, surf_id_interact)
 
-        if are_planes_facing(
-            surf_data_current["FRAME"][:, 0],
-            surf_data_current["ORIGIN"],
-            surf_data_interact["FRAME"][:, 0],
-            surf_data_interact["ORIGIN"],
-        ) and are_planes_parallel(
-            surf_data_current["FRAME"][:, 0], surf_data_interact["FRAME"][:, 0]
+        frame = np.asarray(surf_data_current["FRAME"], dtype=float)
+        normal, origin = frame[:, 0], np.asarray(surf_data_current["ORIGIN"], dtype=float)
+        if not (
+            are_planes_facing(normal, origin, surf_data_interact["FRAME"][:, 0], surf_data_interact["ORIGIN"])
+            and are_planes_parallel(normal, surf_data_interact["FRAME"][:, 0])
         ):
-            for point_id_current, point_current in surf_data_current["POINTS"].items():
-                for opp_point_id, point_interact in surf_data_interact["POINTS"].items():
-                    if self.is_point_facing(
-                        point_current, point_interact, surf_data_current, surf_data_interact
-                    ):
-                        self.facingPointDict[part_id_current][surf_id_current].setdefault(
-                            point_id_current, set()
-                            ).add(f"{part_id_interact}{surf_id_interact}{opp_point_id}")
-        else:
-            sstr1 = f"P{part_id_current}{surf_id_current}"
-            sstr2 = f"P{part_id_interact}{surf_id_interact}"
             logging.warning(
-                f"The two interacting surfaces {sstr1} and {sstr2} are either not parallel or not facing each other."
+                f"The two interacting surfaces P{part_id_current}{surf_id_current} and "
+                f"P{part_id_interact}{surf_id_interact} are either not parallel or not facing each other."
             )
+            return
 
-    def is_point_facing(
-        self,
-        point_current,
-        point_interact,
-        surf_data_current,
-        surf_data_interact,
-        point_search_radius: Union[float, int] = 0.25,  # in mm
-    ):
-        """
-        Determine if a point on one plane is facing a point on another plane.
-
-        This method checks if the line connecting two points intersects both planes
-        and verifies that the intersection points are within a specified radius
-        of the original points.
-
-        Parameters
-        ----------
-            point_current (np.ndarray): Coordinates of the point on the current plane.
-            point_interact (np.ndarray): Coordinates of the point on the interacting plane.
-            surf_data_current (dict): Data of the current plane.
-            surf_data_interact (dict): Data of the interacting plane.
-            point_search_radius (float|int, optional): Search radius for determining facing relationships. Defaults to 0.25.
-
-        Returns
-        -------
-            bool: True if the points are facing within the specified radius, False otherwise.
-
-        Notes
-        -----
-            - A point is considered "facing" if the line connecting it to the other point intersects
-              both planes and the distances between the intersection points and the original points
-              are within the specified radius.
-            - Uses geometric calculations including plane intersections and Euclidean distance.
-        """
-        origin_current = surf_data_current["ORIGIN"]
-        frame_current = surf_data_current["FRAME"]
-        origin_interact = surf_data_interact["ORIGIN"]
-        frame_interact = surf_data_interact["FRAME"]
-
-        # Check if the line connecting point_current and point_interact intersects both planes
-        intersect_point_current = line_plane_intersection(
-            frame_current[:, 0], origin_current, point_interact, frame_interact[:, 0]
+        # In-plane coordinates of both faces in the current surface frame (projection along the normal).
+        in_plane = frame[:, 1:]
+        vertices = planar_overlap_vertices(
+            (points_current - origin) @ in_plane, (points_interact - origin) @ in_plane, atol=POINT_MATCH_ATOL
         )
-        intersect_point_interact = line_plane_intersection(
-            frame_interact[:, 0], origin_interact, point_current, frame_current[:, 0]
-        )
+        if len(vertices) == 0:
+            raise NoPlanarOverlapException(part_id_current, surf_id_current, part_id_interact, surf_id_interact)
 
-        # Verify that intersection points are within the search radius of the original points
-        distance_current = euclidean_distance(point_current, intersect_point_current)
-        distance_interact = euclidean_distance(
-            point_interact, intersect_point_interact
-        )
-
-        return distance_current <= point_search_radius and distance_interact <= point_search_radius
+        self._register_origin_pair(part_id_current, surf_id_current, part_id_interact, surf_id_interact)
+        origin_interact = np.asarray(surf_data_interact["ORIGIN"], dtype=float)
+        for vertex in vertices:
+            point_current = origin + in_plane @ vertex
+            point_interact = point_current + normal * np.dot(origin_interact - point_current, normal)
+            label_current = self._find_or_add_point(part_id_current, surf_id_current, point_current)
+            label_interact = self._find_or_add_point(part_id_interact, surf_id_interact, point_interact)
+            self._register_facing_pair(
+                part_id_current, surf_id_current, label_current,
+                part_id_interact, surf_id_interact, label_interact,
+                contact=True,
+            )
 
     def process_cylinder_cylinder_interaction(
         self, idPCur, idSCur, datSCur, idPInt, idSInt, datSInt
@@ -312,17 +318,18 @@ class SurfaceInteractionManager:
             idPCur, idSCur, datSCur, idPInt, idSInt, datSInt
         )
 
-
     def approximate_cylinders_populate_facingPointDict(
         self, idPCur, idSCur, datSCur, idPInt, idSInt, datSInt
     ):
         """
-        Approximate cylinders and populate the facing point dictionary.
+        Pair the contact points of two coaxial cylinders.
 
-        This method handles the geometric approximation of cylinder-cylinder interactions.
-        It determines whether the current and interacting cylinders are facing, computes
-        their extents, and updates the facing point dictionary with relevant information
-        about their interactions.
+        The axial extents of both cylinders (``EXTENT_LOCAL``, relative to their
+        origin along their own axis) are expressed along the axis of the current
+        cylinder and intersected. A point is placed at each end of the overlap on
+        both axes (reusing an existing point at that location, e.g. an origin lying
+        at a cylinder end) and the two points are paired. The surface origins are
+        paired as well, as reference for the compatibility loops.
 
         Parameters
         ----------
@@ -331,310 +338,61 @@ class SurfaceInteractionManager:
         idSCur : str
             Identifier for the current cylinder's surface.
         datSCur : dict
-            Data structure containing information about the current cylinder.
-            Must include the following keys:
-                - "EXTENT_LOCAL" : dict
-                    Contains `x_max` and `x_min` defining the local extent of the cylinder.
-                - "FRAME" : numpy.ndarray
-                    Local frame (3x3 matrix) of the cylinder.
-                - "ORIGIN" : numpy.ndarray
-                    Origin (3D coordinates) of the cylinder.
+            Data of the current cylinder: ``FRAME`` (axis in the first column),
+            ``ORIGIN`` and ``EXTENT_LOCAL`` (``x_min``, ``x_max``).
         idPInt : str
             Identifier for the interacting cylinder's part.
         idSInt : str
             Identifier for the interacting cylinder's surface.
         datSInt : dict
-            Data structure containing information about the interacting cylinder.
-            Structure must be similar to `datSCur`.
+            Data of the interacting cylinder, as for `datSCur`.
 
         Raises
         ------
         ValueError
-            If the local extent (`x_min` or `x_max`) of either cylinder is invalid (e.g., `x_max < x_min`).
-        NotImplementedError
-            If the cylinders have unusual configurations that are not supported.
-        Exception
-            For errors in updating surface points, including duplicate points or invalid data.
+            If a local extent is not well defined (``x_max < x_min``).
+        NoAxialOverlapException
+            If the cylinders do not overlap along their axis.
 
         Notes
         -----
-        - The method identifies whether the revolution axes of the cylinders are facing or not by
-          computing the dot product of their respective local frame's x-axes.
-        - Updates the facing point dictionary with the following format:
-            `self.facingPointDict[idPCur][idSCur][point_id] = corresponding_point`
-        - Calculates new points based on cylinder extents (`x_min`, `x_max`) and their interaction vectors.
-        - Uses logging to provide detailed debug-level information about the computation process.
-
-        Warnings
-        --------
-        Ensure that the `datSCur` and `datSInt` dictionaries are properly structured and include
-        the necessary keys. Missing or malformed data may result in unexpected errors.
-
-        Examples
-        --------
-        Given two cylinders with the following attributes:
-        - Cylinder 1 (`idPCur="P1"`, `idSCur="A"`) has local extents `x_min=0` and `x_max=10`
-          and origin `[0, 0, 0]`.
-        - Cylinder 2 (`idPInt="P2"`, `idSInt="B"`) has local extents `x_min=5` and `x_max=15`
-          and origin `[10, 0, 0]`.
-
-        The method will:
-        1. Compute whether the revolution axes of the two cylinders are facing.
-        2. Determine the interaction vector and update the local extents accordingly.
-        3. Add new points for any overlap or interaction between the cylinders.
-        4. Populate `self.facingPointDict` with the relationship between corresponding points.
+        Cylinders of zero length (``x_min == x_max == 0``) with coinciding origins
+        are paired at their origins only; that pair is then a contact.
         """
-        # The origins are always "facing", or at least interacting
-        # So let's deal with that one first.
-        self.facingPointDict[idPCur][idSCur].setdefault(f"{idSCur.upper()}0", set()).add(f"{idPInt}{idSInt}{idSInt.upper()}0")
+        extents = []
+        for idP, idS, dat in ((idPCur, idSCur, datSCur), (idPInt, idSInt, datSInt)):
+            x_min, x_max = float(dat["EXTENT_LOCAL"]["x_min"]), float(dat["EXTENT_LOCAL"]["x_max"])
+            if x_max < x_min:
+                raise ValueError(f"Local extent for cylinder part {idP} surface {idS} not well defined")
+            extents.append((x_min, x_max))
 
-        get_max_point_id = lambda points: max(
-            [int(re.compile(r"(\d+)$").search(s).group(1)) for s in points]
-        )
-        # Approximate Inner Cylinder
-        xMaxCur = datSCur["EXTENT_LOCAL"]["x_max"]
-        xMinCur = datSCur["EXTENT_LOCAL"]["x_min"]
-
-        # Approximate Outer Cylinder
-        xMaxInt = datSInt["EXTENT_LOCAL"]["x_max"]
-        xMinInt = datSInt["EXTENT_LOCAL"]["x_min"]
-
-        # if they are facing, the local max for one is local min for the other.
-        normsFacing = np.dot(datSCur["FRAME"][:, 0], datSInt["FRAME"][:, 0]) < 0
-        vecCur2IntGlobal = datSInt["ORIGIN"] - datSCur["ORIGIN"]
-        vecCur2IntLocal = vecCur2IntGlobal @ datSCur["FRAME"]
-        dOrigin = np.linalg.norm(vecCur2IntGlobal)
-
+        axis_cur = np.asarray(datSCur["FRAME"], dtype=float)[:, 0]
+        axis_int = np.asarray(datSInt["FRAME"], dtype=float)[:, 0]
+        origin_cur = np.asarray(datSCur["ORIGIN"], dtype=float)
+        origin_int = np.asarray(datSInt["ORIGIN"], dtype=float)
         logging.debug(
-            f"Processing cylinder-cylinder interaction for part {idPCur} / surface {idSCur} and part {idPInt} / surface {idSInt}."
+            f"Processing cylinder-cylinder interaction for part {idPCur} / surface {idSCur} "
+            f"and part {idPInt} / surface {idSInt}."
         )
-        logging.debug(f"Cylinder revolution axes are {'' if normsFacing else 'not'} facing.")
-        logging.debug(
-            f"Start cylinder to end cylinder origin vector in local {vecCur2IntLocal.round(3)} and global {vecCur2IntGlobal.round(3)} coordinates"
-        )
-        logging.debug(f"First cylinder local extent : {xMinCur} / {xMaxCur}")
-        logging.debug(f"Second cylinder local extent : {xMinInt} / {xMaxInt}")
 
-        if (xMaxCur < xMinCur) or (xMaxInt < xMinInt):
-            raise ValueError(
-                "Local extent for cylinders part {idPCur} surface {idSCur} not well defined"
+        if extents[0] == (0.0, 0.0) and extents[1] == (0.0, 0.0):
+            if np.linalg.norm(origin_int - origin_cur) > POINT_MATCH_ATOL:
+                raise NoAxialOverlapException(idPCur, idSCur, idPInt, idSInt)
+            self._register_facing_pair(
+                idPCur, idSCur, f"{idSCur.upper()}0", idPInt, idSInt, f"{idSInt.upper()}0", contact=True
             )
+            return
 
-        if xMaxCur > xMinCur and xMaxInt > xMinInt:
-            # These are top and bottom in the local frame
-            topPointCur = datSCur["ORIGIN"] + datSCur["FRAME"][:, 0] * xMaxCur
-            bottomPointCur = datSCur["ORIGIN"] + datSCur["FRAME"][:, 0] * xMinCur
+        # Interacting extent expressed along the current axis (the axes may be opposed).
+        ends_int = [origin_int + axis_int * x for x in extents[1]]
+        span_int = tuple(float(np.dot(p - origin_cur, axis_cur)) for p in ends_int)
+        overlap = interval_overlap(extents[0], span_int, atol=POINT_MATCH_ATOL)
+        if overlap is None:
+            raise NoAxialOverlapException(idPCur, idSCur, idPInt, idSInt)
 
-            topPointInt = datSInt["ORIGIN"] + datSInt["FRAME"][:, 0] * xMaxInt
-            bottomPointInt = datSInt["ORIGIN"] + datSInt["FRAME"][:, 0] * xMinInt
-
-            current_points = self.ADP.get_surface_points(idPCur, idSCur)
-            current_points = merge_with_checks(
-                current_points,
-                {f"{idSCur.upper()}1": topPointCur, f"{idSCur.upper()}2": bottomPointCur},
-            )
-
-            interacting_points = self.ADP.get_surface_points(idPInt, idSInt)
-            interacting_points = merge_with_checks(
-                interacting_points,
-                {f"{idSInt.upper()}1": topPointInt, f"{idSInt.upper()}2": bottomPointInt},
-            )
-
-            if not normsFacing:  # they point in the same direction here
-                xMaxIntInCur = xMaxInt + vecCur2IntLocal[0]
-                xMinIntInCur = xMinInt + vecCur2IntLocal[0]
-                xMaxCurInInt = xMaxCur - vecCur2IntLocal[0]
-                xMinCurInInt = xMinCur - vecCur2IntLocal[0]
-                # Guardrail: Check for zero axial overlap
-                if xMaxIntInCur <= xMinCur or xMinIntInCur >= xMaxCur:
-                    raise NoAxialOverlapException(idPCur, idSCur, idPInt, idSInt)
-                # if the projected upper end of the interacting cylinder is lower then the current
-                if xMaxIntInCur < xMaxCur:
-                    # We add a new point on current part
-                    topPointCurAdd = datSCur["ORIGIN"] + datSCur["FRAME"][:, 0] * xMaxIntInCur
-                    if not any(
-                        [
-                            bool(np.array_equal(topPointCurAdd, pnt))
-                            for pnt in current_points.values()
-                        ]
-                    ):
-                        pointIndex = get_max_point_id(current_points) + 1
-                        idPntCur = f"{idSCur.upper()}{pointIndex}"
-                        current_points[idPntCur] = topPointCurAdd
-                        pspstr = f"{idPInt}{idSInt}{idSInt.upper()}1"
-                        self.facingPointDict[idPCur][idSCur].setdefault(idPntCur ,set()).add(pspstr)
-                        logging.debug("\tIF STATEMENT 1, NOT FACING")
-
-                elif xMaxIntInCur > xMaxCur:
-                    # We add a new point interacting part
-                    topPointIntAdd = datSInt["ORIGIN"] + datSInt["FRAME"][:, 0] * xMaxCurInInt
-                    if not any(
-                        [
-                            bool(np.array_equal(topPointIntAdd, pnt))
-                            for pnt in interacting_points.values()
-                        ]
-                    ):
-                        pointIndex = get_max_point_id(interacting_points) + 1
-                        idPntInt = f"{idSInt.upper()}{pointIndex}"
-                        interacting_points[idPntInt] = topPointIntAdd
-                        pspstr = f"{idPCur}{idSCur}{idSCur.upper()}1"
-                        self.facingPointDict[idPInt][idSInt].setdefault(idPntInt ,set()).add(pspstr)
-                        logging.debug("\tIF STATEMENT 2, NOT FACING")
-
-                elif xMaxIntInCur == xMaxCur:
-                    # No point needs to be added.
-                    pspstr = f"{idPInt}{idSInt}{idSInt.upper()}1"
-                    self.facingPointDict[idPCur][idSCur].setdefault(f"{idSCur.upper()}1" ,set()).add(pspstr)
-                    logging.debug("\tIF STATEMENT 3, NOT FACING")
-
-                ####################################################################################
-
-                # if the projected lower end of the interacting cylinder is higher then the current
-                if xMinIntInCur > xMinCur:
-                    # We add a new point at this location:
-                    bottomPointCurAdd = datSCur["ORIGIN"] + datSCur["FRAME"][:, 0] * xMinIntInCur
-                    if not any(
-                        [
-                            bool(np.array_equal(bottomPointCurAdd, pnt))
-                            for pnt in current_points.values()
-                        ]
-                    ):
-                        pointIndex = get_max_point_id(current_points) + 1
-                        idPntCur = f"{idSCur.upper()}{pointIndex}"
-                        current_points[idPntCur] = bottomPointCurAdd
-                        pspstr = f"{idPInt}{idSInt}{idSInt.upper()}2"
-                        self.facingPointDict[idPCur][idSCur].setdefault(idPntCur ,set()).add(pspstr)
-                        logging.debug("\tIF STATEMENT 4, NOT FACING")
-
-                elif xMinIntInCur < xMinCur:
-                    # We add a new point interacting part
-                    bottomPointIntAdd = datSInt["ORIGIN"] + datSInt["FRAME"][:, 0] * xMinCurInInt
-                    if not any(
-                        [
-                            bool(np.array_equal(bottomPointIntAdd, pnt))
-                            for pnt in interacting_points.values()
-                        ]
-                    ):
-                        pointIndex = get_max_point_id(interacting_points) + 1
-                        idPntInt = f"{idSInt.upper()}{pointIndex}"
-                        interacting_points[idPntInt] = bottomPointIntAdd
-                        pspstr = f"{idPCur}{idSCur}{idSCur.upper()}2"
-                        self.facingPointDict[idPInt][idSInt].setdefault(idPntInt ,set()).add(pspstr)
-                        logging.debug("\tIF STATEMENT 5, NOT FACING")
-
-                elif xMinIntInCur == xMinCur:
-                    # No point needs to be added.
-                    pspstr = f"{idPInt}{idSInt}{idSInt.upper()}2"
-                    self.facingPointDict[idPCur][idSCur].setdefault(f"{idSCur.upper()}2" ,set()).add(pspstr)
-                    logging.debug("\tIF STATEMENT 6, NOT FACING")
-                #################################################################################
-
-            elif normsFacing:
-                # I have begun here but all the 6 case from above have to be done here.
-                # To check this again draw 2 parallel lines with points on each, a direction on the axis and express each in the other
-                xMaxIntInCur = -1 * xMaxInt + vecCur2IntLocal[0]
-                xMinIntInCur = -1 * xMinInt + vecCur2IntLocal[0]
-                xMaxCurInInt = -1 * xMaxCur + vecCur2IntLocal[0]
-                xMinCurInInt = -1 * xMinCur + vecCur2IntLocal[0]
-
-                # Guardrail: Check for zero axial overlap, checks are inverted to before since the direction is inverted (facing normals)
-                if xMaxIntInCur >= xMaxCur or xMinIntInCur <= xMinCur:
-                    raise NoAxialOverlapException(idPCur, idSCur, idPInt, idSInt)
-
-                # Here it is inverted
-                if xMaxIntInCur > xMinCur:  # Adding point tu current part
-                    bottomPointCurAdd = datSCur["ORIGIN"] + datSCur["FRAME"][:, 0] * xMaxIntInCur
-                    if not any(
-                        [
-                            bool(np.array_equal(bottomPointCurAdd, pnt))
-                            for pnt in current_points.values()
-                        ]
-                    ):
-                        pointIndex = get_max_point_id(current_points) + 1
-                        idPntCur = f"{idSCur.upper()}{pointIndex}"
-                        current_points[idPntCur] = bottomPointCurAdd
-                        pspstr = f"{idPInt}{idSInt}{idSInt.upper()}1"
-                        self.facingPointDict[idPCur][idSCur].setdefault(idPntCur ,set()).add(pspstr)
-                        logging.debug("\tIF STATEMENT 1, FACING")
-
-                elif xMaxIntInCur < xMinCur:  # Adding point tu interacting part
-                    bottomPointIntAdd = datSInt["ORIGIN"] + datSInt["FRAME"][:, 0] * xMinCurInInt
-                    if not any(
-                        [
-                            bool(np.array_equal(bottomPointIntAdd, pnt))
-                            for pnt in interacting_points.values()
-                        ]
-                    ):
-                        pointIndex = get_max_point_id(interacting_points) + 1
-                        idPntInt = f"{idSInt.upper()}{pointIndex}"
-                        interacting_points[idPntInt] = bottomPointIntAdd
-                        pspstr = f"{idPCur}{idSCur}{idSCur.upper()}2"
-                        self.facingPointDict[idPInt][idSInt].setdefault(idPntInt ,set()).add(pspstr)
-                        logging.debug("\tIF STATEMENT 2, FACING")
-
-                elif xMaxIntInCur == xMinCur:
-                    pspstr = f"{idPInt}{idSInt}{idSInt.upper()}1"
-                    self.facingPointDict[idPCur][idSCur].setdefault(f"{idSCur.upper()}2" ,set()).add(pspstr)
-                    logging.debug("\tIF STATEMENT 3, FACING")
-
-                ####################################################################################
-
-                if xMinIntInCur < xMaxCur:
-                    topPointCurAdd = datSCur["ORIGIN"] + datSCur["FRAME"][:, 0] * xMinIntInCur
-                    if not any(
-                        [
-                            bool(np.array_equal(topPointCurAdd, pnt))
-                            for pnt in current_points.values()
-                        ]
-                    ):
-                        pointIndex = get_max_point_id(current_points) + 1
-                        idPntCur = f"{idSCur.upper()}{pointIndex}"
-                        current_points[idPntCur] = topPointCurAdd
-                        pspstr = f"{idPInt}{idSInt}{idSInt.upper()}2"
-                        self.facingPointDict[idPCur][idSCur].setdefault(idPntCur ,set()).add(pspstr)
-                        logging.debug("\tIF STATEMENT 4, FACING")
-
-                elif xMinIntInCur > xMaxCur:
-                    # We add a new lower point on the interacting part
-                    topPointIntAdd = datSInt["ORIGIN"] + datSInt["FRAME"][:, 0] * xMaxCurInInt
-                    if not any(
-                        [
-                            bool(np.array_equal(topPointIntAdd, pnt))
-                            for pnt in interacting_points.values()
-                        ]
-                    ):
-                        pointIndex = get_max_point_id(interacting_points) + 1
-                        idPntInt = f"{idSInt.upper()}{pointIndex}"
-                        interacting_points[idPntInt] = topPointIntAdd
-                        pspstr = f"{idPCur}{idSCur}{idSCur.upper()}1"
-                        self.facingPointDict[idPInt][idSInt].setdefault(idPntInt ,set()).add(pspstr)
-                        logging.debug("\tIF STATEMENT 5, FACING")
-
-                elif xMinIntInCur == xMaxCur:
-                    # No point needs to be added.
-                    pspstr = f"{idPInt}{idSInt}{idSInt.upper()}2"
-                    self.facingPointDict[idPCur][idSCur].setdefault(f"{idSCur.upper()}1" ,set()).add(pspstr)
-                    logging.debug("\tIF STATEMENT 6, FACING")
-
-                #################################################################################
-            try:
-                self.ADP.add_surface_points(idPCur, idSCur, current_points, ignore_duplicates=True)
-                self.ADP.add_surface_points(
-                    idPInt, idSInt, interacting_points, ignore_duplicates=True
-                )
-            except Exception as e:
-                error_msg = (
-                    f"Error during processing cylinder approximation for parts {idPCur} and {idPInt} on surfaces {idSCur} and {idSInt}. "
-                    f"Current points: {len(current_points)}, Interacting points: {len(interacting_points)}. "
-                    f"Exception: {str(e)}"
-                )
-                # Consider logging the error message instead of printing if a logging framework is in use
-                print("\t", error_msg)
-                # Optionally, re-raise the exception to handle it upstream or log it in a more centralized manner
-                raise e
-
-        elif xMaxCur == xMinCur == 0.0 and xMaxInt == xMinInt == 0.0 and dOrigin == 0.0:
-            pass  # No new point needs to be added
-
-        else:
-            raise NotImplementedError("You've gone too far buddy")
+        self._register_origin_pair(idPCur, idSCur, idPInt, idSInt)
+        for x in overlap:
+            point = origin_cur + axis_cur * x  # on the common axis, shared by both cylinders
+            label_cur = self._find_or_add_point(idPCur, idSCur, point)
+            label_int = self._find_or_add_point(idPInt, idSInt, point)
+            self._register_facing_pair(idPCur, idSCur, label_cur, idPInt, idSInt, label_int, contact=True)

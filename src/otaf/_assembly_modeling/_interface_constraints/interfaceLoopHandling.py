@@ -33,7 +33,11 @@ class InterfaceLoopHandling:
         )
 
         self.interfaceLoopBuilder = InterfaceLoopBuilder(
-            self.ADP, self.CLH, self.filtered_gap_matrices, circle_resolution=circle_resolution
+            self.ADP,
+            self.CLH,
+            self.filtered_gap_matrices,
+            circle_resolution=circle_resolution,
+            contact_gap_names=self.surfaceInteractionManager.contactGapNames,
         )
         self.interfaceLoopBuilder.populate_interface_expressions()
 
@@ -53,22 +57,15 @@ class InterfaceLoopHandling:
                 if token.startswith("G"):
                     gap_matrices.add(token)
 
-        # Sometimes we have the gap in two directions,but ony want one, soooo:
-        inverse_gap_matrices = set(map(inverse_mstring, gap_matrices))
-        intersection = gap_matrices.intersection(inverse_gap_matrices)
-        intersection_list = list(intersection)
-        intersection_list_index_map = {inter: i for i, inter in enumerate(intersection_list)}
-        inverse_intersection_list = list(map(inverse_mstring, intersection_list))
-        inverse_intersection_list_indexes = [
-            intersection_list_index_map[inter] for inter in inverse_intersection_list
-        ]
-        gap_matrices_to_remove = set(
-            [
-                inverse_intersection_list[num]
-                for index, num in enumerate(inverse_intersection_list_indexes)
-                if num > index
-            ]
-        )
+        # Sometimes we have the gap in two directions, but only want one. Both give the
+        # same physical result (tests/test_physical_invariants.py); the choice is made
+        # deterministic (not set iteration order, i.e. the hash seed) so that the
+        # variables and constraint layout are reproducible.
+        gap_matrices_to_remove = {
+            min(gap, inverse_mstring(gap))
+            for gap in gap_matrices
+            if inverse_mstring(gap) in gap_matrices and inverse_mstring(gap) != gap
+        }
         gap_matrices -= gap_matrices_to_remove
         return gap_matrices
 
@@ -146,8 +143,8 @@ class InterfaceLoopHandling:
             for surface, matrix_set in surfaces.items():
                 common_elements = matrix_set.intersection(existing_gap_matrices)
                 if common_elements:
-                    remaining_elements = matrix_set - common_elements
-                    if remaining_elements:
-                        filtered_dict[part][surface]["UNUSED"] = remaining_elements
-                        filtered_dict[part][surface]["USED"] = common_elements
+                    # Kept even without other gaps: the used (reference) gap itself
+                    # can be a contact location.
+                    filtered_dict[part][surface]["UNUSED"] = matrix_set - common_elements
+                    filtered_dict[part][surface]["USED"] = common_elements
         return filtered_dict
