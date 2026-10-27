@@ -649,6 +649,35 @@ divided by the squared norm of the reference vector.</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.interval_overlap">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">interval_overlap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interval_a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval_b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-09</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#interval_overlap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.interval_overlap" title="Link to this definition"></a></dt>
+<dd><p>Intersect two closed 1D intervals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>interval_a</strong> (<em>tuple</em><em> of </em><em>float</em>) – Intervals <code class="docutils literal notranslate"><span class="pre">(start,</span> <span class="pre">end)</span></code>; the bounds may be given in any order.</p></li>
+<li><p><strong>interval_b</strong> (<em>tuple</em><em> of </em><em>float</em>) – Intervals <code class="docutils literal notranslate"><span class="pre">(start,</span> <span class="pre">end)</span></code>; the bounds may be given in any order.</p></li>
+<li><p><strong>atol</strong> (<em>float</em><em>, </em><em>optional</em>) – Overlaps shorter than this are treated as empty (default is 1e-9).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">(start,</span> <span class="pre">end)</span></code> of the overlap, or None if the intervals do not overlap
+over more than <cite>atol</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple of float or None</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">interval_overlap</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.2</span><span class="p">))</span>
+<span class="go">(0.0, 10.0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">interval_overlap</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">))</span> <span class="ow">is</span> <span class="kc">None</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="otaf.geometry.is_affine_transformation_matrix">
 <span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">is_affine_transformation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">M</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raise_exception</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#is_affine_transformation_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.is_affine_transformation_matrix" title="Link to this definition"></a></dt>
 <dd><p>Check if a 4x4 matrix is a valid affine transformation matrix with a valid rotation component.</p>
@@ -760,6 +789,49 @@ cross-section.</p></li>
 <dd class="field-even"><p><strong>ImportError</strong> – If the <code class="docutils literal notranslate"><span class="pre">trimesh</span></code> library is not installed.</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.planar_overlap_vertices">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">planar_overlap_vertices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points_a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points_b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-09</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#planar_overlap_vertices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.planar_overlap_vertices" title="Link to this definition"></a></dt>
+<dd><p>Vertices of the overlap of two flat faces expressed in the same 2D plane coordinates.</p>
+<p>Each face is described by points in a common 2D coordinate system of the
+plane (e.g. the two in-plane axes of a surface frame). Two cases are handled:</p>
+<ul class="simple">
+<li><p>all points of both faces are collinear (faces of 2D assemblies seen edge-on):
+the faces are segments and the overlap is a segment, returned as its 2 end points;</p></li>
+<li><p>otherwise each face is replaced by the convex hull of its points and the
+overlap is the intersection of the two hulls, returned as its vertices in
+counter-clockwise order. Non-convex faces are therefore over-approximated.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points_a</strong> (<em>numpy.ndarray</em>) – Arrays of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">2)</span></code> with the in-plane coordinates of each face.</p></li>
+<li><p><strong>points_b</strong> (<em>numpy.ndarray</em>) – Arrays of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">2)</span></code> with the in-plane coordinates of each face.</p></li>
+<li><p><strong>atol</strong> (<em>float</em><em>, </em><em>optional</em>) – Geometric tolerance (default is 1e-9). Overlaps of length or area below it
+are treated as empty.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Array of shape <code class="docutils literal notranslate"><span class="pre">(K,</span> <span class="pre">2)</span></code> with the overlap vertices; <code class="docutils literal notranslate"><span class="pre">K</span> <span class="pre">=</span> <span class="pre">0</span></code> when the
+faces do not overlap.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If one face is degenerate (collinear points) while the other is not.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">male</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">female</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">5.1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">10.2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">planar_overlap_vertices</span><span class="p">(</span><span class="n">male</span><span class="p">,</span> <span class="n">female</span><span class="p">)</span>
+<span class="go">array([[ 0.,  0.],</span>
+<span class="go">       [10.,  0.]])</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">

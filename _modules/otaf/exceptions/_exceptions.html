@@ -379,6 +379,17 @@
 
 
 
+<div class="viewcode-block" id="NoPlanarOverlapException">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.NoPlanarOverlapException">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NoPlanarOverlapException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Exception raised when two interacting planes do not overlap once projected onto each other."""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id1</span><span class="p">,</span> <span class="n">surface_id1</span><span class="p">,</span> <span class="n">part_id2</span><span class="p">,</span> <span class="n">surface_id2</span><span class="p">):</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"No overlap in planar interaction: Part </span><span class="si">{</span><span class="n">part_id1</span><span class="si">}</span><span class="s2">, Surface </span><span class="si">{</span><span class="n">surface_id1</span><span class="si">}</span><span class="s2"> and Part </span><span class="si">{</span><span class="n">part_id2</span><span class="si">}</span><span class="s2">, Surface </span><span class="si">{</span><span class="n">surface_id2</span><span class="si">}</span><span class="s2"> do not face each other over any area."</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+
+
+
 <div class="viewcode-block" id="InvalidAffineTransformException">
 <a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.InvalidAffineTransformException">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">InvalidAffineTransformException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
