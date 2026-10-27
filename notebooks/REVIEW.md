@@ -138,32 +138,14 @@ change the 50-dimensional training sample of its surrogate.
 
 The automatic version of the 32-dimensional study. Besides the two fixes of Phase 2
 (cylinder gaps, pins blocked in the lower plate only), it is aligned with the thesis:
-$t = 0.25$, distribution and credal set from `model4_auto` (new
+$t = 0.21$ (the value of `model4` and of the thesis scripts), distribution and credal set from `model4_auto` (new
 `eval_credal_set_constraints`: worst standard deviation at the hole ends,
 $z = \pm h_{plate}/2$, as `model4`), half-space constraints, $\lambda$ scaling the standard
 deviations, the four $\alpha_k$. The MI-SDOF cells and a basinhopping draft were removed.
 Checked on a reduced sample (600 points): symbols identical to `model4_auto`, boundary
 start point $\lambda = 1/\sqrt{2}$, $P_f(\lambda = 1) \approx 3\,\%$.
 
-## Left to the author
+## Ex4 notebooks and the thesis scripts
 
-- **Tolerance of Ex4 in the thesis text**: the thesis says $t = 0.25$, but the scripts used
-  `model4`'s default $t = 0.21$, found by `optimize_tolerance_values_for_target_failure.py`
-  with the 5 % rule (`model4`, 50 dimensions, $\lambda = 1$: 6.05 % on 2000 samples). With
-  0.25, $P_f(\lambda = 1)$ would be 20 %. The 4-pin and the ported 32-DOF notebooks also use 0.25
-  (taken from the thesis); change them with the text if 0.21 is the value.
-- **Ex4 $\lambda$ matrices**: empty in the manuscript; `scripts/Summary_model4_50_dof*.md`
-  contains them (with the former plate unit, above).
-- **Ex2 tolerance**: not stated in the thesis; it is 0.16 (`model2` default).
-- **4-pin notebook constraint**: `NonlinearConstraint(lb=-1e-5, ub=1e-5)` (an equality) for
-  both directions, whereas the scripts, Ex1 and the ported notebooks use the thesis half-spaces.
-  Not the source of the thesis figures; align it if it should match them.
-- **Reproducibility of the thesis figures**: the scripts drew their Monte Carlo samples
-  unseeded (`np.random.seed` does not seed OpenTURNS; `imprecise_bounds_analysis.py` had no
-  seed). They now take `--seed`, but the published runs cannot be reproduced bit for bit.
-- **Variable names**: `model4` names the hole defects $(\beta, \gamma, v, w)$; the thesis uses
-  $(\alpha, \beta, u, v)$ for the same rotations and translations.
-- **Thesis, OTAF chapter** (matrices of the 2D example): they match the generated ones, except
-  that the column of $v_{g,1}$ is dropped although the second equation uses it (its 1 is
-  printed in the $u_{g,1}$ column), and the interface constraints are written $\leq 0$ in the
-  text and $\geq 0$ in the matrix form.
+The Ex4 notebooks now use the scripts' values ($t = 0.21$, half-space constraints, start on
+the credal-set boundary).
