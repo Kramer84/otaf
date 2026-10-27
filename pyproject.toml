@@ -84,17 +84,26 @@ src = ["src", "tests"]
 target-version = "py310"
 
 [tool.ruff.lint]
-# Bug-catching rules only for now (syntax errors, undefined names, bad __all__,
-# redefinitions). Widened step by step as the roadmap progresses; see ROADMAP.md.
-select = ["E9", "F63", "F7", "F82", "F811"]
+# Bug-catching rules (syntax errors, undefined names, bad __all__, redefinitions)
+# and pydocstyle (numpy convention, below). Widened step by step as the roadmap
+# progresses; see ROADMAP.md.
+select = ["E9", "F63", "F7", "F82", "F811", "D"]
 # Lets ruff understand `Literal[...]` etc. imported from beartype.typing.
 typing-modules = ["beartype.typing"]
+
+[tool.ruff.lint.per-file-ignores]
+# Docstring rules apply to the library only.
+"tests/**" = ["D"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests", "src/otaf"]
+# Docstring examples in src/ run as doctests. The surrogate package imports torch
+# at module level, so it is not collected (its examples would need torch/GPU).
+addopts = "--doctest-modules --ignore=src/otaf/surrogate"
+doctest_optionflags = ["NORMALIZE_WHITESPACE"]
 markers = [
     "slow: takes more than a few seconds (model construction, small Monte Carlo runs)",
     "gpu: needs torch and/or a GPU; never run in CI or on small machines",

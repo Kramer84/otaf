@@ -430,7 +430,14 @@ def generate_imprecise_probabilistic_samples(
     ...     subgroup_sizes, num_samples=5, seed=42
     ... )
     >>> for sample in samples:
-    ...     print(sample)
+    ...     print(sample.tolist())
+    [0.0, 0.0, 1.0, 0.0, 0.25, 0.25, 0.5]
+    [0.0, 0.5, 0.5, 0.0, 0.25, 0.75, 0.0]
+    [0.25, 0.0, 0.75, 0.0, 0.5, 0.0, 0.5]
+    [0.25, 0.75, 0.0, 0.5, 0.5, 0.0, 0.0]
+    [0.5, 0.5, 0.0, 0.0, 0.25, 0.0, 0.75]
+
+    Each subgroup (here the first three and the last four values) sums to one.
     """
     if seed is not None:
         np.random.seed(seed)

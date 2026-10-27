@@ -144,17 +144,21 @@ class InterfaceLoopHandling:
         in the existing gap matrices set. It iterates through all provided gap matrices, comparing
         them with existing ones, and then organizes them into a nested dictionary indicating
         their usage status. This only categorizes the matrices when there is at least a common
-        elemnt
+        element.
 
-        Args:
-            existing_gap_matrices (Set[str]): A set of existing gap matrix names.
-            all_gap_matrices (Dict[str, Dict[str, Set[str]]]): A dictionary of all gap matrices,
-                structured by parts and surfaces.
+        Parameters
+        ----------
+        existing_gap_matrices : set of str
+            Names of the existing gap matrices.
+        all_gap_matrices : dict
+            All gap matrices, structured by parts and surfaces
+            (``{part: {surface: set of names}}``).
 
         Returns
         -------
-            Dict[str, Dict[str, Dict[str, Set[str]]]]: A nested dictionary categorizing gap matrices
-            into 'used' and 'unused' for each part and surface.
+        dict
+            Nested dictionary ``{part: {surface: {"USED" | "UNUSED": set of names}}}``
+            categorizing the gap matrices for each part and surface.
         """
         filtered_dict = tree()
         for part, surfaces in all_gap_matrices.items():

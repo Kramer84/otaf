@@ -1,3 +1,4 @@
+"""2D reference models: ``model1`` (4 DOF) and ``model2`` (16 DOF)."""
 from __future__ import annotations
 
 __author__ = "Kramer84"

@@ -72,11 +72,15 @@ def inverse_mstring(matrix_str: str) -> str:
 
     Examples
     --------
-    >>> inverse_mstring("TP123S1P456S2")
-    'TP123S2P456S1'
+    Transformation matrices swap their two surface/point pairs:
 
-    >>> inverse_mstring("GP1S1P1P2S2P2")
-    'GP2S2P2P1S1P1'
+    >>> inverse_mstring("TP1aA0bB0")
+    'TP1bB0aA0'
+
+    Gap matrices swap the two part/surface/point triplets:
+
+    >>> inverse_mstring("GP1aA0P2bB0")
+    'GP2bB0P1aA0'
 
     >>> inverse_mstring("")
     ''
@@ -140,6 +144,8 @@ def merge_with_checks(existing_points, new_points):
 
     >>> new_points = {'B': [3.1, 4.1]}
     >>> merge_with_checks(existing_points, new_points)
+    Traceback (most recent call last):
+        ...
     ValueError: Conflict for key B: existing value [3.0, 4.0], new value [3.1, 4.1]
     """
     for key, value in new_points.items():
@@ -184,17 +190,13 @@ def parse_matrix_string(matrix_str: str) -> Dict[str, Union[str, bool]]:
     Examples
     --------
     >>> parse_matrix_string('TP1kK0aA0')
-    {'type': 'T', 'part': '1', 'surface1': 'k', 'point1': 'K0',
-     'surface2': 'a', 'point2': 'A0', 'mstring': 'TP1kK0aA0'}
+    {'type': 'T', 'part': '1', 'surface1': 'k', 'point1': 'K0', 'surface2': 'a', 'point2': 'A0', 'mstring': 'TP1kK0aA0'}
 
     >>> parse_matrix_string('D1k')
-    {'type': 'D', 'inverse': False, 'part': '1', 'surface': 'k',
-     'point': 'K0', 'mstring': 'D1k'}
+    {'type': 'D', 'inverse': False, 'part': '1', 'surface': 'k', 'point': 'K0', 'mstring': 'D1k'}
 
     >>> parse_matrix_string('GP1kK0P2aA0')
-    {'type': 'G', 'inverse': False, 'part1': '1', 'surface1': 'k',
-     'point1': 'K0', 'part2': '2', 'surface2': 'a', 'point2': 'A0',
-     'mstring': 'GP1kK0P2aA0'}
+    {'type': 'G', 'inverse': False, 'part1': '1', 'surface1': 'k', 'point1': 'K0', 'part2': '2', 'surface2': 'a', 'point2': 'A0', 'mstring': 'GP1kK0P2aA0'}
     """
     result = {"type": matrix_str[0]}
     if result["type"] not in ["D", "T", "G"]:
@@ -604,13 +606,15 @@ def threshold_for_percentile_positive_values_below(
 
     Examples
     --------
-    # Compute the 50th percentile threshold for positive values
-    >>> threshold_for_percentile_positive_values_below([-1, 2, 3, 4, 5], 50)
-    3.0
+    The 50th percentile of the positive values ``[2, 3, 4, 5]`` is their median:
 
-    # Handle arrays with no positive values
-    >>> threshold_for_percentile_positive_values_below([-1, -2, -3], 50)
-    None
+    >>> print(threshold_for_percentile_positive_values_below([-1, 2, 3, 4, 5], 50))
+    3.5
+
+    Arrays without positive values give ``None``:
+
+    >>> threshold_for_percentile_positive_values_below([-1, -2, -3], 50) is None
+    True
     """
     arr = np.squeeze(np.asarray(arr))
     if arr.ndim != 1:
@@ -719,7 +723,7 @@ def arrays_close_enough(
 
 def scaling(scale_factor: float) -> Callable[[F], F]:
     """
-    A decorator factory that scales the output of a function by a constant factor.
+    Create a decorator that scales the output of a function by a constant factor.
 
     This decorator safely handles scalar numeric types, nested iterables (lists,
     tuples, sets), and preserves the original iterable type where possible. It

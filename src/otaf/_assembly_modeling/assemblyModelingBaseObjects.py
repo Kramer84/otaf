@@ -89,7 +89,7 @@ class DeviationMatrix:
         self.n_variables = len(self.variables)
 
     def __repr__(self) -> str:
-        """A string representation of the DeviationMatrix.
+        """Return a string representation of the DeviationMatrix.
 
         Returns
         -------
@@ -305,7 +305,7 @@ class GapMatrix:
         logging.debug(f"[Type: 'G', ID: {self.ID}] Added {len(self.variables)} basis variables.")
 
     def __repr__(self) -> str:
-        """A string representation of the GapMatrix.
+        """Return a string representation of the GapMatrix.
 
         Returns
         -------
@@ -446,7 +446,7 @@ class TransformationMatrix:
         self._check_affine_validity_and_inverse()
 
     def __repr__(self) -> str:
-        """A string representation of the TransformationMatrix.
+        """Return a string representation of the TransformationMatrix.
 
         Returns
         -------
@@ -616,7 +616,7 @@ class I4:
         self.ID = -1
 
     def __repr__(self) -> str:
-        """A string representation of the I4 identity matrix.
+        """Return a string representation of the I4 identity matrix.
 
         Returns
         -------
@@ -681,7 +681,7 @@ class J4:
         self.ID = -1
 
     def __repr__(self) -> str:
-        """A string representation of the J4 rotation matrix.
+        """Return a string representation of the J4 rotation matrix.
 
         Returns
         -------

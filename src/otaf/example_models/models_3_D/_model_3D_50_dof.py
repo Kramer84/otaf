@@ -199,6 +199,7 @@ class CylindricalInterfaceConstraint:
     z_eval_points : list of float or list of sympy.Symbol
         Axial locations along the Z-axis to evaluate constraints.
     """
+
     def __init__(
         self,
         name: str,
@@ -322,7 +323,7 @@ def extract_linear_matrices(
     length_vars: Iterable[Any] | None = None,
     length_subs: dict[Any, Any] | None = None,
 ) -> tuple[sp.Matrix, sp.Matrix, sp.Matrix]:
-    """Extract linear constraint matrices from symbolic expressions.
+    r"""Extract linear constraint matrices from symbolic expressions.
 
     Solves the given system of linear equations to form standard matrix
     representations for clearance and defect parameters.
@@ -346,9 +347,9 @@ def extract_linear_matrices(
     -------
     tuple of sympy.Matrix
         A tuple containing three matrices: (A, B, C) corresponding
-        to the equality system :math:`\\mathtt{A} \\cdot
-        \\mathtt{clearances} + \\mathtt{B} \\cdot \\mathtt{defects} +
-        \\mathtt{C} = 0`.
+        to the equality system :math:`\mathtt{A} \cdot
+        \mathtt{clearances} + \mathtt{B} \cdot \mathtt{defects} +
+        \mathtt{C} = 0`.
     """
     if length_vars and length_subs:
         valid_subs = {k: v for k, v in length_subs.items() if k in length_vars}

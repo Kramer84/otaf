@@ -1,3 +1,4 @@
+"""3D reference models: ``model3`` (30 DOF), ``model4`` (50 DOF) and ``model4_auto``."""
 from __future__ import annotations
 
 __author__ = "Kramer84"

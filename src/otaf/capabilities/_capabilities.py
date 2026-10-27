@@ -7,7 +7,7 @@ __all__ = ["process_capability"]
 def process_capability(
     usl: float, lsl: float, mean: float, std_dev: float
 ) -> dict[str, float]:
-    """Calculate the process capability indices Cp, CPU, CPL, Cpk, and k.
+    r"""Calculate the process capability indices Cp, CPU, CPL, Cpk, and k.
 
     Parameters
     ----------
@@ -16,9 +16,9 @@ def process_capability(
     lsl : float
         Lower Specification Limit.
     mean : float
-        Mean of the process ($\\bar{x}$).
+        Mean of the process ($\bar{x}$).
     std_dev : float
-        Standard deviation of the process ($\\sigma$).
+        Standard deviation of the process ($\sigma$).
 
     Returns
     -------
@@ -36,17 +36,17 @@ def process_capability(
 
     .. math::
 
-       C_p = \\frac{usl - lsl}{6\\sigma}
+       C_p = \frac{usl - lsl}{6\sigma}
 
-       CPU = \\frac{usl - \\mu}{3\\sigma}
+       CPU = \frac{usl - \mu}{3\sigma}
 
-       CPL = \\frac{\\mu - lsl}{3\\sigma}
+       CPL = \frac{\mu - lsl}{3\sigma}
 
-       C_{pk} = \\min(CPU, CPL)
+       C_{pk} = \min(CPU, CPL)
 
-       k = \\frac{|\\mu - m|}{\\frac{usl - lsl}{2}}
+       k = \frac{|\mu - m|}{\frac{usl - lsl}{2}}
 
-    Where $m = \\frac{usl + lsl}{2}$ is the specification midpoint.
+    Where $m = \frac{usl + lsl}{2}$ is the specification midpoint.
 
     Raises
     ------

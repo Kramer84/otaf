@@ -48,6 +48,7 @@ class AssemblyDataProcessor:
         Placeholder for compatibility loop expansions, initialized
         as None.
     """
+
     def __init__(self, system_data: Optional[Dict[str, Dict[str, Dict[str, Any]]]] = None) -> None:
         """Initialize an AssemblyDataProcessor instance."""
         self.system_data = (
@@ -760,8 +761,9 @@ class AssemblyDataProcessor:
 
     def _get_feature_color(self, part_id, surf_id):
         """
-        Helper method to ensure consistent colors across all plotting functions
-        for a given part and surface feature.
+        Return a color that is consistent across all plotting functions.
+
+        The color is attached to a given part and surface feature.
         """
         # Build the color map once and cache it
         if not hasattr(self, '_feature_color_map'):
@@ -828,9 +830,7 @@ class AssemblyDataProcessor:
         self,
         radius: float = 0.05
     ) -> list:
-        """
-        Generate cylinders representing 2D lines for planar features in a 2D system.
-        """
+        """Generate cylinders representing 2D lines for planar features in a 2D system."""
         try :
             import trimesh
         except ImportError :
@@ -855,9 +855,7 @@ class AssemblyDataProcessor:
         return trimesh_lines
 
     def generate_functional_cylinders(self) -> list:
-        """
-        Generate open cylinders for 3D cylindrical features.
-        """
+        """Generate open cylinders for 3D cylindrical features."""
         try :
             import trimesh
         except ImportError :
@@ -911,10 +909,7 @@ class AssemblyDataProcessor:
         self,
     ) -> list:
         """
-        Generate planes representing each planar feature in the assembly
-
-        Parameters
-        ----------
+        Generate planes representing each planar feature in the assembly.
 
         Returns
         -------

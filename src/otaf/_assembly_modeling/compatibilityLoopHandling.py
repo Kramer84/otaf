@@ -77,6 +77,7 @@ class CompatibilityLoopHandling:
         Calculate the nominal transformation matrix between two surfaces in a gap, with options
         to nullify specific translation components.
     """
+
     def __init__(self, assemblyDataProcessor: AssemblyDataProcessor):
         """
         Initialize the `CompatibilityLoopHandling` object with system data.
@@ -105,7 +106,6 @@ class CompatibilityLoopHandling:
     def get_gap_matrix_by_id(
         self, ID: Union[str, int]
     ) -> List[Union[GapMatrix, TransformationMatrix]]:
-
         """
         Retrieve a gap matrix by its identifier.
 
