@@ -45,7 +45,9 @@ class SurrogateTrainer:
 
     def generate_data(self, seed=420):
         print(f"[{self.model_name}] Generating training data...")
-        np.random.seed(seed)
+        # np.random.seed alone does not seed OpenTURNS samples; set_seed seeds NumPy, OpenTURNS and PyTorch.
+        otaf.common.set_seed(seed)
+        self.seed = seed
         
         # 1. Get the base distribution using the specified tolerance
         base_dist, _, _, _ = self.distribution_function(tol=self.tol, capa=1.0)
@@ -92,7 +94,8 @@ class SurrogateTrainer:
             compile_model=False,
             train_size=0.6,
             save_path=self.save_path,
-            display_progress_disable=False
+            display_progress_disable=False,
+            seed=self.seed,
         )
 
         # Parse architecture list, resolving "dim" to actual dimension
@@ -144,6 +147,7 @@ if __name__ == "__main__":
     parser.add_argument("--mults", nargs="+", type=float, help="Multiplicator for each model")
     parser.add_argument("--sample-sizes", nargs="+", type=int, help="Sample size for training data per model")
     parser.add_argument("--architectures", nargs="+", type=str, help="Architecture per model, comma-separated. E.g., 'dim,100,70,30,1'")
+    parser.add_argument("--seed", type=int, default=420, help="Seed of the training sample, the split and the network")
     parser.add_argument("--save-paths", nargs="+", type=str, help="Save path for the PyTorch state_dict per model")
 
     args = parser.parse_args()
@@ -196,7 +200,7 @@ if __name__ == "__main__":
             sample_multiplier=model_module.sample_multiplier if hasattr(model_module, 'sample_multiplier') else None
         )
 
-        trainer.generate_data()
+        trainer.generate_data(seed=args.seed)
         trainer.train_and_save()
 """ 
 python train_neural_networks.py --tols 0.31 0.16 0.1 0.21 --mults 1.35 1.21 1.26 1.15 --sample-sizes 200000 --architectures 'dim,16,8,4,1' 'dim,32,16,8,1' 'dim,64,32,16,8,1' 'dim,128,64,32,16,1'

@@ -63,7 +63,8 @@ class HyperparameterTuning:
     def generate_sample_from_tolerance(self, tolerance, seed=3462346):
         """This function will generate a sample from the distribution function with the given tolerance and multiplicator."""
         joint_distribution, _, _, _ = self.distribution_function(tol=tolerance, capa=1.0)
-        np.random.seed(seed)
+        # np.random.seed alone does not seed OpenTURNS samples; set_seed seeds NumPy, OpenTURNS and PyTorch.
+        otaf.common.set_seed(seed)
         sample = np.array(joint_distribution.getSample(self.sample_size),dtype="float32")
         sample = sample @ self.sample_multiplier.T #Apply the variable change if needed
         return sample
@@ -131,7 +132,8 @@ class HyperparameterTuning:
         dist = otaf.distribution.multiply_composed_distribution_standard_with_constants(
             base_dist, [mult]*self.dim)
         # 3. Draw the sample
-        np.random.seed(seed)
+        # np.random.seed alone does not seed OpenTURNS samples; set_seed seeds NumPy, OpenTURNS and PyTorch.
+        otaf.common.set_seed(seed)
         sample = np.array(dist.getSample(self.sample_size), dtype="float32")
         sample = sample @ self.sample_multiplier.T #Apply the variable change if needed
         return sample

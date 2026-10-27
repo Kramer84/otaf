@@ -297,6 +297,7 @@ def main():
     parser.add_argument("--surrogate-path", type=str, default="./model1_4_dof_surrogate.pth", help="Path to the .pth surrogate file")
     parser.add_argument("--alphas", type=float, nargs="+", default=[0.0, 0.5, 1.0], help="List of failure limits/alphas")
     parser.add_argument("--grid-res", type=int, default=20, help="Resolution of the 2D grid")
+    parser.add_argument("--seed", type=int, default=0, help="Seed of the Monte Carlo sample")
     parser.add_argument("--mc-size", type=int, default=100000, help="Monte Carlo sample size")
     parser.add_argument("--norm-type", type=str, choices=["log", "linear", "power"], default="log", help="Contour normalization type")
     parser.add_argument("--highlight-pct", type=float, default=0.05, help="Top percentage to color in red (e.g. 0.05 or 5.0)")
@@ -308,6 +309,7 @@ def main():
     model_sur = otaf.surrogate.NeuralRegressorNetwork.from_checkpoint(args.surrogate_path)
     
     jointDist, symbols, max_std_vect, mu_vect = model1.get_distribution_params()
+    otaf.common.set_seed(args.seed)
     sample_gld = np.array(jointDist.getSample(args.mc_size))
     
     model_eval_fn = get_model_evaluator(sample_gld, mu_vect, model_sur)

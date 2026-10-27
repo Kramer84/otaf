@@ -2,7 +2,10 @@
 
 Checks of the notebooks that serve as references for the library (October 2026), against
 the revised thesis manuscript (Ch. 4, *Application of the Proposed Methodology*, and the
-4-pin appendix). For each notebook: what was checked, how, what was changed, and what is
+4-pin appendix). The thesis figures were produced by the scripts in `scripts/`
+(`train_neural_networks.py`, `imprecise_bounds_analysis.py`, `analyze_results.py`; results in
+`scripts/Summary_*.md`), which take the distributions and credal sets from
+`otaf.example_models`; the notebooks are the step-by-step versions. For each notebook: what was checked, how, what was changed, and what is
 left to the author. Outputs of cells whose code changed were cleared; the former outputs
 are in the git history (commit `7314be8`).
 
@@ -69,9 +72,10 @@ translation), $\alpha_k = 0$, bounds re-estimated on an independent $10^6$ sampl
 | $\underline{P_f}$ | $2.54 \times 10^{-4}$ | $3.55 \times 10^{-4}$, pure translation |
 | $\overline{P_f}$ | $1.16 \times 10^{-3}$ | $1.25 \times 10^{-3}$, mixed allocation (pure rotation: $1.16 \times 10^{-3}$) |
 
-The thesis result is reproduced in location (minimum at pure translation, maximum at a mixed
-allocation) and within 8 % for the upper bound; the lower bound differs by 40 % (GLD tail fit
-against empirical fraction). `scripts/reference_checks/analytical_16dof_vs_model2.py` runs the
+The thesis result (`scripts/Summary_model2_16_dof.md`: `model2` defaults, $t = 0.16$,
+half-space constraints) is reproduced in location (minimum at pure translation, maximum at a
+mixed allocation) and within 8 % for the upper bound; the lower bound differs by 40 % (GLD tail
+fit against empirical fraction). `scripts/reference_checks/analytical_16dof_vs_model2.py` runs the
 same comparison without Jupyter.
 
 ### `OptimizationBasedModels/2D_Model_16DOF_Auto_GLD*.ipynb`: ported
@@ -88,9 +92,8 @@ variances. Now:
 - seeds (MLP notebook).
 
 Not run here (the surrogate needs torch; the direct model is too slow for this PC). The
-stored results came from the former constraint, so they were cleared; the analytical
-reference above suggests the thesis figures were computed with $t = 0.16$ and the thesis
-credal set.
+stored results came from the former constraint, so they were cleared; they were not the thesis
+figures, which come from `scripts/imprecise_bounds_analysis.py`.
 
 ## Ex3 (`model3`, 2 pins)
 
@@ -117,6 +120,14 @@ plate rotations 1.33 times the thesis maximum. Fixed in the notebook and in
 `model4` $P_f$ 6.05 % → 5.40 %, `model4_x1.15` 16.35 % → 14.90 %; every other case unchanged
 bit for bit. No effect on the 32-dimensional study (plates perfect).
 
+The thesis 50-dimensional run (`scripts/Summary_model4_50_dof.md`) used the former
+normalization. Its $P_f$ bounds stay valid: the credal set is the same set of standard
+deviations in both normalizations, and both $[0, 1]$ boxes contain it. Only the reported
+$\lambda$ of the plate rotations (the first two of each plate) are in the former unit:
+$\lambda_{\text{thesis}} = \tfrac{4}{3}\,\lambda_{\text{former}}$ (e.g. 0.5049 → 0.673). A rerun of the
+scripts now also trains the surrogate on a slightly different sample (plate rotations at
+$\lambda = 1$ are 25 % smaller).
+
 Also fixed: seeds (`np.random.seed` did not seed the OpenTURNS samples; the surrogate now
 takes `seed`); the binary-classifier cells, whose module was removed in `2587e56`, were
 deleted. The stored outputs (the thesis 32-dimensional run) were kept: they predate
@@ -136,18 +147,20 @@ start point $\lambda = 1/\sqrt{2}$, $P_f(\lambda = 1) \approx 3\,\%$.
 
 ## Left to the author
 
-- **Optimization constraint, 4-pin notebook**: `NonlinearConstraint(lb=-1e-5, ub=1e-5)` (an
-  equality) for both directions, whereas the thesis text, Ex1 and the ported notebooks use
-  the directional half-spaces. Both keep the capability constant; the thesis should describe
-  what produced its figures.
-- **Tolerance of Ex4**: at $\lambda = 1$, $t = 0.25$ gives $P_f = 2.75\,\%$ (32 dimensions) and
-  20 % (50 dimensions) with `model4` (2000 samples), not the 5 % of the shared rule;
-  `model4.get_distribution_params` defaults to $t = 0.21$ (6 % with 50 dimensions). The thesis
-  says $t = 0.25$ was "selected through optimizations"; worth stating which criterion.
-- **Ex2 tolerance**: the thesis does not state it; $t = 0.16$ follows from its rule.
-- **50-dimensional optimization**: the thesis reports its bounds, but the repository only
-  contains the 32-dimensional run (the $\lambda$ matrices of Ex4 are also empty in the
-  manuscript). With the corrected plate normalization, a rerun would also fill them.
+- **Tolerance of Ex4 in the thesis text**: the thesis says $t = 0.25$, but the scripts used
+  `model4`'s default $t = 0.21$, found by `optimize_tolerance_values_for_target_failure.py`
+  with the 5 % rule (`model4`, 50 dimensions, $\lambda = 1$: 6.05 % on 2000 samples). With
+  0.25, $P_f(\lambda = 1)$ would be 20 %. The 4-pin and the ported 32-DOF notebooks also use 0.25
+  (taken from the thesis); change them with the text if 0.21 is the value.
+- **Ex4 $\lambda$ matrices**: empty in the manuscript; `scripts/Summary_model4_50_dof*.md`
+  contains them (with the former plate unit, above).
+- **Ex2 tolerance**: not stated in the thesis; it is 0.16 (`model2` default).
+- **4-pin notebook constraint**: `NonlinearConstraint(lb=-1e-5, ub=1e-5)` (an equality) for
+  both directions, whereas the scripts, Ex1 and the ported notebooks use the thesis half-spaces.
+  Not the source of the thesis figures; align it if it should match them.
+- **Reproducibility of the thesis figures**: the scripts drew their Monte Carlo samples
+  unseeded (`np.random.seed` does not seed OpenTURNS; `imprecise_bounds_analysis.py` had no
+  seed). They now take `--seed`, but the published runs cannot be reproduced bit for bit.
 - **Variable names**: `model4` names the hole defects $(\beta, \gamma, v, w)$; the thesis uses
   $(\alpha, \beta, u, v)$ for the same rotations and translations.
 - **Thesis, OTAF chapter** (matrices of the 2D example): they match the generated ones, except
