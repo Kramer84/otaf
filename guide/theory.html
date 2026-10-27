@@ -1,0 +1,299 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Theory: system of constraints and slack variable &mdash; otaf 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=2a229e3d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Input format of the assembly dictionary" href="input_format.html" />
+    <link rel="prev" title="OTAF Documentation" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            otaf
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Theory: system of constraints and slack variable</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#deviations-and-gaps">Deviations and gaps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compatibility-loops-equalities">Compatibility loops: equalities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#interface-conditions-inequalities">Interface conditions: inequalities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#slack-variable">Slack variable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#circle-linearization-strategies">Circle linearization strategies</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="input_format.html">Input format of the assembly dictionary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="limitations.html">Validity and limitations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules.html">otaf</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Ex1_2D_4dof_Analytical_Ref.html">Ex 1: Analytical Reference Model (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Ex1_2D_4dof_Opti_Manual.html">Ex 1: Optimization-Based Model &amp; Vector Loops (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Ex1_2D_4dof_Opti_Auto_Surrogate.html">Ex 1: Automatic Topological Generation &amp; Surrogate Optimization (2D / 4-DOF)</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">otaf</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Theory: system of constraints and slack variable</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/guide/theory.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="theory-system-of-constraints-and-slack-variable">
+<h1>Theory: system of constraints and slack variable<a class="headerlink" href="#theory-system-of-constraints-and-slack-variable" title="Link to this heading"></a></h1>
+<p>OTAF decides whether a rigid, over-constrained assembly can be assembled for a given set
+of geometric deviations. The question is turned into a linear program in the relative displacements
+(<em>gaps</em>) between the parts. The value of the program, the <em>slack</em>, is negative when the assembly
+cannot be built. The page follows the order of the pipeline in <code class="docutils literal notranslate"><span class="pre">CODEBASE.md</span></code>:
+deviations and gaps, compatibility loops, interface conditions, slack. For the keys of the input,
+see <a class="reference internal" href="input_format.html"><span class="doc">Input format of the assembly dictionary</span></a>; for what the model does not cover, <a class="reference internal" href="limitations.html"><span class="doc">Validity and limitations</span></a>.</p>
+<section id="deviations-and-gaps">
+<h2>Deviations and gaps<a class="headerlink" href="#deviations-and-gaps" title="Link to this heading"></a></h2>
+<p>Every feature (plane or cylinder) of a part is placed by a rigid-body displacement from its
+nominal position, the <strong>deviation</strong> of the feature. Every pair of features that can touch
+has a <strong>gap</strong>: the rigid displacement of one feature relative to the other that the contact allows.
+Both are small displacements, written as a 4×4 homogeneous matrix close to the identity:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{M} = \mathbf{I} + u\,\mathbf{E}_1 + v\,\mathbf{E}_2 + w\,\mathbf{E}_3
+  + \alpha\,\mathbf{E}_4 + \beta\,\mathbf{E}_5 + \gamma\,\mathbf{E}_6 ,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(u, v, w\)</span> are translations along the local <span class="math notranslate nohighlight">\(x, y, z\)</span> axes of the feature, <span class="math notranslate nohighlight">\(\alpha,
+\beta, \gamma\)</span> are rotations about them and <span class="math notranslate nohighlight">\(\mathbf{E}_k\)</span> are the generators of
+<code class="docutils literal notranslate"><span class="pre">otaf.constants.BASIS_DICT</span></code>. The variables are called <code class="docutils literal notranslate"><span class="pre">u_d_&lt;k&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">alpha_d_&lt;k&gt;</span></code>, … for
+deviations and <code class="docutils literal notranslate"><span class="pre">u_g_&lt;k&gt;</span></code>, … for gaps, where <span class="math notranslate nohighlight">\(k\)</span> is the index of the feature or of the gap. Which of
+the six components exist is set by <code class="docutils literal notranslate"><span class="pre">CONSTRAINTS_D</span></code> (deviations), <code class="docutils literal notranslate"><span class="pre">CONSTRAINTS_G</span></code>,
+<code class="docutils literal notranslate"><span class="pre">BLOCK_*_G</span></code> (gaps) and <code class="docutils literal notranslate"><span class="pre">GLOBAL_CONSTRAINTS</span></code> (2D or 3D).</p>
+<p>The deviations <span class="math notranslate nohighlight">\(\mathbf{d}\)</span> are the uncertain inputs (they follow the tolerance model of the
+study). The gaps <span class="math notranslate nohighlight">\(\mathbf{g}\)</span> are unknowns that the assembly is free to choose.</p>
+</section>
+<section id="compatibility-loops-equalities">
+<h2>Compatibility loops: equalities<a class="headerlink" href="#compatibility-loops-equalities" title="Link to this heading"></a></h2>
+<p>A compatibility loop follows a closed chain of the assembly: from a point of a part to a feature
+of the same part, through a contact to the next part, and so on until it comes back. Going once around, the product of the matrices must be the identity:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{T}_1\,\mathbf{D}_1\,\mathbf{G}_1\,\mathbf{D}_2^{-1}\,\mathbf{T}_2 \cdots = \mathbf{I},
+\]</div>
+<p>with <span class="math notranslate nohighlight">\(\mathbf{T}\)</span> the nominal transforms inside a part, <span class="math notranslate nohighlight">\(\mathbf{D}\)</span> the deviations of
+the features and <span class="math notranslate nohighlight">\(\mathbf{G}\)</span> the gaps (see <a class="reference internal" href="input_format.html"><span class="doc">Input format of the assembly dictionary</span></a> for the loop syntax). Expanding to first order in the small
+variables (<code class="docutils literal notranslate"><span class="pre">FirstOrderMatrixExpansion</span></code>; products of two small terms are dropped) gives one set of
+linear equations per loop,</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{A}_{\mathrm{eq}}^{d}\,\mathbf{d} + \mathbf{A}_{\mathrm{eq}}^{g}\,\mathbf{g} + \mathbf{k}_{\mathrm{eq}} = \mathbf{0},
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{k}_{\mathrm{eq}}\)</span> collects what the nominal geometry contributes (for instance the
+nominal clearance). These are the attributes <code class="docutils literal notranslate"><span class="pre">A_eq_Def</span></code>, <code class="docutils literal notranslate"><span class="pre">A_eq_Gap</span></code> and <code class="docutils literal notranslate"><span class="pre">K_eq</span></code> of
+<code class="docutils literal notranslate"><span class="pre">SystemOfConstraintsAssemblyModel</span></code>. For given deviations, these equalities usually leave
+some gap components free; the inequalities below decide whether a choice of these free
+components exists that respects every contact.</p>
+</section>
+<section id="interface-conditions-inequalities">
+<h2>Interface conditions: inequalities<a class="headerlink" href="#interface-conditions-inequalities" title="Link to this heading"></a></h2>
+<p>The loops close the chain, but not the parts’ bodies: they could interpenetrate. Contact is
+expressed by requiring that the two facing features do not overlap at the places where they could touch.</p>
+<p><strong>Planes.</strong> Two parallel, facing planes are paired at the vertices of their overlapping area
+(the segment ends in 2D, the convex polygon in 3D). For each pair, the displacement of the
+point of one plane relative to the other, along the common normal, must not be negative:</p>
+<div class="math notranslate nohighlight">
+\[
+n_i(\mathbf{d}, \mathbf{g}) = \mathbf{b}_i^{d}\,\mathbf{d} + \mathbf{b}_i^{g}\,\mathbf{g} + k_i \ge 0 .
+\]</div>
+<p>It is linear, so a point of the overlap region cannot be more constraining than the vertices:
+checking the vertices is sufficient for planes.</p>
+<p><strong>Cylinders.</strong> A pin in a hole is paired at the two ends of the axial overlap of the two cylinders.
+In the cross-section there, the axis of the pin is offset from the axis of the hole by
+<span class="math notranslate nohighlight">\((y, z)\)</span>, a linear function of <span class="math notranslate nohighlight">\(\mathbf{d}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{g}\)</span>. The pin does not touch the hole if</p>
+<div class="math notranslate nohighlight">
+\[
+\sqrt{y^2 + z^2} \le c, \qquad c = R_{\mathrm{hole}} - R_{\mathrm{pin}}
+  \;(+\; \tfrac{1}{2}(d_{\mathrm{hole}} - d_{\mathrm{pin}}) \text{ with diameter deviations}),
+\]</div>
+<p>the radial clearance <span class="math notranslate nohighlight">\(c\)</span>. This is not linear. It is replaced by <span class="math notranslate nohighlight">\(N\)</span> half-planes (see below):</p>
+<div class="math notranslate nohighlight">
+\[
+r_f\,c - (y\cos\theta_k + z\sin\theta_k) \ge 0, \qquad \theta_k = \frac{2\pi k}{N}, \quad k = 0, \dots, N-1 .
+\]</div>
+<p>All the conditions are collected as</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{A}_{\mathrm{ub}}^{d}\,\mathbf{d} + \mathbf{A}_{\mathrm{ub}}^{g}\,\mathbf{g} + \mathbf{k}_{\mathrm{ub}} \ge \mathbf{0}.
+\]</div>
+<p>In the interface conditions the deviations enter only through the diameters of cylinders
+(<code class="docutils literal notranslate"><span class="pre">DIAMETER_DEVIATION</span></code>, variables <code class="docutils literal notranslate"><span class="pre">d_d_&lt;k&gt;</span></code>); the position and orientation deviations act through the
+loops above. For the planes of the pocket example, <span class="math notranslate nohighlight">\(\mathbf{A}_{\mathrm{ub}}^{d}\)</span> is zero.</p>
+</section>
+<section id="slack-variable">
+<h2>Slack variable<a class="headerlink" href="#slack-variable" title="Link to this heading"></a></h2>
+<p>For given deviations <span class="math notranslate nohighlight">\(\mathbf{d}\)</span>, the assembly can be built if some <span class="math notranslate nohighlight">\(\mathbf{g}\)</span> satisfies the equalities and
+all the inequalities. Asking for this directly gives a feasibility problem that has no value when it fails.
+OTAF adds one variable, the <strong>slack</strong> <span class="math notranslate nohighlight">\(s\)</span>, to every inequality and maximizes it
+(<code class="docutils literal notranslate"><span class="pre">SystemOfConstraintsAssemblyModel.embedOptimizationVariable</span></code>):</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+s^\star(\mathbf{d}) = \max_{\mathbf{g},\, s} \; s
+\quad\text{subject to}\quad
+\begin{cases}
+\mathbf{A}_{\mathrm{eq}}^{g}\,\mathbf{g} = -\mathbf{A}_{\mathrm{eq}}^{d}\,\mathbf{d} - \mathbf{k}_{\mathrm{eq}},\\[2pt]
+\mathbf{A}_{\mathrm{ub}}^{g}\,\mathbf{g} + \mathbf{A}_{\mathrm{ub}}^{d}\,\mathbf{d} + \mathbf{k}_{\mathrm{ub}} - s\,\mathbf{1} \ge \mathbf{0},\\[2pt]
+\mathbf{g}_{\min} \le \mathbf{g} \le \mathbf{g}_{\max}.
+\end{cases}
+\end{split}\]</div>
+<p>Equivalently, <span class="math notranslate nohighlight">\(s^\star\)</span> is the best achievable value, over the gaps, of the <strong>smallest margin</strong>
+among all the interface conditions. Reading it:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(s^\star \ge 0\)</span>: there is a gap configuration with all contacts respected; the assembly can be built.
+The value is the margin of the tightest contact, in the units of the conditions (mm for planes;
+mm of clearance for cylinders, scaled by <span class="math notranslate nohighlight">\(r_f\)</span>).</p></li>
+<li><p><span class="math notranslate nohighlight">\(s^\star &lt; 0\)</span>: no such configuration exists; the assembly fails. The magnitude says by how
+much the most violated condition has to be relaxed.</p></li>
+</ul>
+<p>The program always has a solution as long as the equalities can be satisfied inside the bounds of the
+gap variables (<code class="docutils literal notranslate"><span class="pre">get_gap_symbol_bounds</span></code>: ±3 mm for translations, ±π/4 for rotations; <span class="math notranslate nohighlight">\(s\)</span> is
+unbounded), whereas the plain feasibility problem would simply be infeasible. This is what
+makes <span class="math notranslate nohighlight">\(s^\star\)</span> usable as a response for sampling, FORM or surrogate
+models. It is solved with <code class="docutils literal notranslate"><span class="pre">scipy.optimize.linprog</span></code> (or <code class="docutils literal notranslate"><span class="pre">milp</span></code> for the batch functions of
+<code class="docutils literal notranslate"><span class="pre">otaf.uncertainty</span></code>) from the arrays returned by calling the model on the deviations.</p>
+<p><span class="math notranslate nohighlight">\(s^\star(\mathbf{d})\)</span> is the optimal value of a linear program whose right-hand side is linear in
+<span class="math notranslate nohighlight">\(\mathbf{d}\)</span>, so it is a <strong>concave, piecewise linear</strong> function of the deviations. The probability of failure of the
+assembly is</p>
+<div class="math notranslate nohighlight">
+\[
+P_f = \mathbb{P}\bigl(s^\star(\mathbf{D}) &lt; 0\bigr),
+\]</div>
+<p>for random deviations <span class="math notranslate nohighlight">\(\mathbf{D}\)</span>. As an example, for the 2D pocket of <a class="reference internal" href="input_format.html"><span class="doc">Input format of the assembly dictionary</span></a>
+the slack of the nominal assembly is exactly half the clearance, <span class="math notranslate nohighlight">\(s^\star = (X_2 - X_1)/2\)</span>,
+and <code class="docutils literal notranslate"><span class="pre">tests/test_physical_invariants.py</span></code> checks that identity on random samples.</p>
+</section>
+<section id="circle-linearization-strategies">
+<h2>Circle linearization strategies<a class="headerlink" href="#circle-linearization-strategies" title="Link to this heading"></a></h2>
+<p>The polygon replacing the circular clearance zone has <span class="math notranslate nohighlight">\(N\)</span> sides (<code class="docutils literal notranslate"><span class="pre">circle_resolution</span></code>). The
+factor <span class="math notranslate nohighlight">\(r_f\)</span> applied to the clearance sets whether the polygon touches the circle from outside,
+from inside or in between (<code class="docutils literal notranslate"><span class="pre">otaf.geometry.LinearizationStrategy</span></code>, <code class="docutils literal notranslate"><span class="pre">circle_linearization_factor</span></code>):</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Strategy</p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(r_f\)</span></p></th>
+<th class="head"><p>Polygon</p></th>
+<th class="head"><p>Effect on the failure probability</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CIRCUMSCRIBED</span></code> (default)</p></td>
+<td><p><span class="math notranslate nohighlight">\(1\)</span></p></td>
+<td><p>contains the circle, edges tangent to it</p></td>
+<td><p>optimistic: <span class="math notranslate nohighlight">\(P_f\)</span> too low</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">INSCRIBED</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\cos(\pi/N)\)</span></p></td>
+<td><p>inside the circle, vertices on it</p></td>
+<td><p>conservative: <span class="math notranslate nohighlight">\(P_f\)</span> too high</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MEAN</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\tfrac{1}{2}\bigl(1 + \cos(\pi/N)\bigr)\)</span></p></td>
+<td><p>in between</p></td>
+<td><p>no bound on either side</p></td>
+</tr>
+</tbody>
+</table>
+<p>Because the feasible region of the polygon is nested with the circle, the decision “can be
+assembled” is ordered: if the assembly is feasible with the inscribed polygon, it is feasible with
+the circle, and if it is feasible with the circle, it is feasible with the circumscribed polygon.
+Hence <span class="math notranslate nohighlight">\(P_f^{\text{inscribed}} \ge P_f^{\text{circle}} \ge P_f^{\text{circumscribed}}\)</span>,
+and running both strategies brackets the failure probability of the circle. The <em>values</em> of
+<span class="math notranslate nohighlight">\(s^\star\)</span> differ between strategies and are not comparable, only their sign is.</p>
+<p>The size of the error is given in <a class="reference internal" href="limitations.html"><span class="doc">Validity and limitations</span></a>. The reference models <code class="docutils literal notranslate"><span class="pre">model3</span></code> and <code class="docutils literal notranslate"><span class="pre">model4</span></code>
+use the same three strategies with a hand-written constraint matrix, and the automatic path
+reproduces <code class="docutils literal notranslate"><span class="pre">model4</span></code> to <span class="math notranslate nohighlight">\(10^{-8}\)</span> for each of them (<code class="docutils literal notranslate"><span class="pre">tests/test_cylinder_interfaces.py</span></code>).</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="OTAF Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="input_format.html" class="btn btn-neutral float-right" title="Input format of the assembly dictionary" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kramer84.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

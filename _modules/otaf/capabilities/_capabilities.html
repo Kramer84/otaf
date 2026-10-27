@@ -42,7 +42,13 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">User Guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/theory.html">Theory: system of constraints and slack variable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/input_format.html">Input format of the assembly dictionary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/limitations.html">Validity and limitations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/modules.html">otaf</a></li>
 </ul>
@@ -89,7 +95,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">process_capability</span><span class="p">(</span>
     <span class="n">usl</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lsl</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mean</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">std_dev</span><span class="p">:</span> <span class="nb">float</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Calculate the process capability indices Cp, CPU, CPL, Cpk, and k.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""Calculate the process capability indices Cp, CPU, CPL, Cpk, and k.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -98,9 +104,9 @@
 <span class="sd">    lsl : float</span>
 <span class="sd">        Lower Specification Limit.</span>
 <span class="sd">    mean : float</span>
-<span class="sd">        Mean of the process ($\\bar{x}$).</span>
+<span class="sd">        Mean of the process ($\bar{x}$).</span>
 <span class="sd">    std_dev : float</span>
-<span class="sd">        Standard deviation of the process ($\\sigma$).</span>
+<span class="sd">        Standard deviation of the process ($\sigma$).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -118,17 +124,17 @@
 
 <span class="sd">    .. math::</span>
 
-<span class="sd">       C_p = \\frac{usl - lsl}{6\\sigma}</span>
+<span class="sd">       C_p = \frac{usl - lsl}{6\sigma}</span>
 
-<span class="sd">       CPU = \\frac{usl - \\mu}{3\\sigma}</span>
+<span class="sd">       CPU = \frac{usl - \mu}{3\sigma}</span>
 
-<span class="sd">       CPL = \\frac{\\mu - lsl}{3\\sigma}</span>
+<span class="sd">       CPL = \frac{\mu - lsl}{3\sigma}</span>
 
-<span class="sd">       C_{pk} = \\min(CPU, CPL)</span>
+<span class="sd">       C_{pk} = \min(CPU, CPL)</span>
 
-<span class="sd">       k = \\frac{|\\mu - m|}{\\frac{usl - lsl}{2}}</span>
+<span class="sd">       k = \frac{|\mu - m|}{\frac{usl - lsl}{2}}</span>
 
-<span class="sd">    Where $m = \\frac{usl + lsl}{2}$ is the specification midpoint.</span>
+<span class="sd">    Where $m = \frac{usl + lsl}{2}$ is the specification midpoint.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>

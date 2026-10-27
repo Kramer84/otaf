@@ -42,7 +42,13 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">User Guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/theory.html">Theory: system of constraints and slack variable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/input_format.html">Input format of the assembly dictionary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/limitations.html">Validity and limitations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/modules.html">otaf</a></li>
 </ul>
@@ -128,6 +134,7 @@
 <span class="sd">        Placeholder for compatibility loop expansions, initialized</span>
 <span class="sd">        as None.</span>
 <span class="sd">    """</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Initialize an AssemblyDataProcessor instance."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">system_data</span> <span class="o">=</span> <span class="p">(</span>
@@ -867,8 +874,9 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_feature_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Helper method to ensure consistent colors across all plotting functions</span>
-<span class="sd">        for a given part and surface feature.</span>
+<span class="sd">        Return a color that is consistent across all plotting functions.</span>
+
+<span class="sd">        The color is attached to a given part and surface feature.</span>
 <span class="sd">        """</span>
         <span class="c1"># Build the color map once and cache it</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">'_feature_color_map'</span><span class="p">):</span>
@@ -940,9 +948,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Generate cylinders representing 2D lines for planar features in a 2D system.</span>
-<span class="sd">        """</span>
+<span class="w">        </span><span class="sd">"""Generate cylinders representing 2D lines for planar features in a 2D system."""</span>
         <span class="k">try</span> <span class="p">:</span>
             <span class="kn">import</span><span class="w"> </span><span class="nn">trimesh</span>
         <span class="k">except</span> <span class="ne">ImportError</span> <span class="p">:</span>
@@ -970,9 +976,7 @@
 <div class="viewcode-block" id="AssemblyDataProcessor.generate_functional_cylinders">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.AssemblyDataProcessor.generate_functional_cylinders">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate_functional_cylinders</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Generate open cylinders for 3D cylindrical features.</span>
-<span class="sd">        """</span>
+<span class="w">        </span><span class="sd">"""Generate open cylinders for 3D cylindrical features."""</span>
         <span class="k">try</span> <span class="p">:</span>
             <span class="kn">import</span><span class="w"> </span><span class="nn">trimesh</span>
         <span class="k">except</span> <span class="ne">ImportError</span> <span class="p">:</span>
@@ -1029,10 +1033,7 @@
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Generate planes representing each planar feature in the assembly</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
+<span class="sd">        Generate planes representing each planar feature in the assembly.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>

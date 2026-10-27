@@ -42,7 +42,13 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">User Guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/theory.html">Theory: system of constraints and slack variable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/input_format.html">Input format of the assembly dictionary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/limitations.html">Validity and limitations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/modules.html">otaf</a></li>
 </ul>
@@ -157,6 +163,7 @@
 <span class="sd">        Calculate the nominal transformation matrix between two surfaces in a gap, with options</span>
 <span class="sd">        to nullify specific translation components.</span>
 <span class="sd">    """</span>
+
 <div class="viewcode-block" id="CompatibilityLoopHandling.__init__">
 <a class="viewcode-back" href="../../../source/otaf.html#otaf.CompatibilityLoopHandling.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">assemblyDataProcessor</span><span class="p">:</span> <span class="n">AssemblyDataProcessor</span><span class="p">):</span>
@@ -190,7 +197,6 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_gap_matrix_by_id</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">ID</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">GapMatrix</span><span class="p">,</span> <span class="n">TransformationMatrix</span><span class="p">]]:</span>
-
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Retrieve a gap matrix by its identifier.</span>
 

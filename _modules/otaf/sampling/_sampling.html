@@ -42,7 +42,13 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">User Guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/theory.html">Theory: system of constraints and slack variable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/input_format.html">Input format of the assembly dictionary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/limitations.html">Validity and limitations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/modules.html">otaf</a></li>
 </ul>
@@ -533,7 +539,14 @@
 <span class="sd">    ...     subgroup_sizes, num_samples=5, seed=42</span>
 <span class="sd">    ... )</span>
 <span class="sd">    &gt;&gt;&gt; for sample in samples:</span>
-<span class="sd">    ...     print(sample)</span>
+<span class="sd">    ...     print(sample.tolist())</span>
+<span class="sd">    [0.0, 0.0, 1.0, 0.0, 0.25, 0.25, 0.5]</span>
+<span class="sd">    [0.0, 0.5, 0.5, 0.0, 0.25, 0.75, 0.0]</span>
+<span class="sd">    [0.25, 0.0, 0.75, 0.0, 0.5, 0.0, 0.5]</span>
+<span class="sd">    [0.25, 0.75, 0.0, 0.5, 0.5, 0.0, 0.0]</span>
+<span class="sd">    [0.5, 0.5, 0.0, 0.0, 0.25, 0.0, 0.75]</span>
+
+<span class="sd">    Each subgroup (here the first three and the last four values) sums to one.</span>
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>

@@ -4,6 +4,14 @@ OTAF Documentation
 .. include:: source/README.rst
 
 .. toctree::
+   :maxdepth: 2
+   :caption: User Guide:
+
+   guide/theory
+   guide/input_format
+   guide/limitations
+
+.. toctree::
    :maxdepth: 4
    :caption: API Reference:
 

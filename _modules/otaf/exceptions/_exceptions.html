@@ -42,7 +42,13 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">User Guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/theory.html">Theory: system of constraints and slack variable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/input_format.html">Input format of the assembly dictionary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/limitations.html">Validity and limitations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/modules.html">otaf</a></li>
 </ul>
@@ -123,6 +129,16 @@
 <div class="viewcode-block" id="MissingSurfaceTypeKeyError">
 <a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.MissingSurfaceTypeKeyError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MissingSurfaceTypeKeyError</span><span class="p">(</span><span class="ne">KeyError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Raised when a surface has no ``TYPE`` key.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    part_id : str</span>
+<span class="sd">        ID of the part.</span>
+<span class="sd">    surf_id : str</span>
+<span class="sd">        ID of the surface.</span>
+<span class="sd">    """</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">"Surface type key 'TYPE' is missing for surface </span><span class="si">{</span><span class="n">surf_id</span><span class="si">}</span><span class="s2"> in part </span><span class="si">{</span><span class="n">part_id</span><span class="si">}</span><span class="s2">."</span>
@@ -133,6 +149,16 @@
 <div class="viewcode-block" id="MissingKeyError">
 <a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.MissingKeyError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MissingKeyError</span><span class="p">(</span><span class="ne">KeyError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Raised when a required key is missing from an input dictionary.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    key : str</span>
+<span class="sd">        Name of the missing key.</span>
+<span class="sd">    dictionary_name : str</span>
+<span class="sd">        Name of the dictionary that should contain it.</span>
+<span class="sd">    """</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">dictionary_name</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">"Required key '</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">' is missing in '</span><span class="si">{</span><span class="n">dictionary_name</span><span class="si">}</span><span class="s2">' dictionary."</span>
@@ -143,6 +169,8 @@
 <div class="viewcode-block" id="InvalidPartLabelError">
 <a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.InvalidPartLabelError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">InvalidPartLabelError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Raised when a part label is not the string form of an integer."""</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="s2">"All parts must be labelled by the string representation of an integer."</span>
@@ -153,6 +181,8 @@
 <div class="viewcode-block" id="InvalidSurfaceLabelError">
 <a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.InvalidSurfaceLabelError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">InvalidSurfaceLabelError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Raised when a surface label is not a lowercase alphabetical string."""</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="s2">"All surfaces must be labelled by a lowercase alphabetical character."</span>
@@ -163,6 +193,14 @@
 <div class="viewcode-block" id="InvalidInteractionFormatError">
 <a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.InvalidInteractionFormatError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">InvalidInteractionFormatError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Raised when an ``INTERACTIONS`` entry does not match ``P&lt;part&gt;&lt;surface&gt;`` (e.g. ``P2a``).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    interaction : str</span>
+<span class="sd">        The offending interaction string.</span>
+<span class="sd">    """</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interaction</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"The interaction '</span><span class="si">{</span><span class="n">interaction</span><span class="si">}</span><span class="s2">' does not match the expected format. Ensure it conforms to the required regex pattern."</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
@@ -172,6 +210,14 @@
 <div class="viewcode-block" id="InvalidSurfaceDirectionError">
 <a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.InvalidSurfaceDirectionError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">InvalidSurfaceDirectionError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Raised when ``SURFACE_DIRECTION`` is not one of ``otaf.constants.SURFACE_DIRECTIONS``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    surf_dir : str</span>
+<span class="sd">        The offending direction.</span>
+<span class="sd">    """</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surf_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"The surface direction '</span><span class="si">{</span><span class="n">surf_dir</span><span class="si">}</span><span class="s2">' is not one of the expected ones: </span><span class="si">{</span><span class="n">SURFACE_DIRECTIONS</span><span class="si">}</span><span class="s2">."</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
@@ -181,6 +227,18 @@
 <div class="viewcode-block" id="UnsupportedSurfaceTypeError">
 <a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.UnsupportedSurfaceTypeError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">UnsupportedSurfaceTypeError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Raised when a surface ``TYPE`` is not one of ``otaf.constants.BASE_SURFACE_TYPES``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    part_id : str</span>
+<span class="sd">        ID of the part.</span>
+<span class="sd">    surf_id : str</span>
+<span class="sd">        ID of the surface.</span>
+<span class="sd">    surf_type : str</span>
+<span class="sd">        The unsupported type.</span>
+<span class="sd">    """</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">,</span> <span class="n">surf_type</span><span class="p">):</span>
         <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"The type </span><span class="si">{</span><span class="n">surf_type</span><span class="si">}</span><span class="s2"> defined for part </span><span class="si">{</span><span class="n">part_id</span><span class="si">}</span><span class="s2"> on surface </span><span class="si">{</span><span class="n">surf_id</span><span class="si">}</span><span class="s2"> is not a standard surface type and not supported.</span><span class="se">\n</span><span class="s2"> Standard types: </span><span class="si">{</span><span class="n">BASE_SURFACE_TYPES</span><span class="si">}</span><span class="s2">"</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
@@ -190,6 +248,14 @@
 <div class="viewcode-block" id="InvalidGlobalConstraintError">
 <a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.InvalidGlobalConstraintError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">InvalidGlobalConstraintError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Raised when ``GLOBAL_CONSTRAINTS`` is not one of the available presets.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    valid_constraints : iterable of str</span>
+<span class="sd">        The accepted preset names.</span>
+<span class="sd">    """</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">valid_constraints</span><span class="p">):</span>
         <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"The global constraint can only be one the following: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">valid_constraints</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
@@ -199,6 +265,14 @@
 <div class="viewcode-block" id="PointDictionaryError">
 <a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.PointDictionaryError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PointDictionaryError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Base class of the errors raised for an invalid ``POINTS`` dictionary.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    message : str</span>
+<span class="sd">        Description of the problem.</span>
+<span class="sd">    """</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
 
@@ -207,6 +281,16 @@
 <div class="viewcode-block" id="MissingOriginPointError">
 <a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.MissingOriginPointError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MissingOriginPointError</span><span class="p">(</span><span class="n">PointDictionaryError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Raised when the ``POINTS`` dictionary of a surface has no point for the surface origin.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    part_id : str</span>
+<span class="sd">        ID of the part.</span>
+<span class="sd">    surf_id : str</span>
+<span class="sd">        ID of the surface.</span>
+<span class="sd">    """</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">):</span>
         <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"A point dictionary has been passed for part </span><span class="si">{</span><span class="n">part_id</span><span class="si">}</span><span class="s2"> surface </span><span class="si">{</span><span class="n">surf_id</span><span class="si">}</span><span class="s2"> but does not contain a point for the surface origin."</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
@@ -216,6 +300,14 @@
 <div class="viewcode-block" id="NonUniqueLabelError">
 <a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.NonUniqueLabelError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">NonUniqueLabelError</span><span class="p">(</span><span class="n">PointDictionaryError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Raised when point labels of a surface are not unique.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    message : str</span>
+<span class="sd">        Description of the problem.</span>
+<span class="sd">    """</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
 
@@ -224,6 +316,14 @@
 <div class="viewcode-block" id="PartNotFoundError">
 <a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.PartNotFoundError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PartNotFoundError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Raised when a part ID does not exist in the assembly data.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    part_id : str</span>
+<span class="sd">        The unknown part ID.</span>
+<span class="sd">    """</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Part ID </span><span class="si">{</span><span class="n">part_id</span><span class="si">}</span><span class="s2"> not found."</span><span class="p">)</span></div>
 
@@ -232,6 +332,16 @@
 <div class="viewcode-block" id="SurfaceNotFoundError">
 <a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.SurfaceNotFoundError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SurfaceNotFoundError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Raised when a surface ID does not exist in a part.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    surf_id : str</span>
+<span class="sd">        The unknown surface ID.</span>
+<span class="sd">    part_id : str</span>
+<span class="sd">        ID of the part searched.</span>
+<span class="sd">    """</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">,</span> <span class="n">part_id</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Surface ID </span><span class="si">{</span><span class="n">surf_id</span><span class="si">}</span><span class="s2"> not found in Part ID </span><span class="si">{</span><span class="n">part_id</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span></div>
 
@@ -240,6 +350,28 @@
 <div class="viewcode-block" id="DuplicatePointError">
 <a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.DuplicatePointError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DuplicatePointError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Raised when a point name or its coordinates duplicate an existing point of the surface.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    point_name : str</span>
+<span class="sd">        Name of the new point.</span>
+<span class="sd">    surf_id : str</span>
+<span class="sd">        ID of the surface.</span>
+<span class="sd">    part_id : str</span>
+<span class="sd">        ID of the part.</span>
+<span class="sd">    existing_point : str, optional</span>
+<span class="sd">        Name of the existing point with similar coordinates (``exact_match=False``).</span>
+<span class="sd">    origin : bool, optional</span>
+<span class="sd">        Whether the point is the surface origin.</span>
+<span class="sd">    new_point_value : array_like, optional</span>
+<span class="sd">        Coordinates of the new point, shown in the message.</span>
+<span class="sd">    existing_point_value : array_like, optional</span>
+<span class="sd">        Coordinates of the existing point, shown in the message.</span>
+<span class="sd">    exact_match : bool, optional</span>
+<span class="sd">        True when the name itself is duplicated, False when only the coordinates are.</span>
+<span class="sd">    """</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">point_name</span><span class="p">,</span>
@@ -271,6 +403,8 @@
 <div class="viewcode-block" id="LabelPatternError">
 <a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.LabelPatternError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">LabelPatternError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Raised when point labels do not match the expected pattern (capital letters followed by an integer)."""</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="s2">"Some labels in the point dict do not comply to the expected pattern."</span>
@@ -281,6 +415,8 @@
 <div class="viewcode-block" id="LabelPrefixError">
 <a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.LabelPrefixError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">LabelPrefixError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Raised when the point labels of a surface do not share the same letter prefix."""</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="s2">"Some labels in the point dict do not comply to the expected pattern, all prefixes should be identical."</span>
@@ -291,6 +427,8 @@
 <div class="viewcode-block" id="UniqueLabelSuffixError">
 <a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.UniqueLabelSuffixError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">UniqueLabelSuffixError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Raised when integer suffixes of point labels coincide once leading zeros are removed (``A000`` and ``A0``)."""</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="s2">"Some labels in the point dict do not comply to the expected pattern, all integer suffixes must be unique. Here A000 and A0 would be identical, and cannot be used together."</span>
@@ -301,6 +439,14 @@
 <div class="viewcode-block" id="NonUniqueCoordinatesError">
 <a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.NonUniqueCoordinatesError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">NonUniqueCoordinatesError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Raised when two points of a surface have the same coordinates.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    duplicates : dict, optional</span>
+<span class="sd">        Mapping from coordinates to the labels sharing them, shown in the message.</span>
+<span class="sd">    """</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duplicates</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">duplicates</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s2">"All coordinates in the point dictionary must be unique."</span>
@@ -319,6 +465,14 @@
 <div class="viewcode-block" id="GeometricConditionError">
 <a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.GeometricConditionError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">GeometricConditionError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Raised when a geometric condition required by the modelling is not met.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    condition_name : str</span>
+<span class="sd">        Name of the condition.</span>
+<span class="sd">    """</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Geometric condition '</span><span class="si">{</span><span class="n">condition_name</span><span class="si">}</span><span class="s2">' is not met."</span><span class="p">)</span></div>
 
@@ -327,6 +481,16 @@
 <div class="viewcode-block" id="PointsNotOnPlaneError">
 <a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.PointsNotOnPlaneError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PointsNotOnPlaneError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Raised when the points given for a plane surface are not coplanar.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    part_id : str</span>
+<span class="sd">        ID of the part.</span>
+<span class="sd">    surf_id : str</span>
+<span class="sd">        ID of the surface.</span>
+<span class="sd">    """</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">"Points for expected plane, surface </span><span class="si">{</span><span class="n">surf_id</span><span class="si">}</span><span class="s2"> on part </span><span class="si">{</span><span class="n">part_id</span><span class="si">}</span><span class="s2"> are not on same plane"</span>
@@ -398,8 +562,10 @@
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">        matrix (np.ndarray): The matrix that caused the exception.</span>
-<span class="sd">        message (str): Explanation of the error.</span>
+<span class="sd">    matrix : np.ndarray</span>
+<span class="sd">        The matrix that caused the exception.</span>
+<span class="sd">    message : str</span>
+<span class="sd">        Explanation of the error.</span>
 <span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>

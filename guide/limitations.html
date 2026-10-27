@@ -1,0 +1,306 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Validity and limitations &mdash; otaf 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=2a229e3d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="otaf" href="../source/modules.html" />
+    <link rel="prev" title="Input format of the assembly dictionary" href="input_format.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            otaf
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Theory: system of constraints and slack variable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input_format.html">Input format of the assembly dictionary</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Validity and limitations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-modelled">What is modelled</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#small-displacement-linearization">Small-displacement linearization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#supported-contact-types">Supported contact types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#linearization-error-of-the-polygon">Linearization error of the polygon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#input-checks">Input checks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#statistics">Statistics</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules.html">otaf</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Ex1_2D_4dof_Analytical_Ref.html">Ex 1: Analytical Reference Model (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Ex1_2D_4dof_Opti_Manual.html">Ex 1: Optimization-Based Model &amp; Vector Loops (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Ex1_2D_4dof_Opti_Auto_Surrogate.html">Ex 1: Automatic Topological Generation &amp; Surrogate Optimization (2D / 4-DOF)</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">otaf</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Validity and limitations</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/guide/limitations.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="validity-and-limitations">
+<h1>Validity and limitations<a class="headerlink" href="#validity-and-limitations" title="Link to this heading"></a></h1>
+<p>OTAF answers one question: can a set of rigid parts, with given small geometric deviations,
+be assembled? The model is exact for that question only under the assumptions below. Read this page
+before using a failure probability for a decision. The mathematical model is in <a class="reference internal" href="theory.html"><span class="doc">Theory: system of constraints and slack variable</span></a>,
+the input keys in <a class="reference internal" href="input_format.html"><span class="doc">Input format of the assembly dictionary</span></a>.</p>
+<section id="what-is-modelled">
+<h2>What is modelled<a class="headerlink" href="#what-is-modelled" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Rigid parts.</strong> There is no elastic deformation, no clamping force, no friction, no
+assembly sequence. A configuration is either geometrically compatible or not.</p></li>
+<li><p><strong>Perfect features with rigid-body deviations.</strong> A plane or a cylinder is displaced and tilted as a
+whole (<code class="docutils literal notranslate"><span class="pre">CONSTRAINTS_D</span></code>). Form errors (flatness, cylindricity, waviness) are not represented, and
+neither is the roughness of the contact.</p></li>
+<li><p><strong>A fixed contact topology.</strong> The set of surfaces that touch (<code class="docutils literal notranslate"><span class="pre">INTERACTIONS</span></code>) and the loops that are
+closed are chosen by the user and are the same for every sample. The model does not detect that a
+different pair of faces comes into contact for large deviations.</p></li>
+<li><p><strong>Static feasibility.</strong> The slack says whether a gap configuration exists; it does not say that the
+assembly process finds it.</p></li>
+</ul>
+</section>
+<section id="small-displacement-linearization">
+<h2>Small-displacement linearization<a class="headerlink" href="#small-displacement-linearization" title="Link to this heading"></a></h2>
+<p>All matrices are expanded to first order in the deviations and gaps. Products of two small
+variables are dropped. For a rotation <span class="math notranslate nohighlight">\(\theta\)</span> and a lever arm <span class="math notranslate nohighlight">\(L\)</span>, the displacement perpendicular to
+the arm is <span class="math notranslate nohighlight">\(L\sin\theta \approx L\theta\)</span>, and the dropped displacement along the arm is
+<span class="math notranslate nohighlight">\(L(1-\cos\theta) \approx L\theta^2/2\)</span>. Orders of magnitude for <span class="math notranslate nohighlight">\(L = 100\)</span> mm:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><span class="math notranslate nohighlight">\(\theta\)</span> (rad)</p></th>
+<th class="head"><p>Dropped term <span class="math notranslate nohighlight">\(L\theta^2/2\)</span> (mm)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0.005</p></td>
+<td><p>0.001</p></td>
+</tr>
+<tr class="row-odd"><td><p>0.01</p></td>
+<td><p>0.005</p></td>
+</tr>
+<tr class="row-even"><td><p>0.02</p></td>
+<td><p>0.02</p></td>
+</tr>
+<tr class="row-odd"><td><p>0.05</p></td>
+<td><p>0.125</p></td>
+</tr>
+</tbody>
+</table>
+<p>The model is valid when this term is small against the smallest clearance of the assembly.
+Tolerances of a few tenths of a millimetre over parts of a hundred millimetres give rotations of
+<span class="math notranslate nohighlight">\(10^{-3}\)</span> to <span class="math notranslate nohighlight">\(10^{-2}\)</span> rad, which is within range; wide tolerances on long lever arms, or
+clearances of a few microns, are not. The check is yours: compare the rotations of the
+solutions with the table above.</p>
+<p>The solver bounds the gap variables at ±3 mm and ±π/4 rad (<code class="docutils literal notranslate"><span class="pre">get_gap_symbol_bounds</span></code>). A sample whose
+compatible gaps fall outside these bounds is reported as infeasible; rotations near π/4 are far
+outside the validity of the linearization anyway. The bounds are not adjustable through the input
+dictionary.</p>
+</section>
+<section id="supported-contact-types">
+<h2>Supported contact types<a class="headerlink" href="#supported-contact-types" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Contact</p></th>
+<th class="head"><p>Status</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>plane–plane</p></td>
+<td><p>Supported. The two planes must be parallel (within about 0.26 rad of the opposed normals, <code class="docutils literal notranslate"><span class="pre">are_planes_facing</span></code>) and overlap over a non-empty area; otherwise the pair is skipped with a warning, or <code class="docutils literal notranslate"><span class="pre">NoPlanarOverlapException</span></code> is raised if they face each other without overlap. The contact is written at the vertices of the overlap, which is exact for the linear model.</p></td>
+</tr>
+<tr class="row-odd"><td><p>cylinder–cylinder</p></td>
+<td><p>Supported for a pin in a hole: the axes must be nominally collinear (<code class="docutils literal notranslate"><span class="pre">NonConcentricCylindersException</span></code> otherwise), the radii different (the same radius raises <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>), and the extents must overlap (<code class="docutils literal notranslate"><span class="pre">NoAxialOverlapException</span></code>). The contact is written at the two ends of the axial overlap. Conflicting or impossible <code class="docutils literal notranslate"><span class="pre">SURFACE_DIRECTION</span></code> raise <code class="docutils literal notranslate"><span class="pre">ConflictingSurfaceDirectionsException</span></code> or <code class="docutils literal notranslate"><span class="pre">CylindricalInterferenceGeometricException</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p>plane–cylinder</p></td>
+<td><p><strong>Not supported yet.</strong> A <code class="docutils literal notranslate"><span class="pre">NotImplementedError</span></code> is raised when the interaction is processed.</p></td>
+</tr>
+<tr class="row-odd"><td><p>cone, sphere</p></td>
+<td><p>Accepted as a <code class="docutils literal notranslate"><span class="pre">TYPE</span></code> by the first check only; they have no deviation or gap model, and fail later with a <code class="docutils literal notranslate"><span class="pre">KeyError</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p>Any other combination</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">NotImplementedError</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Consequences for the geometries that can be modelled: planar contacts and pins in holes, with
+the pin axis parallel to the hole axis nominally. A pin resting on a plane, a ball in a cone, a
+cylinder rolling on a plane, or non-parallel nominal axes cannot be represented.</p>
+</section>
+<section id="linearization-error-of-the-polygon">
+<h2>Linearization error of the polygon<a class="headerlink" href="#linearization-error-of-the-polygon" title="Link to this heading"></a></h2>
+<p>The circle of radial clearance is replaced by a regular polygon with <span class="math notranslate nohighlight">\(N\)</span> sides
+(<code class="docutils literal notranslate"><span class="pre">circle_resolution</span></code>). The radial extent of the polygon relative to the circle varies with the
+direction, from the apothem (the middle of an edge) to the vertex:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Strategy</p></th>
+<th class="head"><p>Radial extent relative to the circle</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CIRCUMSCRIBED</span></code></p></td>
+<td><p>from <span class="math notranslate nohighlight">\(1\)</span> to <span class="math notranslate nohighlight">\(1/\cos(\pi/N)\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">INSCRIBED</span></code></p></td>
+<td><p>from <span class="math notranslate nohighlight">\(\cos(\pi/N)\)</span> to <span class="math notranslate nohighlight">\(1\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MEAN</span></code></p></td>
+<td><p>from <span class="math notranslate nohighlight">\(\tfrac12(1+\cos(\pi/N))\)</span> to <span class="math notranslate nohighlight">\(\tfrac12(1+\cos(\pi/N))/\cos(\pi/N)\)</span></p></td>
+</tr>
+</tbody>
+</table>
+<p>Numerically:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><span class="math notranslate nohighlight">\(N\)</span></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">CIRCUMSCRIBED</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">INSCRIBED</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">MEAN</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>8</p></td>
+<td><p>0 to +8.24 %</p></td>
+<td><p>−7.61 % to 0</p></td>
+<td><p>−3.81 % to +4.12 %</p></td>
+</tr>
+<tr class="row-odd"><td><p>16</p></td>
+<td><p>0 to +1.96 %</p></td>
+<td><p>−1.92 % to 0</p></td>
+<td><p>−0.96 % to +0.98 %</p></td>
+</tr>
+<tr class="row-even"><td><p>32</p></td>
+<td><p>0 to +0.48 %</p></td>
+<td><p>−0.48 % to 0</p></td>
+<td><p>−0.24 % to +0.24 %</p></td>
+</tr>
+<tr class="row-odd"><td><p>64</p></td>
+<td><p>0 to +0.12 %</p></td>
+<td><p>−0.12 % to 0</p></td>
+<td><p>−0.06 % to +0.06 %</p></td>
+</tr>
+</tbody>
+</table>
+<p>The error acts on the clearance, so for a radial clearance of 0.1 mm the worst-case error of the
+circumscribed polygon is 0.008 mm with 8 sides and 0.0001 mm with 64 sides. The default of
+<code class="docutils literal notranslate"><span class="pre">InterfaceLoopHandling</span></code> is <code class="docutils literal notranslate"><span class="pre">circle_resolution=8</span></code>; the pin models use 64. Choose the resolution so
+that this error is small against the quantities you want to resolve, and run <code class="docutils literal notranslate"><span class="pre">INSCRIBED</span></code> and
+<code class="docutils literal notranslate"><span class="pre">CIRCUMSCRIBED</span></code> to bracket the failure probability: the first never under-estimates it and the second never
+over-estimates it (see <a class="reference internal" href="theory.html"><span class="doc">Theory: system of constraints and slack variable</span></a>). The more facets, the more rows in the linear program (one set
+of <span class="math notranslate nohighlight">\(N\)</span> per contact section), and therefore the longer each solve.</p>
+<p>Planes have no such error: their constraints are exactly linear.</p>
+</section>
+<section id="input-checks">
+<h2>Input checks<a class="headerlink" href="#input-checks" title="Link to this heading"></a></h2>
+<p>The input dictionary is checked for labels, surface types, the presence of the keys needed to build
+the points, interactions, directions and the global constraints. It is not checked as a whole:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LOOPS</span></code> are checked only when they are expanded. A contact listed in <code class="docutils literal notranslate"><span class="pre">INTERACTIONS</span></code> that no
+loop crosses gets no contact condition, silently: removing the loop <code class="docutils literal notranslate"><span class="pre">L1</span></code> of the pocket example
+of <a class="reference internal" href="input_format.html"><span class="doc">Input format of the assembly dictionary</span></a> drops the two conditions of the right wall without any message.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">FRAME</span></code> is validated only when the points are generated from <code class="docutils literal notranslate"><span class="pre">ORIGIN</span></code>.</p></li>
+<li><p>Inconsistent <code class="docutils literal notranslate"><span class="pre">CONSTRAINTS_G</span></code> on the two sides of a pair raise a bare <code class="docutils literal notranslate"><span class="pre">KeyError</span></code>, such as
+<code class="docutils literal notranslate"><span class="pre">'plane-plane-floating-sliding'</span></code>.</p></li>
+</ul>
+<p>A schema with explicit errors is planned (see <code class="docutils literal notranslate"><span class="pre">ROADMAP.md</span></code>).</p>
+</section>
+<section id="statistics">
+<h2>Statistics<a class="headerlink" href="#statistics" title="Link to this heading"></a></h2>
+<p>The slack is deterministic. Failure probabilities additionally rely on the distribution assumed
+for the deviations (<code class="docutils literal notranslate"><span class="pre">otaf.distribution</span></code>, <code class="docutils literal notranslate"><span class="pre">otaf.tolerances</span></code>) and on the accuracy of the sampling
+method. Monte Carlo results come with a sampling error that must be reported with them, and the
+surrogate-based studies add the error of the surrogate. None of these are checked by the
+modelling code.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="input_format.html" class="btn btn-neutral float-left" title="Input format of the assembly dictionary" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../source/modules.html" class="btn btn-neutral float-right" title="otaf" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kramer84.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

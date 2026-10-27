@@ -45,7 +45,13 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">User Guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guide/theory.html">Theory: system of constraints and slack variable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/input_format.html">Input format of the assembly dictionary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/limitations.html">Validity and limitations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">otaf</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">otaf package</a><ul>
@@ -430,6 +436,7 @@
 </section>
 <section id="module-otaf">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-otaf" title="Link to this heading"></a></h2>
+<p>OTAF: Open (mechanical) Tolerance Analysis Framework.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="otaf.AssemblyDataProcessor">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">AssemblyDataProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#otaf.AssemblyDataProcessor" title="Link to this definition"></a></dt>
@@ -603,7 +610,7 @@ forms, storing them in <cite>compatibility_loops_expanded</cite>.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.AssemblyDataProcessor.generate_functional_planes">
 <span class="sig-name descname"><span class="pre">generate_functional_planes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyDataProcessor.html#AssemblyDataProcessor.generate_functional_planes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.AssemblyDataProcessor.generate_functional_planes" title="Link to this definition"></a></dt>
-<dd><p>Generate planes representing each planar feature in the assembly</p>
+<dd><p>Generate planes representing each planar feature in the assembly.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>A list of <cite>trimesh</cite> objects for each part and surface.</p>
@@ -1426,7 +1433,7 @@ of freedom.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.DeviationMatrix.__repr__">
 <span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#DeviationMatrix.__repr__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.DeviationMatrix.__repr__" title="Link to this definition"></a></dt>
-<dd><p>A string representation of the DeviationMatrix.</p>
+<dd><p>Return a string representation of the DeviationMatrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>String representation of the DeviationMatrix instance.</p>
@@ -1661,7 +1668,7 @@ freedom.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.GapMatrix.__repr__">
 <span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#GapMatrix.__repr__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.GapMatrix.__repr__" title="Link to this definition"></a></dt>
-<dd><p>A string representation of the GapMatrix.</p>
+<dd><p>Return a string representation of the GapMatrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>String representation of the GapMatrix instance.</p>
@@ -1780,7 +1787,7 @@ neutral element, where no translation or rotation is applied.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.I4.__repr__">
 <span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#I4.__repr__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.I4.__repr__" title="Link to this definition"></a></dt>
-<dd><p>A string representation of the I4 identity matrix.</p>
+<dd><p>Return a string representation of the I4 identity matrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>String representation of the I4 instance.</p>
@@ -1874,24 +1881,21 @@ method returns the same matrix.</p>
 in the existing gap matrices set. It iterates through all provided gap matrices, comparing
 them with existing ones, and then organizes them into a nested dictionary indicating
 their usage status. This only categorizes the matrices when there is at least a common
-elemnt</p>
+element.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>existing_gap_matrices</strong> (<em>Set</em><em>[</em><em>str</em><em>]</em>) – A set of existing gap matrix names.</p></li>
-<li><p><strong>all_gap_matrices</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Set</em><em>[</em><em>str</em><em>]</em><em>]</em><em>]</em>) – A dictionary of all gap matrices,
-structured by parts and surfaces.</p></li>
+<li><p><strong>existing_gap_matrices</strong> (<em>set</em><em> of </em><em>str</em>) – Names of the existing gap matrices.</p></li>
+<li><p><strong>all_gap_matrices</strong> (<em>dict</em>) – All gap matrices, structured by parts and surfaces
+(<code class="docutils literal notranslate"><span class="pre">{part:</span> <span class="pre">{surface:</span> <span class="pre">set</span> <span class="pre">of</span> <span class="pre">names}}</span></code>).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>Dict[str, Dict[str, Dict[str, Set[str]]]]</strong> (<em>A nested dictionary categorizing gap matrices</em>)</p></li>
-<li><p><em>into ‘used’ and ‘unused’ for each part and surface.</em></p></li>
-</ul>
-</p>
+<dd class="field-even"><p>Nested dictionary <code class="docutils literal notranslate"><span class="pre">{part:</span> <span class="pre">{surface:</span> <span class="pre">{&quot;USED&quot;</span> <span class="pre">|</span> <span class="pre">&quot;UNUSED&quot;:</span> <span class="pre">set</span> <span class="pre">of</span> <span class="pre">names}}}</span></code>
+categorizing the gap matrices for each part and surface.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict[str, dict[str, dict[str, set[str]]]]</p>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1955,7 +1959,7 @@ half-turn rotation in a Cartesian coordinate system.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.J4.__repr__">
 <span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#J4.__repr__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.J4.__repr__" title="Link to this definition"></a></dt>
-<dd><p>A string representation of the J4 rotation matrix.</p>
+<dd><p>Return a string representation of the J4 rotation matrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>String representation of the J4 instance.</p>
@@ -2502,7 +2506,7 @@ is “”).</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="otaf.TransformationMatrix.__repr__">
 <span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/assemblyModelingBaseObjects.html#TransformationMatrix.__repr__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.TransformationMatrix.__repr__" title="Link to this definition"></a></dt>
-<dd><p>A string representation of the TransformationMatrix.</p>
+<dd><p>Return a string representation of the TransformationMatrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>String representation of the TransformationMatrix instance,

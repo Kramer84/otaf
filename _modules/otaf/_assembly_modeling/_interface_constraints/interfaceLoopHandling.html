@@ -42,7 +42,13 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">User Guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/theory.html">Theory: system of constraints and slack variable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/input_format.html">Input format of the assembly dictionary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/limitations.html">Validity and limitations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/modules.html">otaf</a></li>
 </ul>
@@ -235,17 +241,21 @@
 <span class="sd">        in the existing gap matrices set. It iterates through all provided gap matrices, comparing</span>
 <span class="sd">        them with existing ones, and then organizes them into a nested dictionary indicating</span>
 <span class="sd">        their usage status. This only categorizes the matrices when there is at least a common</span>
-<span class="sd">        elemnt</span>
+<span class="sd">        element.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            existing_gap_matrices (Set[str]): A set of existing gap matrix names.</span>
-<span class="sd">            all_gap_matrices (Dict[str, Dict[str, Set[str]]]): A dictionary of all gap matrices,</span>
-<span class="sd">                structured by parts and surfaces.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        existing_gap_matrices : set of str</span>
+<span class="sd">            Names of the existing gap matrices.</span>
+<span class="sd">        all_gap_matrices : dict</span>
+<span class="sd">            All gap matrices, structured by parts and surfaces</span>
+<span class="sd">            (``{part: {surface: set of names}}``).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            Dict[str, Dict[str, Dict[str, Set[str]]]]: A nested dictionary categorizing gap matrices</span>
-<span class="sd">            into 'used' and 'unused' for each part and surface.</span>
+<span class="sd">        dict</span>
+<span class="sd">            Nested dictionary ``{part: {surface: {"USED" | "UNUSED": set of names}}}``</span>
+<span class="sd">            categorizing the gap matrices for each part and surface.</span>
 <span class="sd">        """</span>
         <span class="n">filtered_dict</span> <span class="o">=</span> <span class="n">tree</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">part</span><span class="p">,</span> <span class="n">surfaces</span> <span class="ow">in</span> <span class="n">all_gap_matrices</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>

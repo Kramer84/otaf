@@ -45,7 +45,13 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">User Guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guide/theory.html">Theory: system of constraints and slack variable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/input_format.html">Input format of the assembly dictionary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/limitations.html">Validity and limitations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">otaf</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="otaf.html">otaf package</a><ul class="current">
@@ -354,12 +360,14 @@ if <cite>matrix_str</cite> is empty.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inverse_mstring</span><span class="p">(</span><span class="s2">"TP123S1P456S2"</span><span class="p">)</span>
-<span class="go">'TP123S2P456S1'</span>
+<p>Transformation matrices swap their two surface/point pairs:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inverse_mstring</span><span class="p">(</span><span class="s2">"TP1aA0bB0"</span><span class="p">)</span>
+<span class="go">'TP1bB0aA0'</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inverse_mstring</span><span class="p">(</span><span class="s2">"GP1S1P1P2S2P2"</span><span class="p">)</span>
-<span class="go">'GP2S2P2P1S1P1'</span>
+<p>Gap matrices swap the two part/surface/point triplets:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inverse_mstring</span><span class="p">(</span><span class="s2">"GP1aA0P2bB0"</span><span class="p">)</span>
+<span class="go">'GP2bB0P1aA0'</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inverse_mstring</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
@@ -425,7 +433,9 @@ Keys are typically strings, and values are numeric arrays or similar types.</p><
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">new_points</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'B'</span><span class="p">:</span> <span class="p">[</span><span class="mf">3.1</span><span class="p">,</span> <span class="mf">4.1</span><span class="p">]}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">merge_with_checks</span><span class="p">(</span><span class="n">existing_points</span><span class="p">,</span> <span class="n">new_points</span><span class="p">)</span>
-<span class="go">ValueError: Conflict for key B: existing value [3.0, 4.0], new value [3.1, 4.1]</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="w">    </span><span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">Conflict for key B: existing value [3.0, 4.0], new value [3.1, 4.1]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -457,19 +467,15 @@ Keys include <code class="docutils literal notranslate"><span class="pre">type</
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_matrix_string</span><span class="p">(</span><span class="s1">'TP1kK0aA0'</span><span class="p">)</span>
-<span class="go">{'type': 'T', 'part': '1', 'surface1': 'k', 'point1': 'K0',</span>
-<span class="go"> 'surface2': 'a', 'point2': 'A0', 'mstring': 'TP1kK0aA0'}</span>
+<span class="go">{'type': 'T', 'part': '1', 'surface1': 'k', 'point1': 'K0', 'surface2': 'a', 'point2': 'A0', 'mstring': 'TP1kK0aA0'}</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_matrix_string</span><span class="p">(</span><span class="s1">'D1k'</span><span class="p">)</span>
-<span class="go">{'type': 'D', 'inverse': False, 'part': '1', 'surface': 'k',</span>
-<span class="go"> 'point': 'K0', 'mstring': 'D1k'}</span>
+<span class="go">{'type': 'D', 'inverse': False, 'part': '1', 'surface': 'k', 'point': 'K0', 'mstring': 'D1k'}</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_matrix_string</span><span class="p">(</span><span class="s1">'GP1kK0P2aA0'</span><span class="p">)</span>
-<span class="go">{'type': 'G', 'inverse': False, 'part1': '1', 'surface1': 'k',</span>
-<span class="go"> 'point1': 'K0', 'part2': '2', 'surface2': 'a', 'point2': 'A0',</span>
-<span class="go"> 'mstring': 'GP1kK0P2aA0'}</span>
+<span class="go">{'type': 'G', 'inverse': False, 'part1': '1', 'surface1': 'k', 'point1': 'K0', 'part2': '2', 'surface2': 'a', 'point2': 'A0', 'mstring': 'GP1kK0P2aA0'}</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -477,7 +483,7 @@ Keys include <code class="docutils literal notranslate"><span class="pre">type</
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.common.scaling">
 <span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">scaling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scale_factor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#scaling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.scaling" title="Link to this definition"></a></dt>
-<dd><p>A decorator factory that scales the output of a function by a constant factor.</p>
+<dd><p>Create a decorator that scales the output of a function by a constant factor.</p>
 <p>This decorator safely handles scalar numeric types, nested iterables (lists,
 tuples, sets), and preserves the original iterable type where possible. It
 gracefully skips <cite>None</cite>, <cite>str</cite>, and <cite>bytes</cite> values without altering them or
@@ -564,12 +570,16 @@ Returns None if there are no positive values in the input array.</p>
 be reduced to one dimension.</p></li>
 </ul>
 <p class="rubric">Examples</p>
-<p># Compute the 50th percentile threshold for positive values
-&gt;&gt;&gt; threshold_for_percentile_positive_values_below([-1, 2, 3, 4, 5], 50)
-3.0</p>
-<p># Handle arrays with no positive values
-&gt;&gt;&gt; threshold_for_percentile_positive_values_below([-1, -2, -3], 50)
-None</p>
+<p>The 50th percentile of the positive values <code class="docutils literal notranslate"><span class="pre">[2,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5]</span></code> is their median:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">threshold_for_percentile_positive_values_below</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="mi">50</span><span class="p">))</span>
+<span class="go">3.5</span>
+</pre></div>
+</div>
+<p>Arrays without positive values give <code class="docutils literal notranslate"><span class="pre">None</span></code>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">threshold_for_percentile_positive_values_below</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="mi">50</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+<span class="go">True</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
