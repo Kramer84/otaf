@@ -90,6 +90,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Set</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">otaf.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">tree</span><span class="p">,</span> <span class="n">inverse_mstring</span><span class="p">,</span> <span class="n">parse_matrix_string</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">otaf.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearizationStrategy</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">..compatibilityLoopHandling</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompatibilityLoopHandling</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..assemblyDataProcessor</span><span class="w"> </span><span class="kn">import</span> <span class="n">AssemblyDataProcessor</span>
@@ -101,7 +102,23 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
         <span class="n">assemblyDataProcessor</span><span class="p">:</span><span class="n">AssemblyDataProcessor</span><span class="p">,</span>
         <span class="n">compatibility_loop_handling</span><span class="p">:</span><span class="n">CompatibilityLoopHandling</span><span class="p">,</span>
-        <span class="n">circle_resolution</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
+        <span class="n">circle_resolution</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+        <span class="n">linearization</span><span class="p">:</span> <span class="n">LinearizationStrategy</span> <span class="o">=</span> <span class="n">LinearizationStrategy</span><span class="o">.</span><span class="n">CIRCUMSCRIBED</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Generate the interface constraints of an assembly.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        assemblyDataProcessor : AssemblyDataProcessor</span>
+<span class="sd">            Assembly data.</span>
+<span class="sd">        compatibility_loop_handling : CompatibilityLoopHandling</span>
+<span class="sd">            Compatibility loops (gap matrices are shared with them).</span>
+<span class="sd">        circle_resolution : int, optional</span>
+<span class="sd">            Number of facets of the polygon replacing the circular clearance zone</span>
+<span class="sd">            of each cylinder pair (default 8).</span>
+<span class="sd">        linearization : LinearizationStrategy, optional</span>
+<span class="sd">            Whether that polygon is circumscribed to the circle (default, slightly</span>
+<span class="sd">            optimistic), inscribed in it (conservative) or in between.</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span> <span class="o">=</span> <span class="n">assemblyDataProcessor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">CLH</span> <span class="o">=</span> <span class="n">compatibility_loop_handling</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">surfaceInteractionManager</span> <span class="o">=</span> <span class="n">SurfaceInteractionManager</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">)</span>
@@ -118,6 +135,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">filtered_gap_matrices</span><span class="p">,</span>
             <span class="n">circle_resolution</span><span class="o">=</span><span class="n">circle_resolution</span><span class="p">,</span>
             <span class="n">contact_gap_names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">surfaceInteractionManager</span><span class="o">.</span><span class="n">contactGapNames</span><span class="p">,</span>
+            <span class="n">linearization</span><span class="o">=</span><span class="n">linearization</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">interfaceLoopBuilder</span><span class="o">.</span><span class="n">populate_interface_expressions</span><span class="p">()</span>
 

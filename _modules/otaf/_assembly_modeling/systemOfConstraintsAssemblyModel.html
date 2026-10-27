@@ -478,46 +478,39 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">"""Extract sets of deviation and gap variables from equations.</span>
 
-<span class="sd">        This method identifies the free variables used in the compatibility</span>
-<span class="sd">        equations and verifies that all variables appearing in the</span>
-<span class="sd">        interface equations are included.</span>
+<span class="sd">        Gap variables are those of the compatibility equations; every gap</span>
+<span class="sd">        variable of the interface equations must be one of them. Deviation</span>
+<span class="sd">        variables are those of both sets of equations: some only act on the</span>
+<span class="sd">        interfaces (e.g. diameter deviations of cylinders, ``d_d_&lt;k&gt;``).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        deviation_symbols : list of sympy.Symbol</span>
-<span class="sd">            List of deviation variables present in the compatibility</span>
-<span class="sd">            equations.</span>
+<span class="sd">            Sorted deviation variables of all the equations.</span>
 <span class="sd">        gap_symbols : list of sympy.Symbol</span>
-<span class="sd">            List of gap variables present in the compatibility equations.</span>
+<span class="sd">            Sorted gap variables of the compatibility equations.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        AssertionError</span>
-<span class="sd">            If any variable in the interface equations is not included in</span>
+<span class="sd">            If a gap variable of the interface equations does not appear in</span>
 <span class="sd">            the compatibility equations.</span>
-
-<span class="sd">        Notes</span>
-<span class="sd">        -----</span>
-<span class="sd">        - Deviation and gap variables are extracted separately from both</span>
-<span class="sd">          compatibility and interface equations.</span>
-<span class="sd">        - This ensures consistency between the two sets of equations.</span>
 <span class="sd">        """</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="s2">"[Type: SystemOfConstraintsAssemblyModel] Retrieving free gap and deviation variables."</span>
         <span class="p">)</span>
-        <span class="n">deviation_symbols</span><span class="p">,</span> <span class="n">gap_symbols</span> <span class="o">=</span> <span class="n">get_symbols_in_expressions</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">compatibility_eqs</span>
-        <span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">gap_symbols</span> <span class="o">=</span> <span class="n">get_symbols_in_expressions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compatibility_eqs</span><span class="p">)</span>
         <span class="n">symb_dev_interf</span><span class="p">,</span> <span class="n">symb_gap_interf</span> <span class="o">=</span> <span class="n">get_symbols_in_expressions</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">interface_eqs</span>
         <span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">symb_dev_interf</span><span class="p">)</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">deviation_symbols</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span>
-            <span class="n">symb_gap_interf</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">gap_symbols</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">symb_gap_interf</span><span class="p">)</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">gap_symbols</span><span class="p">):</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                <span class="s2">"[Type: SystemOfConstraintsAssemblyModel] Interface variables not included in the compatibility variables."</span>
+                <span class="s2">"[Type: SystemOfConstraintsAssemblyModel] Interface gap variables not included in the compatibility variables."</span>
             <span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s2">"Interface variables not included in the compatibility variables."</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s2">"Interface gap variables not included in the compatibility variables."</span><span class="p">)</span>
+        <span class="n">deviation_symbols</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_symbols_in_expressions</span><span class="p">(</span>
+            <span class="p">[</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">compatibility_eqs</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">interface_eqs</span><span class="p">]</span>
+        <span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="s2">"[Type: SystemOfConstraintsAssemblyModel] Free gap and deviation variables retrieved successfully."</span>
         <span class="p">)</span>

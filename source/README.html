@@ -321,13 +321,17 @@ modeling package (<code class="docutils literal notranslate"><span class="pre">o
 mitigate calculation bottlenecks encountered during extensive
 multi-dimensional optimization loops within imprecise probability
 space exploration.</p></li>
-<li><p><strong>Cylinder Processing Workaround:</strong> High-level automated boundary
-matching contains known algorithmic parsing limitations for
-cylinder-to-cylinder interactions that still need to be resolved.
-Users analyzing complex multi-primitive cylindrical joints should
-bypass automated generation scripts and leverage the validated,
-hand-coded 30-DOF and 50-DOF reference models located in
-<code class="docutils literal notranslate"><span class="pre">src/otaf/example_models/models_3_D/</span></code>.</p></li>
+<li><p><strong>Cylinder–cylinder joints:</strong> Pin/hole joints are generated
+automatically, with optional diameter deviations
+(<code class="docutils literal notranslate"><span class="pre">&quot;DIAMETER_DEVIATION&quot;:</span> <span class="pre">True</span></code> on a cylinder) and a choice of
+polygon for the circular clearance zone
+(<code class="docutils literal notranslate"><span class="pre">InterfaceLoopHandling(...,</span> <span class="pre">linearization=otaf.geometry.LinearizationStrategy.INSCRIBED)</span></code>).
+The automatic two-plates/four-pins model
+(<code class="docutils literal notranslate"><span class="pre">otaf.example_models.model4_auto</span></code>) gives the same results as the
+hand-coded 50-DOF reference model, sample by sample. The 30-DOF model
+(<code class="docutils literal notranslate"><span class="pre">model3</span></code>), a re-implementation of Dumas (2014) with its own
+parametrization, is hand-coded. Plane–cylinder contacts are not
+supported yet.</p></li>
 </ul>
 </section>
 <section id="roadmap">

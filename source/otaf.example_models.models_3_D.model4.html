@@ -166,8 +166,8 @@
 <li><p><strong>tol</strong> (<em>float</em><em>, </em><em>default 0.21</em>) – Tolerance limit value used to compute standard deviations.</p></li>
 <li><p><strong>capa</strong> (<em>float</em><em>, </em><em>default 1.0</em>) – Process capability index factor.</p></li>
 <li><p><strong>hPlate</strong> (<em>float</em><em>, </em><em>default 30.0</em>) – The height parameter of the plate component.</p></li>
-<li><p><strong>EH</strong> (<em>float</em><em>, </em><em>default 50.0</em>) – The embedment height component.</p></li>
-<li><p><strong>LB</strong> (<em>float</em><em>, </em><em>default 25.0</em>) – The length parameter of the base section.</p></li>
+<li><p><strong>EH</strong> (<em>float</em><em>, </em><em>default 50.0</em>) – Distance between the pin axes, along x and along y.</p></li>
+<li><p><strong>LB</strong> (<em>float</em><em>, </em><em>default 25.0</em>) – Distance from a pin axis to the plate edge.</p></li>
 <li><p><strong>Dext</strong> (<em>float</em><em>, </em><em>default 20.0</em>) – The nominal external component diameter.</p></li>
 <li><p><strong>Dint</strong> (<em>float</em><em>, </em><em>default 19.8</em>) – The nominal internal component diameter.</p></li>
 </ul>
@@ -222,7 +222,7 @@ evaluated constraint array.</p>
 <li><p><strong>L</strong> (<em>array_like</em><em>, </em><em>optional</em>) – An array containing geometric parameters l0, l1, l2, l3.
 The default is [50, 50, 30, 30].</p></li>
 <li><p><strong>CIRCLE_RESOLUTION</strong> (<em>int</em><em>, </em><em>default 64</em>) – The number of discretization points for linearization.</p></li>
-<li><p><strong>strategy</strong> (<em>LinearizationStrategy</em><em>, </em><em>optional</em>) – The linearization strategy applied to circular constraints.
+<li><p><strong>strategy</strong> (<a class="reference internal" href="otaf.example_models.models_3_D.html#otaf.example_models.models_3_D.LinearizationStrategy" title="otaf.example_models.models_3_D.LinearizationStrategy"><em>LinearizationStrategy</em></a><em>, </em><em>optional</em>) – The linearization strategy applied to circular constraints.
 Default is <code class="docutils literal notranslate"><span class="pre">LinearizationStrategy.CIRCUMSCRIBED</span></code>.</p></li>
 </ul>
 </dd>

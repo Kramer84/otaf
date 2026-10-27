@@ -156,6 +156,9 @@
 <span class="sd">                `method` is ``'QMC'``. Options are ``'Faure'``,</span>
 <span class="sd">                ``'Halton'``, ``'ReverseHalton'``, ``'Haselgrove'``, or</span>
 <span class="sd">                ``'Sobol'``. Default is ``'Sobol'``.</span>
+<span class="sd">            seed : int, optional</span>
+<span class="sd">                Seeds OpenTURNS before the ``'MonteCarlo'`` and ``'LHS'``</span>
+<span class="sd">                designs are drawn. Default is None (not reproducible).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -445,6 +448,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">method</span> <span class="o">=</span> <span class="s2">"MonteCarlo"</span>
         <span class="n">N2</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"seed"</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">"seed"</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"MonteCarlo"</span><span class="p">:</span>
             <span class="n">sample</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">N2</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"LHS"</span><span class="p">:</span>

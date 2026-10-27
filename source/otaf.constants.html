@@ -225,6 +225,13 @@ directional components.</p>
 nullified within nominal configuration models.</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>For planes, the normal offset (local x) between the two surface origins is the
+nominal clearance, carried by the gap; the in-plane offset is geometry and is
+kept. For cylinders, the radial offset (local y, z) is the clearance and the
+axial offset (local x) between the two origins is geometry: it must be kept,
+otherwise loops through a gap with blocked axial translation (e.g. a pin that
+cannot slide in a hole) do not close.</p>
 <dl class="field-list simple">
 <dt class="field-odd">meta hide-value<span class="colon">:</span></dt>
 <dd class="field-odd"><p></p></dd>

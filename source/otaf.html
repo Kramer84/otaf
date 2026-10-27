@@ -145,6 +145,7 @@
 <li class="toctree-l3"><a class="reference internal" href="otaf.common.html#otaf.common.merge_with_checks"><code class="docutils literal notranslate"><span class="pre">merge_with_checks()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.common.html#otaf.common.parse_matrix_string"><code class="docutils literal notranslate"><span class="pre">parse_matrix_string()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.common.html#otaf.common.scaling"><code class="docutils literal notranslate"><span class="pre">scaling()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.common.html#otaf.common.set_seed"><code class="docutils literal notranslate"><span class="pre">set_seed()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.common.html#otaf.common.threshold_for_percentile_positive_values_below"><code class="docutils literal notranslate"><span class="pre">threshold_for_percentile_positive_values_below()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.common.html#otaf.common.tree"><code class="docutils literal notranslate"><span class="pre">tree()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.common.html#otaf.common.validate_dict_keys"><code class="docutils literal notranslate"><span class="pre">validate_dict_keys()</span></code></a></li>
@@ -201,6 +202,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.example_models.models_3_D.html">otaf.example_models.models_3_D package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="otaf.example_models.models_3_D.html#otaf.example_models.models_3_D.LinearizationStrategy"><code class="docutils literal notranslate"><span class="pre">LinearizationStrategy</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.example_models.models_3_D.html#available-models">Available Models</a></li>
 </ul>
 </li>
@@ -248,6 +250,12 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="otaf.geometry.html">otaf.geometry package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="otaf.geometry.html#module-otaf.geometry">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="otaf.geometry.html#otaf.geometry.LinearizationStrategy"><code class="docutils literal notranslate"><span class="pre">LinearizationStrategy</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="otaf.geometry.html#otaf.geometry.LinearizationStrategy.CIRCUMSCRIBED"><code class="docutils literal notranslate"><span class="pre">LinearizationStrategy.CIRCUMSCRIBED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.geometry.html#otaf.geometry.LinearizationStrategy.INSCRIBED"><code class="docutils literal notranslate"><span class="pre">LinearizationStrategy.INSCRIBED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.geometry.html#otaf.geometry.LinearizationStrategy.MEAN"><code class="docutils literal notranslate"><span class="pre">LinearizationStrategy.MEAN</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.geometry.html#otaf.geometry.angle_between_planes"><code class="docutils literal notranslate"><span class="pre">angle_between_planes()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.geometry.html#otaf.geometry.angle_between_vectors"><code class="docutils literal notranslate"><span class="pre">angle_between_vectors()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.geometry.html#otaf.geometry.are_lines_collinear"><code class="docutils literal notranslate"><span class="pre">are_lines_collinear()</span></code></a></li>
@@ -260,6 +268,7 @@
 <li class="toctree-l3"><a class="reference internal" href="otaf.geometry.html#otaf.geometry.calculate_cylinder_surface_frame"><code class="docutils literal notranslate"><span class="pre">calculate_cylinder_surface_frame()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.geometry.html#otaf.geometry.calculate_scalar_projection_factor"><code class="docutils literal notranslate"><span class="pre">calculate_scalar_projection_factor()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.geometry.html#otaf.geometry.centroid"><code class="docutils literal notranslate"><span class="pre">centroid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.geometry.html#otaf.geometry.circle_linearization_factor"><code class="docutils literal notranslate"><span class="pre">circle_linearization_factor()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.geometry.html#otaf.geometry.closest_point_on_line"><code class="docutils literal notranslate"><span class="pre">closest_point_on_line()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.geometry.html#otaf.geometry.closest_point_on_plane"><code class="docutils literal notranslate"><span class="pre">closest_point_on_plane()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="otaf.geometry.html#otaf.geometry.compute_bounding_box"><code class="docutils literal notranslate"><span class="pre">compute_bounding_box()</span></code></a></li>
@@ -1830,13 +1839,14 @@ method returns the same matrix.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="otaf.InterfaceLoopHandling">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">InterfaceLoopHandling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">assemblyDataProcessor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compatibility_loop_handling</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">circle_resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#otaf.InterfaceLoopHandling" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.</span></span><span class="sig-name descname"><span class="pre">InterfaceLoopHandling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">assemblyDataProcessor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compatibility_loop_handling</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">circle_resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linearization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">LinearizationStrategy.CIRCUMSCRIBED</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#otaf.InterfaceLoopHandling" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>assemblyDataProcessor</strong> (<a class="reference internal" href="#otaf.AssemblyDataProcessor" title="otaf.AssemblyDataProcessor"><em>AssemblyDataProcessor</em></a>)</p></li>
 <li><p><strong>compatibility_loop_handling</strong> (<a class="reference internal" href="#otaf.CompatibilityLoopHandling" title="otaf.CompatibilityLoopHandling"><em>CompatibilityLoopHandling</em></a>)</p></li>
+<li><p><strong>linearization</strong> (<a class="reference internal" href="otaf.example_models.models_3_D.html#otaf.example_models.models_3_D.LinearizationStrategy" title="otaf.example_models.models_3_D.LinearizationStrategy"><em>LinearizationStrategy</em></a>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -2279,32 +2289,26 @@ the new variable:
 <dt class="sig sig-object py" id="otaf.SystemOfConstraintsAssemblyModel.extractFreeGapAndDeviationVariables">
 <span class="sig-name descname"><span class="pre">extractFreeGapAndDeviationVariables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/_assembly_modeling/systemOfConstraintsAssemblyModel.html#SystemOfConstraintsAssemblyModel.extractFreeGapAndDeviationVariables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.SystemOfConstraintsAssemblyModel.extractFreeGapAndDeviationVariables" title="Link to this definition"></a></dt>
 <dd><p>Extract sets of deviation and gap variables from equations.</p>
-<p>This method identifies the free variables used in the compatibility
-equations and verifies that all variables appearing in the
-interface equations are included.</p>
+<p>Gap variables are those of the compatibility equations; every gap
+variable of the interface equations must be one of them. Deviation
+variables are those of both sets of equations: some only act on the
+interfaces (e.g. diameter deviations of cylinders, <code class="docutils literal notranslate"><span class="pre">d_d_&lt;k&gt;</span></code>).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
-<li><p><strong>deviation_symbols</strong> (<em>list of sympy.Symbol</em>) – List of deviation variables present in the compatibility
-equations.</p></li>
-<li><p><strong>gap_symbols</strong> (<em>list of sympy.Symbol</em>) – List of gap variables present in the compatibility equations.</p></li>
+<li><p><strong>deviation_symbols</strong> (<em>list of sympy.Symbol</em>) – Sorted deviation variables of all the equations.</p></li>
+<li><p><strong>gap_symbols</strong> (<em>list of sympy.Symbol</em>) – Sorted gap variables of the compatibility equations.</p></li>
 </ul>
 </p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>AssertionError</strong> – If any variable in the interface equations is not included in
+<dd class="field-even"><p><strong>AssertionError</strong> – If a gap variable of the interface equations does not appear in
     the compatibility equations.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>tuple[list[<em>Symbol</em>], list[<em>Symbol</em>]]</p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<ul class="simple">
-<li><p>Deviation and gap variables are extracted separately from both
-compatibility and interface equations.</p></li>
-<li><p>This ensures consistency between the two sets of equations.</p></li>
-</ul>
 </dd></dl>
 
 <dl class="py method">

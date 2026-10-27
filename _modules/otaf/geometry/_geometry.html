@@ -118,10 +118,13 @@
     <span class="s2">"rotation_matrix_from_vectors"</span><span class="p">,</span>
     <span class="s2">"are_lines_collinear"</span><span class="p">,</span>
     <span class="s2">"interval_overlap"</span><span class="p">,</span>
+    <span class="s2">"LinearizationStrategy"</span><span class="p">,</span>
+    <span class="s2">"circle_linearization_factor"</span><span class="p">,</span>
     <span class="s2">"planar_overlap_vertices"</span><span class="p">,</span>
 <span class="p">]</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.spatial</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConvexHull</span>
@@ -136,7 +139,7 @@
 
 
 <div class="viewcode-block" id="is_affine_transformation_matrix">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.is_affine_transformation_matrix">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.is_affine_transformation_matrix">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">is_affine_transformation_matrix</span><span class="p">(</span><span class="n">M</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">raise_exception</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -236,7 +239,7 @@
 
 
 <div class="viewcode-block" id="tfrt">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.tfrt">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.tfrt">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">tfrt</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Alias for transformation_from_rotation_translation function."""</span>
     <span class="k">return</span> <span class="n">transformation_from_rotation_translation</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
@@ -244,7 +247,7 @@
 
 
 <div class="viewcode-block" id="points_in_cylinder">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.points_in_cylinder">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.points_in_cylinder">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">points_in_cylinder</span><span class="p">(</span>
     <span class="n">pt1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pt2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">r</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">q</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
@@ -289,7 +292,7 @@
 
 
 <div class="viewcode-block" id="points_in_cylinder_vect">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.points_in_cylinder_vect">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.points_in_cylinder_vect">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">points_in_cylinder_vect</span><span class="p">(</span>
     <span class="n">pt1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pt2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">r</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">q</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
@@ -336,7 +339,7 @@
 
 
 <div class="viewcode-block" id="plane_parameters">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.plane_parameters">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.plane_parameters">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">plane_parameters</span><span class="p">(</span><span class="n">point_on_plane</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">rotation_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -371,7 +374,7 @@
 
 
 <div class="viewcode-block" id="euclidean_distance">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.euclidean_distance">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.euclidean_distance">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">euclidean_distance</span><span class="p">(</span><span class="n">point1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">point2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -397,7 +400,7 @@
 
 
 <div class="viewcode-block" id="angle_between_vectors">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.angle_between_vectors">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.angle_between_vectors">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">angle_between_vectors</span><span class="p">(</span>
     <span class="n">vec1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">vec2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">assume_normalized</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
@@ -447,7 +450,7 @@
 
 
 <div class="viewcode-block" id="point_in_hull">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.point_in_hull">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.point_in_hull">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">point_in_hull</span><span class="p">(</span><span class="n">point</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">hull</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -477,7 +480,7 @@
 
 
 <div class="viewcode-block" id="line_plane_intersection">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.line_plane_intersection">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.line_plane_intersection">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">line_plane_intersection</span><span class="p">(</span>
     <span class="n">plane_normal</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -516,7 +519,7 @@
 
 
 <div class="viewcode-block" id="transform_point">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.transform_point">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.transform_point">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">transform_point</span><span class="p">(</span><span class="n">point</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">transformation_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -544,7 +547,7 @@
 
 
 <div class="viewcode-block" id="closest_point_on_plane">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.closest_point_on_plane">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.closest_point_on_plane">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">closest_point_on_plane</span><span class="p">(</span>
     <span class="n">plane_normal</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">plane_point</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">point</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
@@ -577,7 +580,7 @@
 
 
 <div class="viewcode-block" id="project_vector_onto_plane">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.project_vector_onto_plane">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.project_vector_onto_plane">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">project_vector_onto_plane</span><span class="p">(</span><span class="n">vector</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">plane_normal</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -607,7 +610,7 @@
 
 
 <div class="viewcode-block" id="closest_point_on_line">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.closest_point_on_line">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.closest_point_on_line">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">closest_point_on_line</span><span class="p">(</span>
     <span class="n">line_point1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">line_point2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">point</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
@@ -641,7 +644,7 @@
 
 
 <div class="viewcode-block" id="point_plane_distance">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.point_plane_distance">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.point_plane_distance">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">point_plane_distance</span><span class="p">(</span>
     <span class="n">plane_normal</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">plane_point</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">point</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
@@ -673,7 +676,7 @@
 
 
 <div class="viewcode-block" id="point_to_segment_distance">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.point_to_segment_distance">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.point_to_segment_distance">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">point_to_segment_distance</span><span class="p">(</span>
     <span class="n">point</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">segment_start</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">segment_end</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
@@ -733,7 +736,7 @@
 
 
 <div class="viewcode-block" id="are_planes_coincident">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.are_planes_coincident">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.are_planes_coincident">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">are_planes_coincident</span><span class="p">(</span>
     <span class="n">normal1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -780,7 +783,7 @@
 
 
 <div class="viewcode-block" id="are_planes_parallel">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.are_planes_parallel">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.are_planes_parallel">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">are_planes_parallel</span><span class="p">(</span><span class="n">normal1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">normal2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -809,7 +812,7 @@
 
 
 <div class="viewcode-block" id="are_planes_perpendicular">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.are_planes_perpendicular">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.are_planes_perpendicular">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">are_planes_perpendicular</span><span class="p">(</span>
     <span class="n">normal1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">normal2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-8</span>
@@ -840,7 +843,7 @@
 
 
 <div class="viewcode-block" id="are_planes_facing">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.are_planes_facing">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.are_planes_facing">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">are_planes_facing</span><span class="p">(</span>
     <span class="n">normal1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -900,7 +903,7 @@
 
 
 <div class="viewcode-block" id="angle_between_planes">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.angle_between_planes">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.angle_between_planes">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">angle_between_planes</span><span class="p">(</span><span class="n">normal1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">normal2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -927,7 +930,7 @@
 
 
 <div class="viewcode-block" id="distance_between_planes">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.distance_between_planes">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.distance_between_planes">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">distance_between_planes</span><span class="p">(</span>
     <span class="n">normal1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">point1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">normal2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">point2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
@@ -964,7 +967,7 @@
 
 
 <div class="viewcode-block" id="centroid">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.centroid">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.centroid">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">centroid</span><span class="p">(</span><span class="n">arr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -992,7 +995,7 @@
 
 
 <div class="viewcode-block" id="are_points_on_2d_plane">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.are_points_on_2d_plane">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.are_points_on_2d_plane">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">are_points_on_2d_plane</span><span class="p">(</span>
     <span class="n">points</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">return_normal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
@@ -1036,7 +1039,7 @@
 
 
 <div class="viewcode-block" id="point_dict_to_arrays">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.point_dict_to_arrays">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.point_dict_to_arrays">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">point_dict_to_arrays</span><span class="p">(</span><span class="n">point_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">]]):</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -1073,8 +1076,56 @@
 
 
 
+<div class="viewcode-block" id="LinearizationStrategy">
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.LinearizationStrategy">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LinearizationStrategy</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Polygon that replaces the circular clearance zone of a cylinder pair.</span>
+
+<span class="sd">    The radial clearance condition ``|d| &lt;= r`` (``d`` the relative axis</span>
+<span class="sd">    displacement in a cross-section, ``r`` the radial clearance) is replaced by</span>
+<span class="sd">    ``N`` half-planes ``d . n_k &lt;= rf * r`` with ``n_k`` evenly spaced unit</span>
+<span class="sd">    normals:</span>
+
+<span class="sd">    - ``CIRCUMSCRIBED`` (``rf = 1``): the polygon's edges are tangent to the</span>
+<span class="sd">      circle; it contains the circle, so the model is slightly optimistic</span>
+<span class="sd">      (under-estimates failures).</span>
+<span class="sd">    - ``INSCRIBED`` (``rf = cos(pi / N)``): the polygon's vertices lie on the</span>
+<span class="sd">      circle; it is contained in the circle, so the model is conservative.</span>
+<span class="sd">    - ``MEAN``: the average of the two factors.</span>
+<span class="sd">    """</span>
+
+    <span class="n">INSCRIBED</span> <span class="o">=</span> <span class="s2">"inscribed"</span>
+    <span class="n">MEAN</span> <span class="o">=</span> <span class="s2">"mean"</span>
+    <span class="n">CIRCUMSCRIBED</span> <span class="o">=</span> <span class="s2">"circumscribed"</span></div>
+
+
+
+<div class="viewcode-block" id="circle_linearization_factor">
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.circle_linearization_factor">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">circle_linearization_factor</span><span class="p">(</span><span class="n">strategy</span><span class="p">:</span> <span class="n">LinearizationStrategy</span><span class="p">,</span> <span class="n">num_points</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Factor ``rf`` applied to the radial clearance for `strategy` with `num_points` facets.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; circle_linearization_factor(LinearizationStrategy.CIRCUMSCRIBED, 8)</span>
+<span class="sd">    1.0</span>
+<span class="sd">    &gt;&gt;&gt; round(circle_linearization_factor(LinearizationStrategy.INSCRIBED, 4), 6)</span>
+<span class="sd">    0.707107</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">num_points</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"At least 3 facets are needed to bound a circle, got </span><span class="si">{</span><span class="n">num_points</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">strategy</span> <span class="o">=</span> <span class="n">LinearizationStrategy</span><span class="p">(</span><span class="n">strategy</span><span class="p">)</span>
+    <span class="n">inscribed</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">num_points</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">strategy</span> <span class="ow">is</span> <span class="n">LinearizationStrategy</span><span class="o">.</span><span class="n">INSCRIBED</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">inscribed</span>
+    <span class="k">if</span> <span class="n">strategy</span> <span class="ow">is</span> <span class="n">LinearizationStrategy</span><span class="o">.</span><span class="n">MEAN</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">inscribed</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+    <span class="k">return</span> <span class="mf">1.0</span></div>
+
+
+
 <div class="viewcode-block" id="generate_circle_points">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.generate_circle_points">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.generate_circle_points">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">generate_circle_points</span><span class="p">(</span>
     <span class="n">radius</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
@@ -1119,7 +1170,7 @@
 
 
 <div class="viewcode-block" id="generate_circle_points_3d">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.generate_circle_points_3d">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.generate_circle_points_3d">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">generate_circle_points_3d</span><span class="p">(</span>
     <span class="n">radius</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
@@ -1175,7 +1226,7 @@
 
 
 <div class="viewcode-block" id="calculate_cylinder_surface_frame">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.calculate_cylinder_surface_frame">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.calculate_cylinder_surface_frame">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">calculate_cylinder_surface_frame</span><span class="p">(</span>
     <span class="n">axis_translation</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">axis_rotation</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">use_interior_normal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
@@ -1245,7 +1296,7 @@
 
 
 <div class="viewcode-block" id="compute_bounding_box">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.compute_bounding_box">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.compute_bounding_box">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_bounding_box</span><span class="p">(</span><span class="n">points</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -1272,7 +1323,7 @@
 
 
 <div class="viewcode-block" id="is_bounding_box_within">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.is_bounding_box_within">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.is_bounding_box_within">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">is_bounding_box_within</span><span class="p">(</span><span class="n">bbox1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">bbox2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -1303,7 +1354,7 @@
 
 
 <div class="viewcode-block" id="do_bounding_boxes_overlap">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.do_bounding_boxes_overlap">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.do_bounding_boxes_overlap">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">do_bounding_boxes_overlap</span><span class="p">(</span><span class="n">bbox1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">bbox2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -1330,7 +1381,7 @@
 
 
 <div class="viewcode-block" id="are_normals_aligned_and_facing">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.are_normals_aligned_and_facing">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.are_normals_aligned_and_facing">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">are_normals_aligned_and_facing</span><span class="p">(</span>
     <span class="n">normal1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -1378,7 +1429,7 @@
 
 
 <div class="viewcode-block" id="calculate_scalar_projection_factor">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.calculate_scalar_projection_factor">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.calculate_scalar_projection_factor">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">calculate_scalar_projection_factor</span><span class="p">(</span>
     <span class="n">vector_to_project</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">reference_vector</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
@@ -1411,7 +1462,7 @@
 
 
 <div class="viewcode-block" id="rotation_matrix_from_vectors">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.rotation_matrix_from_vectors">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.rotation_matrix_from_vectors">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">rotation_matrix_from_vectors</span><span class="p">(</span><span class="n">vec1</span><span class="p">,</span> <span class="n">vec2</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute the rotation matrix that aligns vec1 to vec2.</span>
@@ -1471,7 +1522,7 @@
 
 
 <div class="viewcode-block" id="are_lines_collinear">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.are_lines_collinear">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.are_lines_collinear">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">are_lines_collinear</span><span class="p">(</span>
     <span class="n">dir1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -1522,7 +1573,7 @@
 
 
 <div class="viewcode-block" id="interval_overlap">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.interval_overlap">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.interval_overlap">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">interval_overlap</span><span class="p">(</span>
     <span class="n">interval_a</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">interval_b</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">atol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-9</span>
@@ -1589,7 +1640,7 @@
 
 
 <div class="viewcode-block" id="planar_overlap_vertices">
-<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.geometry.planar_overlap_vertices">[docs]</a>
+<a class="viewcode-back" href="../../../source/otaf.geometry.html#otaf.example_models.models_3_D.planar_overlap_vertices">[docs]</a>
 <span class="nd">@beartype</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">planar_overlap_vertices</span><span class="p">(</span>
     <span class="n">points_a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">points_b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">atol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-9</span>

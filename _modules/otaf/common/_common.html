@@ -390,7 +390,7 @@
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    - Sorting prioritizes symbols with a specific prefix order (`"u_", "v_", "w_", "alpha_",</span>
-<span class="sd">      "beta_", "gamma_"`) followed by numerical suffixes.</span>
+<span class="sd">      "beta_", "gamma_", "d_"` (diameter)) followed by numerical suffixes.</span>
 <span class="sd">    - The function assumes symbols are named consistently with the expected patterns.</span>
 
 <span class="sd">    Examples</span>
@@ -401,7 +401,7 @@
 <span class="sd">    &gt;&gt;&gt; get_symbols_in_expressions(expr_list)</span>
 <span class="sd">    ([u_d_1, w_d_3], [v_g_2])</span>
 <span class="sd">    """</span>
-    <span class="n">sort_order</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"u_"</span><span class="p">,</span> <span class="s2">"v_"</span><span class="p">,</span> <span class="s2">"w_"</span><span class="p">,</span> <span class="s2">"alpha_"</span><span class="p">,</span> <span class="s2">"beta_"</span><span class="p">,</span> <span class="s2">"gamma_"</span><span class="p">]</span>
+    <span class="n">sort_order</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"u_"</span><span class="p">,</span> <span class="s2">"v_"</span><span class="p">,</span> <span class="s2">"w_"</span><span class="p">,</span> <span class="s2">"alpha_"</span><span class="p">,</span> <span class="s2">"beta_"</span><span class="p">,</span> <span class="s2">"gamma_"</span><span class="p">,</span> <span class="s2">"d_"</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">sort_key</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
         <span class="n">id_var</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">"(</span><span class="se">\\</span><span class="s2">d+)$"</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
@@ -895,6 +895,51 @@
             <span class="k">return</span> <span class="n">_scale_item</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">wrapper</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">decorator</span></div>
+
+
+
+<div class="viewcode-block" id="set_seed">
+<a class="viewcode-back" href="../../../source/otaf.common.html#otaf.common.set_seed">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Seed every random number generator an OTAF workflow draws from.</span>
+
+<span class="sd">    OpenTURNS, NumPy and PyTorch each keep their own global generator:</span>
+<span class="sd">    ``np.random.seed`` alone leaves ``distribution.getSample`` unseeded.</span>
+<span class="sd">    This seeds Python's ``random``, NumPy's legacy global generator,</span>
+<span class="sd">    OpenTURNS and, when it is installed, PyTorch (CPU and CUDA).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    seed : int</span>
+<span class="sd">        Non-negative seed.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    GPU training can still differ between runs, because some CUDA kernels</span>
+<span class="sd">    are not deterministic (see ``torch.use_deterministic_algorithms``).</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import openturns as ot</span>
+<span class="sd">    &gt;&gt;&gt; set_seed(1); a = ot.Normal().getSample(2)</span>
+<span class="sd">    &gt;&gt;&gt; set_seed(1); b = ot.Normal().getSample(2)</span>
+<span class="sd">    &gt;&gt;&gt; a == b</span>
+<span class="sd">    True</span>
+<span class="sd">    """</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+    <span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
+
+    <span class="k">if</span> <span class="n">seed</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"seed must be non-negative, got </span><span class="si">{</span><span class="n">seed</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span></div>
 
 </pre></div>
 

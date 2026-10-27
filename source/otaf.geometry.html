@@ -110,6 +110,40 @@
 <section id="module-otaf.geometry">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-otaf.geometry" title="Link to this heading"></a></h2>
 <p>Geometric primitives and spatial analysis utilities for the OTAF project.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="otaf.geometry.LinearizationStrategy">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">LinearizationStrategy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#LinearizationStrategy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.LinearizationStrategy" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Polygon that replaces the circular clearance zone of a cylinder pair.</p>
+<p>The radial clearance condition <code class="docutils literal notranslate"><span class="pre">|d|</span> <span class="pre">&lt;=</span> <span class="pre">r</span></code> (<code class="docutils literal notranslate"><span class="pre">d</span></code> the relative axis
+displacement in a cross-section, <code class="docutils literal notranslate"><span class="pre">r</span></code> the radial clearance) is replaced by
+<code class="docutils literal notranslate"><span class="pre">N</span></code> half-planes <code class="docutils literal notranslate"><span class="pre">d</span> <span class="pre">.</span> <span class="pre">n_k</span> <span class="pre">&lt;=</span> <span class="pre">rf</span> <span class="pre">*</span> <span class="pre">r</span></code> with <code class="docutils literal notranslate"><span class="pre">n_k</span></code> evenly spaced unit
+normals:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CIRCUMSCRIBED</span></code> (<code class="docutils literal notranslate"><span class="pre">rf</span> <span class="pre">=</span> <span class="pre">1</span></code>): the polygon’s edges are tangent to the
+circle; it contains the circle, so the model is slightly optimistic
+(under-estimates failures).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">INSCRIBED</span></code> (<code class="docutils literal notranslate"><span class="pre">rf</span> <span class="pre">=</span> <span class="pre">cos(pi</span> <span class="pre">/</span> <span class="pre">N)</span></code>): the polygon’s vertices lie on the
+circle; it is contained in the circle, so the model is conservative.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MEAN</span></code>: the average of the two factors.</p></li>
+</ul>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.geometry.LinearizationStrategy.CIRCUMSCRIBED">
+<span class="sig-name descname"><span class="pre">CIRCUMSCRIBED</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'circumscribed'</span></span><a class="headerlink" href="#otaf.geometry.LinearizationStrategy.CIRCUMSCRIBED" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.geometry.LinearizationStrategy.INSCRIBED">
+<span class="sig-name descname"><span class="pre">INSCRIBED</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'inscribed'</span></span><a class="headerlink" href="#otaf.geometry.LinearizationStrategy.INSCRIBED" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.geometry.LinearizationStrategy.MEAN">
+<span class="sig-name descname"><span class="pre">MEAN</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'mean'</span></span><a class="headerlink" href="#otaf.geometry.LinearizationStrategy.MEAN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.geometry.angle_between_planes">
 <span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">angle_between_planes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normal1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normal2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#angle_between_planes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.angle_between_planes" title="Link to this definition"></a></dt>
@@ -443,6 +477,30 @@ divided by the squared norm of the reference vector.</p></li>
 <ul class="simple">
 <li><p>The centroid is calculated as the mean of all points along each axis.</p></li>
 </ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.geometry.circle_linearization_factor">
+<span class="sig-prename descclassname"><span class="pre">otaf.geometry.</span></span><span class="sig-name descname"><span class="pre">circle_linearization_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strategy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/geometry/_geometry.html#circle_linearization_factor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.geometry.circle_linearization_factor" title="Link to this definition"></a></dt>
+<dd><p>Factor <code class="docutils literal notranslate"><span class="pre">rf</span></code> applied to the radial clearance for <cite>strategy</cite> with <cite>num_points</cite> facets.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">circle_linearization_factor</span><span class="p">(</span><span class="n">LinearizationStrategy</span><span class="o">.</span><span class="n">CIRCUMSCRIBED</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="go">1.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">round</span><span class="p">(</span><span class="n">circle_linearization_factor</span><span class="p">(</span><span class="n">LinearizationStrategy</span><span class="o">.</span><span class="n">INSCRIBED</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="mi">6</span><span class="p">)</span>
+<span class="go">0.707107</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>strategy</strong> (<a class="reference internal" href="#otaf.geometry.LinearizationStrategy" title="otaf.geometry._geometry.LinearizationStrategy"><em>LinearizationStrategy</em></a>)</p></li>
+<li><p><strong>num_points</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

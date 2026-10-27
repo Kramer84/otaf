@@ -94,7 +94,6 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterable</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -115,12 +114,8 @@
 <span class="p">}</span>
 
 
-<span class="k">class</span><span class="w"> </span><span class="nc">LinearizationStrategy</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Linearization strategy choices for circular features."""</span>
-    <span class="n">INSCRIBED</span> <span class="o">=</span> <span class="s2">"inscribed"</span>
-    <span class="n">MEAN</span> <span class="o">=</span> <span class="s2">"mean"</span>
-    <span class="n">CIRCUMSCRIBED</span> <span class="o">=</span> <span class="s2">"circumscribed"</span>
-
+<span class="c1"># Shared with the automatic builder (InterfaceLoopHandling(linearization=...)).</span>
+<span class="n">LinearizationStrategy</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">LinearizationStrategy</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">SmallDispTorsor</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Small displacement torsor representation.</span>
@@ -978,7 +973,8 @@
     <span class="n">interf_exprs</span> <span class="o">=</span> <span class="n">get_interface_constraint_expressions</span><span class="p">(</span>
         <span class="n">num_points</span><span class="o">=</span><span class="n">CIRCLE_RESOLUTION</span><span class="p">,</span>
         <span class="n">strategy</span><span class="o">=</span><span class="n">strategy</span><span class="p">,</span>
-        <span class="n">z_eval_points</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">L</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">],</span>
+        <span class="c1"># Each hole is evaluated at its own ends (+-l2/2 upper plate, +-l3/2 lower plate).</span>
+        <span class="n">z_eval_points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">otaf_mapping</span> <span class="o">=</span> <span class="n">create_dynamic_mapping</span><span class="p">(</span><span class="n">defect_vars_glob</span><span class="p">,</span> <span class="n">clearance_vars_glob</span><span class="p">)</span>
     <span class="n">mapped_loop_exprs</span> <span class="o">=</span> <span class="n">rename_variables</span><span class="p">(</span><span class="n">loop_exprs</span><span class="p">,</span> <span class="n">otaf_mapping</span><span class="p">)</span>
@@ -1038,9 +1034,9 @@
 <span class="sd">    hPlate : float, default 30.0</span>
 <span class="sd">        The height parameter of the plate component.</span>
 <span class="sd">    EH : float, default 50.0</span>
-<span class="sd">        The embedment height component.</span>
+<span class="sd">        Distance between the pin axes, along x and along y.</span>
 <span class="sd">    LB : float, default 25.0</span>
-<span class="sd">        The length parameter of the base section.</span>
+<span class="sd">        Distance from a pin axis to the plate edge.</span>
 <span class="sd">    Dext : float, default 20.0</span>
 <span class="sd">        The nominal external component diameter.</span>
 <span class="sd">    Dint : float, default 19.8</span>
@@ -1061,7 +1057,9 @@
     <span class="n">theta_max</span> <span class="o">=</span> <span class="n">tol</span> <span class="o">/</span> <span class="n">hPlate</span>
     <span class="n">sigma_e_theta</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">theta_max</span> <span class="o">/</span> <span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">capa</span><span class="p">)</span>
     <span class="n">sigma_e_pos_plate</span> <span class="o">=</span> <span class="n">tol</span> <span class="o">/</span> <span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">capa</span><span class="p">)</span>
-    <span class="n">sigma_e_theta_plate</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">tol</span> <span class="o">/</span> <span class="p">(</span><span class="n">EH</span> <span class="o">+</span> <span class="n">LB</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">capa</span><span class="p">)</span>
+    <span class="c1"># The plate deviation is largest at its corners, (EH / 2 + LB) from the plate</span>
+    <span class="c1"># centre along x and y, where eval_credal_set_constraints evaluates it.</span>
+    <span class="n">sigma_e_theta_plate</span> <span class="o">=</span> <span class="n">sigma_e_pos_plate</span> <span class="o">/</span> <span class="p">(</span><span class="n">EH</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">LB</span><span class="p">)</span>
     <span class="n">sigma_diam</span> <span class="o">=</span> <span class="n">sigma_e_pos</span>
     <span class="n">otaf_mapping</span> <span class="o">=</span> <span class="n">create_dynamic_mapping</span><span class="p">(</span><span class="n">defect_vars_glob</span><span class="p">,</span> <span class="n">clearance_vars_glob</span><span class="p">)</span>
     <span class="n">mapped_defects</span> <span class="o">=</span> <span class="p">[</span><span class="n">otaf_mapping</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">defect_vars_glob</span> <span class="k">if</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">otaf_mapping</span><span class="p">]</span>

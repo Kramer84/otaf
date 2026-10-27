@@ -344,6 +344,15 @@
                                         <span class="n">part_surf_dict</span><span class="p">[</span><span class="s2">"SURFACE_DIRECTION"</span><span class="p">]</span>
                                     <span class="p">)</span>
 
+                            <span class="k">if</span> <span class="s2">"DIAMETER_DEVIATION"</span> <span class="ow">in</span> <span class="n">surf_params</span> <span class="ow">and</span> <span class="p">(</span>
+                                <span class="n">part_surf_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"TYPE"</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">"cylinder"</span>
+                                <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">part_surf_dict</span><span class="p">[</span><span class="s2">"DIAMETER_DEVIATION"</span><span class="p">],</span> <span class="nb">bool</span><span class="p">)</span>
+                            <span class="p">):</span>
+                                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                                    <span class="sa">f</span><span class="s2">"DIAMETER_DEVIATION of surface </span><span class="si">{</span><span class="n">surf_id</span><span class="si">}</span><span class="s2"> on part </span><span class="si">{</span><span class="n">part_id</span><span class="si">}</span><span class="s2"> "</span>
+                                    <span class="s2">"must be a bool and is only valid for cylinders."</span>
+                                <span class="p">)</span>
+
                 <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">"GLOBAL_CONSTRAINTS"</span><span class="p">:</span>
                     <span class="k">if</span> <span class="p">(</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">system_data</span><span class="p">[</span><span class="s2">"GLOBAL_CONSTRAINTS"</span><span class="p">]</span>

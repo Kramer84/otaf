@@ -297,7 +297,7 @@ The symbols in each category are sorted according to a predefined order.</p>
 <p class="rubric">Notes</p>
 <ul class="simple">
 <li><p>Sorting prioritizes symbols with a specific prefix order (<cite>“u_”, “v_”, “w_”, “alpha_”,
-“beta_”, “gamma_”</cite>) followed by numerical suffixes.</p></li>
+“beta_”, “gamma_”, “d_”</cite> (diameter)) followed by numerical suffixes.</p></li>
 <li><p>The function assumes symbols are named consistently with the expected patterns.</p></li>
 </ul>
 <p class="rubric">Examples</p>
@@ -499,6 +499,35 @@ throwing errors.</p>
 <span class="gp">... </span>    <span class="k">return</span> <span class="p">[</span><span class="mf">10.0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">get_prices</span><span class="p">()</span>
 <span class="go">[25.0, None, 50.0]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.common.set_seed">
+<span class="sig-prename descclassname"><span class="pre">otaf.common.</span></span><span class="sig-name descname"><span class="pre">set_seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/common/_common.html#set_seed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.common.set_seed" title="Link to this definition"></a></dt>
+<dd><p>Seed every random number generator an OTAF workflow draws from.</p>
+<p>OpenTURNS, NumPy and PyTorch each keep their own global generator:
+<code class="docutils literal notranslate"><span class="pre">np.random.seed</span></code> alone leaves <code class="docutils literal notranslate"><span class="pre">distribution.getSample</span></code> unseeded.
+This seeds Python’s <code class="docutils literal notranslate"><span class="pre">random</span></code>, NumPy’s legacy global generator,
+OpenTURNS and, when it is installed, PyTorch (CPU and CUDA).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>int</em>) – Non-negative seed.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>GPU training can still differ between runs, because some CUDA kernels
+are not deterministic (see <code class="docutils literal notranslate"><span class="pre">torch.use_deterministic_algorithms</span></code>).</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">set_seed</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="n">a</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">()</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">set_seed</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="n">b</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">()</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">==</span> <span class="n">b</span>
+<span class="go">True</span>
 </pre></div>
 </div>
 </dd></dl>
