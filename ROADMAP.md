@@ -29,29 +29,31 @@ imprecise-probability sweeps) is marked `@pytest.mark.gpu` and runs elsewhere.
 - [x] **Contact points at the overlap of facing surfaces, not by proximity.** The 0.25 mm pairing radius (`is_point_facing`) is removed. Planes now intersect the two faces (segments in 2D, convex hulls in 3D: `otaf.geometry.planar_overlap_vertices`) and pair points at the overlap vertices. Cylinders use the same helper logic on their axial extents. In both cases an existing point at a vertex is reused (e.g. the origin) and new points are created otherwise. Before the fix, model2 with female faces 0.3 mm taller lost 4 of 8 contacts (Pf 5.35 % instead of 14.15 %), and 1 mm taller lost all of them (every solve unbounded).
 - [x] **Interface loops no longer end with `JCor⁻¹`.** It re-applied the in-plane offset between the two surface origins after the gap rotation, so lever arms were off by that offset (model2: 0.1 mm) and depended on the gap direction. Both directions now give identical slack at every face height. Effect on model2 (×1.21): Pf 14.40 % → 14.20 %, |Δs| ≤ 0.0026. Models 1, 3 and 4 are unchanged.
 - [x] Baselines and comparison notebook: `scripts/baselines/` (`pre-fix`, `post-overlap-fix`) and `notebooks/Baselines/Compare_To_Baseline.ipynb`.
-- [ ] Hand-coded baselines: map `ManualImplementation4Pins2plates.ipynb` and the 16-DOF analytical LP notebook onto the automatic models' variables and compare with `matrix_utils` (needs row scaling support).
+- [x] Hand-coded references checked against the automatic models (`notebooks/REVIEW.md`): the four-pin model (`model4`, from `ManualImplementation4Pins2plates.ipynb`) sample by sample (`tests/test_cylinder_interfaces.py`); the 16-DOF analytical reference against `model2` in distribution (same Pf within Monte Carlo error).
+- [x] Reference notebooks aligned with the revised thesis (Ch. 4): thesis parameters and normalized parametrization, credal sets from the model functions instead of the removed MI-SDOF classes, directional half-space constraints, seeds; stale API references fixed (all `otaf.*` names in the notebooks resolve). The 16-DOF analytical notebook is rebuilt (closed-form slack) and reproduces the thesis bounds of Ex2 (`notebooks/REVIEW.md`).
+- [x] `model4` plate rotations normalized as in the thesis (`σ_max = target / 50`, the plate corner where the capability constraint is evaluated; was `/ 37.5`). Baseline `plate-capability`: `model4` Pf 6.05 % → 5.40 %, other cases unchanged.
 - [ ] `model3` samples a reduced parameter space mapped by position (`sample_multiplier`); add explicit labels so the mapping can be checked by name.
 - [ ] Remaining invariants: invariance to part/surface relabelling; 2D models embedded in 3D give the same result; LP vs MILP agreement.
 
 ## Phase 2: Cylinder–cylinder interfaces (top priority; core purpose of the library)
 
-Known differences between the automatic path (`_interfaceLoopBuilder._cylinder_interaction_approximation`) and the hand-coded models:
+The automatic path now reproduces the hand-coded `model4` (two plates, four pins) sample by sample, for the three linearization strategies (`tests/test_cylinder_interfaces.py`, `example_models.model4_auto`).
 
-| | Automatic | Hand-coded (`model3`) |
+| | Automatic (now) | Hand-coded (`model3`, `model4`) |
 |---|---|---|
-| Clearance | fixed `RADIUS` from input | diameter defects are variables: `rf/2 · (d_hole − d_pin)` |
-| Polygon linearization | none | inscribed / mean / circumscribed factor `rf` |
-| Contact sections | from fragile overlap cases in `_surfaceInteractionManager` (incl. a `NotImplementedError` branch) | both cylinder ends, explicit |
+| Clearance | `RADIUS`, plus diameter deviations `d_d_<k>` when `DIAMETER_DEVIATION` is true | diameter variables: `rf/2 · (d_hole − d_pin)` |
+| Polygon linearization | `InterfaceLoopHandling(linearization=LinearizationStrategy.…)` | inscribed / mean / circumscribed factor `rf` (same enum) |
+| Contact sections | ends of the axial overlap (`SurfaceInteractionManager`) | both hole ends, explicit |
 
-- [x] Axial overlap pairing reviewed and tested (`tests/test_surface_interactions.py`). It is correct for same and opposed axes, with either cylinder longer and for staggered overlaps; the opposed-axes branch is complete despite its "I have begun here" comment.
-- [x] An overlap end that coincides with an existing point (e.g. the cylinder origin) is now paired, reusing that point.
-- [x] Origins may lie at a cylinder end (or a face end). When the reference pair of the loops is itself a contact, its constraint is now written too (`InterfaceLoopBuilder._contact_partners`).
+- [x] Axial overlap pairing reviewed and tested (`tests/test_surface_interactions.py`): same and opposed axes, either cylinder longer, staggered, no overlap (raises), overlap ends on existing points, origins at cylinder ends.
 - [x] Mixed interactions (plane–cylinder) raise `NotImplementedError` instead of being silently ignored.
-- [ ] Failing differential test: one pin/hole joint, automatic vs hand-coded matrices (via the Phase 1 mapping helper).
-- [ ] Add diameter-defect variables for cylinders (ties into "intrinsic dimension variability").
-- [ ] Add `LinearizationStrategy` to the automatic builder.
-- [ ] Rewrite axial-overlap logic as explicit, unit-tested cases (no overlap / partial / contained / coincident ends).
-- [ ] Acceptance: automatically generated `model3` (and `model4`) reproduces the hand-coded matrices and Pf.
+- [x] **Root cause of the failing automatic pin models:** the nominal transform of a cylinder–cylinder gap dropped the axial offset between the two surface origins (`GAP_TYPE_TO_NULLIFIED_NOMINAL_COMPONENTS`). With axial sliding blocked, the loops could not close and the nominal assembly was infeasible (`3D_Model_32DOF_Auto_GLD_EX2.ipynb`). The axial offset is now kept.
+- [x] Diameter-deviation variables (`"DIAMETER_DEVIATION": True`), named `d_d_<k>` with the feature index of the cylinder's deviation matrix (pins, which have none, get new indices). Deviation variables may now appear only in interface constraints.
+- [x] `LinearizationStrategy` in `otaf.geometry`, used by the automatic builder and by `model3`/`model4` (their separate enums made `model4` silently ignore a strategy passed from elsewhere).
+- [x] Differential test: automatic vs hand-coded `model4` (max |Δs| ≈ 1e-8 over 60 samples, diameters included).
+- [x] `model4` evaluated the lower-plate holes at ±l2/2 instead of ±l3/2 (no effect with the default l2 = l3).
+- `model3` (30 DOF) stays hand-coded: it re-implements Dumas (2014) with its own parametrization (measured points), which the automatic pipeline does not use.
+- [ ] Plane–cylinder contacts (later; they raise `NotImplementedError` meanwhile).
 
 ## Phase 3: Documentation
 
@@ -64,7 +66,8 @@ Known differences between the automatic path (`_interfaceLoopBuilder._cylinder_i
 
 - [ ] **pydantic models for the input dictionary** (`SystemData`, `Part`, `Surface`, `Loops`, …): validate types, labels, frames (orthonormal), required keys per surface type (e.g. `RADIUS` for cylinders) up front with clear errors; keep accepting plain dicts.
 - [ ] Replace `print` (54 calls) with `logging`.
-- [ ] Explicit RNG seeds everywhere; named numerical tolerances instead of literals.
+- [x] Every random draw can be seeded: `otaf.common.set_seed` (NumPy, OpenTURNS, PyTorch) and `seed` arguments where the library samples.
+- [ ] Named numerical tolerances instead of literals.
 - [ ] Make solver failures explicit: today a single failed `milp` in a batch returns `x=None` and crashes the whole batch with `ValueError: setting an array element with a sequence` (`uncertainty/_reliability.py`). Surface status codes per sample instead.
 - [x] `PointsNotOnPlaneError` is now raised for non-coplanar face points.
 - [ ] `compute_gap_optimizations_on_sample_batch` defaults to `float32` output; the sign of `s` near 0 deserves `float64`.

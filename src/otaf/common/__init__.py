@@ -20,6 +20,7 @@ from ._common import (
     merge_with_checks,
     parse_matrix_string,
     scaling,
+    set_seed,
     threshold_for_percentile_positive_values_below,
     validate_dict_keys,
 )
@@ -52,6 +53,7 @@ __all__ = [
     "merge_with_checks",
     "parse_matrix_string",
     "scaling",
+    "set_seed",
     "threshold_for_percentile_positive_values_below",
     "tree",
     "validate_dict_keys",

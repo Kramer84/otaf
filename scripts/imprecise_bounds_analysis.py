@@ -291,6 +291,7 @@ if __name__ == "__main__":
     parser.add_argument("--output-dir", type=str, default=".", help="Directory to save CSV results")
     parser.add_argument("--maxiter", type=int, default=5000, help="Max iterations for COBYQA")
     parser.add_argument("--mc-size", type=int, default=100000, help="Monte Carlo sample size for GLD")
+    parser.add_argument("--seed", type=int, default=0, help="Seed of the Monte Carlo sample used for the GLD fits")
     parser.add_argument("--reduced-mode", action="store_true", help="Run reduced variable subsets for model3 and model4")
 
     args = parser.parse_args()
@@ -320,6 +321,7 @@ if __name__ == "__main__":
         model_sur = otaf.surrogate.NeuralRegressorNetwork.from_checkpoint(model_path)
         
         jointDist, symbols, max_std_vect, mu_vect = model.get_distribution_params()
+        otaf.common.set_seed(args.seed)
         sample_gld = np.array(jointDist.getSample(args.mc_size))
         
         # Base full-dimensional model evaluator

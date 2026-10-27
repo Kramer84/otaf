@@ -12,7 +12,6 @@ __all__ = [
     "no_tol", 
     ]
 
-from enum import Enum
 from typing import Tuple, Callable, Any
 
 import numpy as np
@@ -22,11 +21,8 @@ import otaf
 from otaf.tolerances import sigma_delta_circular_feature
 
 
-class LinearizationStrategy(Enum):
-    INSCRIBED = "inscribed"
-    MEAN = "mean"
-    CIRCUMSCRIBED = "circumscribed"
-
+# Shared with the automatic builder (InterfaceLoopHandling(linearization=...)).
+LinearizationStrategy = otaf.geometry.LinearizationStrategy
 
 MatrixBundle = Tuple[
     np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray

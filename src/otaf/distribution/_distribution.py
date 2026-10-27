@@ -237,6 +237,7 @@ def generate_correlated_samples(
     sigma2: float = 1,
     corr: float = 0,
     N: int = 1,
+    seed: int | None = None,
 ) -> np.ndarray:
     """
     Generate bivariate correlated samples.
@@ -255,6 +256,8 @@ def generate_correlated_samples(
         Correlation coefficient between the two marginals. Default is 0.
     N : int, optional
         The number of samples to generate. Default is 1.
+    seed : int, optional
+        Seeds OpenTURNS before sampling. Default is None (not reproducible).
 
     Returns
     -------
@@ -263,6 +266,8 @@ def generate_correlated_samples(
         correlated samples.
     """
     R = ot.CorrelationMatrix(2, [1, corr, corr, 1])
+    if seed is not None:
+        ot.RandomGenerator.SetSeed(seed)
     sample = np.array(ot.Normal([mu1, mu2], [sigma1, sigma2], R).getSample(N))
     return sample
 

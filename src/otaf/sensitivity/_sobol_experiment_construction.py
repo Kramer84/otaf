@@ -72,6 +72,9 @@ class SobolIndicesExperimentWithComposedDistribution(ot.SobolIndicesExperiment):
                 `method` is ``'QMC'``. Options are ``'Faure'``,
                 ``'Halton'``, ``'ReverseHalton'``, ``'Haselgrove'``, or
                 ``'Sobol'``. Default is ``'Sobol'``.
+            seed : int, optional
+                Seeds OpenTURNS before the ``'MonteCarlo'`` and ``'LHS'``
+                designs are drawn. Default is None (not reproducible).
 
         Returns
         -------
@@ -318,6 +321,8 @@ class SobolIndicesExperimentWithComposedDistribution(ot.SobolIndicesExperiment):
         else:
             method = "MonteCarlo"
         N2 = 2 * self.size
+        if kwargs.get("seed") is not None:
+            ot.RandomGenerator.SetSeed(kwargs["seed"])
         if method == "MonteCarlo":
             sample = distribution.getSample(N2)
         elif method == "LHS":

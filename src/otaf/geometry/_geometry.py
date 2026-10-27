@@ -38,10 +38,13 @@ __all__ = [
     "rotation_matrix_from_vectors",
     "are_lines_collinear",
     "interval_overlap",
+    "LinearizationStrategy",
+    "circle_linearization_factor",
     "planar_overlap_vertices",
 ]
 
 import math
+from enum import Enum
 import numpy as np
 
 from scipy.spatial import ConvexHull
@@ -919,6 +922,48 @@ def point_dict_to_arrays(point_dict: Dict[str, Union[np.ndarray, Tuple, List]]):
         print(f"Error converting to arrays for point_dict: {point_dict}")
         raise e
     return label_array, point_array
+
+
+class LinearizationStrategy(Enum):
+    """Polygon that replaces the circular clearance zone of a cylinder pair.
+
+    The radial clearance condition ``|d| <= r`` (``d`` the relative axis
+    displacement in a cross-section, ``r`` the radial clearance) is replaced by
+    ``N`` half-planes ``d . n_k <= rf * r`` with ``n_k`` evenly spaced unit
+    normals:
+
+    - ``CIRCUMSCRIBED`` (``rf = 1``): the polygon's edges are tangent to the
+      circle; it contains the circle, so the model is slightly optimistic
+      (under-estimates failures).
+    - ``INSCRIBED`` (``rf = cos(pi / N)``): the polygon's vertices lie on the
+      circle; it is contained in the circle, so the model is conservative.
+    - ``MEAN``: the average of the two factors.
+    """
+
+    INSCRIBED = "inscribed"
+    MEAN = "mean"
+    CIRCUMSCRIBED = "circumscribed"
+
+
+def circle_linearization_factor(strategy: LinearizationStrategy, num_points: int) -> float:
+    """Factor ``rf`` applied to the radial clearance for `strategy` with `num_points` facets.
+
+    Examples
+    --------
+    >>> circle_linearization_factor(LinearizationStrategy.CIRCUMSCRIBED, 8)
+    1.0
+    >>> round(circle_linearization_factor(LinearizationStrategy.INSCRIBED, 4), 6)
+    0.707107
+    """
+    if num_points < 3:
+        raise ValueError(f"At least 3 facets are needed to bound a circle, got {num_points}")
+    strategy = LinearizationStrategy(strategy)
+    inscribed = math.cos(math.pi / num_points)
+    if strategy is LinearizationStrategy.INSCRIBED:
+        return inscribed
+    if strategy is LinearizationStrategy.MEAN:
+        return (1.0 + inscribed) / 2.0
+    return 1.0
 
 
 @beartype

@@ -10,6 +10,7 @@ from beartype import beartype
 from beartype.typing import Dict, Set
 
 from otaf.common import tree, inverse_mstring, parse_matrix_string
+from otaf.geometry import LinearizationStrategy
 
 from ..compatibilityLoopHandling import CompatibilityLoopHandling
 from ..assemblyDataProcessor import AssemblyDataProcessor
@@ -21,7 +22,23 @@ class InterfaceLoopHandling:
     def __init__(self,
         assemblyDataProcessor:AssemblyDataProcessor,
         compatibility_loop_handling:CompatibilityLoopHandling,
-        circle_resolution=8):
+        circle_resolution=8,
+        linearization: LinearizationStrategy = LinearizationStrategy.CIRCUMSCRIBED):
+        """Generate the interface constraints of an assembly.
+
+        Parameters
+        ----------
+        assemblyDataProcessor : AssemblyDataProcessor
+            Assembly data.
+        compatibility_loop_handling : CompatibilityLoopHandling
+            Compatibility loops (gap matrices are shared with them).
+        circle_resolution : int, optional
+            Number of facets of the polygon replacing the circular clearance zone
+            of each cylinder pair (default 8).
+        linearization : LinearizationStrategy, optional
+            Whether that polygon is circumscribed to the circle (default, slightly
+            optimistic), inscribed in it (conservative) or in between.
+        """
         self.ADP = assemblyDataProcessor
         self.CLH = compatibility_loop_handling
         self.surfaceInteractionManager = SurfaceInteractionManager(self.ADP)
@@ -38,6 +55,7 @@ class InterfaceLoopHandling:
             self.filtered_gap_matrices,
             circle_resolution=circle_resolution,
             contact_gap_names=self.surfaceInteractionManager.contactGapNames,
+            linearization=linearization,
         )
         self.interfaceLoopBuilder.populate_interface_expressions()
 

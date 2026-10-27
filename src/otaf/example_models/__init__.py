@@ -5,7 +5,7 @@ __author__ = "Kramer84"
 from . import models_2_D as models2D
 from . import models_3_D as models3D
 from .models_2_D import model1, model2
-from .models_3_D import model3, model4
+from .models_3_D import model3, model4, model4_auto
 
 __all__ = [
     "models2D",
@@ -13,5 +13,6 @@ __all__ = [
     "model1",
     "model2",
     "model3",
-    "model4",   
+    "model4",
+    "model4_auto",
 ]
