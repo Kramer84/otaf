@@ -63,6 +63,7 @@ docs = [
     "sphinx-autodoc-typehints",
     "sphinx_rtd_theme",
     "myst-parser",
+    "linkify-it-py",
     "nbsphinx",
     "notebook",
     "pandoc"
@@ -72,7 +73,7 @@ all = [
     "torch", "torcheval", "scikit-learn",
     "networkx", "trimesh", "triangle", "pytransform3d", 
     "pyglet<2", "sphinx", "sphinx-autodoc-typehints", 
-    "sphinx_rtd_theme", "myst-parser", "nbsphinx", 
+    "sphinx_rtd_theme", "myst-parser", "linkify-it-py", "nbsphinx", 
     "notebook", "pandoc"
 ]
 

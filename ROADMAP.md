@@ -86,3 +86,26 @@ Found while writing the pages (not fixed, docs and docstrings only in this phase
 
 - [ ] Semantic versioning, `CHANGELOG.md`, Zenodo DOI per release (`CITATION.cff` exists).
 - [ ] Verification report against literature cases (e.g. Dumas 2014) and the thesis results.
+
+## Phase 6: CAD to input dictionary
+
+Goal: build the assembly dictionary from a CAD assembly (STEP first) instead of by hand. Depends on the Phase 4 schema (the converter's target and its JSON schema) and on plane–cylinder contacts only if the target assemblies need them.
+
+How well the current format fits (reviewed against `docs/guide/input_format.md`):
+
+- **Fits CAD:** the geometric keys of a surface (`TYPE`, `FRAME`, `ORIGIN`, `POINTS`/`CONTOUR_GLOBAL`, `RADIUS`, `EXTENT_LOCAL`) are what a B-rep gives for planar and cylindrical faces, in global coordinates. Extra keys are tolerated (checked: `META`, `CAD_ID` do not disturb the build), and surface labels continue past `z` (`aa`, `ab`, …).
+- **Does not come from CAD:** `CONSTRAINTS_D` (needs GD&T/PMI, rarely present in STEP), `CONSTRAINTS_G` and `BLOCK_*_G` (contact kinematics, only partly in assembly mates), `DIAMETER_DEVIATION`, and above all `LOOPS` (a modelling choice: independent closed chains that cover every contact; an uncovered contact is silently dropped today). The dictionary also holds no tolerance values; distributions live in per-model functions, so a CAD import has nothing to fill there yet.
+- **Under-specified for a generator:** the sign convention of the face normal (the code only needs facing planes to be anti-parallel; `model1` is not outward-normal consistently), units (mm assumed, not stated), the mapping between CAD names and labels (no traceability key defined), partial cylinders (a hole split in two half-faces has no angular extent), non-convex faces and faces with holes (only the convex hull of the overlap is used).
+- Conclusion: usable as the geometric target, but not as the only interface. A converter needs an intermediate description and a user-in-the-loop step for the intent.
+
+Items:
+
+- [ ] Decide and document the conventions a generator must follow: normal direction, units, CAD-id traceability key (`META`/`CAD_ID`), label scheme. Put them in the Phase 4 schema.
+- [ ] Neutral assembly description (parts, features with geometry and CAD ids, contact pairs, tolerance table) with a JSON schema; the dictionary is built from it.
+- [ ] Automatic loop generation from the contact graph (`_assembly_topology.py` already builds a networkx graph): independent cycles that cross every contact, with a warning for contacts that cannot be covered. Useful for hand-written inputs too.
+- [ ] STEP reader for planar and cylindrical faces (OpenCascade binding as an optional dependency): merge split cylinders, ignore other surface types with a report, sample contours.
+- [ ] Contact detection (coincident or near faces within a tolerance) with a report the user confirms; derive `INTERACTIONS` and `SURFACE_DIRECTION`.
+- [ ] Evaluate QIF (ISO 23952:2020, XML; free schemas at qifstandards.org) as the source of the tolerance side: it models features and characteristics (ASME GD&T and ISO GPS tolerances) and is aimed at model-based definition, so it is a candidate for `CONSTRAINTS_D` and for the tolerance values the dictionary lacks, and later for returning results. Open questions to settle with a spike on a sample file before committing to it: how much assembly structure (mates, contacts) a QIF file carries compared with STEP AP242, and whether its feature and characteristic identifiers can be matched to the B-rep faces.
+- [ ] Tolerance input: a table, QIF or STEP PMI mapped to `CONSTRAINTS_D` and to the defect distributions; user-supplied `CONSTRAINTS_G`/`BLOCK_*_G` defaults per contact type.
+- [ ] Acceptance tests by round trip: CAD of the `model1` pocket and of the two-plate/four-pin assembly must give dictionaries equivalent to `model1` and `model4_auto` (same constraint system by `tests/matrix_utils.py`).
+- Out of scope at first: sections of 3D CAD into 2D models, non-planar/non-cylindrical contacts, assemblies where the contact topology changes with the deviations.
