@@ -57,10 +57,20 @@ The automatic path now reproduces the hand-coded `model4` (two plates, four pins
 
 ## Phase 3: Documentation
 
-- [ ] Normalise docstrings to numpy style (25 Google-style param lines, mostly `_surfaceInteractionManager.py`); document the 21 exception classes; enable ruff `D` rules.
-- [ ] Run docstring examples as doctests on `src/`.
-- [ ] Input-format reference page (all keys, `TYPE`, `CONSTRAINTS_D/G`, loop syntax), generated from the pydantic schema (Phase 4).
-- [ ] Theory pages (SOC, slack variable, linearization) and a "Validity and limitations" page.
+- [x] Docstrings in numpy style (the last Google-style parameter lists are converted), exception classes documented, ruff `D` rules (numpy convention) enabled on `src/` (tests exempt).
+- [x] Docstring examples run as doctests on `src/otaf` (pytest config and CI; the torch-based `surrogate` package is not collected). Fixed examples that were wrong, not only failing: the 50th percentile of the positive values `[2, 3, 4, 5]` is 3.5, not 3.0. One example (`InterfaceLoopBuilder.get_interface_equations_facing_cylinders`) needs a fully built model and is kept as a skipped illustration; the model itself is exercised by `tests/test_cylinder_interfaces.py`.
+- [x] Input-format reference page (`docs/guide/input_format.md`), written by hand from the validation code and `otaf.constants`, with a 2D example (`model1`) and a pin/hole example (`model4_auto`, one pin). `tests/test_docs_examples.py` runs both examples and checks them against the example models. To be regenerated from the pydantic schema in Phase 4.
+- [x] Theory page (`docs/guide/theory.md`) and "Validity and limitations" page (`docs/guide/limitations.md`).
+
+Found while writing the pages (not fixed, docs and docstrings only in this phase):
+
+- A contact listed in `INTERACTIONS` that no compatibility loop crosses gets no contact condition, silently (removing loop `L1` of `model1` drops the two conditions of the right wall). Should warn or raise.
+- `CONSTRAINTS_G` entries that differ on the two sides of a pair (including one side left to the default) give a bare `KeyError: 'plane-plane-floating-sliding'`. Should be an explicit error.
+- `validate_system_data_structure` calls `MissingSurfaceTypeKeyError(surf_id, part_id)` but the signature is `(part_id, surf_id)`: the message names them the wrong way round.
+- `FRAME` is validated only when the points are generated from `ORIGIN`; with `POINTS` given it is used unchecked.
+- `TYPE` accepts `cone` and `sphere`, which fail later with a `KeyError` (no deviation/gap model).
+- Gap bounds (±3 mm, ±π/4) are hard-coded in `get_gap_symbol_bounds`.
+- The default `circle_resolution` of `InterfaceLoopHandling` is 8 (up to 8 % error on the clearance); the pin models use 64.
 
 ## Phase 4: API hardening
 
