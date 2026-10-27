@@ -108,6 +108,8 @@ class UniformSurfaceSampler:
         Initial points already satisfying the constraint.
     step_size : float, optional
         Step size for generating new points on the surface. Default is 0.1.
+    seed : int, optional
+        Seed of the random walk. Default is None (not reproducible).
 
     Attributes
     ----------
@@ -131,12 +133,14 @@ class UniformSurfaceSampler:
         bounds: list[tuple[float, float]],
         starting_points: np.ndarray,
         step_size: float = 0.1,
+        seed: Optional[int] = None,
     ) -> None:
         self.dim = dim
         self.g = g
         self.bounds = bounds
         self.starting_points = starting_points
         self.step_size = step_size
+        self.rng = np.random.default_rng(seed)
 
     @beartype
     def objective_function(self, X: np.ndarray) -> float:
@@ -204,8 +208,8 @@ class UniformSurfaceSampler:
             if np.abs(self.g(point)) < 1e-06:
                 sampled_points.append(point)
         while len(sampled_points) < num_samples:
-            x0 = sampled_points[np.random.randint(len(sampled_points))]
-            random_direction = np.random.randn(self.dim)
+            x0 = sampled_points[self.rng.integers(len(sampled_points))]
+            random_direction = self.rng.standard_normal(self.dim)
             random_direction /= np.linalg.norm(random_direction)
             new_point = x0 + self.step_size * random_direction
             new_point = np.clip(

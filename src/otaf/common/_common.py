@@ -767,3 +767,45 @@ def scaling(scale_factor: float) -> Callable[[F], F]:
             return _scale_item(result)
         return cast(F, wrapper)
     return decorator
+
+
+def set_seed(seed: int) -> None:
+    """Seed every random number generator an OTAF workflow draws from.
+
+    OpenTURNS, NumPy and PyTorch each keep their own global generator:
+    ``np.random.seed`` alone leaves ``distribution.getSample`` unseeded.
+    This seeds Python's ``random``, NumPy's legacy global generator,
+    OpenTURNS and, when it is installed, PyTorch (CPU and CUDA).
+
+    Parameters
+    ----------
+    seed : int
+        Non-negative seed.
+
+    Notes
+    -----
+    GPU training can still differ between runs, because some CUDA kernels
+    are not deterministic (see ``torch.use_deterministic_algorithms``).
+
+    Examples
+    --------
+    >>> import openturns as ot
+    >>> set_seed(1); a = ot.Normal().getSample(2)
+    >>> set_seed(1); b = ot.Normal().getSample(2)
+    >>> a == b
+    True
+    """
+    import random
+
+    import openturns as ot
+
+    if seed < 0:
+        raise ValueError(f"seed must be non-negative, got {seed}")
+    random.seed(seed)
+    np.random.seed(seed)
+    ot.RandomGenerator.SetSeed(seed)
+    try:
+        import torch
+    except ImportError:
+        return
+    torch.manual_seed(seed)

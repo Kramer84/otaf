@@ -29,17 +29,21 @@ __all__ = [
     "get_assembly_data",
     "get_system_of_constraints_assembly_model",
     "get_distribution_params",
+    "eval_credal_set_constraints",
+    "eval_scaled_credal_set_constraints",
+    "get_scaled_credal_set_constraints_function",
     "dim",
     "sample_multiplier",
     "no_tol",
 ]
 
-from typing import Any
+from typing import Any, Callable
 
 import numpy as np
 import sympy as sp
 
 import otaf
+from otaf.tolerances import sigma_delta_cylindrical_feature
 
 
 def get_assembly_data(
@@ -251,6 +255,88 @@ def _deviation_symbols(n_pins: int, diameter_deviation: bool) -> list[sp.Symbol]
         first_pin = max(hole_indices) + 1
         symbols += [sp.Symbol(f"d_d_{first_pin + i}") for i in range(n_pins)]
     return symbols
+
+
+def eval_credal_set_constraints(
+    x_std: np.ndarray,
+    tol: float = 0.21,
+    capa: float = 1.0,
+    hPlate: float = 30.0,
+    diameter_deviation: bool = True,
+    NX: int = 2,
+    NY: int = 2,
+) -> np.ndarray:
+    """Capability constraints of the features, normalized by the target standard deviation.
+
+    The credal set is the set of standard deviations for which the largest standard
+    deviation of the measured defect over each feature equals ``tol / (6 capa)``:
+    the constraint value is 0 on it, negative inside it.
+
+    - Hole: the radial deviation of the axis, in the directions of the local y and z
+      axes, at the hole ends (``hPlate / 2`` from its centre), with the diameter
+      deviation as radial component (as in ``model4``):
+      ``sqrt(s_d^2 + s_v^2 + (hPlate/2)^2 s_gamma^2)`` and
+      ``sqrt(s_d^2 + s_w^2 + (hPlate/2)^2 s_beta^2)``.
+    - Pin: its diameter deviation alone.
+
+    Parameters
+    ----------
+    x_std : np.ndarray
+        Standard deviations, in the order of the model's deviation symbols.
+
+    Returns
+    -------
+    np.ndarray
+        One value per hole (in symbol order), then one per pin.
+    """
+    names = [str(s) for s in _deviation_symbols(NX * NY, diameter_deviation)]
+    std = dict(zip(names, np.asarray(x_std, dtype=float)))
+    target = tol / (6 * capa)
+    z = hPlate / 2
+    holes = [n.split("_")[-1] for n in names if n.startswith("v_d_")]
+    pins = [n.split("_")[-1] for n in names if n.startswith("d_d_") and f"v_d_{n.split('_')[-1]}" not in std]
+    constraints = []
+    for k in holes:
+        sr = std.get(f"d_d_{k}", 0.0)
+        worst = max(
+            sigma_delta_cylindrical_feature(z, 0.0, sr, std[f"v_d_{k}"], std[f"beta_d_{k}"], std[f"w_d_{k}"], std[f"gamma_d_{k}"]),
+            sigma_delta_cylindrical_feature(z, np.pi / 2, sr, std[f"v_d_{k}"], std[f"beta_d_{k}"], std[f"w_d_{k}"], std[f"gamma_d_{k}"]),
+        )
+        constraints.append((worst - target) / target)
+    for k in pins:
+        constraints.append((std[f"d_d_{k}"] - target) / target)
+    return np.array(constraints)
+
+
+def eval_scaled_credal_set_constraints(
+    x_scaled: np.ndarray,
+    max_std_vect: np.ndarray,
+    tracker: Any | None = None,
+    experiment_key: Any | None = None,
+    **kwargs: Any,
+) -> np.ndarray:
+    """:func:`eval_credal_set_constraints` of ``x_scaled * max_std_vect``.
+
+    ``x_scaled`` holds the ratios to the largest admissible standard deviations
+    (the normalized vector of the thesis, in ``[0, 1]``). ``kwargs`` are passed to
+    :func:`eval_credal_set_constraints`. The values are logged in ``tracker`` if given.
+    """
+    constraint_array = eval_credal_set_constraints(np.asarray(x_scaled) * max_std_vect, **kwargs)
+    if tracker:
+        tracker.update_constraint_data(exp_key=experiment_key, x=x_scaled, constraints=constraint_array)
+    return constraint_array
+
+
+def get_scaled_credal_set_constraints_function(
+    max_std_vect: np.ndarray,
+    tracker: Any | None = None,
+    experiment_key: Any | None = None,
+    **kwargs: Any,
+) -> Callable[[np.ndarray], np.ndarray]:
+    """:func:`eval_scaled_credal_set_constraints` as a function of ``x_scaled`` only."""
+    return lambda x_scaled: eval_scaled_credal_set_constraints(
+        x_scaled, max_std_vect, tracker, experiment_key, **kwargs
+    )
 
 
 dim = len(_deviation_symbols(4, True))

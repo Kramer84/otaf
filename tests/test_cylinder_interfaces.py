@@ -193,3 +193,24 @@ def test_automatic_pins_match_hand_coded_model4(four_pins):
     s_auto = _slack(four_pins, (x4 - nominal) @ _model4_to_auto(four_pins).T)
     assert (s4 < 0).any() and (s4 > 0).any()
     np.testing.assert_allclose(s_auto, s4, atol=1e-8)
+
+
+# --- Credal set (capability constraints of the thesis) ------------------------------------
+
+
+def test_credal_constraints_are_zero_on_the_capability_boundary():
+    _, symbols, max_std, _ = auto.get_distribution_params(tol=0.25)
+    names = [str(s) for s in symbols]
+    kw = {"tol": 0.25}
+    # Each component alone at its maximal standard deviation is on the boundary.
+    for i, name in enumerate(names):
+        x = np.zeros(len(names))
+        x[i] = 1.0
+        values = auto.eval_scaled_credal_set_constraints(x, max_std, **kw)
+        assert values.max() == pytest.approx(0.0, abs=1e-12), name
+    # Translation and rotation sharing the variance in both directions: still on it.
+    x = np.where([n.split("_")[0] in ("v", "w", "beta", "gamma") for n in names], np.sqrt(0.5), 0.0)
+    np.testing.assert_allclose(auto.eval_scaled_credal_set_constraints(x, max_std, **kw)[:8], 0.0, atol=1e-12)
+    # All components at their maximum: sqrt(3) times the target for holes (d, v, gamma).
+    values = auto.get_scaled_credal_set_constraints_function(max_std, **kw)(np.ones(len(names)))
+    np.testing.assert_allclose(values, [np.sqrt(3) - 1] * 8 + [0.0] * 4)

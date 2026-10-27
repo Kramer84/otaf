@@ -89,6 +89,9 @@ class NeuralRegressorNetwork(nn.Module):
     noise_level : float, optional
         The structural coefficient multiplier applied to standard
         deviation noise scaling. The default is 0.1.
+    seed : int, optional
+        Seeds PyTorch (weight initialization, training noise, sampling)
+        and the train/test split. The default is None (not reproducible).
     """
 
     def __init__(
@@ -112,8 +115,12 @@ class NeuralRegressorNetwork(nn.Module):
         output_normalization: bool = True,
         noise_dims: List[int] = [],
         noise_level: float = 0.1,
+        seed: Optional[int] = None,
     ) -> None:
         super().__init__()
+        self.seed = seed
+        if seed is not None:
+            torch.manual_seed(seed)
         self.register_buffer(
             "input_dim", torch.tensor(input_dim, dtype=int, requires_grad=False)
         )
@@ -395,7 +402,8 @@ class NeuralRegressorNetwork(nn.Module):
         randomized test boundaries.
         """
         X_train, X_test, y_train, y_test = train_test_split(
-            self.X, self.y, train_size=self.train_size, shuffle=True
+            self.X, self.y, train_size=self.train_size, shuffle=True,
+            random_state=self.seed,
         )
         self.X_train = X_train
         self.y_train = torch.atleast_2d(y_train)

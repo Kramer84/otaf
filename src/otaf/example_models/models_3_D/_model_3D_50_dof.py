@@ -949,9 +949,9 @@ def get_distribution_params(
     hPlate : float, default 30.0
         The height parameter of the plate component.
     EH : float, default 50.0
-        The embedment height component.
+        Distance between the pin axes, along x and along y.
     LB : float, default 25.0
-        The length parameter of the base section.
+        Distance from a pin axis to the plate edge.
     Dext : float, default 20.0
         The nominal external component diameter.
     Dint : float, default 19.8
@@ -972,7 +972,9 @@ def get_distribution_params(
     theta_max = tol / hPlate
     sigma_e_theta = 2 * theta_max / (6 * capa)
     sigma_e_pos_plate = tol / (6 * capa)
-    sigma_e_theta_plate = 2 * (tol / (EH + LB)) / (6 * capa)
+    # The plate deviation is largest at its corners, (EH / 2 + LB) from the plate
+    # centre along x and y, where eval_credal_set_constraints evaluates it.
+    sigma_e_theta_plate = sigma_e_pos_plate / (EH / 2 + LB)
     sigma_diam = sigma_e_pos
     otaf_mapping = create_dynamic_mapping(defect_vars_glob, clearance_vars_glob)
     mapped_defects = [otaf_mapping[var] for var in defect_vars_glob if var in otaf_mapping]
