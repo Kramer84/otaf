@@ -1,4 +1,4 @@
-"""Function based representation of the examples in ``notebooks/``"""
+"""Function based representation of the examples in ``notebooks/``."""
 from __future__ import annotations
 
 __author__ = "Kramer84"

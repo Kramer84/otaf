@@ -48,7 +48,8 @@ jobs:
 
       - name: Run Pytest
         run: |
-          pytest tests/ -m "not gpu" --doctest-modules --cov=otaf --cov-report=term --junitxml=junit/test-results.xml
+          # tests/ and the docstring examples of src/otaf (doctests), see [tool.pytest.ini_options]
+          pytest -m "not gpu" --cov=otaf --cov-report=term --junitxml=junit/test-results.xml
 
       - name: Upload Test Results
         if: always()

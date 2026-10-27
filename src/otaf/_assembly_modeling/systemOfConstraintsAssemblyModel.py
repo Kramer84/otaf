@@ -75,6 +75,7 @@ class SystemOfConstraintsAssemblyModel:
     interface_eqs : list of sympy.Expr or None
         Stored interface equations.
     """
+
     def __init__(
         self,
         compatibility_eqs: Optional[List[sp.Expr]] = None,

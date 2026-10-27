@@ -72,14 +72,17 @@ class SurfaceInteractionManager:
 
         Parameters
         ----------
-            part_id (str): ID of the current part to which the surface belongs.
-            surface_id (str): ID of the current surface being processed.
-            surface_data (dict): Detailed data describing the surface's properties and interactions.
+        part_id : str
+            ID of the current part to which the surface belongs.
+        surface_id : str
+            ID of the current surface being processed.
+        surface_data : dict
+            Detailed data describing the surface's properties and interactions.
 
         Notes
         -----
-            - Interaction data is retrieved from the `INTERACTIONS` field in `surface_data`.
-            - Surface types determine the specific interaction processing method used.
+        - Interaction data is retrieved from the `INTERACTIONS` field in `surface_data`.
+        - Surface types determine the specific interaction processing method used.
         """
         for interaction in surface_data["INTERACTIONS"]:
             (part_id_interact, surf_id_interact) = BASE_PART_SURF_PATTERN.fullmatch(
@@ -246,20 +249,29 @@ class SurfaceInteractionManager:
 
         Parameters
         ----------
-            idPCur (str): ID of the current part.
-            idSCur (str): ID of the current surface.
-            datSCur (dict): Data of the current cylindrical surface, including radius, origin, and frame.
-            idPInt (str): ID of the interacting part.
-            idSInt (str): ID of the interacting surface.
-            datSInt (dict): Data of the interacting cylindrical surface, similar to `datSCur`.
+        idPCur : str
+            ID of the current part.
+        idSCur : str
+            ID of the current surface.
+        datSCur : dict
+            Data of the current cylindrical surface, including radius, origin, and frame.
+        idPInt : str
+            ID of the interacting part.
+        idSInt : str
+            ID of the interacting surface.
+        datSInt : dict
+            Data of the interacting cylindrical surface, similar to `datSCur`.
 
         Raises
         ------
-            NonConcentricCylindersException: If cylinder normals are not aligned and facing.
-            ConflictingSurfaceDirectionsException: If both cylinders have conflicting surface directions.
-            CylindricalInterferenceGeometricException: If there is geometric interference
-                based on surface directions and radii.
-            ValueError: If the inner and outer cylinders have the same radii, which is not supported.
+        NonConcentricCylindersException
+            If cylinder normals are not aligned and facing.
+        ConflictingSurfaceDirectionsException
+            If both cylinders have conflicting surface directions.
+        CylindricalInterferenceGeometricException
+            If there is geometric interference based on surface directions and radii.
+        ValueError
+            If the inner and outer cylinders have the same radii, which is not supported.
 
         Notes
         -----

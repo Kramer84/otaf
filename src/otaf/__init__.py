@@ -1,5 +1,6 @@
-from __future__ import annotations
+"""OTAF: Open (mechanical) Tolerance Analysis Framework."""
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
 __author__ = "Kramer84"
 __requires__ = ["numpy", "sympy", "openturns", "scipy", "matplotlib",

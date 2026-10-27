@@ -320,10 +320,10 @@ class InterfaceLoopBuilder:
 
         Returns
         -------
-        List[<appropriate type>]
-            A list of interaction matrix loops representing the geometric relationships and
-            interactions between the cylinder and its interacting surfaces. Each loop consists
-            of transformation and gap matrices expanded into symbolic equations.
+        list of sympy.Expr
+            Linearized non-interpenetration expressions, one per polygon side
+            (``CIRCLE_RESOLUTION`` of them) for each contact section of each
+            cylinder pair; the contact holds when each expression is non-negative.
 
         Notes
         -----
@@ -340,10 +340,11 @@ class InterfaceLoopBuilder:
 
         Examples
         --------
-        To generate interaction equations for a cylinder:
-        >>> equations = get_interface_equations_facing_cylinders("Part1", "SurfaceA")
-        >>> for eq in equations:
-        ...     self._print(eq)
+        The method needs a fully built model (a ``CompatibilityLoopHandling`` and the
+        surface interactions), so its example is not run as a doctest. It is
+        exercised on the pin/plate assembly in ``tests/test_cylinder_interfaces.py``:
+
+        >>> equations = builder.get_interface_equations_facing_cylinders("P1", "a")  # doctest: +SKIP
         """
         self._print(f"Processing part {idPart}, surface {idSurf} for cylinder-to-cylinder interactions.")
 

@@ -111,7 +111,6 @@ def _merge_style(style: dict | None = None, **overrides) -> dict:
 def _setup_mpl_from_style(cfg: dict) -> None:
     """Configure global Matplotlib settings for typography and LaTeX.
 
-
     Parameters
     ----------
     cfg : dict
