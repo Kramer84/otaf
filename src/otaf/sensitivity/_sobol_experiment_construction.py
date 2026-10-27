@@ -1,7 +1,10 @@
 __author__ = "Kramer84"
 __all__ = ["SobolIndicesExperimentWithComposedDistribution"]
+import logging
 from typing import Any
 import openturns as ot
+
+logger = logging.getLogger(__name__)
 
 if hasattr(ot, "JointDistribution"):
     JointDistribution = ot.JointDistribution
@@ -344,7 +347,7 @@ class SobolIndicesExperimentWithComposedDistribution(ot.SobolIndicesExperiment):
                 else:
                     raise ValueError("Unknown sequence type")
             else:
-                print(
+                logger.warning(
                     "sequence undefined for low discrepancy experiment, default: SobolSequence"
                 )
                 seq = ot.SobolSequence()

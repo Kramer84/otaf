@@ -25,6 +25,7 @@ _lazy_submodules = {
     "optimization": f"{__name__}.optimization",
     "tolerances": f"{__name__}.tolerances",
     "example_models": f"{__name__}.example_models",
+    "schema": f"{__name__}.schema",
 }
 
 # --- Lazy re-exports from _assembly_modeling ---------------------------------
@@ -73,7 +74,7 @@ def __dir__():
 # For static type checkers only
 if TYPE_CHECKING:
     from . import sampling, distribution, sensitivity, capabilities
-    from . import uncertainty, surrogate, optimization, tolerances, example_models
+    from . import uncertainty, surrogate, optimization, tolerances, example_models, schema
     from ._assembly_modeling import (  # type: ignore[F401]
         SystemOfConstraintsAssemblyModel, AssemblyDataProcessor, CompatibilityLoopHandling,
         DeviationMatrix, TransformationMatrix, FirstOrderMatrixExpansion,
@@ -91,6 +92,7 @@ __all__ = [
     "geometry", "constants", "plotting", "exceptions", "common",
     "uncertainty", "surrogate", "sensitivity", "optimization",
     "sampling", "distribution", "capabilities", "example_models", "tolerances",
+    "schema",
 ]
 
 
@@ -140,6 +142,9 @@ def setup_logging(filename="otaf_tmp.log", level=_logging.INFO):
 
     _logging.info("Logging initialized for open (mechanical) tolerance analysis framework")
 
+
+# Library convention: no output unless the application configures logging.
+_logging.getLogger(__name__).addHandler(_logging.NullHandler())
 
 # Notify users that logging is optional
 _logging.info("To enable logging, call setup_logging()")

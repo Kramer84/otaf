@@ -19,6 +19,7 @@ import otaf.exceptions as otaf_exceptions
 import otaf.constants as  otaf_constants
 
 from otaf.common import validate_dict_keys
+from otaf.schema import SystemData, validate_point_dict, validate_system_data
 from otaf.geometry import point_dict_to_arrays, are_points_on_2d_plane, spheres_from_point_cloud, surface_from_planar_contour, open_cylinder_mesh
 from otaf.plotting import color_palette_3, hex_to_rgba, trimesh_scene_as_notebook_scene
 from ._assembly_topology import calculate_graph_layout
@@ -35,10 +36,11 @@ class AssemblyDataProcessor:
 
     Parameters
     ----------
-    system_data : dict, optional
-        A nested dictionary representing mechanical system data. If
-        not provided, an empty structure is initialized (the
-        default is None).
+    system_data : dict or otaf.schema.SystemData, optional
+        A nested dictionary representing mechanical system data (see
+        ``docs/guide/input_format.md``), validated against
+        `otaf.schema.SystemData`. If not provided, an empty structure is
+        initialized (the default is None).
 
     Attributes
     ----------
@@ -49,8 +51,10 @@ class AssemblyDataProcessor:
         as None.
     """
 
-    def __init__(self, system_data: Optional[Dict[str, Dict[str, Dict[str, Any]]]] = None) -> None:
+    def __init__(self, system_data: Optional[Union[Dict[str, Any], SystemData]] = None) -> None:
         """Initialize an AssemblyDataProcessor instance."""
+        if isinstance(system_data, SystemData):
+            system_data = system_data.to_system_data()
         self.system_data = (
             deepcopy(system_data) if system_data is not None else self._initialize_empty_system_data()
         )
@@ -158,9 +162,11 @@ class AssemblyDataProcessor:
     def validate_system_data_structure(self) -> None:
         """Validate the structure and integrity of the system data.
 
-        Ensures that the required keys and nested structures exist and
-        conform to expected standards, including part IDs, surface
-        labels, types, points, interactions, and constraints.
+        Checks the dictionary against the input schema
+        (`otaf.schema.validate_system_data`: labels, types, frames, points,
+        required keys per surface, interactions, contact constraints, loop
+        references), then generates the points of the surfaces given without
+        ``POINTS`` and sets ``ORIGIN`` from the origin point of the others.
 
         Raises
         ------
@@ -182,95 +188,27 @@ class AssemblyDataProcessor:
             If a surface direction is invalid.
         otaf.exceptions.InvalidGlobalConstraintError
             If the global constraint is not supported.
+        otaf.exceptions.InconsistentContactConstraintsError
+            If the two surfaces of a contact have different ``CONSTRAINTS_G``.
+        otaf.exceptions.SystemDataValidationError
+            For the other schema violations (e.g. a ``FRAME`` that is not a
+            rotation matrix).
         """
         logging.info("Validating system data dictionary structure.")
-        required_top_level_keys = ["PARTS", "LOOPS", "GLOBAL_CONSTRAINTS"]
-        for key in required_top_level_keys:
-            if key not in self.system_data:
-                raise otaf_exceptions.MissingKeyError(key, "system_data")
-            else:
-                if key == "PARTS":
-                    part_keys = list(self.system_data["PARTS"].keys())
-                    if not all(
-                        map(lambda x: x.isdigit(), part_keys)
-                    ):  # Check if all part labels are integers
-                        raise otaf_exceptions.InvalidPartLabelError()
-                    for part_id in part_keys:
-                        surf_keys = list(self.system_data["PARTS"][part_id].keys())
-                        if not all(
-                            map(lambda x: x.islower() and x.isalpha(), surf_keys)
-                        ):  # Check if all surface labels are lowercase ascii
-                            raise otaf_exceptions.InvalidSurfaceLabelError()
-                        for surf_id in surf_keys:
-                            part_surf_dict = self.system_data["PARTS"][part_id][surf_id]
-                            surf_params = list(part_surf_dict.keys())
-                            if "TYPE" in surf_params:
-                                if not part_surf_dict["TYPE"] in otaf_constants.BASE_SURFACE_TYPES:
-                                    raise otaf_exceptions.UnsupportedSurfaceTypeError(
-                                        part_id, surf_id, part_surf_dict["TYPE"]
-                                    )
-                            else:
-                                raise otaf_exceptions.MissingSurfaceTypeKeyError(surf_id, part_id)
-
-                            if "POINTS" not in surf_params:
-                                self.generate_points_for_surface(part_id, surf_id)
-
-                            else:
-                                point_dict = part_surf_dict["POINTS"]
-                                self.validate_point_dict(point_dict)
-                                label_array, point_array = point_dict_to_arrays(
-                                    point_dict
-                                )
-                                label_origin = list(
-                                    filter(
-                                        otaf_constants.SURF_ORIGIN_PATTERN.fullmatch, label_array
-                                    )
-                                )
-                                if label_origin:
-                                    part_surf_dict["ORIGIN"] = np.array(
-                                        point_dict[label_origin[0]], dtype="float64"
-                                    )
-                                else:
-                                    raise otaf_exceptions.MissingOriginPointError(part_id, surf_id)
-
-                            if "INTERACTIONS" in surf_params:
-                                for interaction in part_surf_dict["INTERACTIONS"]:
-                                    if not otaf_constants.BASE_PART_SURF_PATTERN.fullmatch(
-                                        interaction
-                                    ):
-                                        raise otaf_exceptions.InvalidInteractionFormatError(
-                                            interaction
-                                        )
-
-                            if "SURFACE_DIRECTION" in surf_params:
-                                if (
-                                    part_surf_dict["SURFACE_DIRECTION"]
-                                    not in otaf_constants.SURFACE_DIRECTIONS
-                                ):
-                                    raise otaf_exceptions.InvalidSurfaceDirectionError(
-                                        part_surf_dict["SURFACE_DIRECTION"]
-                                    )
-
-                            if "DIAMETER_DEVIATION" in surf_params and (
-                                part_surf_dict.get("TYPE") != "cylinder"
-                                or not isinstance(part_surf_dict["DIAMETER_DEVIATION"], bool)
-                            ):
-                                raise ValueError(
-                                    f"DIAMETER_DEVIATION of surface {surf_id} on part {part_id} "
-                                    "must be a bool and is only valid for cylinders."
-                                )
-
-                if key == "GLOBAL_CONSTRAINTS":
-                    if (
-                        self.system_data["GLOBAL_CONSTRAINTS"]
-                        not in otaf_constants.GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF.keys()
-                    ):
-                        raise otaf_exceptions.InvalidGlobalConstraintError(
-                            otaf_constants.GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF.keys()
-                        )
-                if key == "LOOPS":
-                    loop_keys = self.system_data["LOOPS"].keys()
-                    pass  # Not nice enough to continue working on this...
+        validate_system_data(self.system_data)
+        for part_id, part in self.system_data["PARTS"].items():
+            for surf_id, part_surf_dict in part.items():
+                if "POINTS" not in part_surf_dict:
+                    self.generate_points_for_surface(part_id, surf_id)
+                else:
+                    point_dict = part_surf_dict["POINTS"]
+                    label_origin = [
+                        label for label in point_dict
+                        if otaf_constants.SURF_ORIGIN_PATTERN.fullmatch(label)
+                    ]
+                    part_surf_dict["ORIGIN"] = np.array(
+                        point_dict[label_origin[0]], dtype="float64"
+                    )
 
     def validate_point_dict(
         self, point_dict: Dict[str, Union[Tuple[float, ...], np.ndarray]]
@@ -305,39 +243,7 @@ class AssemblyDataProcessor:
           and unique numeric suffixes.
         - The coordinates for all points must be unique.
         """
-        label_array, point_array = point_dict_to_arrays(point_dict)
-        label_pattern_compliance = list(
-            filter(otaf_constants.SURF_POINT_PATTERN.fullmatch, label_array)
-        )
-        if len(label_pattern_compliance) != label_array.shape[0]:
-            raise otaf_exceptions.LabelPatternError()
-        label_prefixes = list(map(lambda X: re.findall(r"^[A-Z]+", X)[0], label_array))
-        if len(list(set(label_prefixes))) > 1:
-            raise otaf_exceptions.LabelPrefixError()
-        label_suffixes = list(map(lambda X: int(re.findall(r"[0-9]+$", X)[0]), label_array))
-        if len(list(set(label_suffixes))) < label_array.shape[0]:
-            raise otaf_exceptions.UniqueLabelSuffixError()
-        # unique_points = np.unique(point_array, axis=0)
-        # if unique_points.shape[0] < point_array.shape[0]:
-        #     raise otaf_exceptions.NonUniqueCoordinatesError()
-        # Finding duplicates with their labels and coordinates
-        point_to_labels = {}
-        for label, point in zip(
-            label_array, map(tuple, point_array)
-        ):  # Convert numpy arrays to tuples for hashing
-            point_to_labels.setdefault(point, []).append(label)
-
-        duplicates = {}
-        for point, labels in point_to_labels.items():
-            if len(labels) > 1:
-                duplicates[point] = labels
-
-        if duplicates:
-            # Transforming point keys back to their original numpy array form for the error message
-            duplicates_formatted = {
-                str(np.array(point)): labels for point, labels in duplicates.items()
-            }
-            raise otaf_exceptions.NonUniqueCoordinatesError(duplicates_formatted)
+        validate_point_dict(point_dict)
 
     def add_surface_points(
         self,
@@ -497,8 +403,8 @@ class AssemblyDataProcessor:
         point_dict = {key_prefix + "0": surf_data["ORIGIN"]}
         if "CONTOUR_GLOBAL" in surf_data:
             # The contour of the surface has been defined in the global frame
-            NP = surf_data["CONTOUR_GLOBAL"].shape[0]
-            points = surf_data["CONTOUR_GLOBAL"]
+            points = np.asarray(surf_data["CONTOUR_GLOBAL"], dtype="float64")
+            NP = points.shape[0]
             points_to_check = np.vstack([surf_data["ORIGIN"], points])
             glob_const = self.system_data.get("GLOBAL_CONSTRAINTS", "3D")
             
@@ -542,10 +448,11 @@ class AssemblyDataProcessor:
         point_dict = {key_prefix + "0": surf_data["ORIGIN"]}
         if "CONTOUR_GLOBAL" in surf_data:
             # The contour of the surface has been defined in the global frame
-            NP = surf_data["CONTOUR_GLOBAL"].shape[0]
+            points = np.asarray(surf_data["CONTOUR_GLOBAL"], dtype="float64")
+            NP = points.shape[0]
             contour_point_dict = {
                 key_prefix + str(key): value
-                for key, value in zip(list(range(1, NP + 1)), surf_data["CONTOUR_GLOBAL"])
+                for key, value in zip(list(range(1, NP + 1)), points)
             }
             point_dict.update(contour_point_dict)
         self.add_surface_points(part_id, surf_id, point_dict)

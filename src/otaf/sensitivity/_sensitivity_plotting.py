@@ -1,10 +1,13 @@
 __author__ = "Kramer84"
 __all__ = ["plotSobolIndicesWithErr"]
+import logging
 from typing import Optional, Any, Union
 import matplotlib
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import numpy as np
+
+logger = logging.getLogger(__name__)
 
 
 def plotSobolIndicesWithErr(
@@ -61,11 +64,10 @@ def plotSobolIndicesWithErr(
     if Stot is not None and errStot is not None:
         Stot, errStot = (np.squeeze(Stot), np.squeeze(errStot))
     if len(S.shape) == 1:
-        print("The output is scalar")
-        print(
-            "The sensitivity is measured accordingly to the",
+        logger.info(
+            "The output is scalar. The sensitivity is measured according to the %s "
+            "input variables, namely: %s",
             n_dims,
-            "input variables, namely:\n",
             " and ".join(varNames),
         )
         lgd_elems = [
@@ -91,7 +93,7 @@ def plotSobolIndicesWithErr(
         plt.grid()
         plt.show()
     if len(S.shape) == 2:
-        print("The output is a vector")
+        logger.info("The output is a vector")
         plt.ion()
         fig = plt.figure(figsize=figsize)
         if n_dims <= 5:

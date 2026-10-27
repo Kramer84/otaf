@@ -13,6 +13,7 @@ __all__ = [
     ]
 
 import copy
+import logging
 import re
 from typing import Sequence, Any, Callable, Iterable
 
@@ -21,6 +22,8 @@ import sympy as sp
 
 import otaf
 from otaf.tolerances import sigma_delta_3D_plane, sigma_delta_cylindrical_feature
+
+logger = logging.getLogger(__name__)
 
 _VAR_RE = re.compile("^([A-Za-z]+)_([A-Za-z0-9]+)$")
 _PREFIX_MAP: dict[str, str] = {
@@ -360,9 +363,7 @@ def extract_linear_matrices(
     if length_subs:
         remaining_symbols = A.free_symbols | B.free_symbols | C.free_symbols
         if remaining_symbols:
-            print(
-                f"Warning: Matrices still contain unbound symbols: {remaining_symbols}"
-            )
+            logger.warning("Matrices still contain unbound symbols: %s", remaining_symbols)
     return (A, B, C)
 
 

@@ -9,6 +9,11 @@ import numpy as np
 from beartype import beartype
 from scipy.optimize import OptimizeResult, minimize
 
+# Convergence tolerance of the SLSQP projection onto the surface g(X) = 0.
+PROJECTION_TOL = 1e-9
+# A starting point with |g(X)| below this is already on the surface.
+ON_SURFACE_ATOL = 1e-6
+
 
 class LagrangeConstraintSolver:
     """
@@ -87,7 +92,7 @@ class LagrangeConstraintSolver:
             method="SLSQP",
             bounds=self.bounds,
             constraints=[constraints],
-            tol=1e-09,
+            tol=PROJECTION_TOL,
         )
         return res
 
@@ -205,7 +210,7 @@ class UniformSurfaceSampler:
         """
         sampled_points = []
         for point in self.starting_points:
-            if np.abs(self.g(point)) < 1e-06:
+            if np.abs(self.g(point)) < ON_SURFACE_ATOL:
                 sampled_points.append(point)
         while len(sampled_points) < num_samples:
             x0 = sampled_points[self.rng.integers(len(sampled_points))]

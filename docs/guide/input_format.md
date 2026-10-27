@@ -2,7 +2,9 @@
 
 The whole assembly is described by one nested dictionary, the *system data*. It is
 validated by `otaf.AssemblyDataProcessor`, which is the first step of the modelling
-pipeline (see {doc}`theory`). Lengths are in millimetres and angles in radians.
+pipeline (see {doc}`theory`), against the pydantic models of `otaf.schema`
+(`SystemData`, `Part`, `Surface`, `ExtentLocal`, `Loops`). Lengths are in millimetres and
+angles in radians.
 
 ```text
 system_data
@@ -11,16 +13,16 @@ system_data
 └── "GLOBAL_CONSTRAINTS"  "3D" | "2D_NX" | "2D_NY" | "2D_NZ"
 ```
 
-The three top-level keys are required (`MissingKeyError` otherwise). The dictionary is
-copied, so the one you pass is never modified; read the completed data back from
-`AssemblyDataProcessor.system_data`.
+The three top-level keys are required (`MissingKeyError` otherwise); other keys are kept and
+ignored. The dictionary is copied, so the one you pass is never modified; read the completed data
+back from `AssemblyDataProcessor.system_data`. See {ref}`validation` for the errors.
 
 ## Labels
 
 | Element | Rule | Example |
 |---|---|---|
 | Part id | string of an integer | `"1"` |
-| Surface id | lowercase letters only, unique within the part | `"a"`, `"b"` |
+| Surface id | lowercase ASCII letters only, unique within the part | `"a"`, `"b"` |
 | Point label | upper-case prefix + integer suffix; the same prefix for all points of a surface (conventionally the upper-case surface id); suffixes unique (`A0` and `A00` clash) | `"A0"`, `"A1"` |
 | Origin point | the label whose suffix is all zeros | `"A0"` |
 | Interaction | `P<part id><surface id>` | `"P2a"` |
@@ -30,28 +32,28 @@ generated for it in the loops.
 
 ## Surface dictionary
 
-`PARTS[part][surface]` is a dictionary with the following keys.
+`PARTS[part][surface]` is a dictionary with the following keys (model `otaf.schema.Surface`).
+Other keys, such as `META` or `CAD_ID`, are kept and ignored.
 
 | Key | Required | Allowed values | Meaning |
 |---|---|---|---|
-| `TYPE` | always | `"plane"` or `"cylinder"` | Geometry of the feature. `"cone"` and `"sphere"` pass the first check (`otaf.constants.BASE_SURFACE_TYPES`) but are not supported later (see {doc}`limitations`). |
-| `FRAME` | with `ORIGIN` (no `POINTS`); always for interactions | 3×3 array, orthonormal, determinant +1 | Local frame. **Columns** are the local axes. Local x (first column) is the plane normal, or the cylinder axis. |
+| `TYPE` | always | `"plane"` or `"cylinder"` (`otaf.constants.SUPPORTED_SURFACE_TYPES`) | Geometry of the feature. `"cone"` and `"sphere"` have no deviation or gap model and are rejected (`UnsupportedSurfaceTypeError`, see {doc}`limitations`). |
+| `FRAME` | always | 3×3 array, orthonormal, determinant +1 (to `otaf.constants.FRAME_ATOL`) | Local frame. **Columns** are the local axes. Local x (first column) is the plane normal, or the cylinder axis. |
 | `ORIGIN` | when `POINTS` is absent | 3 floats | Origin of the surface frame. If `POINTS` is given, it is taken from the point whose label ends in zeros. |
 | `POINTS` | optional | `{label: (x, y, z)}` | Points on the feature, in global coordinates: the contour of a plane (in 3D, 3 or more coplanar points; in 2D, the origin and the ends of the segment), or points on a cylinder axis. Must contain the origin. Labels and coordinates must be unique. |
 | `CONTOUR_GLOBAL` | optional, instead of `POINTS` | array of shape (n, 3) | Contour points in global coordinates. Labelled `<SURFACE>1 … <SURFACE>n` after the origin `<SURFACE>0`. Coplanarity is checked in 3D. |
-| `RADIUS` | cylinders in an interaction | float > 0 | Nominal radius. |
-| `EXTENT_LOCAL` | cylinders in an interaction | `{"x_min": float, "x_max": float}` | Axial extent along the local x axis, from `ORIGIN`. `x_max >= x_min`. |
-| `INTERACTIONS` | when `POINTS` is absent; required for contact | list of `P<part><surface>` | Surfaces this one can touch. List the interaction on both surfaces. |
-| `CONSTRAINTS_D` | optional (default `["NONE"]`) | one of the values below | Which deviations the feature has. |
-| `CONSTRAINTS_G` | optional (default `["FLOATING"]`) | one of the values below | Which relative motions the contact blocks. |
+| `RADIUS` | cylinders with `INTERACTIONS` | number > 0 | Nominal radius. |
+| `EXTENT_LOCAL` | cylinders with `INTERACTIONS` | `{"x_min": number, "x_max": number}`, no other key | Axial extent along the local x axis, from `ORIGIN`. `x_max >= x_min`. |
+| `INTERACTIONS` | when `POINTS` is absent; required for contact | list of `P<part><surface>`, existing surfaces of the same `TYPE` | Surfaces this one can touch. List the interaction on both surfaces. |
+| `CONSTRAINTS_D` | optional (default `["NONE"]`) | list with one of the values below | Which deviations the feature has. |
+| `CONSTRAINTS_G` | optional (default `["FLOATING"]`) | list with one of the values below, the same on both surfaces of a contact | Which relative motions the contact blocks. |
 | `BLOCK_TRANSLATIONS_G`, `BLOCK_ROTATIONS_G` | optional (default `""`) | string of the axes `x`, `y`, `z`, e.g. `"xz"` | Extra blocked gap translations/rotations, added to those of `CONSTRAINTS_G`. |
-| `SURFACE_DIRECTION` | optional, cylinders | `"centripetal"` or `"centrifugal"` | `"centripetal"`: the material is outside the cylinder (a hole). `"centrifugal"`: the material is inside (a pin). Deduced from the radii when absent on both cylinders of a pair. |
-| `DIAMETER_DEVIATION` | optional, cylinders | `True` / `False` | Whether the diameter is a deviation variable `d_d_<k>`. Only valid on cylinders (`ValueError` otherwise). |
+| `SURFACE_DIRECTION` | optional, cylinders only | `"centripetal"` or `"centrifugal"` | `"centripetal"`: the material is outside the cylinder (a hole). `"centrifugal"`: the material is inside (a pin). Deduced from the radii when absent on both cylinders of a pair. |
+| `DIAMETER_DEVIATION` | optional, cylinders only | `True` / `False` | Whether the diameter is a deviation variable `d_d_<k>`. |
 
-When `POINTS` is absent, `TYPE`, `FRAME`, `ORIGIN` and `INTERACTIONS` must all be present
-(`MissingKeyError`), and `FRAME` and `ORIGIN` are checked. When `POINTS` is given, only the
-origin is looked for; `FRAME` is then used without further validation by the later steps, so
-make sure it is a rotation matrix.
+When `POINTS` is absent, `ORIGIN` and `INTERACTIONS` must be present (`MissingKeyError`). When
+`POINTS` is given, it must contain the origin point (`MissingOriginPointError`) and `ORIGIN` is
+taken from it. `FRAME` is checked in both cases.
 
 ### `CONSTRAINTS_D`: deviations of a feature
 
@@ -72,9 +74,9 @@ with position and orientation deviations only.
 
 ### `CONSTRAINTS_G`: relative motion at a contact
 
-Both surfaces of a pair must carry the **same** entry (if one has `"SLIDING"` and the other none,
-the missing one defaults to `"FLOATING"` and a `KeyError` such as
-`'plane-plane-floating-sliding'` is raised).
+Both surfaces of a pair must carry the **same** entry (case-insensitive). A surface without the
+key counts as `"FLOATING"`, so if one has `"SLIDING"` and the other none,
+`InconsistentContactConstraintsError` is raised.
 
 | Entry | Plane–plane: blocked gap motions | Cylinder–cylinder: blocked gap motions |
 |---|---|---|
@@ -122,11 +124,13 @@ The loop must close:
   the loop is closed by a gap between the last and first elements.
 - A loop with two elements is a direct contact between two different parts.
 
-Each element must match `P<digits><letters><LETTERS><digits>`, and a loop that stays in one part is
-rejected; both raise a `ValueError`. One loop is needed per independent closed chain of the
-assembly. Every contact that matters must be crossed by some loop: the contact conditions are
-generated for the gaps that appear in the loops, so a contact in `INTERACTIONS` that no loop
-crosses is ignored without a message.
+Each element must match `P<digits><letters><LETTERS><digits>` (`SystemDataValidationError`
+otherwise) and name an existing part and surface (`PartNotFoundError`, `SurfaceNotFoundError`);
+a loop that stays in one part raises a `ValueError` when the loops are expanded. One loop is
+needed per independent closed chain of the assembly. Every contact must be crossed by some loop:
+the contact conditions are generated for the gaps that appear in the loops, so a contact in
+`INTERACTIONS` that no loop crosses gets no condition, and `InterfaceLoopHandling` warns about it
+(`otaf.exceptions.UncoveredContactWarning`).
 
 ## Example 1: two parts in 2D
 
@@ -211,6 +215,48 @@ print(round(slack, 6))
 The slack of the nominal assembly is half the clearance, `(X2 - X1) / 2 = 0.1` mm.
 It is positive, so the nominal assembly can be assembled. The deviation variables of
 `soc.deviation_symbols` are the inputs sampled by the uncertainty study.
+
+(validation)=
+## Validation
+
+`AssemblyDataProcessor` validates the dictionary before using it. The same check can be run on
+its own, and a model built once can be passed in place of the dictionary:
+
+```python
+from otaf.schema import SystemData, validate_system_data
+
+model = validate_system_data(system_data)  # SystemData; system_data is not modified
+assert model.PARTS["1"].root["c"].CONSTRAINTS_G == ["SLIDING"]
+assert model.contact_pairs()[0] == (("1", "a"), ("2", "a"))
+adp_from_model = otaf.AssemblyDataProcessor(model)
+json_schema = SystemData.model_json_schema()  # e.g. for a CAD converter or an editor
+
+broken = {**system_data, "GLOBAL_CONSTRAINTS": "2D"}
+try:
+    validate_system_data(broken)
+except otaf.exceptions.InvalidGlobalConstraintError as error:
+    print(error)
+```
+
+Errors that have their own class in `otaf.exceptions` are raised with it, their message
+prefixed by the location of the problem (`PARTS -> 1 -> a -> POINTS: ...`):
+
+| Problem | Exception |
+|---|---|
+| missing key (top level, `TYPE`, keys required by the rules above) | `MissingKeyError` (`MissingSurfaceTypeKeyError` for `TYPE`) |
+| part or surface label | `InvalidPartLabelError`, `InvalidSurfaceLabelError` |
+| `TYPE` not `plane` or `cylinder` | `UnsupportedSurfaceTypeError` |
+| point labels or duplicate points | `LabelPatternError`, `LabelPrefixError`, `UniqueLabelSuffixError`, `NonUniqueCoordinatesError` |
+| no origin point in `POINTS` | `MissingOriginPointError` |
+| `INTERACTIONS` entry format, unknown target | `InvalidInteractionFormatError`, `PartNotFoundError`, `SurfaceNotFoundError` |
+| `SURFACE_DIRECTION` value | `InvalidSurfaceDirectionError` |
+| `GLOBAL_CONSTRAINTS` value | `InvalidGlobalConstraintError` |
+| different `CONSTRAINTS_G` on the two sides of a contact | `InconsistentContactConstraintsError` |
+| plane–cylinder contact | `NotImplementedError` |
+| anything else (`FRAME` not a rotation, negative `RADIUS`, `CONSTRAINTS_D` not a one-entry list, ...) | `SystemDataValidationError` |
+
+When several problems are found, the first is raised and chained to a
+`SystemDataValidationError` that lists all of them (`error.__cause__.messages`).
 
 ## Example 2: a pin in two plates (3D)
 

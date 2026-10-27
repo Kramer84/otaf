@@ -16,6 +16,7 @@ from beartype.typing import Dict, List, Union
 from otaf.constants import SURF_TYPE_TO_DEVIATION_DOF, GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF, GAP_TYPE_TO_NULLIFIED_NOMINAL_COMPONENTS, CONTACT_TYPE_TO_GAP_DOF, GLOBAL_CONSTRAINTS_TO_GAP_DOF
 from otaf.common import extract_expressions_with_variables, inverse_mstring, parse_matrix_string
 from otaf.geometry import tfrt
+from otaf.exceptions import InconsistentContactConstraintsError
 
 from .assemblyDataProcessor import AssemblyDataProcessor
 from .assemblyModelingBaseObjects import DeviationMatrix, GapMatrix, TransformationMatrix, I4, J4
@@ -415,8 +416,9 @@ class CompatibilityLoopHandling:
 
         Raises
         ------
-        KeyError
-            If required surface or contact constraints are missing in the input data.
+        otaf.exceptions.InconsistentContactConstraintsError
+            If the two surfaces carry different ``CONSTRAINTS_G`` (a missing key
+            counts as ``["FLOATING"]``).
         """
         if el_info["mstring"] not in self._gap_matrix_map:
             g_mat_id_max = (
@@ -454,7 +456,12 @@ class CompatibilityLoopHandling:
             )
 
             is_inverse = el_info["inverse"]
-            gap_constraints = list(set((*constraints1, *constraints2)))
+            if sorted({c.upper() for c in constraints1}) != sorted({c.upper() for c in constraints2}):
+                raise InconsistentContactConstraintsError(
+                    el_info["part1"], el_info["surface1"], constraints1,
+                    el_info["part2"], el_info["surface2"], constraints2,
+                )
+            gap_constraints = sorted({c.lower() for c in constraints1})
             contact_type = "-".join(map(str.lower, [surf_type1, surf_type2, *gap_constraints]))
             manual_constraints_translation = "".join(
                 set(translations_blocked_manual_1 + translations_blocked_manual_2)

@@ -6,8 +6,8 @@ module is added, moved, renamed, or changes responsibility.
 ## Pipeline (input dict → failure probability)
 
 ```
-system_data (dict)
-  └─ AssemblyDataProcessor            parse/validate parts, surfaces, points, loops
+system_data (dict or otaf.schema.SystemData)
+  └─ AssemblyDataProcessor            validate (otaf.schema), generate points, expand loops
        ├─ CompatibilityLoopHandling   compatibility loops → first-order equalities
        │    └─ FirstOrderMatrixExpansion, DeviationMatrix/GapMatrix/TransformationMatrix
        └─ InterfaceLoopHandling       contact (non-interpenetration) inequalities
@@ -23,18 +23,19 @@ system_data (dict)
 
 | Path | Role |
 |---|---|
-| `__init__.py` | Eager-imports `constants`, `exceptions`, `common`, `geometry`; everything else is lazy (`__getattr__`). Re-exports the `_assembly_modeling` classes. |
+| `__init__.py` | Eager-imports `constants`, `exceptions`, `common`, `geometry`; everything else is lazy (`__getattr__`). Re-exports the `_assembly_modeling` classes. Adds a `NullHandler` to the `otaf` logger: library code reports through `logging` (module loggers), not `print`. |
 | `_assembly_modeling/` | Core modelling engine (pipeline above). Private package; public names are re-exported from `otaf`. |
-| `_assembly_modeling/_interface_constraints/` | Contact constraints. `SurfaceInteractionManager` pairs contact points at the overlap of two surfaces (`contactGapNames`); `InterfaceLoopBuilder` writes constraints at those pairs only. Cylinder pairs: radial clearance from `RADIUS`, plus diameter deviations `d_d_<k>` for cylinders with `DIAMETER_DEVIATION` (`InterfaceLoopBuilder.radial_clearance`), polygon chosen by `geometry.LinearizationStrategy`. |
+| `_assembly_modeling/_interface_constraints/` | Contact constraints. `InterfaceLoopHandling` warns about `INTERACTIONS` contacts that no loop crosses (`uncovered_contacts`). `SurfaceInteractionManager` pairs contact points at the overlap of two surfaces (`contactGapNames`); `InterfaceLoopBuilder` writes constraints at those pairs only. Cylinder pairs: radial clearance from `RADIUS`, plus diameter deviations `d_d_<k>` for cylinders with `DIAMETER_DEVIATION` (`InterfaceLoopBuilder.radial_clearance`), polygon chosen by `geometry.LinearizationStrategy`. |
 | `_assembly_modeling/_assembly_topology.py` | Assembly graph helpers (networkx). |
-| `constants/` | Regex patterns for labels (`P1aA0`, gap/deviation names) and global-constraint presets (`3D`, `2D_NZ`, …). |
+| `schema/` | pydantic models of the input dictionary (`SystemData`, `Part`, `Surface`, `ExtentLocal`, `Loops`) and `validate_system_data`, called by `AssemblyDataProcessor`. Validation only: the processor keeps working on its copy of the dict. Maps pydantic errors to `otaf.exceptions` (location-prefixed), else `SystemDataValidationError`. Lazy-loaded. |
+| `constants/` | Regex patterns for labels (`P1aA0`, gap/deviation names), global-constraint presets (`3D`, `2D_NZ`, …), `SUPPORTED_SURFACE_TYPES`, and the named numerical tolerances and gap bounds (`FRAME_ATOL`, `GEOMETRIC_ATOL`, `DIRECTION_ATOL`, `GAP_TRANSLATION_BOUND`, …). |
 | `common/` | Generic helpers: SymPy coefficient extraction, matrix-string parsing, nested dicts, tqdm/notebook utilities, `set_seed` (seeds NumPy, OpenTURNS and PyTorch at once). |
 | `geometry/` | Points, planes, lines, cylinders, transforms; `_meshes.py` uses trimesh (optional). |
-| `exceptions/` | Custom exceptions, `_raise_missing_dependency`, timeout decorator. |
+| `exceptions/` | Custom exceptions and warnings (`UncoveredContactWarning`, `SolverFailureWarning`), `_raise_missing_dependency`, timeout decorator. |
 | `tolerances/` | Tolerance zone → defect standard deviation conversions (`sigma_delta_*`). |
 | `distribution/` | Building OpenTURNS distributions for defect vectors. |
 | `sampling/` | Low-discrepancy sequences, permutations, hyper-plane/surface samplers. |
-| `uncertainty/` | Reliability: failure probability (FORM, NAIS, subset), batched gap optimisation on samples (`milp_batch_sequential`). |
+| `uncertainty/` | Reliability: failure probability (FORM, NAIS, subset), batched gap optimisation on samples (`milp_batch_sequential`, `compute_gap_optimizations_on_sample_batch`: NaN rows and per-sample status for failed solves, `return_status=True`). |
 | `optimization/` | Storage/tracking of optimisation history and credal-set constraints. |
 | `capabilities/` | Process capability helpers. |
 | `sensitivity/` | Sobol experiment construction and plotting. |
@@ -47,6 +48,7 @@ system_data (dict)
 | Path | Role |
 |---|---|
 | `tests/` | pytest suite. Markers: `slow` (model construction, small MC), `gpu` (torch). CI runs `-m "not gpu"`. Docstring examples in `src/otaf` run as doctests (`--doctest-modules` in the pytest config; `surrogate/` is ignored because it imports torch). `conftest.py` caches built example models per session. |
+| `tests/test_input_schema.py`, `tests/test_solver_failures.py` | Input validation (one test per Phase 3 finding) and per-sample solver failures. |
 | `tests/matrix_utils.py` | Layout-independent comparison of constraint systems (columns by variable name, rows up to permutation). |
 | `tests/data/matrix_snapshots/` | Golden-master matrices of models 1–4; regenerate with `OTAF_UPDATE_SNAPSHOTS=1 pytest tests/test_matrix_snapshots.py`. |
 | `scripts/` | Thesis study scripts, which produced every figure of the thesis (training surrogates, imprecise bounds, Pf plots, result analysis), with their CSV/PNG/MD outputs. They take `--seed`; most import torch. |

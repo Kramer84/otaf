@@ -4,6 +4,8 @@ from __future__ import annotations
 __author__ = "Kramer84"
 
 
+import logging
+
 import numpy as np
 import sympy as sp
 
@@ -20,6 +22,8 @@ from otaf.geometry import (
 
 from ..assemblyDataProcessor import AssemblyDataProcessor
 from ..firstOrderMatrixExpansion import FirstOrderMatrixExpansion
+
+logger = logging.getLogger(__name__)
 
 
 @beartype
@@ -73,7 +77,9 @@ class InterfaceLoopBuilder:
         circle_resolution : int, optional
             Resolution for approximating circular interactions (default is 8).
         silence_prints : bool, optional
-            Suppress debug prints (default is True).
+            Kept for compatibility, no effect: the debug messages go to the
+            ``otaf._assembly_modeling._interface_constraints._interfaceLoopBuilder``
+            logger at DEBUG level.
         contact_gap_names : set of str, optional
             Gap matrix names of the point pairs where contact can occur (see
             ``SurfaceInteractionManager.contactGapNames``). Contact constraints are
@@ -112,11 +118,8 @@ class InterfaceLoopBuilder:
     def _is_contact(self, gap_name: str) -> bool:
         return self.contact_gap_names is None or gap_name in self.contact_gap_names
 
-    def _print(self, *args):
-        if self.sp:
-            pass
-        else:
-            print(*args)
+    def _debug(self, *args):
+        logger.debug(" ".join(map(str, args)))
 
     def matrix_list_taylor_expansion(self, matrix_loop_list: List[Any]) -> sp.MatrixBase:
         """
@@ -218,17 +221,17 @@ class InterfaceLoopBuilder:
         performed based on part and surface identifiers.
         """
         GMMP = G_MATRIX_MSTRING_PATTERN
-        self._print(f"Processing part {idPart}, surface {idSurf} for plane-to-plane interactions.")
+        self._debug(f"Processing part {idPart}, surface {idSurf} for plane-to-plane interactions.")
 
         usedGMat = sorted(self.filtered_gap_matrices[idPart][idSurf]["USED"])
         usedGMatDat = [list(GMMP.fullmatch(ug).groups()) for ug in usedGMat]
-        self._print("usedGMatDat", usedGMatDat)
-        self._print(f"Found {len(usedGMat)} used gap matrices.")
+        self._debug("usedGMatDat", usedGMatDat)
+        self._debug(f"Found {len(usedGMat)} used gap matrices.")
 
         unusedGMat = sorted(self.filtered_gap_matrices[idPart][idSurf]["UNUSED"])
         unusedGMatDat = [list(GMMP.fullmatch(uug).groups()) for uug in unusedGMat]
-        self._print("unusedGMatDat", unusedGMatDat)
-        self._print(f"Found {len(unusedGMat)} unused gap matrices.")
+        self._debug("unusedGMatDat", unusedGMatDat)
+        self._debug(f"Found {len(unusedGMat)} unused gap matrices.")
 
         facingPlaneInteractionMatrixList = []
         for i, datGUsed in enumerate(usedGMatDat):
@@ -239,7 +242,7 @@ class InterfaceLoopBuilder:
                         partner, datGUsed, self.CLH._gap_matrix_map[usedGMat[i]]
                     )
                 )
-            self._print(f"Generated {len(partners)} interaction matrix loops for {usedGMat[i]}.")
+            self._debug(f"Generated {len(partners)} interaction matrix loops for {usedGMat[i]}.")
 
         return facingPlaneInteractionMatrixList
 
@@ -346,19 +349,19 @@ class InterfaceLoopBuilder:
 
         >>> equations = builder.get_interface_equations_facing_cylinders("P1", "a")  # doctest: +SKIP
         """
-        self._print(f"Processing part {idPart}, surface {idSurf} for cylinder-to-cylinder interactions.")
+        self._debug(f"Processing part {idPart}, surface {idSurf} for cylinder-to-cylinder interactions.")
 
         GMMP = G_MATRIX_MSTRING_PATTERN
 
         usedGMat = sorted(self.filtered_gap_matrices[idPart][idSurf]["USED"])
         usedGMatDat = [list(GMMP.fullmatch(ug).groups()) for ug in usedGMat]
-        self._print("usedGMatDat", usedGMatDat)
-        self._print(f"Found {len(usedGMat)} used gap matrices.")
+        self._debug("usedGMatDat", usedGMatDat)
+        self._debug(f"Found {len(usedGMat)} used gap matrices.")
 
         unusedGMat = sorted(self.filtered_gap_matrices[idPart][idSurf]["UNUSED"])
         unusedGMatDat = [list(GMMP.fullmatch(uug).groups()) for uug in unusedGMat]
-        self._print("unusedGMatDat", unusedGMatDat)
-        self._print(f"Found {len(unusedGMat)} unused gap matrices.")
+        self._debug("unusedGMatDat", unusedGMatDat)
+        self._debug(f"Found {len(unusedGMat)} unused gap matrices.")
 
         facingCylinderInteractionEquationList = []
         for i, datGUsed in enumerate(usedGMatDat):
@@ -375,8 +378,8 @@ class InterfaceLoopBuilder:
                         idPart, idSurf, datGUsed, cylinder_edge_center_interaction_matrix
                     )
                 )
-            self._print(f"Generated interaction equations at {len(partners)} contact pairs for {usedGMat[i]}.")
-        self._print(
+            self._debug(f"Generated interaction equations at {len(partners)} contact pairs for {usedGMat[i]}.")
+        self._debug(
             f"Total interaction equations generated: {len(facingCylinderInteractionEquationList)}"
         )
         return facingCylinderInteractionEquationList

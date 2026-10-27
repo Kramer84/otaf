@@ -43,3 +43,11 @@ def test_pin_example_is_model4_auto(guide_namespace):
 
     assert _same(guide_namespace["pin_system_data"], get_assembly_data(NX=1, NY=1))
     assert guide_namespace["pin_slack"] == pytest.approx((20.0 - 19.8) / 2, abs=1e-7)
+
+
+def test_validation_example(guide_namespace):
+    from otaf.schema import SystemData
+
+    assert isinstance(guide_namespace["model"], SystemData)
+    assert guide_namespace["json_schema"]["title"] == "SystemData"
+    assert guide_namespace["adp_from_model"].system_data.keys() == guide_namespace["system_data"].keys()

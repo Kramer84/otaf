@@ -43,6 +43,7 @@ __all__ = [
     "planar_overlap_vertices",
 ]
 
+import logging
 import math
 from enum import Enum
 import numpy as np
@@ -54,7 +55,10 @@ from beartype import beartype
 from beartype.typing import Dict, List, Tuple, Union, Iterable
 
 
+from otaf.constants import DIRECTION_ATOL, GEOMETRIC_ATOL, ZERO_NORM_ATOL
 from otaf.exceptions import InvalidAffineTransformException
+
+logger = logging.getLogger(__name__)
 
 
 
@@ -616,7 +620,7 @@ def are_planes_coincident(
     point1: np.ndarray,
     normal2: np.ndarray,
     point2: np.ndarray,
-    tolerance: float = 1e-8,
+    tolerance: float = DIRECTION_ATOL,
 ) -> bool:
     """
     Check if two planes are coincident within a specified tolerance.
@@ -655,7 +659,7 @@ def are_planes_coincident(
 
 
 @beartype
-def are_planes_parallel(normal1: np.ndarray, normal2: np.ndarray, tolerance: float = 1e-8) -> bool:
+def are_planes_parallel(normal1: np.ndarray, normal2: np.ndarray, tolerance: float = DIRECTION_ATOL) -> bool:
     """
     Check if two planes are parallel within a specified tolerance.
 
@@ -682,7 +686,7 @@ def are_planes_parallel(normal1: np.ndarray, normal2: np.ndarray, tolerance: flo
 
 @beartype
 def are_planes_perpendicular(
-    normal1: np.ndarray, normal2: np.ndarray, tolerance: float = 1e-8
+    normal1: np.ndarray, normal2: np.ndarray, tolerance: float = DIRECTION_ATOL
 ) -> bool:
     """
     Check if two planes are perpendicular within a specified tolerance.
@@ -714,7 +718,7 @@ def are_planes_facing(
     point1: np.ndarray,
     normal2: np.ndarray,
     point2: np.ndarray,
-    atol: float = 1e-9,
+    atol: float = GEOMETRIC_ATOL,
     max_angle: float = 0.26,
 ) -> bool:
     """
@@ -919,7 +923,7 @@ def point_dict_to_arrays(point_dict: Dict[str, Union[np.ndarray, Tuple, List]]):
         label_array = np.array(list(point_dict.keys()), dtype=str)
         point_array = np.stack(list(point_dict.values()), dtype="float64")
     except Exception as e:
-        print(f"Error converting to arrays for point_dict: {point_dict}")
+        logger.error("Error converting to arrays for point_dict: %s", point_dict)
         raise e
     return label_array, point_array
 
@@ -1210,7 +1214,7 @@ def are_normals_aligned_and_facing(
     point1: np.ndarray,
     normal2: np.ndarray,
     point2: np.ndarray,
-    atol: float = 1e-9,
+    atol: float = GEOMETRIC_ATOL,
 ) -> bool:
     """
     Check if two normal vectors are aligned in opposite directions and facing each other.
@@ -1308,7 +1312,7 @@ def rotation_matrix_from_vectors(vec1, vec2):
     """
     def normalize(v):
         norm = np.linalg.norm(v)
-        if norm < 1e-10:
+        if norm < ZERO_NORM_ATOL:
             raise ValueError("Input vector is too close to zero for normalization.")
         return v / norm
     a = normalize(vec1)
@@ -1342,7 +1346,7 @@ def are_lines_collinear(
     point1: np.ndarray,
     dir2: np.ndarray,
     point2: np.ndarray,
-    atol: float = 1e-9,
+    atol: float = GEOMETRIC_ATOL,
 ) -> bool:
     """
     Check if two lines in 3D space are collinear (i.e., they lie on the exact same infinite line).
@@ -1386,7 +1390,7 @@ def are_lines_collinear(
 
 @beartype
 def interval_overlap(
-    interval_a: Tuple[float, float], interval_b: Tuple[float, float], atol: float = 1e-9
+    interval_a: Tuple[float, float], interval_b: Tuple[float, float], atol: float = GEOMETRIC_ATOL
 ) -> Union[Tuple[float, float], None]:
     """
     Intersect two closed 1D intervals.
@@ -1450,7 +1454,7 @@ def _clip_convex_polygon(subject: np.ndarray, clip: np.ndarray) -> np.ndarray:
 
 @beartype
 def planar_overlap_vertices(
-    points_a: np.ndarray, points_b: np.ndarray, atol: float = 1e-9
+    points_a: np.ndarray, points_b: np.ndarray, atol: float = GEOMETRIC_ATOL
 ) -> np.ndarray:
     """
     Vertices of the overlap of two flat faces expressed in the same 2D plane coordinates.

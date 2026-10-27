@@ -163,9 +163,9 @@ def condition_sample_array(
             conditioned_array = np.sqrt(conditioned_array)
         return conditioned_array
     except Exception as e:
-        logging.error(f"Error in condition_sample_array: {e}")
-        print(
-            f"Error encountered in condition_sample_array:\nsample_array: {sample_array}\nfeature_indices: {feature_indices}\nsquared_sum: {squared_sum}"
+        logging.error(
+            f"Error in condition_sample_array: {e}\nsample_array: {sample_array}\n"
+            f"feature_indices: {feature_indices}\nsquared_sum: {squared_sum}"
         )
         raise
 
