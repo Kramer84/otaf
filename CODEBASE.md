@@ -25,7 +25,7 @@ system_data (dict)
 |---|---|
 | `__init__.py` | Eager-imports `constants`, `exceptions`, `common`, `geometry`; everything else is lazy (`__getattr__`). Re-exports the `_assembly_modeling` classes. |
 | `_assembly_modeling/` | Core modelling engine (pipeline above). Private package; public names are re-exported from `otaf`. |
-| `_assembly_modeling/_interface_constraints/` | Contact constraints. **Cylinder–cylinder handling here is known to be wrong/incomplete** (fixed radius, no diameter defects, no linearization strategy). See ROADMAP.md, Phase 2. |
+| `_assembly_modeling/_interface_constraints/` | Contact constraints. `SurfaceInteractionManager` pairs contact points at the overlap of two surfaces (`contactGapNames`); `InterfaceLoopBuilder` writes constraints at those pairs only. **The cylinder clearance model is still incomplete** (fixed radius, no diameter defects, no linearization strategy). See ROADMAP.md, Phase 2. |
 | `_assembly_modeling/_assembly_topology.py` | Assembly graph helpers (networkx). |
 | `constants/` | Regex patterns for labels (`P1aA0`, gap/deviation names) and global-constraint presets (`3D`, `2D_NZ`, …). |
 | `common/` | Generic helpers: SymPy coefficient extraction, matrix-string parsing, nested dicts, tqdm/notebook utilities. |

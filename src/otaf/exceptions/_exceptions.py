@@ -227,6 +227,14 @@ class NoAxialOverlapException(Exception):
         super().__init__(message)
 
 
+class NoPlanarOverlapException(Exception):
+    """Exception raised when two interacting planes do not overlap once projected onto each other."""
+
+    def __init__(self, part_id1, surface_id1, part_id2, surface_id2):
+        message = f"No overlap in planar interaction: Part {part_id1}, Surface {surface_id1} and Part {part_id2}, Surface {surface_id2} do not face each other over any area."
+        super().__init__(message)
+
+
 class InvalidAffineTransformException(Exception):
     """
     Exception raised when a matrix is not a valid affine transformation matrix.

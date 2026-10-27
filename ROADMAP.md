@@ -26,7 +26,9 @@ imprecise-probability sweeps) is marked `@pytest.mark.gpu` and runs elsewhere.
 - [x] Removed duplicated plane interaction loops (each was added twice and hidden by a `set`).
 - [x] Analytical oracle for `model1`: SOC slack equals half the analytical clearance (`s = j/2`, to 1e-7) on every sample. Mutation check: catches sign, lever-arm and nominal-size errors.
 - [x] Invariants on all models: nominal assembly feasible with positive margin; failures persist when the dispersion grows (follows from LP concavity); distribution labels match solver variables (models 1, 2, 4).
-- [ ] **Project the overlap of facing planes instead of pairing points by proximity.** Cylinders already do this (`approximate_cylinders_populate_facingPointDict` projects the axial extents and creates points at the overlap ends); planes only pair existing points within 0.25 mm (`is_point_facing`). Consequences, covered by strict-xfail tests in `tests/test_surface_interactions.py`: with model2's faces (10 vs 10.2) one contact sits at y = 10.2, outside the overlap [0, 10] (lever arm 5.2); with 10 vs 11 the top contact disappears silently. In 2D the overlap is a segment intersection (same logic as cylinders); in 3D it is a polygon intersection. Once fixed, remove the xfails here and in `test_physical_invariants.py`.
+- [x] **Contact points at the overlap of facing surfaces, not by proximity.** The 0.25 mm pairing radius (`is_point_facing`) is removed. Planes now intersect the two faces (segments in 2D, convex hulls in 3D: `otaf.geometry.planar_overlap_vertices`) and pair points at the overlap vertices. Cylinders use the same helper logic on their axial extents. In both cases an existing point at a vertex is reused (e.g. the origin) and new points are created otherwise. Before the fix, model2 with female faces 0.3 mm taller lost 4 of 8 contacts (Pf 5.35 % instead of 14.15 %), and 1 mm taller lost all of them (every solve unbounded).
+- [x] **Interface loops no longer end with `JCor⁻¹`.** It re-applied the in-plane offset between the two surface origins after the gap rotation, so lever arms were off by that offset (model2: 0.1 mm) and depended on the gap direction. Both directions now give identical slack at every face height. Effect on model2 (×1.21): Pf 14.40 % → 14.20 %, |Δs| ≤ 0.0026. Models 1, 3 and 4 are unchanged.
+- [x] Baselines and comparison notebook: `scripts/baselines/` (`pre-fix`, `post-overlap-fix`) and `notebooks/Baselines/Compare_To_Baseline.ipynb`.
 - [ ] Hand-coded baselines: map `ManualImplementation4Pins2plates.ipynb` and the 16-DOF analytical LP notebook onto the automatic models' variables and compare with `matrix_utils` (needs row scaling support).
 - [ ] `model3` samples a reduced parameter space mapped by position (`sample_multiplier`); add explicit labels so the mapping can be checked by name.
 - [ ] Remaining invariants: invariance to part/surface relabelling; 2D models embedded in 3D give the same result; LP vs MILP agreement.
@@ -42,9 +44,9 @@ Known differences between the automatic path (`_interfaceLoopBuilder._cylinder_i
 | Contact sections | from fragile overlap cases in `_surfaceInteractionManager` (incl. a `NotImplementedError` branch) | both cylinder ends, explicit |
 
 - [x] Axial overlap pairing reviewed and tested (`tests/test_surface_interactions.py`). It is correct for same and opposed axes, with either cylinder longer and for staggered overlaps; the opposed-axes branch is complete despite its "I have begun here" comment.
-- [ ] Fix: an overlap end that coincides with an existing point (e.g. the cylinder origin) is skipped as a duplicate and its contact is not paired (strict xfail).
-- [ ] An origin placed at a cylinder end is rejected with `NonUniqueCoordinatesError` (A0 = A2); accept it.
-- [ ] Mixed interactions (plane–cylinder) are silently ignored by `process_surface_interactions`; raise instead.
+- [x] An overlap end that coincides with an existing point (e.g. the cylinder origin) is now paired, reusing that point.
+- [x] Origins may lie at a cylinder end (or a face end). When the reference pair of the loops is itself a contact, its constraint is now written too (`InterfaceLoopBuilder._contact_partners`).
+- [x] Mixed interactions (plane–cylinder) raise `NotImplementedError` instead of being silently ignored.
 - [ ] Failing differential test: one pin/hole joint, automatic vs hand-coded matrices (via the Phase 1 mapping helper).
 - [ ] Add diameter-defect variables for cylinders (ties into "intrinsic dimension variability").
 - [ ] Add `LinearizationStrategy` to the automatic builder.
@@ -64,7 +66,7 @@ Known differences between the automatic path (`_interfaceLoopBuilder._cylinder_i
 - [ ] Replace `print` (54 calls) with `logging`.
 - [ ] Explicit RNG seeds everywhere; named numerical tolerances instead of literals.
 - [ ] Make solver failures explicit: today a single failed `milp` in a batch returns `x=None` and crashes the whole batch with `ValueError: setting an array element with a sequence` (`uncertainty/_reliability.py`). Surface status codes per sample instead.
-- [ ] `PointsNotOnPlaneError(...)` is instantiated but never raised in `_surfaceInteractionManager.process_plane_plane_interaction`, so non-planar point sets pass silently.
+- [x] `PointsNotOnPlaneError` is now raised for non-coplanar face points.
 - [ ] `compute_gap_optimizations_on_sample_batch` defaults to `float32` output; the sign of `s` near 0 deserves `float64`.
 
 ## Phase 5: Release and validation

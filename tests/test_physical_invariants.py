@@ -114,23 +114,40 @@ def _model2_slack_keeping_gap_direction(monkeypatch, keep, hM, hF, size=500):
 
 # model2 uses the gap between surfaces P1b and P2b in both directions in its compatibility
 # loops and keeps only one. Each direction pivots the gap at a different origin, so the raw
-# coefficients may differ, but the physical answer (the optimal slack) must not.
+# coefficients may differ, but the physical answer (the optimal slack) must not. Unequal
+# face heights used to break this (proximity pairing of points and a trailing JCor inverse
+# in the interface loops shifting the lever arms by the offset between the origins).
 
 
-def test_model2_gap_direction_is_irrelevant_when_points_face_exactly(monkeypatch):
-    # Equal heights: the facing points of P1b and P2b coincide, both directions agree.
-    forward = _model2_slack_keeping_gap_direction(monkeypatch, "GP1bB0P2bB0", hM=10.0, hF=10.0)
-    backward = _model2_slack_keeping_gap_direction(monkeypatch, "GP2bB0P1bB0", hM=10.0, hF=10.0)
+@pytest.mark.parametrize("hF", [10.0, 10.2, 10.3, 11.0])
+def test_model2_gap_direction_is_irrelevant(monkeypatch, hF):
+    forward = _model2_slack_keeping_gap_direction(monkeypatch, "GP1bB0P2bB0", hM=10.0, hF=hF)
+    backward = _model2_slack_keeping_gap_direction(monkeypatch, "GP2bB0P1bB0", hM=10.0, hF=hF)
     np.testing.assert_allclose(forward, backward, atol=1e-9)
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="open bug: facing plane points are paired by proximity (0.25 mm) instead of projecting "
-    "the overlap of the two faces, so with hM=10, hF=10.2 one direction places a contact at "
-    "y=10.2, outside the overlap [0, 10] (lever arm 5.2 instead of 5)",
-)
-def test_model2_gap_direction_is_irrelevant_with_unequal_heights(monkeypatch):
-    forward = _model2_slack_keeping_gap_direction(monkeypatch, "GP1bB0P2bB0", hM=10.0, hF=10.2)
-    backward = _model2_slack_keeping_gap_direction(monkeypatch, "GP2bB0P1bB0", hM=10.0, hF=10.2)
-    np.testing.assert_allclose(forward, backward, atol=1e-9)
+def test_model2_contact_at_surface_origin_is_kept():
+    # Move the origins of P1b and P2b to the bottom of the faces (swap B0 and B1). The
+    # reference pair of the compatibility loops is then itself the bottom contact, and must
+    # still produce its contact constraint: same number of contacts, same nominal margin.
+    model = otaf.example_models.model2
+
+    def build(data):
+        sda = model.get_assembly_data_processor_object(data)
+        clh = model.get_compatibility_loop_handling_object(sda)
+        ilh = model.get_interface_loop_handling_object(sda, clh)
+        soc = otaf.SystemOfConstraintsAssemblyModel(clh.get_compatibility_expressions(), ilh.get_interface_expressions())
+        soc.embedOptimizationVariable()
+        return soc
+
+    default = build(model.get_assembly_data())
+    moved_data = model.get_assembly_data()
+    for part in ("1", "2"):
+        points = moved_data["PARTS"][part]["b"]["POINTS"]
+        points["B0"], points["B1"] = points["B1"], points["B0"]
+    moved = build(moved_data)
+
+    assert moved.nI == default.nI
+    np.testing.assert_allclose(
+        solve_slack(moved, np.zeros((1, moved.nD))), solve_slack(default, np.zeros((1, default.nD))), atol=1e-12
+    )
