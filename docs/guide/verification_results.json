@@ -1,21 +1,4 @@
 {
- "provenance": {
-  "dumas": {
-   "otaf_version": "0.3.0",
-   "git_revision": "e7bd464+dirty",
-   "created": "2026-10-28"
-  },
-  "thesis": {
-   "otaf_version": "0.3.0",
-   "git_revision": "e7bd464+dirty",
-   "created": "2026-10-28"
-  },
-  "baselines": {
-   "otaf_version": "0.3.0",
-   "git_revision": "e7bd464+dirty",
-   "created": "2026-10-28"
-  }
- },
  "baseline_tag": "plate-capability",
  "dumas": [
   {
@@ -41,7 +24,7 @@
     "circle_resolution": "4",
     "linearization": "inscribed"
    },
-   "seconds": 6.090578595001716
+   "seconds": 6.329123478004476
   },
   {
    "group": "dumas",
@@ -66,7 +49,7 @@
     "circle_resolution": "4",
     "linearization": "mean"
    },
-   "seconds": 6.142926625005202
+   "seconds": 6.733701577002648
   },
   {
    "group": "dumas",
@@ -91,7 +74,7 @@
     "circle_resolution": "4",
     "linearization": "circumscribed"
    },
-   "seconds": 6.033747746987501
+   "seconds": 6.4534069710061885
   },
   {
    "group": "dumas",
@@ -116,7 +99,7 @@
     "circle_resolution": "8",
     "linearization": "inscribed"
    },
-   "seconds": 6.43715675198473
+   "seconds": 6.617683073010994
   },
   {
    "group": "dumas",
@@ -141,7 +124,7 @@
     "circle_resolution": "8",
     "linearization": "mean"
    },
-   "seconds": 6.378450702992268
+   "seconds": 6.841924025997287
   },
   {
    "group": "dumas",
@@ -166,7 +149,7 @@
     "circle_resolution": "8",
     "linearization": "circumscribed"
    },
-   "seconds": 6.505697596003301
+   "seconds": 6.842644940013997
   },
   {
    "group": "dumas",
@@ -191,7 +174,7 @@
     "circle_resolution": "60",
     "linearization": "inscribed"
    },
-   "seconds": 11.674998111004243
+   "seconds": 14.626355236017844
   },
   {
    "group": "dumas",
@@ -216,7 +199,7 @@
     "circle_resolution": "60",
     "linearization": "mean"
    },
-   "seconds": 11.889871300983941
+   "seconds": 12.057513635983923
   },
   {
    "group": "dumas",
@@ -241,7 +224,7 @@
     "circle_resolution": "60",
     "linearization": "circumscribed"
    },
-   "seconds": 11.908060999994632
+   "seconds": 15.202917470014654
   },
   {
    "group": "dumas",
@@ -266,7 +249,7 @@
     "circle_resolution": "60",
     "linearization": "circumscribed"
    },
-   "seconds": 71.91841860499699
+   "seconds": 60.62043437198736
   },
   {
    "group": "dumas",
@@ -291,7 +274,7 @@
     "circle_resolution": "60",
     "linearization": "circumscribed"
    },
-   "seconds": 98.55280037800549
+   "seconds": 71.02415589100565
   }
  ],
  "thesis": [
@@ -324,7 +307,7 @@
    ],
    "difference": 0.001948266412374471,
    "z": 6.785038357061541,
-   "seconds": 31.050368602009257,
+   "seconds": 34.11616777998279,
    "closed_form": {
     "pf": 0.003174,
     "failures": 3174,
@@ -367,7 +350,7 @@
    ],
    "difference": -0.00033238578524443646,
    "z": -0.5769625170725146,
-   "seconds": 29.96816673502326,
+   "seconds": 34.59869884798536,
    "closed_form": {
     "pf": 0.006377,
     "failures": 6377,
@@ -454,7 +437,7 @@
    ],
    "difference": 0.00033623725696330553,
    "z": 1.394702123516368,
-   "seconds": 31.233089393994305
+   "seconds": 34.96640855399892
   },
   {
    "group": "thesis",
@@ -513,7 +496,7 @@
    ],
    "difference": -0.0018102960697202117,
    "z": -0.6574211552339786,
-   "seconds": 11.694719557999633
+   "seconds": 13.961330308986362
   },
   {
    "group": "thesis",
@@ -572,7 +555,7 @@
    ],
    "difference": -0.002127341078962397,
    "z": -0.5773530873165011,
-   "seconds": 11.676270700001623
+   "seconds": 15.129710779991001
   },
   {
    "group": "thesis",
@@ -627,7 +610,7 @@
    ],
    "difference": -0.000859319030252638,
    "z": -0.3118313402744142,
-   "seconds": 11.586433051998029
+   "seconds": 13.143057454988593
   },
   {
    "group": "thesis",
@@ -682,7 +665,7 @@
    ],
    "difference": -0.002127709217145529,
    "z": -0.5774512671002707,
-   "seconds": 15.238900438998826
+   "seconds": 16.083428862999426
   },
   {
    "group": "thesis",
@@ -829,7 +812,7 @@
    ],
    "difference": -0.0038833259152819006,
    "z": -2.2665260690088638,
-   "seconds": 44.6431013509864
+   "seconds": 47.963522476988146
   },
   {
    "group": "thesis",
@@ -1217,5 +1200,22 @@
     }
    }
   }
- ]
+ ],
+ "provenance": {
+  "dumas": {
+   "otaf_version": "0.3.0",
+   "git_revision": "d56bc96",
+   "created": "2026-10-28"
+  },
+  "thesis": {
+   "otaf_version": "0.3.0",
+   "git_revision": "d56bc96",
+   "created": "2026-10-28"
+  },
+  "baselines": {
+   "otaf_version": "0.3.0",
+   "git_revision": "d56bc96",
+   "created": "2026-10-28"
+  }
+ }
 }

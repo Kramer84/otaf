@@ -3,7 +3,7 @@
 (verification-dumas-table)=
 ### Table 1: model3 against Dumas (2014)
 
-Computed on 2026-10-28 with OTAF 0.3.0 (revision `e7bd464+dirty`).
+Computed on 2026-10-28 with OTAF 0.3.0 (revision `d56bc96`).
 
 | Set | Nd | Linearization | Dumas (2014) | OTAF Pf [95 % CI] | Difference | z | Relative to Nd = 60, Dumas / OTAF | N (seed) |
 |---|---|---|---|---|---|---|---|---|
@@ -22,7 +22,7 @@ Computed on 2026-10-28 with OTAF 0.3.0 (revision `e7bd464+dirty`).
 (verification-thesis-table)=
 ### Table 2: thesis bounds (surrogate + GLD) against the scipy solver
 
-Computed on 2026-10-28 with OTAF 0.3.0 (revision `e7bd464+dirty`).
+Computed on 2026-10-28 with OTAF 0.3.0 (revision `d56bc96`).
 
 | Summary | Bound | Reference | OTAF Pf [95 % CI] | Difference | z | N (seed) | Linearization |
 |---|---|---|---|---|---|---|---|
@@ -44,7 +44,7 @@ Computed on 2026-10-28 with OTAF 0.3.0 (revision `e7bd464+dirty`).
 (verification-baseline-table)=
 ### Table 3: baseline cases against `plate-capability`
 
-Computed on 2026-10-28 with OTAF 0.3.0 (revision `e7bd464+dirty`).
+Computed on 2026-10-28 with OTAF 0.3.0 (revision `d56bc96`).
 
 | Case | Pf baseline | Pf now | Reclassified samples | max \|Δs\| | Solver failures | N (seed) | Settings |
 |---|---|---|---|---|---|---|---|
