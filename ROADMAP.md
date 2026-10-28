@@ -80,7 +80,7 @@ Found while writing the pages (docs only in this phase; fixed in Phase 4 unless 
 - [x] Named numerical tolerances instead of literals: `otaf.constants` (`FRAME_ATOL`, `GEOMETRIC_ATOL`, `DIRECTION_ATOL`, `ZERO_NORM_ATOL`, `TAYLOR_COEFFICIENT_TOL`, gap bounds) used by geometry, contact pairing and the Taylor expansion; module constants for the mesh and hyper-surface samplers. Values unchanged.
 - [x] Make solver failures explicit: a single failed `milp` in a batch returned `x=None` and crashed the whole batch with `ValueError: setting an array element with a sequence`. `milp_batch_sequential` and `compute_gap_optimizations_on_sample_batch` now give NaN rows for samples without a solution, warn (`SolverFailureWarning`, with the count per status) and return the status of every sample with `return_status=True` (`otaf.uncertainty.MILP_STATUS_MESSAGES`). Successful samples are unchanged (`tests/test_solver_failures.py`).
 - [x] `PointsNotOnPlaneError` is now raised for non-coplanar face points.
-- [ ] `compute_gap_optimizations_on_sample_batch` defaults to `float32` output; the sign of `s` near 0 deserves `float64`.
+- [x] `compute_gap_optimizations_on_sample_batch` defaults to `float32` output: kept on purpose, it is the dtype of the torch surrogates trained on it (and halves the memory of large sample sets). Not a precision issue: casting cannot flip the sign of `s`, and the float32 rounding (about 1e-8 relative) is below the solver tolerance (about 1e-7). Pass `dtype="float64"` for comparisons at the 1e-8 level, as the tests do.
 
 ## Phase 5: Release and validation
 
