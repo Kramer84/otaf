@@ -496,7 +496,10 @@ def compute_gap_optimizations_on_sample_batch(
         Verbosity level for debugging. Default is 0.
     dtype : str, optional
         Data type for the resulting optimized decision variable array.
-        Default is ``'float32'``.
+        Default is ``'float32'``, the dtype of the torch surrogates trained
+        on these results. The rounding (about 1e-8 relative) is below the
+        solver tolerance and never changes the sign of the slack; use
+        ``'float64'`` to compare results at the 1e-8 level.
     return_status : bool, optional
         Also return the ``scipy.optimize.milp`` status of every sample
         (default False).
