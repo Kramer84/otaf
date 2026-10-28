@@ -200,7 +200,7 @@ from scipy.optimize import linprog
 adp = otaf.AssemblyDataProcessor(system_data)
 adp.generate_expanded_loops()
 clh = otaf.CompatibilityLoopHandling(adp)
-ilh = otaf.InterfaceLoopHandling(adp, clh, circle_resolution=8)
+ilh = otaf.InterfaceLoopHandling(adp, clh)
 soc = otaf.SystemOfConstraintsAssemblyModel(
     clh.get_compatibility_expressions(), ilh.get_interface_expressions()
 )

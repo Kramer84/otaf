@@ -25,7 +25,7 @@ class InterfaceLoopHandling:
     def __init__(self,
         assemblyDataProcessor:AssemblyDataProcessor,
         compatibility_loop_handling:CompatibilityLoopHandling,
-        circle_resolution=8,
+        circle_resolution=64,
         linearization: LinearizationStrategy = LinearizationStrategy.CIRCUMSCRIBED):
         """Generate the interface constraints of an assembly.
 
@@ -37,7 +37,8 @@ class InterfaceLoopHandling:
             Compatibility loops (gap matrices are shared with them).
         circle_resolution : int, optional
             Number of facets of the polygon replacing the circular clearance zone
-            of each cylinder pair (default 8).
+            of each cylinder pair (default 64: clearance error at most 0.12 %,
+            see ``docs/guide/limitations.md``).
         linearization : LinearizationStrategy, optional
             Whether that polygon is circumscribed to the circle (default, slightly
             optimistic), inscribed in it (conservative) or in between.

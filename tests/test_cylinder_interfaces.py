@@ -214,3 +214,14 @@ def test_credal_constraints_are_zero_on_the_capability_boundary():
     # All components at their maximum: sqrt(3) times the target for holes (d, v, gamma).
     values = auto.get_scaled_credal_set_constraints_function(max_std, **kw)(np.ones(len(names)))
     np.testing.assert_allclose(values, [np.sqrt(3) - 1] * 8 + [0.0] * 4)
+
+
+def test_default_polygon_has_64_sides():
+    # 64 sides keep the clearance error below 0.12 % (docs/guide/limitations.md); the
+    # default was 8 (up to 8 %) before 0.3.0, see CHANGELOG.md.
+    import inspect
+
+    from otaf._assembly_modeling._interface_constraints._interfaceLoopBuilder import InterfaceLoopBuilder
+
+    for cls in (otaf.InterfaceLoopHandling, InterfaceLoopBuilder):
+        assert inspect.signature(cls.__init__).parameters["circle_resolution"].default == 64, cls.__name__

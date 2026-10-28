@@ -72,7 +72,7 @@ Found while writing the pages (docs only in this phase; fixed in Phase 4 unless 
 - [x] `FRAME` was validated only when the points were generated from `ORIGIN`. Now required and checked (rotation matrix, `otaf.constants.FRAME_ATOL`) for every surface.
 - [x] `TYPE` accepted `cone` and `sphere`, which failed later with a `KeyError`. Now `UnsupportedSurfaceTypeError` up front (`otaf.constants.SUPPORTED_SURFACE_TYPES`).
 - [x] Gap bounds (±3 mm, ±π/4) were literals in `get_gap_symbol_bounds`; now `otaf.constants.GAP_TRANSLATION_BOUND` / `GAP_ROTATION_BOUND` (same values; not yet a parameter).
-- [ ] The default `circle_resolution` of `InterfaceLoopHandling` is 8 (up to 8 % error on the clearance); the pin models use 64. Open on purpose: changing a default changes the results of every user model that relies on it, so it is the author's decision (proposal: 32 sides, 0.5 % error, or 64 like the pin models, with a "Behaviour changes" entry in `CHANGELOG.md`). No example model or baseline relies on the default.
+- [x] The default `circle_resolution` of `InterfaceLoopHandling` was 8 (up to 8 % error on the clearance); it is 64 since 0.3.0, as in the pin models (at most 0.12 %). Author's decision: few users, not on PyPI. Listed under "Behaviour changes" in `CHANGELOG.md`; no example model, notebook with cylinders or baseline relied on the default.
 
 ## Phase 4: API hardening
 

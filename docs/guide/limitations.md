@@ -80,7 +80,8 @@ Numerically:
 
 The error acts on the clearance, so for a radial clearance of 0.1 mm the worst-case error of the
 circumscribed polygon is 0.008 mm with 8 sides and 0.0001 mm with 64 sides. The default of
-`InterfaceLoopHandling` is `circle_resolution=8`; the pin models use 64. Choose the resolution so
+`InterfaceLoopHandling` is `circle_resolution=64` (8 before version 0.3.0), as in the pin models.
+Choose the resolution so
 that this error is small against the quantities you want to resolve, and run `INSCRIBED` and
 `CIRCUMSCRIBED` to bracket the failure probability: the first never under-estimates it and the second never
 over-estimates it (see {doc}`theory`). The more facets, the more rows in the linear program (one set

@@ -71,6 +71,13 @@ Results:
 - `model4`: the largest standard deviation of a plate rotation is the target
   divided by 50 mm (thesis normalization) instead of 37.5 mm: Pf 6.05 % → 5.40 %
   at the default tolerance (#7).
+- **`InterfaceLoopHandling` uses 64 polygon sides by default** instead of 8
+  (`circle_resolution`, also the default of `InterfaceLoopBuilder`): the error
+  on the radial clearance drops from up to 8 % to at most 0.12 %. Models with
+  cylinder contacts that relied on the default get different (more accurate)
+  results and four times as many contact rows; pass `circle_resolution=8` for
+  the former behaviour. Plane-only models are not affected, and every example
+  model passes its resolution explicitly.
 - `model4` evaluated the lower-plate holes at ±l2/2 instead of ±l3/2 (no effect
   with the default l2 = l3, #7).
 

@@ -58,7 +58,7 @@ class InterfaceLoopBuilder:
         assemblyDataProcessor: AssemblyDataProcessor,
         compatibility_loop_handling: Any,
         filtered_gap_matrices: Dict[str, Dict[str, Any]],
-        circle_resolution: int = 8,
+        circle_resolution: int = 64,
         silence_prints=True,
         contact_gap_names: Optional[Set[str]] = None,
         linearization: LinearizationStrategy = LinearizationStrategy.CIRCUMSCRIBED,
@@ -75,7 +75,7 @@ class InterfaceLoopBuilder:
         filtered_gap_matrices : Dict[str, Dict[str, Any]]
             Filtered gap matrices for parts and surfaces.
         circle_resolution : int, optional
-            Resolution for approximating circular interactions (default is 8).
+            Resolution for approximating circular interactions (default is 64).
         silence_prints : bool, optional
             Kept for compatibility, no effect: the debug messages go to the
             ``otaf._assembly_modeling._interface_constraints._interfaceLoopBuilder``
