@@ -3,6 +3,7 @@ from __future__ import annotations
 __author__ = "Kramer84"
 __all__ = ["NeuralRegressorNetwork", "initialize_model_weights"]
 import copy
+import logging
 from typing import Any, List, Optional
 
 import matplotlib.pyplot as plt
@@ -13,6 +14,8 @@ import torch.nn as nn
 import tqdm
 from sklearn.model_selection import train_test_split
 from torcheval.metrics import R2Score
+
+logger = logging.getLogger(__name__)
 
 import otaf
 
@@ -389,7 +392,7 @@ class NeuralRegressorNetwork(nn.Module):
                     pf_cpu_mod = (total_failures + 1) / total_samples_processed
                     pf_array = np.append(pf_array, pf_cpu)
                     if abs(pf_cpu - pf_cpu_mod) < PF_STAB:
-                        print(
+                        logger.info(
                             f"Finished at iteration {int((i + 1) * (j / batch_size + 1))} with {total_samples_processed} experiments. Pf: {pf_cpu}"
                         )
                         return pf_array[-1]
@@ -483,7 +486,7 @@ class NeuralRegressorNetwork(nn.Module):
                 R2 = float(self.metric.compute())
                 self.history_metric.append(R2)
                 self.metric.reset()
-                print(
+                logger.info(
                     f"Epoch {epoch + 1:03d}, Val Loss: {loss_f:.6f}, Val R2: {R2:.6f}"
                 )
                 if loss_f < self.best_loss:
@@ -495,8 +498,8 @@ class NeuralRegressorNetwork(nn.Module):
                 if self.scheduler:
                     self.scheduler.step()
         except KeyboardInterrupt:
-            print("Training interrupted by user")
-        print(
+            logger.warning("Training interrupted by user")
+        logger.info(
             f"Finished training at epoch {epoch + 1} with best loss {self.best_loss:.6f} and R2 of {self.best_metric:.6f}"
         )
         self.load_state_dict(self.best_weights)
@@ -629,10 +632,10 @@ class NeuralRegressorNetwork(nn.Module):
         """
         if epoch > self.finish_critertion_epoch:
             if self.best_loss <= self.loss_finish:
-                print("Stopping: Loss below threshold.")
+                logger.info("Stopping: Loss below threshold.")
                 return True
             elif self.best_metric >= self.metric_finish:
-                print("Stopping: R2 score is high enough.")
+                logger.info("Stopping: R2 score is high enough.")
                 return True
         return False
 

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 __author__ = "Kramer84"
 from ._reliability import (
+    MILP_STATUS_MESSAGES,
     compute_failure_probability_FORM,
     compute_failure_probability_NAIS,
     compute_failure_probability_SUBSET,
@@ -21,4 +22,5 @@ __all__ = [
     "compute_gap_optimizations_on_sample",
     "milp_batch_sequential",
     "compute_gap_optimizations_on_sample_batch",
+    "MILP_STATUS_MESSAGES",
 ]

@@ -62,23 +62,23 @@ The automatic path now reproduces the hand-coded `model4` (two plates, four pins
 - [x] Input-format reference page (`docs/guide/input_format.md`), written by hand from the validation code and `otaf.constants`, with a 2D example (`model1`) and a pin/hole example (`model4_auto`, one pin). `tests/test_docs_examples.py` runs both examples and checks them against the example models. To be regenerated from the pydantic schema in Phase 4.
 - [x] Theory page (`docs/guide/theory.md`) and "Validity and limitations" page (`docs/guide/limitations.md`).
 
-Found while writing the pages (not fixed, docs and docstrings only in this phase):
+Found while writing the pages (docs only in this phase; fixed in Phase 4 unless noted, tests in `tests/test_input_schema.py`):
 
-- A contact listed in `INTERACTIONS` that no compatibility loop crosses gets no contact condition, silently (removing loop `L1` of `model1` drops the two conditions of the right wall). Should warn or raise.
-- `CONSTRAINTS_G` entries that differ on the two sides of a pair (including one side left to the default) give a bare `KeyError: 'plane-plane-floating-sliding'`. Should be an explicit error.
-- `validate_system_data_structure` calls `MissingSurfaceTypeKeyError(surf_id, part_id)` but the signature is `(part_id, surf_id)`: the message names them the wrong way round.
-- `FRAME` is validated only when the points are generated from `ORIGIN`; with `POINTS` given it is used unchecked.
-- `TYPE` accepts `cone` and `sphere`, which fail later with a `KeyError` (no deviation/gap model).
-- Gap bounds (±3 mm, ±π/4) are hard-coded in `get_gap_symbol_bounds`.
-- The default `circle_resolution` of `InterfaceLoopHandling` is 8 (up to 8 % error on the clearance); the pin models use 64.
+- [x] A contact listed in `INTERACTIONS` that no compatibility loop crosses got no contact condition, silently (removing loop `L1` of `model1` drops the two conditions of the right wall). Now `InterfaceLoopHandling` warns (`UncoveredContactWarning`; `uncovered_contacts()` lists them). The example models cover every contact.
+- [x] `CONSTRAINTS_G` entries that differ on the two sides of a pair (including one side left to the default) gave a bare `KeyError: 'plane-plane-floating-sliding'`. Now `InconsistentContactConstraintsError`, raised by the schema for `INTERACTIONS` pairs and by `CompatibilityLoopHandling` for any loop gap. Entries are compared case-insensitively.
+- [x] `MissingSurfaceTypeKeyError` was called with part and surface swapped. Now raised by the schema with the right order.
+- [x] `FRAME` was validated only when the points were generated from `ORIGIN`. Now required and checked (rotation matrix, `otaf.constants.FRAME_ATOL`) for every surface.
+- [x] `TYPE` accepted `cone` and `sphere`, which failed later with a `KeyError`. Now `UnsupportedSurfaceTypeError` up front (`otaf.constants.SUPPORTED_SURFACE_TYPES`).
+- [x] Gap bounds (±3 mm, ±π/4) were literals in `get_gap_symbol_bounds`; now `otaf.constants.GAP_TRANSLATION_BOUND` / `GAP_ROTATION_BOUND` (same values; not yet a parameter).
+- [ ] The default `circle_resolution` of `InterfaceLoopHandling` is 8 (up to 8 % error on the clearance); the pin models use 64.
 
 ## Phase 4: API hardening
 
-- [ ] **pydantic models for the input dictionary** (`SystemData`, `Part`, `Surface`, `Loops`, …): validate types, labels, frames (orthonormal), required keys per surface type (e.g. `RADIUS` for cylinders) up front with clear errors; keep accepting plain dicts.
-- [ ] Replace `print` (54 calls) with `logging`.
+- [x] **pydantic models for the input dictionary** (`otaf.schema`: `SystemData`, `Part`, `Surface`, `ExtentLocal`, `Loops`, `validate_system_data`). `AssemblyDataProcessor` validates up front: types, labels, frames (rotation matrices), required keys per surface (`RADIUS`/`EXTENT_LOCAL` for cylinders in an interaction, `ORIGIN`/`INTERACTIONS` without `POINTS`), one-entry `CONSTRAINTS_D`/`CONSTRAINTS_G` lists with known values, `BLOCK_*_G` axes, interaction and loop references, same-type contacts, consistent contact constraints. The existing `otaf.exceptions` are raised where they apply, prefixed by the location; other problems raise `SystemDataValidationError` listing all of them. Plain dicts are still accepted and not converted (validation only, results unchanged); a `SystemData` can be passed too. JSON schema: `SystemData.model_json_schema()`. `docs/guide/input_format.md` follows the models.
+- [x] Replace `print` with `logging` (module loggers, `NullHandler` on `otaf`). `verbose=True` of the FORM/NAIS/subset functions now logs at INFO; `silence_prints` of `InterfaceLoopBuilder` is kept but has no effect (DEBUG messages). Kept as `print`: the two display helpers of `model4` (`print_kinematic_loops`, `print_interface_constraints`) and doctest examples.
 - [x] Every random draw can be seeded: `otaf.common.set_seed` (NumPy, OpenTURNS, PyTorch) and `seed` arguments where the library samples.
-- [ ] Named numerical tolerances instead of literals.
-- [ ] Make solver failures explicit: today a single failed `milp` in a batch returns `x=None` and crashes the whole batch with `ValueError: setting an array element with a sequence` (`uncertainty/_reliability.py`). Surface status codes per sample instead.
+- [x] Named numerical tolerances instead of literals: `otaf.constants` (`FRAME_ATOL`, `GEOMETRIC_ATOL`, `DIRECTION_ATOL`, `ZERO_NORM_ATOL`, `TAYLOR_COEFFICIENT_TOL`, gap bounds) used by geometry, contact pairing and the Taylor expansion; module constants for the mesh and hyper-surface samplers. Values unchanged.
+- [x] Make solver failures explicit: a single failed `milp` in a batch returned `x=None` and crashed the whole batch with `ValueError: setting an array element with a sequence`. `milp_batch_sequential` and `compute_gap_optimizations_on_sample_batch` now give NaN rows for samples without a solution, warn (`SolverFailureWarning`, with the count per status) and return the status of every sample with `return_status=True` (`otaf.uncertainty.MILP_STATUS_MESSAGES`). Successful samples are unchanged (`tests/test_solver_failures.py`).
 - [x] `PointsNotOnPlaneError` is now raised for non-coplanar face points.
 - [ ] `compute_gap_optimizations_on_sample_batch` defaults to `float32` output; the sign of `s` near 0 deserves `float64`.
 

@@ -8,6 +8,8 @@ __all__ = [
     "surface_from_planar_contour",
 ]
 
+import logging
+
 import numpy as np
 
 from beartype import beartype
@@ -18,6 +20,11 @@ if TYPE_CHECKING:
 
 from otaf.geometry import are_points_on_2d_plane, rotation_matrix_from_vectors
 import otaf.exceptions as otaf_exceptions
+
+logger = logging.getLogger(__name__)
+
+# Mesh vertices closer than this to a target coordinate are taken as on it.
+MESH_VERTEX_ATOL = 1e-5
 
 
 def spheres_from_point_cloud(
@@ -116,9 +123,9 @@ def open_cylinder_mesh(
     # Identify cap center vertices (local Z is +/- height/2)
     z_limit = height / 2.0
     center_v_indices = np.where(
-        (np.abs(temp_cyl.vertices[:, 0]) < 1e-5) &
-        (np.abs(temp_cyl.vertices[:, 1]) < 1e-5) &
-        (np.abs(np.abs(temp_cyl.vertices[:, 2]) - z_limit) < 1e-5)
+        (np.abs(temp_cyl.vertices[:, 0]) < MESH_VERTEX_ATOL) &
+        (np.abs(temp_cyl.vertices[:, 1]) < MESH_VERTEX_ATOL) &
+        (np.abs(np.abs(temp_cyl.vertices[:, 2]) - z_limit) < MESH_VERTEX_ATOL)
     )[0]
     # Filter faces: keep only those that DON'T use a cap center vertex
     face_mask = ~np.any(np.isin(temp_cyl.faces, center_v_indices), axis=1)
@@ -190,7 +197,7 @@ def surface_from_planar_contour(
     # RotationMatrixLocalPlaneToGlobal
     R = rotation_matrix_from_vectors(normal, np.array([0, 0, 1]))
     vertices_proj = (R @ vertices.T).T
-    print(vertices_proj)
+    logger.debug("Projected vertices: %s", vertices_proj)
     assert np.array_equal(
         are_points_on_2d_plane(vertices_proj,True)[1], np.array([0, 0, 1])
     ), "Some problem"

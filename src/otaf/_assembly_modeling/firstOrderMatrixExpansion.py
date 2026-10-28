@@ -11,6 +11,8 @@ import sympy as sp
 from beartype import beartype
 from beartype.typing import List, Union
 
+from otaf.constants import TAYLOR_COEFFICIENT_TOL
+
 from .assemblyModelingBaseObjects import DeviationMatrix, GapMatrix, TransformationMatrix, I4, J4
 
 @beartype
@@ -43,7 +45,7 @@ class FirstOrderMatrixExpansion:
         self.matrix_list = matrix_list
 
     def compute_first_order_expansion(
-        self, tolerance: float = 1e-8
+        self, tolerance: float = TAYLOR_COEFFICIENT_TOL
     ) -> sp.MatrixBase:
         """Construct the first-order Taylor expansion of a matrix product.
 

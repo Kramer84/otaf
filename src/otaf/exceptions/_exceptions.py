@@ -27,11 +27,15 @@ __all__ = [
     "CylindricalInterferenceGeometricException",
     "NoAxialOverlapException",
     "InvalidAffineTransformException",
+    "InconsistentContactConstraintsError",
+    "SystemDataValidationError",
+    "UncoveredContactWarning",
+    "SolverFailureWarning",
     "_raise_missing_dependency",
 ]
 import numpy as np
 
-from otaf.constants import BASE_SURFACE_TYPES, SURFACE_DIRECTIONS
+from otaf.constants import SUPPORTED_SURFACE_TYPES, SURFACE_DIRECTIONS
 
 
 def _raise_missing_dependency(library_name, method_name):
@@ -121,7 +125,10 @@ class InvalidSurfaceDirectionError(ValueError):
 
 
 class UnsupportedSurfaceTypeError(ValueError):
-    """Raised when a surface ``TYPE`` is not one of ``otaf.constants.BASE_SURFACE_TYPES``.
+    """Raised when a surface ``TYPE`` is not one of ``otaf.constants.SUPPORTED_SURFACE_TYPES``.
+
+    ``"cone"`` and ``"sphere"`` are listed in ``otaf.constants.BASE_SURFACE_TYPES``
+    but have no deviation or gap model yet, so they are rejected too.
 
     Parameters
     ----------
@@ -134,7 +141,10 @@ class UnsupportedSurfaceTypeError(ValueError):
     """
 
     def __init__(self, part_id, surf_id, surf_type):
-        message = f"The type {surf_type} defined for part {part_id} on surface {surf_id} is not a standard surface type and not supported.\n Standard types: {BASE_SURFACE_TYPES}"
+        message = (
+            f"The type {surf_type!r} of surface {surf_id} on part {part_id} is not supported. "
+            f"Supported types: {SUPPORTED_SURFACE_TYPES}"
+        )
         super().__init__(message)
 
 
@@ -414,3 +424,65 @@ class InvalidAffineTransformException(Exception):
 
     def __str__(self):
         return f"{self.message}\nMatrix:\n{self.matrix}"
+
+
+class InconsistentContactConstraintsError(ValueError):
+    """Raised when the two surfaces of a contact carry different ``CONSTRAINTS_G``.
+
+    The contact type is looked up from both entries, so they must be equal. A
+    surface without the key counts as ``["FLOATING"]``.
+
+    Parameters
+    ----------
+    part_id1, surf_id1 : str
+        First surface of the contact.
+    constraints1 : list of str
+        Its ``CONSTRAINTS_G`` (default included).
+    part_id2, surf_id2 : str
+        Second surface of the contact.
+    constraints2 : list of str
+        Its ``CONSTRAINTS_G`` (default included).
+    """
+
+    def __init__(self, part_id1, surf_id1, constraints1, part_id2, surf_id2, constraints2):
+        super().__init__(
+            f"CONSTRAINTS_G differ on the two sides of the contact P{part_id1}{surf_id1}-P{part_id2}{surf_id2}: "
+            f"{list(constraints1)} on P{part_id1}{surf_id1}, {list(constraints2)} on P{part_id2}{surf_id2} "
+            "(a missing key counts as ['FLOATING']). Give both surfaces the same entry."
+        )
+
+
+class SystemDataValidationError(ValueError):
+    """Raised when the assembly dictionary does not match the input schema.
+
+    Lists every problem found, each prefixed by its location in the dictionary
+    (e.g. ``PARTS -> 1 -> a -> RADIUS``).
+
+    Parameters
+    ----------
+    messages : list of str
+        One message per problem.
+    """
+
+    def __init__(self, messages):
+        self.messages = list(messages)
+        super().__init__(
+            f"{len(self.messages)} problem(s) in the system data:\n"
+            + "\n".join(f"  - {m}" for m in self.messages)
+        )
+
+
+class UncoveredContactWarning(UserWarning):
+    """Warns that a contact listed in ``INTERACTIONS`` is crossed by no compatibility loop.
+
+    Contact conditions are only written for the gaps that appear in the loops, so
+    such a contact has no condition at all.
+    """
+
+
+class SolverFailureWarning(RuntimeWarning):
+    """Warns that the optimisation failed for some samples of a batch.
+
+    Their rows of the result are NaN; the ``scipy.optimize.milp`` status of every
+    sample is available with ``return_status=True``.
+    """

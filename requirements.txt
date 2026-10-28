@@ -8,6 +8,7 @@ tqdm
 joblib
 beartype
 gldpy
+pydantic>=2
 
 # Optional dependencies for surrogate modeling
 torch

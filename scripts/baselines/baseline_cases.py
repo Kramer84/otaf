@@ -87,8 +87,9 @@ def _git_revision() -> str:
 def solve_slack(soc, deviations: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     """Optimal slack and ``scipy.optimize.milp`` status per sample.
 
-    Same problem as ``otaf.uncertainty.milp_batch_sequential``, but a failed solve
-    yields ``s = nan`` and its status instead of aborting the whole batch.
+    Same problem as ``otaf.uncertainty.milp_batch_sequential``. Kept separate so that
+    the baselines do not depend on the library code they check: any non-optimal
+    status (not only a missing solution) gives ``s = nan``.
     """
     from scipy.optimize import Bounds, LinearConstraint, milp
 

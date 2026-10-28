@@ -6,10 +6,13 @@ __all__ = [
     "get_custom_mlp_layers",
     "add_gaussian_noise",
 ]
+import logging
 from typing import Any, Callable, Dict, List, Optional, Type, Union
 
 import torch
 import torch.nn as nn
+
+logger = logging.getLogger(__name__)
 
 
 def get_variable_size_sequential_linear_model(
@@ -75,7 +78,7 @@ def get_variable_size_sequential_linear_model(
         else:
             size = m_layer_size
         lin_size_l.append(size)
-    print(f"Linear layer sizes  : {lin_size_l}")
+    logger.info("Linear layer sizes  : %s", lin_size_l)
     seq_args = []
     for i in range(1, n_layers):
         seq_args.append(nn.Linear(lin_size_l[i - 1], lin_size_l[i]))
@@ -121,7 +124,7 @@ def get_base_relu_mlp_model(
             ],
         )
     )
-    print(layer_sizes)
+    logger.info("Layer sizes: %s", layer_sizes)
     layers = get_custom_mlp_layers(layer_sizes, activation_class=nn.ReLU)
     model = nn.Sequential(*layers)
     if compile_model:

@@ -9,7 +9,11 @@ __all__ = [
     "compute_gap_optimizations_on_sample",
     "milp_batch_sequential",
     "compute_gap_optimizations_on_sample_batch",
+    "MILP_STATUS_MESSAGES",
 ]
+
+import logging
+import warnings
 
 import numpy as np
 import openturns as ot
@@ -19,6 +23,18 @@ from joblib import Parallel, cpu_count, delayed
 from scipy.optimize import Bounds, LinearConstraint, OptimizeResult, milp
 
 from otaf.common import get_tqdm_range
+from otaf.exceptions import SolverFailureWarning
+
+logger = logging.getLogger(__name__)
+
+MILP_STATUS_MESSAGES = {
+    0: "optimal solution found",
+    1: "iteration or time limit reached",
+    2: "problem is infeasible",
+    3: "problem is unbounded",
+    4: "other solver failure",
+}
+"""Status codes of ``scipy.optimize.milp`` (``OptimizeResult.status``)."""
 
 if hasattr(ot, "JointDistribution"):
     JointDistribution = ot.JointDistribution
@@ -56,7 +72,8 @@ def compute_failure_probability_FORM(
         Initial starting point for the optimization algorithm in
         physical space. Default is None.
     verbose : bool, optional
-        If True, print reliability diagnostics. Default is False.
+        If True, log reliability diagnostics at INFO level on the
+        ``otaf.uncertainty._reliability`` logger. Default is False.
     solver : ot.OptimizationAlgorithm, optional
         The optimization algorithm to find the design point. Uses
         ``ot.Cobyla()`` with strict convergence tolerances if None.
@@ -83,14 +100,10 @@ def compute_failure_probability_FORM(
     result = algoFORM.getResult()
     pf = result.getEventProbability()
     if verbose:
-        print(
-            f"Design point in physical space : {result.getPhysicalSpaceDesignPoint()}"
-        )
-        print(
-            f"Design point in standard space : {result.getStandardSpaceDesignPoint()}"
-        )
-        print(f"Hasofer index : {result.getHasoferReliabilityIndex()}")
-        print(f"Probability of failure (FORM) Pf = {pf:.16f}")
+        logger.info("Design point in physical space : %s", result.getPhysicalSpaceDesignPoint())
+        logger.info("Design point in standard space : %s", result.getStandardSpaceDesignPoint())
+        logger.info("Hasofer index : %s", result.getHasoferReliabilityIndex())
+        logger.info("Probability of failure (FORM) Pf = %.16f", pf)
     return (pf, result)
 
 
@@ -114,7 +127,9 @@ def compute_failure_probability_NAIS(
     quantile_level : float, optional
         The quantile level for the NAIS algorithm. Default is 0.001.
     verbose : bool, optional
-        If True, print additional information. Default is False.
+        If True, log the estimate and its confidence interval at INFO
+        level on the ``otaf.uncertainty._reliability`` logger. Default is
+        False.
 
     Returns
     -------
@@ -132,12 +147,12 @@ def compute_failure_probability_NAIS(
     result = algo.getResult()
     proba = result.getProbabilityEstimate()
     if verbose:
-        print("Proba NAIS =", proba)
-        print("Current coefficient of variation =", result.getCoefficientOfVariation())
+        logger.info("Proba NAIS = %s", proba)
+        logger.info("Current coefficient of variation = %s", result.getCoefficientOfVariation())
         length_95 = result.getConfidenceLength()
-        print("Confidence length (0.95) =", length_95)
-        print(
-            "Confidence interval (0.95) =",
+        logger.info("Confidence length (0.95) = %s", length_95)
+        logger.info(
+            "Confidence interval (0.95) = %s",
             [proba - length_95 / 2, proba + length_95 / 2],
         )
     return (proba, result)
@@ -162,7 +177,9 @@ def compute_failure_probability_SUBSET(
     threshold : float, optional
         The threshold value. Default is 0.0.
     verbose : bool, optional
-        If True, print additional information. Default is False.
+        If True, log the estimate and its confidence interval at INFO
+        level on the ``otaf.uncertainty._reliability`` logger. Default is
+        False.
     proposal_range : float, optional
         The proposal range for the Markov chain Monte Carlo steps.
         Default is 2.0.
@@ -190,12 +207,12 @@ def compute_failure_probability_SUBSET(
     result = algo.getResult()
     proba = result.getProbabilityEstimate()
     if verbose:
-        print("Proba Subset =", proba)
-        print("Current coefficient of variation =", result.getCoefficientOfVariation())
+        logger.info("Proba Subset = %s", proba)
+        logger.info("Current coefficient of variation = %s", result.getCoefficientOfVariation())
         length_95 = result.getConfidenceLength()
-        print("Confidence length (0.95) =", length_95)
-        print(
-            "Confidence interval (0.95) =",
+        logger.info("Confidence length (0.95) = %s", length_95)
+        logger.info(
+            "Confidence interval (0.95) = %s",
             [proba - length_95 / 2, proba + length_95 / 2],
         )
     return (proba, result, algo)
@@ -330,6 +347,51 @@ def compute_gap_optimizations_on_sample(
     return optimizations
 
 
+def _milp_batch(
+    c: np.ndarray,
+    bounds: np.ndarray,
+    a_ub: np.ndarray,
+    b_ub: np.ndarray,
+    a_eq: np.ndarray,
+    b_eq: np.ndarray,
+) -> tuple:
+    """Solve the batch; return ``(x, status)``, rows of NaN where milp gave no solution."""
+    bounds = Bounds(bounds[:, 0], bounds[:, 1], keep_feasible=False)
+    n_samples = b_ub.shape[1]
+    x = np.full((n_samples, len(c)), np.nan)
+    status = np.empty(n_samples, dtype=int)
+    for k in range(n_samples):
+        result = milp(
+            c=c,
+            bounds=bounds,
+            constraints=(
+                LinearConstraint(a_ub, -np.inf, b_ub[:, k]),
+                LinearConstraint(a_eq, b_eq[:, k], b_eq[:, k]),
+            ),
+            options={"disp": False, "presolve": True},
+        )
+        status[k] = result.status
+        if result.x is not None:
+            x[k] = result.x
+    return x, status
+
+
+def _warn_solver_failures(x: np.ndarray, status: np.ndarray) -> None:
+    failed = np.isnan(x).all(axis=1) if x.size else np.zeros(len(status), dtype=bool)
+    if failed.any():
+        codes, counts = np.unique(status[failed], return_counts=True)
+        detail = ", ".join(
+            f"{n} x status {code} ({MILP_STATUS_MESSAGES.get(int(code), 'unknown')})"
+            for code, n in zip(codes, counts)
+        )
+        warnings.warn(
+            f"The optimisation failed for {int(failed.sum())} of {len(status)} samples ({detail}); "
+            "their rows are NaN. Pass return_status=True to get the status of every sample.",
+            SolverFailureWarning,
+            stacklevel=3,
+        )
+
+
 def milp_batch_sequential(
     c: np.ndarray,
     bounds: np.ndarray,
@@ -337,7 +399,8 @@ def milp_batch_sequential(
     b_ub: np.ndarray,
     a_eq: np.ndarray,
     b_eq: np.ndarray,
-) -> np.ndarray:
+    return_status: bool = False,
+) -> Union[np.ndarray, tuple]:
     """Optimize a batch of linear programming problems sequentially.
 
     Solve a sequence of Mixed-Integer Linear Programming (MILP)
@@ -361,12 +424,24 @@ def milp_batch_sequential(
         2D array for the equality constraints.
     b_eq : np.ndarray
         2D array of equality constraint values per problem.
+    return_status : bool, optional
+        Also return the ``scipy.optimize.milp`` status of every problem
+        (default False).
 
     Returns
     -------
-    np.ndarray
+    x : np.ndarray
         2D array of optimized decision variables for each problem in
-        the batch.
+        the batch. A row is NaN when the solver returned no solution
+        (e.g. infeasible problem).
+    status : np.ndarray of int
+        Only if `return_status`: the status of each problem, see
+        `MILP_STATUS_MESSAGES` (0 is optimal).
+
+    Warns
+    -----
+    otaf.exceptions.SolverFailureWarning
+        If some problems have no solution.
 
     Notes
     -----
@@ -374,22 +449,11 @@ def milp_batch_sequential(
     ``scipy.optimize.milp``. Solver options are set to
     ``disp=False`` and ``presolve=True`` for efficiency. Problems
     share `c`, `a_ub`, and `a_eq`, while `b_ub` and `b_eq` vary per
-    batch element.
+    batch element. A failed problem no longer aborts the batch.
     """
-    bounds = Bounds(bounds[:, 0], bounds[:, 1], keep_feasible=False)
-    optimizations = [
-        milp(
-            c=c,
-            bounds=bounds,
-            constraints=(
-                LinearConstraint(a_ub, -np.inf, b_ub[:, k]),
-                LinearConstraint(a_eq, b_eq[:, k], b_eq[:, k]),
-            ),
-            options={"disp": False, "presolve": True},
-        ).x
-        for k in range(b_ub.shape[1])
-    ]
-    return np.array(optimizations)
+    x, status = _milp_batch(c, bounds, a_ub, b_ub, a_eq, b_eq)
+    _warn_solver_failures(x, status)
+    return (x, status) if return_status else x
 
 
 def compute_gap_optimizations_on_sample_batch(
@@ -402,7 +466,8 @@ def compute_gap_optimizations_on_sample_batch(
     progress_bar: bool = False,
     verbose: int = 0,
     dtype: str = "float32",
-) -> np.ndarray:
+    return_status: bool = False,
+) -> Union[np.ndarray, tuple]:
     """Compute gap optimizations using batch processing and MILP.
 
     Perform parallel batch optimization for a system of
@@ -432,12 +497,25 @@ def compute_gap_optimizations_on_sample_batch(
     dtype : str, optional
         Data type for the resulting optimized decision variable array.
         Default is ``'float32'``.
+    return_status : bool, optional
+        Also return the ``scipy.optimize.milp`` status of every sample
+        (default False).
 
     Returns
     -------
-    np.ndarray
+    x : np.ndarray
         Optimized decision variables for all samples stacked into a
-        single array.
+        single array. A row is NaN when the solver returned no solution
+        for that sample; the slack ``x[:, -1]`` is then NaN too, so count
+        failures with ``np.isnan`` before computing a failure probability.
+    status : np.ndarray of int
+        Only if `return_status`: the status of each sample, see
+        `MILP_STATUS_MESSAGES` (0 is optimal).
+
+    Warns
+    -----
+    otaf.exceptions.SolverFailureWarning
+        If some samples have no solution.
     """
     c, a_ub, b_ub, a_eq, b_eq, bounds = constraint_matrix_generator(
         deviation_array, bounds=bounds, C=C
@@ -452,9 +530,9 @@ def compute_gap_optimizations_on_sample_batch(
             _range = get_tqdm_range()(0, N_points, batch_size, unit_scale=batch_size)
         else:
             _range = range(0, N_points, batch_size)
-        optimizations = Parallel(n_jobs=N_cpu_reque)(
+        batches = Parallel(n_jobs=N_cpu_reque)(
             (
-                delayed(milp_batch_sequential)(
+                delayed(_milp_batch)(
                     c,
                     bounds,
                     a_ub,
@@ -465,7 +543,10 @@ def compute_gap_optimizations_on_sample_batch(
                 for i in _range
             )
         )
-        return np.vstack(optimizations, dtype=dtype)
+        x = np.vstack([batch[0] for batch in batches], dtype=dtype)
+        status = np.concatenate([batch[1] for batch in batches])
     else:
-        optimizations = milp_batch_sequential(c, bounds, a_ub, b_ub, a_eq, b_eq)
-        return np.array(optimizations, dtype=dtype)
+        x, status = _milp_batch(c, bounds, a_ub, b_ub, a_eq, b_eq)
+        x = np.array(x, dtype=dtype)
+    _warn_solver_failures(x, status)
+    return (x, status) if return_status else x

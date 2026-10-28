@@ -17,6 +17,7 @@ from __future__ import annotations
 __author__ = "Kramer84"
 __all__ = [
     "BASE_SURFACE_TYPES",
+    "SUPPORTED_SURFACE_TYPES",
     "SURFACE_DIRECTIONS",
     "CONTACT_TYPES",
     "SURF_POINT_PATTERN",
@@ -39,6 +40,13 @@ __all__ = [
     "GAP_TYPE_TO_NULLIFIED_NOMINAL_COMPONENTS",
     "BASIS_DICT",
     "SURFACE_DICT_VALUE_CHECKS",
+    "FRAME_ATOL",
+    "GEOMETRIC_ATOL",
+    "DIRECTION_ATOL",
+    "ZERO_NORM_ATOL",
+    "TAYLOR_COEFFICIENT_TOL",
+    "GAP_TRANSLATION_BOUND",
+    "GAP_ROTATION_BOUND",
 ]
 
 import re
@@ -48,12 +56,14 @@ import numpy as np
 # -----------------------------------------------------------------------------
 
 BASE_SURFACE_TYPES = ["plane", "cylinder", "cone", "sphere"]
-"""List of supported surface types for geometric modeling.
+"""Surface types known to the geometry helpers.
 
-Accepted types include ``'plane'``, ``'cylinder'``, ``'cone'``, and
-``'sphere'``. Only ``'plane'`` and ``'cylinder'`` are currently 
-supported for interactions.
+Only those of `SUPPORTED_SURFACE_TYPES` can be used in an assembly: ``'cone'``
+and ``'sphere'`` have no deviation or gap model yet.
 """
+
+SUPPORTED_SURFACE_TYPES = ["plane", "cylinder"]
+"""Surface types accepted in the assembly dictionary (``TYPE`` key)."""
 
 SURFACE_DIRECTIONS = ["centripetal", "centrifugal"]
 """List of valid surface orientation vectors for revolutionary surfaces."""
@@ -287,11 +297,46 @@ dict of str to dict
 :meta hide-value:
 """
 
+# -----------------------------------------------------------------------------
+# Numerical tolerances
+# -----------------------------------------------------------------------------
+
+FRAME_ATOL = 1e-8
+"""Absolute tolerance of the rotation-matrix check of a ``FRAME``.
+
+``F @ F.T`` must equal the identity and ``det(F)`` must equal 1 within it (with
+the default relative tolerance of `numpy.allclose`).
+"""
+
+GEOMETRIC_ATOL = 1e-9
+"""Absolute tolerance on lengths (model units, mm) in the geometry helpers.
+
+Two points closer than this are the same point, and overlaps shorter (or, for
+planes, smaller in area relative to the face size) than this are empty.
+"""
+
+DIRECTION_ATOL = 1e-8
+"""Absolute tolerance on unit-vector dot products (parallel, perpendicular,
+coincident planes)."""
+
+ZERO_NORM_ATOL = 1e-10
+"""Vectors with a norm below this cannot be normalised."""
+
+TAYLOR_COEFFICIENT_TOL = 1e-8
+"""Default tolerance of `FirstOrderMatrixExpansion.compute_first_order_expansion`."""
+
+GAP_TRANSLATION_BOUND = 3.0
+"""Bound (mm) of every gap translation variable in the solver: ``[-3, 3]``."""
+
+GAP_ROTATION_BOUND = np.pi / 4
+"""Bound (rad) of every gap rotation variable in the solver: ``[-pi/4, pi/4]``."""
+
+
 SURFACE_DICT_VALUE_CHECKS = {
-    "TYPE": lambda x: x in BASE_SURFACE_TYPES,
+    "TYPE": lambda x: x in SUPPORTED_SURFACE_TYPES,
     "FRAME": lambda x: (
-        np.allclose(np.dot(np.array(x), np.array(x).T), np.identity(3))
-        and np.isclose(np.linalg.det(np.array(x)), 1)
+        np.allclose(np.dot(np.array(x), np.array(x).T), np.identity(3), atol=FRAME_ATOL)
+        and np.isclose(np.linalg.det(np.array(x)), 1, atol=FRAME_ATOL)
     ),
     "ORIGIN": lambda x: np.array(x).shape == (3,),
     "INTERACTIONS": lambda xL: all(BASE_PART_SURF_PATTERN.fullmatch(x) is not None for x in xL),

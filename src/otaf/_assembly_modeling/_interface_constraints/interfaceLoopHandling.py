@@ -5,11 +5,14 @@ __author__ = "Kramer84"
 
 
 import re
+import warnings
 
 from beartype import beartype
 from beartype.typing import Dict, Set
 
 from otaf.common import tree, inverse_mstring, parse_matrix_string
+from otaf.constants import BASE_PART_SURF_PATTERN
+from otaf.exceptions import UncoveredContactWarning
 from otaf.geometry import LinearizationStrategy
 
 from ..compatibilityLoopHandling import CompatibilityLoopHandling
@@ -45,6 +48,7 @@ class InterfaceLoopHandling:
         self.surfaceInteractionManager.get_facing_point_dictionary()
         self.all_gap_matrix_names = self.generate_all_gap_matrix_names()
         self.compatibility_gap_matrix_names = self.extract_unique_gap_matrices_from_expanded_loops()
+        self.warn_uncovered_contacts()
         self.filtered_gap_matrices = self.filter_gap_matrices(
             self.compatibility_gap_matrix_names, self.all_gap_matrix_names
         )
@@ -86,6 +90,42 @@ class InterfaceLoopHandling:
         }
         gap_matrices -= gap_matrices_to_remove
         return gap_matrices
+
+    def uncovered_contacts(self) -> list:
+        """Return the contacts listed in ``INTERACTIONS`` that no compatibility loop crosses.
+
+        Contact conditions are written only for the gaps of the loops, so these
+        contacts get none.
+
+        Returns
+        -------
+        list of tuple
+            Sorted ``((part1, surf1), (part2, surf2))`` pairs.
+        """
+        covered = set()
+        for gap in self.compatibility_gap_matrix_names:
+            parsed = parse_matrix_string(gap)
+            covered.add(
+                tuple(sorted([(parsed["part1"], parsed["surface1"]), (parsed["part2"], parsed["surface2"])]))
+            )
+        listed = set()
+        for part_id, part in self.ADP["PARTS"].items():
+            for surf_id, surface in part.items():
+                for interaction in surface.get("INTERACTIONS", []):
+                    other = BASE_PART_SURF_PATTERN.fullmatch(interaction).groups()
+                    listed.add(tuple(sorted([(part_id, surf_id), other])))
+        return sorted(listed - covered)
+
+    def warn_uncovered_contacts(self) -> None:
+        """Warn (`otaf.exceptions.UncoveredContactWarning`) for each contact no loop crosses."""
+        for (p1, s1), (p2, s2) in self.uncovered_contacts():
+            warnings.warn(
+                f"The contact P{p1}{s1}-P{p2}{s2} listed in INTERACTIONS is not crossed by any "
+                "compatibility loop, so it gets no contact condition. Add a loop through it "
+                "or remove it from INTERACTIONS.",
+                UncoveredContactWarning,
+                stacklevel=3,
+            )
 
     def generate_all_gap_matrix_names(self) -> Dict[str, Dict[str, Set[str]]]:
         """

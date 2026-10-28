@@ -18,6 +18,7 @@ from beartype import beartype
 from beartype.typing import List, Tuple, Union, Optional, Sequence
 
 from otaf.common import get_symbol_coef_map, get_symbols_in_expressions
+from otaf.constants import GAP_ROTATION_BOUND, GAP_TRANSLATION_BOUND
 
 
 @beartype
@@ -263,8 +264,7 @@ class SystemOfConstraintsAssemblyModel:
                 )
                 C[idGVarXTrans] = 1
             else:
-                if self.verbose > 1:
-                    print("Using s variable for objective")
+                logging.debug("[Type: SystemOfConstraintsAssemblyModel] Using s variable for objective")
                 C[self.gap_symbols.index(sp.Symbol("s"))] = (
                     -1.0
                 )  # Cause we want to maximize s, but this is a minimization.  # Guess its that! But this is important.
@@ -480,10 +480,6 @@ class SystemOfConstraintsAssemblyModel:
             logging.info(
                 f"[Type: SystemOfConstraintsAssemblyModel] Result for interface expression {i} is : {round(interface_results[i], rnd)}"
             )
-            if self.verbose > 0:
-                print(
-                    f"[Type: SystemOfConstraintsAssemblyModel] Result for interface expression {i} is : {round(interface_results[i], rnd)}"
-                )
         return compatibility_result, interface_results
 
     def embedOptimizationVariable(self) -> None:
@@ -622,10 +618,11 @@ def get_gap_symbol_bounds(gap_symbols: List[sp.Symbol]) -> np.ndarray:
     -----
     - Translational gap symbols:
       - Variables starting with ``u_g``, ``v_g``, or ``w_g`` have bounds
-        of ``[-3, 3]`` millimeters.
+        of ``[-3, 3]`` millimeters (``otaf.constants.GAP_TRANSLATION_BOUND``).
     - Rotational gap symbols:
       - Variables starting with ``alpha_g``, ``beta_g``, or ``gamma_g``
-        have bounds of ``[-π/4, π/4]`` radians.
+        have bounds of ``[-π/4, π/4]`` radians
+        (``otaf.constants.GAP_ROTATION_BOUND``).
     - The auxiliary variable ``s`` (if present) is unbounded and has
       bounds of ``[-∞, ∞]``.
     - If a symbol does not match any known prefix, a warning is logged.
@@ -642,12 +639,10 @@ def get_gap_symbol_bounds(gap_symbols: List[sp.Symbol]) -> np.ndarray:
     bounds = []
     for s in gap_symbols:
         str_s = str(s)
-        if str_s.startswith("u_g"):
-            bounds.append([-3, 3])  # mm
-        elif str_s.startswith(("v_g", "w_g")):
-            bounds.append([-3, 3])  # mm
+        if str_s.startswith(("u_g", "v_g", "w_g")):
+            bounds.append([-GAP_TRANSLATION_BOUND, GAP_TRANSLATION_BOUND])  # mm
         elif str_s.startswith(("alpha_g", "beta_g", "gamma_g")):
-            bounds.append([-np.pi / 4, np.pi / 4])  # rad
+            bounds.append([-GAP_ROTATION_BOUND, GAP_ROTATION_BOUND])  # rad
         elif str_s == "s":
             bounds.append([-np.inf, np.inf])
         else:
