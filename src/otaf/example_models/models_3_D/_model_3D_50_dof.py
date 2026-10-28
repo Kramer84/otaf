@@ -9,7 +9,7 @@ __all__ = [
     "get_scaled_credal_set_constraints_function",
     "dim",
     "sample_multiplier",
-    "no_tol", 
+    "no_tol",
     ]
 
 import copy
@@ -70,7 +70,7 @@ class SmallDispTorsor:
     point_name : str
         Name of the geometric point.
     """
-    
+
     def __init__(
         self, name: str, omega: Any, v: Any, point: Any, point_name: str
     ) -> None:
@@ -856,7 +856,7 @@ def print_interface_constraints(expressions: list[sp.Expr]) -> None:
 
 
 def get_system_of_constraints_assembly_model(
-    L: np.ndarray | list[float] = [50, 50, 30, 30],
+    L: np.ndarray | list[float] | tuple[float, ...] = (50, 50, 30, 30),
     CIRCLE_RESOLUTION: int = 64,
     strategy: LinearizationStrategy = LinearizationStrategy.CIRCUMSCRIBED,
 ) -> otaf.SystemOfConstraintsAssemblyModel:

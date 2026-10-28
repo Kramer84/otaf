@@ -3,7 +3,7 @@ from __future__ import annotations
 __author__ = "Kramer84"
 __all__ = ["LagrangeConstraintSolver", "UniformSurfaceSampler"]
 from collections.abc import Callable
-from typing import Optional, Union
+from typing import Optional
 
 import numpy as np
 from beartype import beartype
@@ -77,7 +77,7 @@ class LagrangeConstraintSolver:
         """
         Solve the optimization problem using the SLSQP method.
 
-        Finds the subspace satisfying ``g(X) = 0`` subject to defined 
+        Finds the subspace satisfying ``g(X) = 0`` subject to defined
         variable bounds.
 
         Returns
@@ -169,7 +169,7 @@ class UniformSurfaceSampler:
         """
         Project an arbitrary point onto the surface g(X) = 0.
 
-        Uses the SLSQP method to find the nearest point satisfying the 
+        Uses the SLSQP method to find the nearest point satisfying the
         constraint.
 
         Parameters
@@ -180,7 +180,7 @@ class UniformSurfaceSampler:
         Returns
         -------
         ndarray or None
-            The projected point on the surface, or ``None`` if 
+            The projected point on the surface, or ``None`` if
             optimization failed.
         """
         constraints = {"type": "eq", "fun": self.g}

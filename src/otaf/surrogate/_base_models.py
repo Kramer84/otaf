@@ -64,8 +64,6 @@ def get_variable_size_sequential_linear_model(
     m_layer_id = max(ir(n_layers * relative_max_layer_depth), 1)
     m_layer_id = min(m_layer_id, n_layers - 2)
     m_layer_size = ir(d * relative_max_layer_size)
-    coef_lin_up = (m_layer_size - d) / (m_layer_id + 1)
-    coef_lin_down = (d - m_layer_size) / (n_layers - m_layer_id)
     lin_size_l = [d]
     for i in range(1, n_layers):
         if i < m_layer_id:

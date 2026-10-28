@@ -16,7 +16,7 @@ import math
 
 import matplotlib.pyplot as plt
 from beartype import beartype
-from beartype.typing import TYPE_CHECKING, Any, List, Tuple, Union
+from beartype.typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     import trimesh
@@ -59,13 +59,13 @@ def _cm_to_inch(cm: tuple[float, float] | None) -> tuple[float, float] | None:
     Parameters
     ----------
     cm : tuple of float, optional
-        A tuple containing the width and height values in centimeters. 
+        A tuple containing the width and height values in centimeters.
         If None, the function returns None.
 
     Returns
     -------
     tuple of float or None
-        The corresponding width and height measurements converted into 
+        The corresponding width and height measurements converted into
         inches, or None if the input was None.
     """
     if cm is None:
@@ -82,13 +82,13 @@ def _merge_style(style: dict | None = None, **overrides) -> dict:
     style : dict, optional
         Base style dict shared across figures. Default is None.
     **overrides
-        Per-call overrides like ``figsize_cm=...``, ``dpi=...``, 
+        Per-call overrides like ``figsize_cm=...``, ``dpi=...``,
         ``legend=False``, etc.
 
     Returns
     -------
     dict
-        A fully merged configuration dictionary containing updated 
+        A fully merged configuration dictionary containing updated
         style configurations and color mappings.
     """
     cfg = DEFAULT_FIG_STYLE.copy()
@@ -226,10 +226,10 @@ def trimesh_scene_as_notebook_scene(
     """
     try:
         from trimesh import viewer
-    except ImportError:
+    except ImportError as err:
         raise otaf_exceptions._raise_missing_dependency(
             "trimesh", "trimesh_scene_as_notebook_scene"
-        )
+        ) from err
     notebook_scene = viewer.notebook.scene_to_notebook(scene)
     notebook_scene.data = notebook_scene.data.replace(
         "scene.background=new THREE.Color(0xffffff)",

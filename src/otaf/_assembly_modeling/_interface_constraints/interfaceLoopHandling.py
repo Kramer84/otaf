@@ -163,8 +163,8 @@ class InterfaceLoopHandling:
                         gap_matrix_dict[part_id][surface_id].add(gap_matrix_name)
 
         # Step 3: Repopulate missing gap matrices by inverting existing ones
-        for part_id, surfaces in gap_matrix_dict.items():
-            for surface_id, gap_matrices in surfaces.items():
+        for surfaces in gap_matrix_dict.values():
+            for gap_matrices in surfaces.values():
                 for gap_matrix in gap_matrices:
                     parsed = parse_matrix_string(gap_matrix)
                     inverse_gap_matrix = inverse_mstring(gap_matrix)

@@ -1,0 +1,1221 @@
+{
+ "provenance": {
+  "dumas": {
+   "otaf_version": "0.3.0",
+   "git_revision": "e7bd464+dirty",
+   "created": "2026-10-28"
+  },
+  "thesis": {
+   "otaf_version": "0.3.0",
+   "git_revision": "e7bd464+dirty",
+   "created": "2026-10-28"
+  },
+  "baselines": {
+   "otaf_version": "0.3.0",
+   "git_revision": "e7bd464+dirty",
+   "created": "2026-10-28"
+  }
+ },
+ "baseline_tag": "plate-capability",
+ "dumas": [
+  {
+   "group": "dumas",
+   "param_set": 1,
+   "table": "C.3",
+   "reference": 0.0837,
+   "reference_n": 30000,
+   "reference_ci95": 0.0054,
+   "pf": 0.07525,
+   "failures": 301,
+   "n": 4000,
+   "solver_failures": 0,
+   "ci95": [
+    0.06747636980798148,
+    0.08383867727946555
+   ],
+   "difference": -0.00845,
+   "z": -1.6333437658926397,
+   "settings": {
+    "seed": 0,
+    "size": 4000,
+    "circle_resolution": "4",
+    "linearization": "inscribed"
+   },
+   "seconds": 6.090578595001716
+  },
+  {
+   "group": "dumas",
+   "param_set": 1,
+   "table": "C.3",
+   "reference": 0.0642,
+   "reference_n": 30000,
+   "reference_ci95": 0.0054,
+   "pf": 0.0575,
+   "failures": 230,
+   "n": 4000,
+   "solver_failures": 0,
+   "ci95": [
+    0.050701252726316905,
+    0.06514785459845135
+   ],
+   "difference": -0.006699999999999991,
+   "z": -1.4090296797315278,
+   "settings": {
+    "seed": 0,
+    "size": 4000,
+    "circle_resolution": "4",
+    "linearization": "mean"
+   },
+   "seconds": 6.142926625005202
+  },
+  {
+   "group": "dumas",
+   "param_set": 1,
+   "table": "C.3",
+   "reference": 0.0541,
+   "reference_n": 30000,
+   "reference_ci95": 0.0054,
+   "pf": 0.04925,
+   "failures": 197,
+   "n": 4000,
+   "solver_failures": 0,
+   "ci95": [
+    0.042965890881488215,
+    0.056399047257809636
+   ],
+   "difference": -0.00485,
+   "z": -1.0742250869536893,
+   "settings": {
+    "seed": 0,
+    "size": 4000,
+    "circle_resolution": "4",
+    "linearization": "circumscribed"
+   },
+   "seconds": 6.033747746987501
+  },
+  {
+   "group": "dumas",
+   "param_set": 1,
+   "table": "C.3",
+   "reference": 0.0647,
+   "reference_n": 30000,
+   "reference_ci95": 0.0054,
+   "pf": 0.057,
+   "failures": 228,
+   "n": 4000,
+   "solver_failures": 0,
+   "ci95": [
+    0.050231168605276724,
+    0.06461889816279637
+   ],
+   "difference": -0.007699999999999992,
+   "z": -1.6154474506789742,
+   "settings": {
+    "seed": 0,
+    "size": 4000,
+    "circle_resolution": "8",
+    "linearization": "inscribed"
+   },
+   "seconds": 6.43715675198473
+  },
+  {
+   "group": "dumas",
+   "param_set": 1,
+   "table": "C.3",
+   "reference": 0.0617,
+   "reference_n": 30000,
+   "reference_ci95": 0.0054,
+   "pf": 0.05575,
+   "failures": 223,
+   "n": 4000,
+   "solver_failures": 0,
+   "ci95": [
+    0.04905663798118158,
+    0.06329582739515356
+   ],
+   "difference": -0.005949999999999997,
+   "z": -1.2666990010114914,
+   "settings": {
+    "seed": 0,
+    "size": 4000,
+    "circle_resolution": "8",
+    "linearization": "mean"
+   },
+   "seconds": 6.378450702992268
+  },
+  {
+   "group": "dumas",
+   "param_set": 1,
+   "table": "C.3",
+   "reference": 0.0592,
+   "reference_n": 30000,
+   "reference_ci95": 0.0054,
+   "pf": 0.0535,
+   "failures": 214,
+   "n": 4000,
+   "solver_failures": 0,
+   "ci95": [
+    0.04694501335398031,
+    0.06091176951722653
+   ],
+   "difference": -0.005700000000000004,
+   "z": -1.2288734087734559,
+   "settings": {
+    "seed": 0,
+    "size": 4000,
+    "circle_resolution": "8",
+    "linearization": "circumscribed"
+   },
+   "seconds": 6.505697596003301
+  },
+  {
+   "group": "dumas",
+   "param_set": 1,
+   "table": "C.3",
+   "reference": 0.0612,
+   "reference_n": 30000,
+   "reference_ci95": 0.0054,
+   "pf": 0.0555,
+   "failures": 222,
+   "n": 4000,
+   "solver_failures": 0,
+   "ci95": [
+    0.04882185032025879,
+    0.06303109477772877
+   ],
+   "difference": -0.005699999999999997,
+   "z": -1.2165025396966564,
+   "settings": {
+    "seed": 0,
+    "size": 4000,
+    "circle_resolution": "60",
+    "linearization": "inscribed"
+   },
+   "seconds": 11.674998111004243
+  },
+  {
+   "group": "dumas",
+   "param_set": 1,
+   "table": "C.3",
+   "reference": 0.0611,
+   "reference_n": 30000,
+   "reference_ci95": 0.0054,
+   "pf": 0.0555,
+   "failures": 222,
+   "n": 4000,
+   "solver_failures": 0,
+   "ci95": [
+    0.04882185032025879,
+    0.06303109477772877
+   ],
+   "difference": -0.005600000000000001,
+   "z": -1.1957580913463168,
+   "settings": {
+    "seed": 0,
+    "size": 4000,
+    "circle_resolution": "60",
+    "linearization": "mean"
+   },
+   "seconds": 11.889871300983941
+  },
+  {
+   "group": "dumas",
+   "param_set": 1,
+   "table": "C.3",
+   "reference": 0.0611,
+   "reference_n": 30000,
+   "reference_ci95": 0.0054,
+   "pf": 0.0555,
+   "failures": 222,
+   "n": 4000,
+   "solver_failures": 0,
+   "ci95": [
+    0.04882185032025879,
+    0.06303109477772877
+   ],
+   "difference": -0.005600000000000001,
+   "z": -1.1957580913463168,
+   "settings": {
+    "seed": 0,
+    "size": 4000,
+    "circle_resolution": "60",
+    "linearization": "circumscribed"
+   },
+   "seconds": 11.908060999994632
+  },
+  {
+   "group": "dumas",
+   "param_set": 1,
+   "table": "C.3",
+   "reference": 0.0611,
+   "reference_n": 30000,
+   "reference_ci95": 0.0054,
+   "pf": 0.05945,
+   "failures": 1189,
+   "n": 20000,
+   "solver_failures": 0,
+   "ci95": [
+    0.05625664669619781,
+    0.06281255627550479
+   ],
+   "difference": -0.0016499999999999987,
+   "z": -0.5101931156623821,
+   "settings": {
+    "seed": 0,
+    "size": 20000,
+    "circle_resolution": "60",
+    "linearization": "circumscribed"
+   },
+   "seconds": 71.91841860499699
+  },
+  {
+   "group": "dumas",
+   "param_set": 2,
+   "table": "3.3",
+   "reference": 0.000796,
+   "reference_n": 3000000,
+   "reference_ci95": 6.5e-05,
+   "pf": 0.0003,
+   "failures": 6,
+   "n": 20000,
+   "solver_failures": 0,
+   "ci95": [
+    0.00013749971291305316,
+    0.0006544211245850223
+   ],
+   "difference": -0.0004960000000000001,
+   "z": -2.4535173001206894,
+   "settings": {
+    "seed": 0,
+    "size": 20000,
+    "circle_resolution": "60",
+    "linearization": "circumscribed"
+   },
+   "seconds": 98.55280037800549
+  }
+ ],
+ "thesis": [
+  {
+   "group": "thesis",
+   "summary": "model1_4_dof",
+   "model": "model1",
+   "bound": "min",
+   "reference": 0.0016517335876255288,
+   "scaling": [
+    0.99719022,
+    0.00843174,
+    0.99719022,
+    0.00804686
+   ],
+   "max_abs_constraint": 0.00277731,
+   "optimized_at_slack": 0.0,
+   "settings": {
+    "seed": 0,
+    "size": 20000
+   },
+   "checked": true,
+   "pf": 0.0036,
+   "failures": 72,
+   "n": 20000,
+   "solver_failures": 0,
+   "ci95": [
+    0.002859905724891284,
+    0.00453074767461651
+   ],
+   "difference": 0.001948266412374471,
+   "z": 6.785038357061541,
+   "seconds": 31.050368602009257,
+   "closed_form": {
+    "pf": 0.003174,
+    "failures": 3174,
+    "n": 1000000,
+    "solver_failures": 0,
+    "ci95": [
+     0.0030656466303366037,
+     0.0032861704283006408
+    ],
+    "difference": 0.0015222664123744714,
+    "z": 37.48690891523686
+   }
+  },
+  {
+   "group": "thesis",
+   "summary": "model1_4_dof",
+   "model": "model1",
+   "bound": "max",
+   "reference": 0.006682385785244436,
+   "scaling": [
+    0.00318271,
+    0.99999915,
+    0.49127957,
+    0.87777796
+   ],
+   "max_abs_constraint": 0.00590743723,
+   "optimized_at_slack": 0.0,
+   "settings": {
+    "seed": 0,
+    "size": 20000
+   },
+   "checked": true,
+   "pf": 0.00635,
+   "failures": 127,
+   "n": 20000,
+   "solver_failures": 0,
+   "ci95": [
+    0.005339958170403404,
+    0.007549639030779156
+   ],
+   "difference": -0.00033238578524443646,
+   "z": -0.5769625170725146,
+   "seconds": 29.96816673502326,
+   "closed_form": {
+    "pf": 0.006377,
+    "failures": 6377,
+    "n": 1000000,
+    "solver_failures": 0,
+    "ci95": [
+     0.006222869726815203,
+     0.006534922723530979
+    ],
+    "difference": -0.00030538578524443635,
+    "z": -3.748340000002357
+   }
+  },
+  {
+   "group": "thesis",
+   "summary": "model2_16_dof",
+   "model": "model2",
+   "bound": "min",
+   "reference": 0.000254310497990738,
+   "scaling": [
+    0.99019984,
+    0.02768834,
+    0.99034707,
+    0.02734576,
+    0.99019412,
+    0.02809125,
+    0.9900346,
+    0.03663918,
+    0.99045096,
+    0.02409517,
+    0.99027727,
+    0.02853264,
+    0.9991493,
+    0.01066855,
+    0.99043939,
+    0.02399751
+   ],
+   "max_abs_constraint": 0.00941312,
+   "optimized_at_slack": 0.075,
+   "settings": {
+    "seed": 0
+   },
+   "checked": false,
+   "reason": "Pf < 0.001: needs far more than a few thousand samples"
+  },
+  {
+   "group": "thesis",
+   "summary": "model2_16_dof",
+   "model": "model2",
+   "bound": "max",
+   "reference": 0.0011637627430366945,
+   "scaling": [
+    0.49447406,
+    0.87089538,
+    0.7403611,
+    0.66829079,
+    0.62316158,
+    0.7875037,
+    0.37888177,
+    0.92751646,
+    0.30204983,
+    0.95587571,
+    0.85184978,
+    0.5270327,
+    1.0,
+    0.00582979,
+    0.22939316,
+    0.97661591
+   ],
+   "max_abs_constraint": 0.0042372438,
+   "optimized_at_slack": 0.0,
+   "settings": {
+    "seed": 0,
+    "size": 20000
+   },
+   "checked": true,
+   "pf": 0.0015,
+   "failures": 30,
+   "n": 20000,
+   "solver_failures": 0,
+   "ci95": [
+    0.0010509490692668592,
+    0.002140510881689296
+   ],
+   "difference": 0.00033623725696330553,
+   "z": 1.394702123516368,
+   "seconds": 31.233089393994305
+  },
+  {
+   "group": "thesis",
+   "summary": "model3_30_dof",
+   "model": "model3",
+   "bound": "min",
+   "reference": 0.03131029606972021,
+   "scaling": [
+    0.195520486,
+    1.0,
+    0.00845506217,
+    0.00414068287,
+    0.999957996,
+    0.0256199401,
+    0.00845640084,
+    0.052526093,
+    7.9120169e-07,
+    1.0,
+    0.0062458459,
+    0.0288802885,
+    0.99961572,
+    0.0212483546,
+    0.999837972,
+    0.0195059532,
+    0.0458032415,
+    0.00474475096,
+    0.0136761168,
+    0.00962290909,
+    0.999624359,
+    0.00443748156,
+    0.99790968,
+    0.997867735,
+    0.997908239,
+    0.997904521,
+    1.0,
+    0.999999983,
+    1.0,
+    1.0
+   ],
+   "max_abs_constraint": 0.00195732854,
+   "optimized_at_slack": 0.025,
+   "settings": {
+    "seed": 0,
+    "circle_resolution": "64",
+    "linearization": "circumscribed",
+    "size": 4000
+   },
+   "checked": true,
+   "pf": 0.0295,
+   "failures": 118,
+   "n": 4000,
+   "solver_failures": 0,
+   "ci95": [
+    0.02469096179864265,
+    0.035211874351195695
+   ],
+   "difference": -0.0018102960697202117,
+   "z": -0.6574211552339786,
+   "seconds": 11.694719557999633
+  },
+  {
+   "group": "thesis",
+   "summary": "model3_30_dof",
+   "model": "model3",
+   "bound": "max",
+   "reference": 0.0576273410789624,
+   "scaling": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.5,
+    1.0
+   ],
+   "max_abs_constraint": 0.0,
+   "optimized_at_slack": 0.0,
+   "settings": {
+    "seed": 0,
+    "circle_resolution": "64",
+    "linearization": "circumscribed",
+    "size": 4000
+   },
+   "checked": true,
+   "pf": 0.0555,
+   "failures": 222,
+   "n": 4000,
+   "solver_failures": 0,
+   "ci95": [
+    0.04882185032025879,
+    0.06303109477772877
+   ],
+   "difference": -0.002127341078962397,
+   "z": -0.5773530873165011,
+   "seconds": 11.676270700001623
+  },
+  {
+   "group": "thesis",
+   "summary": "model3_30_dof_reduced",
+   "model": "model3",
+   "bound": "min",
+   "reference": 0.03135931903025264,
+   "scaling": [
+    0.0715868362,
+    1.0,
+    0.0469884844,
+    0.0861452041,
+    0.999984314,
+    0.00558192982,
+    0.00484382263,
+    0.0109830765,
+    0.000772616751,
+    1.0,
+    0.00143088965,
+    0.0013418038,
+    0.000201241606,
+    1.0,
+    0.000800115033,
+    4.13752958e-06,
+    1.0,
+    0.0379429216,
+    0.0112657004,
+    0.999999789,
+    0.0183149631,
+    0.000148717649,
+    1.0,
+    0.999999458,
+    0.999999979,
+    1.0
+   ],
+   "max_abs_constraint": 1.0,
+   "optimized_at_slack": 0.0,
+   "settings": {
+    "seed": 0,
+    "circle_resolution": "64",
+    "linearization": "circumscribed",
+    "size": 4000
+   },
+   "checked": true,
+   "pf": 0.0305,
+   "failures": 122,
+   "n": 4000,
+   "solver_failures": 0,
+   "ci95": [
+    0.025605048297357234,
+    0.03629586896587146
+   ],
+   "difference": -0.000859319030252638,
+   "z": -0.3118313402744142,
+   "seconds": 11.586433051998029
+  },
+  {
+   "group": "thesis",
+   "summary": "model3_30_dof_reduced",
+   "model": "model3",
+   "bound": "max",
+   "reference": 0.05762770921714553,
+   "scaling": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "max_abs_constraint": 1.0,
+   "optimized_at_slack": 0.0,
+   "settings": {
+    "seed": 0,
+    "circle_resolution": "64",
+    "linearization": "circumscribed",
+    "size": 4000
+   },
+   "checked": true,
+   "pf": 0.0555,
+   "failures": 222,
+   "n": 4000,
+   "solver_failures": 0,
+   "ci95": [
+    0.04882185032025879,
+    0.06303109477772877
+   ],
+   "difference": -0.002127709217145529,
+   "z": -0.5774512671002707,
+   "seconds": 15.238900438998826
+  },
+  {
+   "group": "thesis",
+   "summary": "model4_50_dof",
+   "model": "model4",
+   "bound": "min",
+   "reference": 5.363445511637444e-07,
+   "scaling": [
+    7.16871467e-05,
+    6.24937226e-06,
+    0.999993752,
+    0.0240931271,
+    0.00690116185,
+    0.999993752,
+    0.00769086238,
+    0.000687564103,
+    0.999993443,
+    0.180302211,
+    0.0730019374,
+    0.00033107312,
+    0.975983467,
+    6.24937226e-06,
+    0.0239265387,
+    0.000197590351,
+    0.999993752,
+    0.000467818374,
+    0.0339619269,
+    8.03796875e-05,
+    0.919970585,
+    0.104899772,
+    0.000669000704,
+    0.000410611118,
+    0.334628762,
+    0.989489388,
+    0.000222101412,
+    0.113824081,
+    0.00647236894,
+    0.950780104,
+    0.0161216486,
+    6.24937226e-06,
+    0.0170479568,
+    0.996711956,
+    0.000306989782,
+    7.27718502e-06,
+    0.00109906508,
+    0.999993752,
+    2.48428131e-05,
+    2.24746726e-05,
+    0.180079886,
+    0.0795363412,
+    0.217822313,
+    0.393034286,
+    0.317232973,
+    6.24937226e-06,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "max_abs_constraint": 0.00574274152,
+   "optimized_at_slack": 0.05,
+   "settings": {
+    "seed": 0,
+    "circle_resolution": "64",
+    "linearization": "circumscribed"
+   },
+   "checked": false,
+   "reason": "Pf < 0.001: needs far more than a few thousand samples"
+  },
+  {
+   "group": "thesis",
+   "summary": "model4_50_dof",
+   "model": "model4",
+   "bound": "max",
+   "reference": 0.0118833259152819,
+   "scaling": [
+    0.50494746,
+    0.44249443,
+    0.4456754,
+    0.53474898,
+    0.45412083,
+    0.33567306,
+    0.95733331,
+    0.95124969,
+    0.29499826,
+    0.272981,
+    0.95274846,
+    0.99474875,
+    0.09889601,
+    0.30032193,
+    0.90644576,
+    0.93736699,
+    0.3212935,
+    0.39285484,
+    0.97974578,
+    0.96137754,
+    0.27730654,
+    0.19320338,
+    0.96991986,
+    0.97459735,
+    0.15373982,
+    0.16727225,
+    0.92661414,
+    0.91977858,
+    0.33937254,
+    0.32053854,
+    1.0,
+    0.95728143,
+    0.29242472,
+    0.02198851,
+    0.94772842,
+    0.97964118,
+    0.13723955,
+    0.28188677,
+    0.08719548,
+    0.13361329,
+    0.16975164,
+    0.01057033,
+    0.00229487,
+    0.0391494,
+    0.19906875,
+    0.15295488,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "max_abs_constraint": 0.00618564118,
+   "optimized_at_slack": 0.025,
+   "settings": {
+    "seed": 0,
+    "circle_resolution": "64",
+    "linearization": "circumscribed",
+    "size": 4000
+   },
+   "checked": true,
+   "pf": 0.008,
+   "failures": 32,
+   "n": 4000,
+   "solver_failures": 0,
+   "ci95": [
+    0.005672587302339802,
+    0.011271504909605927
+   ],
+   "difference": -0.0038833259152819006,
+   "z": -2.2665260690088638,
+   "seconds": 44.6431013509864
+  },
+  {
+   "group": "thesis",
+   "summary": "model4_50_dof_reduced",
+   "model": "model4",
+   "bound": "min",
+   "reference": 0.0,
+   "scaling": [
+    0.79921173,
+    0.80495449,
+    0.60618892,
+    0.52571263,
+    0.80811474,
+    0.77915384,
+    0.52811323,
+    0.58025692,
+    0.68873223,
+    0.85119566,
+    0.52627102,
+    0.61628915,
+    0.80154708,
+    0.78148783,
+    0.58712826,
+    0.58679629,
+    0.77585668,
+    0.80206235,
+    0.61020412,
+    0.5786551,
+    0.80514709,
+    0.83549204,
+    0.54351242,
+    0.57359239,
+    0.50260899,
+    0.8584319,
+    0.51110593,
+    0.62077779,
+    0.8542447,
+    0.73277585,
+    0.43094731,
+    0.52071306
+   ],
+   "max_abs_constraint": 1.0,
+   "optimized_at_slack": 0.075,
+   "settings": {
+    "seed": 0,
+    "circle_resolution": "64",
+    "linearization": "circumscribed"
+   },
+   "checked": false,
+   "reason": "Pf < 0.001: needs far more than a few thousand samples"
+  },
+  {
+   "group": "thesis",
+   "summary": "model4_50_dof_reduced",
+   "model": "model4",
+   "bound": "max",
+   "reference": 2.012937045792806e-05,
+   "scaling": [
+    0.98358177,
+    0.96625501,
+    0.25618844,
+    0.18096952,
+    0.96691196,
+    0.98638199,
+    0.16608015,
+    0.25396419,
+    0.97341755,
+    0.01775013,
+    0.50483413,
+    0.22885301,
+    0.86903277,
+    0.96364594,
+    0.26570684,
+    0.4952547,
+    0.79331127,
+    0.88064795,
+    0.47331936,
+    0.60876699,
+    0.94709729,
+    0.96215057,
+    0.27322547,
+    0.32046338,
+    0.99976902,
+    0.95081569,
+    0.31015514,
+    0.037258,
+    0.96314954,
+    0.91794336,
+    0.39699533,
+    0.26961806
+   ],
+   "max_abs_constraint": 1.0,
+   "optimized_at_slack": 0.05,
+   "settings": {
+    "seed": 0,
+    "circle_resolution": "64",
+    "linearization": "circumscribed"
+   },
+   "checked": false,
+   "reason": "Pf < 0.001: needs far more than a few thousand samples"
+  }
+ ],
+ "baselines": [
+  {
+   "group": "baselines",
+   "case": "model1",
+   "tag": "plate-capability",
+   "reference": 0.0535,
+   "pf": 0.0535,
+   "difference": 0.0,
+   "reclassified": 0,
+   "max_abs_ds": 0.0,
+   "solver_failures": 0,
+   "reference_solver_failures": 0,
+   "settings": {
+    "seed": 0,
+    "size": 2000,
+    "multiplier": 1.0
+   }
+  },
+  {
+   "group": "baselines",
+   "case": "model1_x1.35",
+   "tag": "plate-capability",
+   "reference": 0.15,
+   "pf": 0.15,
+   "difference": 0.0,
+   "reclassified": 0,
+   "max_abs_ds": 0.0,
+   "solver_failures": 0,
+   "reference_solver_failures": 0,
+   "settings": {
+    "seed": 0,
+    "size": 2000,
+    "multiplier": 1.35
+   }
+  },
+  {
+   "group": "baselines",
+   "case": "model2",
+   "tag": "plate-capability",
+   "reference": 0.052,
+   "pf": 0.052,
+   "difference": 0.0,
+   "reclassified": 0,
+   "max_abs_ds": 0.0,
+   "solver_failures": 0,
+   "reference_solver_failures": 0,
+   "settings": {
+    "seed": 0,
+    "size": 2000,
+    "multiplier": 1.0
+   }
+  },
+  {
+   "group": "baselines",
+   "case": "model2_x1.21",
+   "tag": "plate-capability",
+   "reference": 0.142,
+   "pf": 0.142,
+   "difference": 0.0,
+   "reclassified": 0,
+   "max_abs_ds": 0.0,
+   "solver_failures": 0,
+   "reference_solver_failures": 0,
+   "settings": {
+    "seed": 0,
+    "size": 2000,
+    "multiplier": 1.21
+   }
+  },
+  {
+   "group": "baselines",
+   "case": "model2_hF10.0_x1.21",
+   "tag": "plate-capability",
+   "reference": 0.1455,
+   "pf": 0.1455,
+   "difference": 0.0,
+   "reclassified": 0,
+   "max_abs_ds": 0.0,
+   "solver_failures": 0,
+   "reference_solver_failures": 0,
+   "settings": {
+    "seed": 0,
+    "size": 2000,
+    "multiplier": 1.21,
+    "build": {
+     "hF": 10.0
+    }
+   }
+  },
+  {
+   "group": "baselines",
+   "case": "model2_hF10.24_x1.21",
+   "tag": "plate-capability",
+   "reference": 0.1415,
+   "pf": 0.1415,
+   "difference": 0.0,
+   "reclassified": 0,
+   "max_abs_ds": 0.0,
+   "solver_failures": 0,
+   "reference_solver_failures": 0,
+   "settings": {
+    "seed": 0,
+    "size": 2000,
+    "multiplier": 1.21,
+    "build": {
+     "hF": 10.24
+    }
+   }
+  },
+  {
+   "group": "baselines",
+   "case": "model2_hF10.3_x1.21",
+   "tag": "plate-capability",
+   "reference": 0.1415,
+   "pf": 0.1415,
+   "difference": 0.0,
+   "reclassified": 0,
+   "max_abs_ds": 0.0,
+   "solver_failures": 0,
+   "reference_solver_failures": 0,
+   "settings": {
+    "seed": 0,
+    "size": 2000,
+    "multiplier": 1.21,
+    "build": {
+     "hF": 10.3
+    }
+   }
+  },
+  {
+   "group": "baselines",
+   "case": "model2_hF11.0_x1.21",
+   "tag": "plate-capability",
+   "reference": 0.1325,
+   "pf": 0.1325,
+   "difference": 0.0,
+   "reclassified": 0,
+   "max_abs_ds": 0.0,
+   "solver_failures": 0,
+   "reference_solver_failures": 0,
+   "settings": {
+    "seed": 0,
+    "size": 2000,
+    "multiplier": 1.21,
+    "build": {
+     "hF": 11.0
+    }
+   }
+  },
+  {
+   "group": "baselines",
+   "case": "model3",
+   "tag": "plate-capability",
+   "reference": 0.0575,
+   "pf": 0.0575,
+   "difference": 0.0,
+   "reclassified": 0,
+   "max_abs_ds": 0.0,
+   "solver_failures": 0,
+   "reference_solver_failures": 0,
+   "settings": {
+    "seed": 0,
+    "size": 2000,
+    "multiplier": 1.0,
+    "circle_resolution": "64",
+    "linearization": "circumscribed"
+   }
+  },
+  {
+   "group": "baselines",
+   "case": "model3_x1.26",
+   "tag": "plate-capability",
+   "reference": 0.15,
+   "pf": 0.15,
+   "difference": 0.0,
+   "reclassified": 0,
+   "max_abs_ds": 0.0,
+   "solver_failures": 0,
+   "reference_solver_failures": 0,
+   "settings": {
+    "seed": 0,
+    "size": 2000,
+    "multiplier": 1.26,
+    "circle_resolution": "64",
+    "linearization": "circumscribed"
+   }
+  },
+  {
+   "group": "baselines",
+   "case": "model4",
+   "tag": "plate-capability",
+   "reference": 0.054,
+   "pf": 0.054,
+   "difference": 0.0,
+   "reclassified": 0,
+   "max_abs_ds": 0.0,
+   "solver_failures": 0,
+   "reference_solver_failures": 0,
+   "settings": {
+    "seed": 0,
+    "size": 2000,
+    "multiplier": 1.0,
+    "circle_resolution": "64",
+    "linearization": "circumscribed"
+   }
+  },
+  {
+   "group": "baselines",
+   "case": "model4_x1.15",
+   "tag": "plate-capability",
+   "reference": 0.149,
+   "pf": 0.149,
+   "difference": 0.0,
+   "reclassified": 0,
+   "max_abs_ds": 0.0,
+   "solver_failures": 0,
+   "reference_solver_failures": 0,
+   "settings": {
+    "seed": 0,
+    "size": 2000,
+    "multiplier": 1.15,
+    "circle_resolution": "64",
+    "linearization": "circumscribed"
+   }
+  },
+  {
+   "group": "baselines",
+   "case": "model4_auto",
+   "tag": "plate-capability",
+   "reference": 0.0335,
+   "pf": 0.0335,
+   "difference": 0.0,
+   "reclassified": 0,
+   "max_abs_ds": 0.0,
+   "solver_failures": 0,
+   "reference_solver_failures": 0,
+   "settings": {
+    "seed": 0,
+    "size": 2000,
+    "multiplier": 1.0,
+    "circle_resolution": "64",
+    "linearization": "circumscribed"
+   }
+  },
+  {
+   "group": "baselines",
+   "case": "model4_auto_x1.15",
+   "tag": "plate-capability",
+   "reference": 0.123,
+   "pf": 0.123,
+   "difference": 0.0,
+   "reclassified": 0,
+   "max_abs_ds": 0.0,
+   "solver_failures": 0,
+   "reference_solver_failures": 0,
+   "settings": {
+    "seed": 0,
+    "size": 2000,
+    "multiplier": 1.15,
+    "circle_resolution": "64",
+    "linearization": "circumscribed"
+   }
+  },
+  {
+   "group": "baselines",
+   "case": "model4_auto_inscribed_x1.15",
+   "tag": "plate-capability",
+   "reference": 0.123,
+   "pf": 0.123,
+   "difference": 0.0,
+   "reclassified": 0,
+   "max_abs_ds": 0.0,
+   "solver_failures": 0,
+   "reference_solver_failures": 0,
+   "settings": {
+    "seed": 0,
+    "size": 2000,
+    "multiplier": 1.15,
+    "circle_resolution": "64",
+    "linearization": "inscribed",
+    "build": {
+     "strategy": "inscribed"
+    }
+   }
+  }
+ ]
+}

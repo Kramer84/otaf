@@ -16,7 +16,7 @@ imprecise-probability sweeps) is marked `@pytest.mark.gpu` and runs elsewhere.
 - [x] `CODEBASE.md` module map.
 - [x] ruff in CI with a bug-catching rule set (`E9, F63, F7, F82, F811`); widen later.
 - [x] pytest markers `slow` / `gpu`; CI runs `-m "not gpu"` on Python 3.10 and 3.12 with coverage report.
-- [ ] Widen ruff rules gradually: `F401/F841` (unused imports/variables), `B` (mutable defaults: 7 sites), `W` (whitespace).
+- [x] Widen ruff rules: `F401/F841` (unused imports/variables), `B` (flake8-bugbear) and `W` (whitespace) on `src/` and `tests/`. Fixed: mutable and call-expression defaults (now `None` or tuples), `raise ... from err` in `except` clauses, unused loop variables, closures over loop variables. `B905` (`zip()` without `strict=`) is ignored: adding `strict=True` would raise where a shorter iterable is meant to stop the loop, so it is left to site-by-site review.
 
 ## Phase 1: Characterization tests (before changing any numerics)
 
@@ -32,8 +32,10 @@ imprecise-probability sweeps) is marked `@pytest.mark.gpu` and runs elsewhere.
 - [x] Hand-coded references checked against the automatic models (`notebooks/REVIEW.md`): the four-pin model (`model4`, from `ManualImplementation4Pins2plates.ipynb`) sample by sample (`tests/test_cylinder_interfaces.py`); the 16-DOF analytical reference against `model2` in distribution (same Pf within Monte Carlo error).
 - [x] Reference notebooks aligned with the revised thesis (Ch. 4): thesis parameters and normalized parametrization, credal sets from the model functions instead of the removed MI-SDOF classes, directional half-space constraints, seeds; stale API references fixed (all `otaf.*` names in the notebooks resolve). The 16-DOF analytical notebook is rebuilt (closed-form slack) and reproduces the thesis bounds of Ex2 (`notebooks/REVIEW.md`).
 - [x] `model4` plate rotations normalized as in the thesis (`σ_max = target / 50`, the plate corner where the capability constraint is evaluated; was `/ 37.5`). Baseline `plate-capability`: `model4` Pf 6.05 % → 5.40 %, other cases unchanged.
-- [ ] `model3` samples a reduced parameter space mapped by position (`sample_multiplier`); add explicit labels so the mapping can be checked by name.
-- [ ] Remaining invariants: invariance to part/surface relabelling; 2D models embedded in 3D give the same result; LP vs MILP agreement.
+- [x] `model3` samples a reduced parameter space mapped by position (`sample_multiplier`): `model3.sample_multiplier_labels()` names its rows (feature defects, in Dumas' and in the solver's notation) and columns (measured defects). Tests check by name that every entry links two defects of the same feature and that the rows are the solver variables.
+- [x] Invariance to relabelling: swapping the parts, permuting the surface letters and reversing the loop list of `model1`/`model2` gives the same slack sample by sample, once deviation variables are matched by surface (the variables are renumbered).
+- [x] LP vs MILP: the problem has no integer variables; the library's `milp` (HiGHS) and an interior-point `linprog` give the same slack (models 1–4, to 1e-6).
+- [ ] 2D models embedded in 3D give the same result. Open: it needs a 3D version of `model1`/`model2` (faces as contours with a z extent, and the out-of-plane gap components blocked or free per contact), which is a modelling task rather than a test.
 
 ## Phase 2: Cylinder–cylinder interfaces (top priority; core purpose of the library)
 
@@ -70,7 +72,7 @@ Found while writing the pages (docs only in this phase; fixed in Phase 4 unless 
 - [x] `FRAME` was validated only when the points were generated from `ORIGIN`. Now required and checked (rotation matrix, `otaf.constants.FRAME_ATOL`) for every surface.
 - [x] `TYPE` accepted `cone` and `sphere`, which failed later with a `KeyError`. Now `UnsupportedSurfaceTypeError` up front (`otaf.constants.SUPPORTED_SURFACE_TYPES`).
 - [x] Gap bounds (±3 mm, ±π/4) were literals in `get_gap_symbol_bounds`; now `otaf.constants.GAP_TRANSLATION_BOUND` / `GAP_ROTATION_BOUND` (same values; not yet a parameter).
-- [ ] The default `circle_resolution` of `InterfaceLoopHandling` is 8 (up to 8 % error on the clearance); the pin models use 64.
+- [ ] The default `circle_resolution` of `InterfaceLoopHandling` is 8 (up to 8 % error on the clearance); the pin models use 64. Open on purpose: changing a default changes the results of every user model that relies on it, so it is the author's decision (proposal: 32 sides, 0.5 % error, or 64 like the pin models, with a "Behaviour changes" entry in `CHANGELOG.md`). No example model or baseline relies on the default.
 
 ## Phase 4: API hardening
 
@@ -84,8 +86,17 @@ Found while writing the pages (docs only in this phase; fixed in Phase 4 unless 
 
 ## Phase 5: Release and validation
 
-- [ ] Semantic versioning, `CHANGELOG.md`, Zenodo DOI per release (`CITATION.cff` exists).
-- [ ] Verification report against literature cases (e.g. Dumas 2014) and the thesis results.
+- [x] Semantic versioning: the version is defined once (`src/otaf/_version.py`, `otaf.__version__`, read by `pyproject.toml` and `docs/conf.py`); `tests/test_version.py` checks it against the installed metadata, `CITATION.cff` and the top entry of `CHANGELOG.md`. Next release: 0.3.0 (0.2.0 was never tagged or archived).
+- [x] `CHANGELOG.md` (Keep a Changelog), with the behaviour changes of 0.3.0 in their own section.
+- [ ] Zenodo DOI per release. Ready in the repository: `CITATION.cff` (read by Zenodo when there is no `.zenodo.json`) carries the concept DOI `10.5281/zenodo.14639554`, which always points to the latest version. To do by the author: check that the GitHub–Zenodo integration is enabled for the repository, then tag `v0.3.0` and publish the GitHub release; Zenodo archives it and mints the version DOI. The existing v0.0.1-alpha record says GPL-3.0 while the code is MIT: correct it on Zenodo (the new version takes the license from `CITATION.cff`).
+- [x] Verification report (`docs/guide/verification.md`, `scripts/verification/`, `tests/test_verification.py`): model3 against Dumas (2014), the thesis bounds against the scipy solver at the same allocations, and the regression baselines. Settings (seed, sample size, polygon, linearization) for every case.
+
+Found by the verification report (open):
+
+- [ ] Dumas parameter set 2: OTAF 3.0e-4 (6 failures in 20 000) against 7.96e-4 published (z = -2.5), while set 1 agrees. Rerun with at least 2e5 samples; if it persists, compare the measured-point mapping with Dumas' appendix C term by term.
+- [ ] Thesis Ex1 lower bound: at the allocation returned as the minimum, the true Pf is 3.17e-3 (closed form, 1e6 samples), not 1.65e-3 (surrogate + GLD). The upper bound agrees to 5 %. The true minimum over the credal set can be computed exactly for this 4-DOF model (the slack has a closed form).
+- [ ] Thesis Ex4 upper bound: 8.0e-3 with 4000 samples against 1.19e-2 (z = -2.3); rerun with a larger sample.
+- [ ] Bounds below Pf = 1e-3 (Ex2 lower, Ex4 lower and reduced) need large samples or rare-event methods (subset simulation), on the workstation.
 
 ## Phase 6: CAD to input dictionary
 

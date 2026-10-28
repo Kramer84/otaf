@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "otaf"
-version = "0.2"
+dynamic = ["version"]
 description = "OTAF : Open (mechanical) tolerance analysis framework - A comprehensive framework for modeling 3 dimensional overconstrained mechanical assemblies and doing statistical tolerance analysis."
 readme = "README.md"
 license = {text = "MIT"}
@@ -78,6 +78,10 @@ all = [
     "notebook", "pandoc"
 ]
 
+[tool.setuptools.dynamic]
+# Single source: src/otaf/_version.py (also exposed as otaf.__version__).
+version = {attr = "otaf._version.__version__"}
+
 [tool.setuptools.packages.find]
 where = ["src"]
 
@@ -86,10 +90,13 @@ src = ["src", "tests"]
 target-version = "py310"
 
 [tool.ruff.lint]
-# Bug-catching rules (syntax errors, undefined names, bad __all__, redefinitions)
-# and pydocstyle (numpy convention, below). Widened step by step as the roadmap
-# progresses; see ROADMAP.md.
-select = ["E9", "F63", "F7", "F82", "F811", "D"]
+# Bug-catching rules (syntax errors, undefined names, bad __all__, redefinitions,
+# unused imports/variables, flake8-bugbear, whitespace) and pydocstyle (numpy
+# convention, below). See ROADMAP.md.
+select = ["E9", "F63", "F7", "F82", "F811", "F401", "F841", "B", "W", "D"]
+# zip() without strict=: adding strict=True would raise where the shorter iterable
+# is meant to stop the loop; to be decided site by site, not by a blanket rule.
+ignore = ["B905"]
 # Lets ruff understand `Literal[...]` etc. imported from beartype.typing.
 typing-modules = ["beartype.typing"]
 

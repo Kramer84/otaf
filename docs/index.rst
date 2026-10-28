@@ -10,6 +10,7 @@ OTAF Documentation
    guide/theory
    guide/input_format
    guide/limitations
+   guide/verification
 
 .. toctree::
    :maxdepth: 4

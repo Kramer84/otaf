@@ -37,32 +37,32 @@ def condition_lambda_sample(
     """
     Condition lambda parameters to sum to 1 for each feature group.
 
-    This function extracts feature indices from the descriptions of the 
-    sample, normalizes the array representation using those indices, 
-    and returns a new sample. Note that if `squared_sum` is True, an 
+    This function extracts feature indices from the descriptions of the
+    sample, normalizes the array representation using those indices,
+    and returns a new sample. Note that if `squared_sum` is True, an
     element-wise square root transformation is applied.
 
     Parameters
     ----------
     sample : ot.Sample
-        Lambda parameters with each feature description ending in an 
+        Lambda parameters with each feature description ending in an
         integer sequence.
     squared_sum : bool, optional
-        Whether to apply a square root transform to the normalized values. 
+        Whether to apply a square root transform to the normalized values.
         Default is False.
 
     Returns
     -------
     ot.Sample
-        The conditioned lambda parameters sample sharing the original 
+        The conditioned lambda parameters sample sharing the original
         descriptions.
 
     Notes
     -----
-    This function can only be used if all the features are planar. If 
-    they are cylindrical, the constraints are absolutely different. 
-    To support both types, a more complex function is required to 
-    inspect the structural type of each feature and apply the 
+    This function can only be used if all the features are planar. If
+    they are cylindrical, the constraints are absolutely different.
+    To support both types, a more complex function is required to
+    inspect the structural type of each feature and apply the
     corresponding mathematical constraint.
     """
     logging.info("[condition_lambda_sample] Started. Checking input sample.")
@@ -86,19 +86,19 @@ def validate_and_extract_indices(description: list) -> list[int]:
     Parameters
     ----------
     description : list of str
-        List of feature descriptions where each element represents a 
+        List of feature descriptions where each element represents a
         symbol or feature name.
 
     Returns
     -------
     list of int
-        Extracted feature indices parsed from the trailing characters 
+        Extracted feature indices parsed from the trailing characters
         of the descriptions.
 
     Raises
     ------
     ValueError
-        If the `description` is empty or if any individual feature name 
+        If the `description` is empty or if any individual feature name
         fails to end with an integer suffix.
     """
     if not description:
@@ -124,7 +124,7 @@ def condition_sample_array(
     Condition a sample array by normalizing specified feature slices.
 
     This function normalizes columns of an array grouped by identical feature
-    identifiers, dividing each slice by the sum of all matching features. 
+    identifiers, dividing each slice by the sum of all matching features.
     If requested, a square root transform is applied to the final result.
 
     Parameters
@@ -134,19 +134,19 @@ def condition_sample_array(
     feature_indices : list of int
         An ordered list of IDs mapping each column to its parent feature.
     squared_sum : bool
-        If True, applies an element-wise square root transformation to 
+        If True, applies an element-wise square root transformation to
         the normalized array.
 
     Returns
     -------
     ndarray
-        The normalized (and optionally square-rooted) conditioned sample 
+        The normalized (and optionally square-rooted) conditioned sample
         array.
 
     Raises
     ------
     Exception
-        If the dimension alignment fails or division by zero occurs during 
+        If the dimension alignment fails or division by zero occurs during
         normalization.
     """
     logging.info("[condition_sample_array] Conditioning sample.")
@@ -176,8 +176,8 @@ def find_best_worst_quantile(
     """
     Find best and worst observations based on a given quantile.
 
-    This function calculates the best and worst performing observations 
-    from a given set of parameters and corresponding results, based on 
+    This function calculates the best and worst performing observations
+    from a given set of parameters and corresponding results, based on
     the specified quantile.
 
     Parameters
@@ -218,8 +218,8 @@ def generate_lhs_experiment(
     """
     Generate an optimal Latin Hypercube Sample (LHS) design.
 
-    Construct a space-filling design using the Simulated Annealing 
-    algorithm to minimize the ``C2`` criterion, ensuring a high-quality 
+    Construct a space-filling design using the Simulated Annealing
+    algorithm to minimize the ``C2`` criterion, ensuring a high-quality
     distribution of samples within the input space.
 
     Parameters
@@ -231,13 +231,13 @@ def generate_lhs_experiment(
     SEED : int, optional
         Seed for the random number generator. Default is 999.
     T0 : float, optional
-        Initial temperature for the simulated annealing process. 
+        Initial temperature for the simulated annealing process.
         Default is 10.0.
     c : float, optional
-        Geometric cooling factor for the simulated annealing process. 
+        Geometric cooling factor for the simulated annealing process.
         Default is 0.95.
     iMax : int, optional
-        Maximum number of iterations for the optimization. Default is 
+        Maximum number of iterations for the optimization. Default is
         2000.
 
     Returns
@@ -265,18 +265,18 @@ def generate_random_permutations_with_sampling(
     """
     Generate a random subset of signed permutations for configurations.
 
-    Create a random subset of valid permutations for concatenated one-hot 
-    encoded subgroups, where each non-zero element is randomly assigned 
+    Create a random subset of valid permutations for concatenated one-hot
+    encoded subgroups, where each non-zero element is randomly assigned
     a ``+1`` or ``-1`` sign to mitigate the curse of dimensionality.
 
     Parameters
     ----------
     subgroup_sizes : list of int
-        List where each entry is the size of a subgroup (number of 
+        List where each entry is the size of a subgroup (number of
         one-hot vectors).
     num_samples : int, optional
-        Number of permutations to generate. If None or exceeding the 
-        total number of possible permutations, all possible permutations 
+        Number of permutations to generate. If None or exceeding the
+        total number of possible permutations, all possible permutations
         are generated.
     seed : int, optional
         Seed for the random number generator to ensure reproducibility.
@@ -284,18 +284,18 @@ def generate_random_permutations_with_sampling(
     Returns
     -------
     ndarray
-        A 2D array where each row is a generated permutation, including 
+        A 2D array where each row is a generated permutation, including
         randomized sign flips.
 
     Notes
     -----
-    This function addresses the curse of dimensionality by limiting 
+    This function addresses the curse of dimensionality by limiting
     permutations to `num_samples`.
 
-    If `num_samples` exceeds total possible permutations, all unique 
+    If `num_samples` exceeds total possible permutations, all unique
     combinations are returned.
 
-    Each subgroup is constrained to exactly one non-zero element per 
+    Each subgroup is constrained to exactly one non-zero element per
     sample.
     """
     if seed is not None:
@@ -337,20 +337,20 @@ def generate_scaled_permutations(
     """
     Generate scaled random permutations with sign flips.
 
-    Create a set of random permutations for concatenated one-hot encoded 
-    subgroups, applying random sign flips (``+1`` or ``-1``) and scaling 
+    Create a set of random permutations for concatenated one-hot encoded
+    subgroups, applying random sign flips (``+1`` or ``-1``) and scaling
     each element by the provided factors.
 
     Parameters
     ----------
     subgroup_sizes : list of int
-        Size of each subgroup, representing the number of possible 
+        Size of each subgroup, representing the number of possible
         one-hot vectors.
     scaling_factors : array_like
-        Scaling factors for each element in the permutation vector. 
+        Scaling factors for each element in the permutation vector.
         Must match the total sum of `subgroup_sizes`.
     num_samples : int, optional
-        Number of permutations to generate. If None or exceeding the 
+        Number of permutations to generate. If None or exceeding the
         total possible combinations, all combinations are generated.
     seed : int, optional
         Random seed for reproducibility.
@@ -358,14 +358,14 @@ def generate_scaled_permutations(
     Returns
     -------
     ndarray
-        A 2D array where each row is a generated permutation, scaled and 
-        sign-flipped according to the logic defined in the underlying 
+        A 2D array where each row is a generated permutation, scaled and
+        sign-flipped according to the logic defined in the underlying
         sampling.
 
     Raises
     ------
     ValueError
-        If the length of `scaling_factors` does not match the sum of 
+        If the length of `scaling_factors` does not match the sum of
         `subgroup_sizes`.
     """
     permutations = generate_random_permutations_with_sampling(
@@ -484,7 +484,7 @@ def generate_and_transform_sequence(
     """
     Generate a low-discrepancy sequence and transform it to target.
 
-    Map a low-discrepancy sequence from the unit hypercube to the target 
+    Map a low-discrepancy sequence from the unit hypercube to the target
     distribution space using iso-probabilistic transformations.
 
     Parameters
@@ -496,8 +496,8 @@ def generate_and_transform_sequence(
     target_distribution : ot.Distribution
         The target OpenTURNS distribution to transform the sequence into.
     sequence_type : str, optional
-        Type of low-discrepancy sequence. Choices are ``"sobol"``, 
-        ``"halton"``, ``"reverse_halton"``, ``"faure"``, or 
+        Type of low-discrepancy sequence. Choices are ``"sobol"``,
+        ``"halton"``, ``"reverse_halton"``, ``"faure"``, or
         ``"haselgrove"``. Default is "halton".
 
     Returns

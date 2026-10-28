@@ -2,7 +2,6 @@ from __future__ import annotations
 
 __author__ = "Kramer84"
 __all__ = ["plot_gld_pbox_cdf", "plot_ensemble_gld_pbox_cdf"]
-import matplotlib.pyplot as plt
 import numpy as np
 from beartype.typing import Any, Optional, Tuple
 

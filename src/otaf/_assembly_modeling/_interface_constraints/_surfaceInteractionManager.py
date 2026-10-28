@@ -10,9 +10,8 @@ import logging
 import numpy as np
 
 from beartype import beartype
-from beartype.typing import Union
 
-from otaf.common import tree, merge_with_checks
+from otaf.common import tree
 from otaf.constants import BASE_PART_SURF_PATTERN, GEOMETRIC_ATOL
 from otaf.geometry import point_dict_to_arrays, are_points_on_2d_plane, are_planes_facing, are_planes_parallel, are_lines_collinear, interval_overlap, planar_overlap_vertices
 from otaf.exceptions import PointsNotOnPlaneError, NonConcentricCylindersException, ConflictingSurfaceDirectionsException, CylindricalInterferenceGeometricException, NoAxialOverlapException, NoPlanarOverlapException

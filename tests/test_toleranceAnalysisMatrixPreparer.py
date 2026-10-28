@@ -1,6 +1,5 @@
 import unittest
 import sympy as sp
-import numpy as np
 from otaf.common import get_symbol_coef_map, get_symbols_in_expressions
 
 class TestLatestFunctions(unittest.TestCase):

@@ -65,16 +65,16 @@ def calculate_graph_layout(
     """
     try:
         import networkx as nx
-    except ImportError:
+    except ImportError as err:
         raise ImportError(
             "The 'networkx' library is required to calculate graph layouts."
-        )
+        ) from err
     parts = data.get("PARTS", {})
     G_macro = nx.Graph()
     for p_id in parts.keys():
         G_macro.add_node(p_id)
     for p_id, features in parts.items():
-        for f_id, f_data in features.items():
+        for f_data in features.values():
             for inter in f_data.get("INTERACTIONS", []):
                 target_p = inter[1]
                 if target_p in parts:

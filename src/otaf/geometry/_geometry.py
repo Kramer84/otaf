@@ -197,7 +197,6 @@ def points_in_cylinder(
     """
     vec = pt2 - pt1
     vec_norm = np.linalg.norm(vec)
-    const = r * vec_norm
     delta_q1 = q - pt1
     delta_q2 = q - pt2
     dot1 = np.dot(delta_q1, vec)
@@ -565,8 +564,8 @@ def point_to_segment_distance(
     Calculate the shortest distance from a point or array of points to a line segment.
 
     This function is dimension-agnostic and works for coordinates in any arbitrary
-    n-dimensional space (e.g., 2D, 3D, etc.). It calculates the true shortest distance 
-    to the segment by clamping the projection factor, preventing it from treating the 
+    n-dimensional space (e.g., 2D, 3D, etc.). It calculates the true shortest distance
+    to the segment by clamping the projection factor, preventing it from treating the
     segment as an infinite line.
 
     Parameters
@@ -590,14 +589,14 @@ def point_to_segment_distance(
 
     Notes
     -----
-    The closest point on the line segment is found using vector projection. 
-    For a point vector 'p' relative to the segment start, and a segment vector 
+    The closest point on the line segment is found using vector projection.
+    For a point vector 'p' relative to the segment start, and a segment vector
     ``s``, the projection factor ``t`` is computed as:
 
         ``t = dot(p, s) / ||s||^2``
 
-    By clipping 't' to the interval ``[0.0, 1.0]``, the closest point is strictly 
-    restricted to the line segment boundary. If the start and end points of the 
+    By clipping 't' to the interval ``[0.0, 1.0]``, the closest point is strictly
+    restricted to the line segment boundary. If the start and end points of the
     segment are identical, the segment is treated as a single point.
     """
     point = np.atleast_2d(point)
@@ -1429,10 +1428,10 @@ def _clip_convex_polygon(subject: np.ndarray, clip: np.ndarray) -> np.ndarray:
         edge_start, edge_end = clip[i], clip[(i + 1) % len(clip)]
         edge = edge_end - edge_start
 
-        def inside(p):
+        def inside(p, edge=edge, edge_start=edge_start):
             return edge[0] * (p[1] - edge_start[1]) - edge[1] * (p[0] - edge_start[0]) >= 0.0
 
-        def crossing(p, q):
+        def crossing(p, q, edge=edge, edge_start=edge_start):
             d = q - p
             denom = edge[0] * d[1] - edge[1] * d[0]
             t = (edge[1] * (p[0] - edge_start[0]) - edge[0] * (p[1] - edge_start[1])) / denom

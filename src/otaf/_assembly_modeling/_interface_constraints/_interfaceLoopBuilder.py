@@ -154,8 +154,8 @@ class InterfaceLoopBuilder:
         """
         interface_equations = []
         for idPart, surfData in self.filtered_gap_matrices.items():
-            for idSurf, pointData in surfData.items():
-                # If len(pointData["USED"]) > 1 that could also mean that the cylinder is traversing multiple parts
+            for idSurf in surfData:
+                # If len(surfData[idSurf]["USED"]) > 1 that could also mean that the cylinder is traversing multiple parts
                 # So a new implementation would be needed then.
                 surfType = self.ADP["PARTS"][idPart][idSurf]["TYPE"]
 

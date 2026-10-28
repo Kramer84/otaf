@@ -40,12 +40,16 @@ def sample_deviations(name, size, seed=0):
     return mean @ multiplier.T, sample @ multiplier.T
 
 
-@pytest.mark.parametrize("name", ["model1", "model2", pytest.param("model4", marks=pytest.mark.slow)])
+@pytest.mark.parametrize("name", ["model1", "model2", "model3", pytest.param("model4", marks=pytest.mark.slow)])
 def test_distribution_labels_match_solver_variables(name, soc_model):
-    # compute_gap_optimizations_* assume the sample columns follow soc.deviation_symbols.
-    # model3 samples a reduced parameter space mapped by position (sample_multiplier),
-    # so its labels cannot be checked by name.
-    _, labels, _, _ = getattr(otaf.example_models, name).get_distribution_params()
+    # compute_gap_optimizations_* assume the sample columns, after sample_multiplier,
+    # follow soc.deviation_symbols. model3 samples measured points and maps them to the
+    # solver variables (sample_multiplier_labels names both sides).
+    model = getattr(otaf.example_models, name)
+    if name == "model3":
+        _, labels, _ = model.sample_multiplier_labels()
+    else:
+        _, labels, _, _ = model.get_distribution_params()
     assert [str(x) for x in labels] == [str(x) for x in soc_model(name).deviation_symbols]
 
 
@@ -151,3 +155,87 @@ def test_model2_contact_at_surface_origin_is_kept():
     np.testing.assert_allclose(
         solve_slack(moved, np.zeros((1, moved.nD))), solve_slack(default, np.zeros((1, default.nD))), atol=1e-12
     )
+
+
+@pytest.mark.parametrize("name", MODELS)
+def test_lp_and_milp_give_the_same_slack(name, soc_model):
+    # The problem has no integer variables: scipy's milp (HiGHS branch and bound, used by
+    # the library) must agree with an LP solved by another algorithm (interior point).
+    from scipy.optimize import linprog
+
+    soc = soc_model(name)
+    _, sample = sample_deviations(name, size=100, seed=2)
+    c, a_ub, b_ub, a_eq, b_eq, bounds = soc(sample)
+    lp = np.array([
+        linprog(c, A_ub=a_ub, b_ub=b_ub[:, k], A_eq=a_eq, b_eq=b_eq[:, k], bounds=bounds, method="highs-ipm").x[-1]
+        for k in range(len(sample))
+    ])
+    np.testing.assert_allclose(solve_slack(soc, sample), lp, atol=1e-6)
+
+
+def _relabel(data, parts, surfaces):
+    """Copy of an input dictionary with parts and surfaces renamed (points follow their
+    surface) and the compatibility loops listed in reverse order."""
+    import re
+
+    def label(match):
+        part, surface, point = match.group(1), match.group(2), match.group(3) or ""
+        new_surface = surfaces.get(surface, surface)
+        return f"P{parts.get(part, part)}{new_surface}" + (new_surface.upper() + point[1:] if point else "")
+
+    rename = lambda text: re.sub(r"P(\d+)([a-z]+)([A-Z]+\d+)?", label, text)  # noqa: E731
+    out = {key: value for key, value in data.items() if key not in ("PARTS", "LOOPS")}
+    out["LOOPS"] = {
+        kind: {f"L{i}": rename(loop) for i, loop in enumerate(reversed(loops.values()))}
+        for kind, loops in data["LOOPS"].items()
+    }
+    out["PARTS"] = {}
+    for part, part_surfaces in data["PARTS"].items():
+        new_part = out["PARTS"].setdefault(parts.get(part, part), {})
+        for surface, surface_data in part_surfaces.items():
+            new_surface = surfaces.get(surface, surface)
+            new = dict(surface_data)
+            if "POINTS" in new:
+                new["POINTS"] = {new_surface.upper() + p[1:]: xyz for p, xyz in new["POINTS"].items()}
+            if "INTERACTIONS" in new:
+                new["INTERACTIONS"] = [rename(i) for i in new["INTERACTIONS"]]
+            new_part[new_surface] = new
+    return out
+
+
+def _build_with_deviation_map(model, data):
+    """SOC model of ``data`` and the deviation-matrix index of each surface (``{"D1b": 5, ...}``)."""
+    adp = model.get_assembly_data_processor_object(data)
+    clh = model.get_compatibility_loop_handling_object(adp)
+    ilh = model.get_interface_loop_handling_object(adp, clh)
+    soc = otaf.SystemOfConstraintsAssemblyModel(clh.get_compatibility_expressions(), ilh.get_interface_expressions())
+    soc.embedOptimizationVariable()
+    return soc, {name: matrices[0].ID for name, matrices in clh._deviation_matrix_map.items()}
+
+
+@pytest.mark.parametrize("name", ["model1", "model2"])
+def test_slack_does_not_depend_on_labels_or_loop_order(name):
+    # Labels and the order of the loops only name and arrange things: swapping the two
+    # parts, permuting the surface letters and reversing the loop list (which renumbers
+    # the variables) must give the same slack once the deviation variables are matched
+    # by the surface they belong to.
+    model = getattr(otaf.example_models, name)
+    data = model.get_assembly_data()
+    surfaces = sorted({s for part in data["PARTS"].values() for s in part})
+    permuted = dict(zip(surfaces, surfaces[1:] + surfaces[:1], strict=True))
+    swapped = {"1": "2", "2": "1"}
+    soc, index = _build_with_deviation_map(model, data)
+    soc_r, index_r = _build_with_deviation_map(model, _relabel(data, swapped, permuted))
+
+    # "D1b" (part 1, surface b) is "D2c" after relabelling, etc.
+    new_index = {i: index_r[f"D{swapped[dev[1:-1]]}{permuted[dev[-1]]}"] for dev, i in index.items()}
+    columns = {}
+    for k, symbol in enumerate(soc.deviation_symbols):
+        component, _, i = str(symbol).rpartition("_d_")
+        columns[f"{component}_d_{new_index[int(i)]}"] = k
+    order = [columns[str(symbol)] for symbol in soc_r.deviation_symbols]
+
+    assert any(old != new for old, new in new_index.items()), "relabelling should renumber the variables"
+
+    _, sample = sample_deviations(name, size=200, seed=3)
+    np.testing.assert_allclose(solve_slack(soc_r, sample[:, order]), solve_slack(soc, sample), atol=1e-9)

@@ -2,7 +2,6 @@ import unittest
 import numpy as np
 import sympy as sp
 import logging
-import otaf
 from otaf import (
     TransformationMatrix,
     I4,

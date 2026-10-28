@@ -9,7 +9,7 @@ __all__ = [
     "get_scaled_credal_set_constraints_function",
     "dim",
     "sample_multiplier",
-    "no_tol",    
+    "no_tol",
 ]
 from typing import Any, Callable
 

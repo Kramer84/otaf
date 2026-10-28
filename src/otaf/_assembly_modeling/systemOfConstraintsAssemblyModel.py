@@ -9,13 +9,12 @@ import re
 import logging
 
 from collections import defaultdict
-from collections.abc import Iterable
 
 import numpy as np
 import sympy as sp
 
 from beartype import beartype
-from beartype.typing import List, Tuple, Union, Optional, Sequence
+from beartype.typing import List, Tuple, Optional, Sequence
 
 from otaf.common import get_symbol_coef_map, get_symbols_in_expressions
 from otaf.constants import GAP_ROTATION_BOUND, GAP_TRANSLATION_BOUND

@@ -41,15 +41,15 @@ def get_composed_normal_defect_distribution(
     defect_names : list of str or sympy.Symbol
         A list of defect variable names (symbols).
     mu_list : list of float, optional
-        List of means for each defect. If not provided, defaults to 0.0 
+        List of means for each defect. If not provided, defaults to 0.0
         for all defects.
     sigma_list : list of float, optional
-        List of standard deviations for each defect. If not provided, 
+        List of standard deviations for each defect. If not provided,
         defaults to 1.0 for all defects.
     mu_dict : dict, optional
         Dictionary mapping defect names to their mean values.
     sigma_dict : dict, optional
-        Dictionary mapping defect names to their standard deviation 
+        Dictionary mapping defect names to their standard deviation
         values.
 
     Returns
@@ -59,7 +59,7 @@ def get_composed_normal_defect_distribution(
 
     Notes
     -----
-    The defect names are expected to have specific prefixes to identify 
+    The defect names are expected to have specific prefixes to identify
     their mechanical degrees of freedom:
 
     - ``u_`` : translation along the x-axis
@@ -69,7 +69,7 @@ def get_composed_normal_defect_distribution(
     - ``beta_`` : rotation around the y-axis
     - ``gamma_`` : rotation around the z-axis
 
-    This prefix pattern must be matched in keys if `mu_dict` or 
+    This prefix pattern must be matched in keys if `mu_dict` or
     `sigma_dict` are provided, e.g., ``sigma_dict = {'u': 1.0}``.
     """
     ND = len(defect_names)
@@ -118,7 +118,7 @@ def get_composed_normal_defect_distribution(
             sigma_dict = {}
         mu_keys = list(mu_dict.keys())
         sigma_keys = list(sigma_dict.keys())
-        for i, defect_name in enumerate(defect_names):
+        for defect_name in defect_names:
             mu, sigma = (0.0, 1.0)
             defect_str = str(defect_name)
             mu_match = next((key for key in mu_keys if key in defect_str), None)
@@ -159,7 +159,7 @@ def multiply_composed_distribution_with_constant(
     Returns
     -------
     JointDistribution
-        A copy of the original composed distribution, with its 
+        A copy of the original composed distribution, with its
         parameters scaled by the given `constant`.
     """
     composed_distribution = copy.copy(composed_distribution)
@@ -176,7 +176,7 @@ def multiply_composed_distribution_standard_with_constants(
     Multiply sub-distribution standard deviations by corresponding constants.
 
     This function assumes each sub-distribution is a Normal distribution,
-    where each distribution's parameters are in the form 
+    where each distribution's parameters are in the form
     [mean, std, mean, std, ...].
 
     Parameters
@@ -184,13 +184,13 @@ def multiply_composed_distribution_standard_with_constants(
     composed_distribution : JointDistribution
         The original composed distribution.
     constants : list of float
-        A list of constants to multiply each distribution's standard 
+        A list of constants to multiply each distribution's standard
         deviation.
 
     Returns
     -------
     JointDistribution
-        A copy of the original composed distribution, with updated 
+        A copy of the original composed distribution, with updated
         standard deviations scaled by `constants`.
     """
     composed_distribution = copy.copy(composed_distribution)
@@ -217,8 +217,8 @@ def get_means_standards_composed_distribution(
     Returns
     -------
     means, stds : tuple of list
-        A tuple containing two lists: the first list holds the means 
-        of the distributions, and the second list holds the standard 
+        A tuple containing two lists: the first list holds the means
+        of the distributions, and the second list holds the standard
         deviations.
     """
     parameters = composed_distribution.getParameter()
@@ -262,7 +262,7 @@ def generate_correlated_samples(
     Returns
     -------
     array_like
-        An (N, 2) NumPy array containing the generated bivariate 
+        An (N, 2) NumPy array containing the generated bivariate
         correlated samples.
     """
     R = ot.CorrelationMatrix(2, [1, corr, corr, 1])
@@ -278,33 +278,33 @@ def compute_sup_inf_distributions(
     """
     Compute the supremum and infimum CDFs for a list of distributions.
 
-    This function evaluates the Cumulative Distribution Functions (CDFs) 
-    at `n_points` evenly spaced points between `x_min` and `x_max` for 
-    a given list of distributions. It then computes the pointwise 
-    supremum and infimum of the CDFs across the distributions at each 
+    This function evaluates the Cumulative Distribution Functions (CDFs)
+    at `n_points` evenly spaced points between `x_min` and `x_max` for
+    a given list of distributions. It then computes the pointwise
+    supremum and infimum of the CDFs across the distributions at each
     of these points.
 
     Parameters
     ----------
     distributions : list
-        A list of objects where each object has a ``computeCDF(x)`` 
+        A list of objects where each object has a ``computeCDF(x)``
         method to evaluate the CDF at a point x.
     x_min : float, optional
-        The lower bound of the x values over which the CDFs are 
+        The lower bound of the x values over which the CDFs are
         evaluated. Default is -10.
     x_max : float, optional
-        The upper bound of the x values over which the CDFs are 
+        The upper bound of the x values over which the CDFs are
         evaluated. Default is 10.
     n_points : int, optional
-        The number of points at which the CDFs are evaluated between 
+        The number of points at which the CDFs are evaluated between
         `x_min` and `x_max`. Default is 10000.
 
     Returns
     -------
     sup_data, inf_data : tuple of ndarray
-        A tuple containing two 2D arrays, each with shape (n_points, 2). 
-        The first column corresponds to the x values. For `sup_data`, 
-        the second column contains the pointwise supremum of the CDFs. 
+        A tuple containing two 2D arrays, each with shape (n_points, 2).
+        The first column corresponds to the x values. For `sup_data`,
+        the second column contains the pointwise supremum of the CDFs.
         For `inf_data`, it contains the pointwise infimum.
     """
     x_arr = np.linspace(x_min, x_max, n_points)
@@ -323,15 +323,15 @@ def get_prob_below_threshold(data_inf_sup: np.ndarray, threshold: float = 0) -> 
     """
     Get the probability of the gap being below a specified threshold.
 
-    This function finds the element in the array `data_inf_sup` where 
-    the absolute value of the difference between the first column and 
-    the `threshold` is the smallest, and then returns the corresponding 
+    This function finds the element in the array `data_inf_sup` where
+    the absolute value of the difference between the first column and
+    the `threshold` is the smallest, and then returns the corresponding
     value from the second column.
 
     Parameters
     ----------
     data_inf_sup : ndarray
-        Array where the first column contains gap values and the second 
+        Array where the first column contains gap values and the second
         column contains probabilities.
     threshold : float, optional
         The threshold to check against. Default is 0.
@@ -339,7 +339,7 @@ def get_prob_below_threshold(data_inf_sup: np.ndarray, threshold: float = 0) -> 
     Returns
     -------
     float
-        The probability corresponding to the gap closest to the 
+        The probability corresponding to the gap closest to the
         `threshold`.
     """
     min_index = np.argmin(np.abs(data_inf_sup[:, 0] - threshold))

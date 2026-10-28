@@ -41,3 +41,26 @@ def test_model2_scaled_constraints_match_unscaled():
 
     np.testing.assert_allclose(direct, expected)
     np.testing.assert_allclose(wrapped, expected)
+
+
+def test_model3_sample_multiplier_maps_measured_points_to_their_own_feature():
+    # model3 samples defects measured at points (Dumas, 2014) and maps them to feature
+    # defects by position (sample_multiplier). With the labels the mapping is checked by
+    # name: every entry links a measured defect to a defect of the same feature
+    # ("1a1" in w_1a1_C and alpha_1a1), and the defects measured at the feature origin
+    # are passed through unchanged.
+    model = otaf.example_models.model3
+    rows, _, columns = model.sample_multiplier_labels()
+    _, labels, _, _ = model.get_distribution_params()
+    assert columns == [str(x) for x in labels]
+
+    def feature(label):
+        return label.split("_")[1]
+
+    T = np.asarray(model.sample_multiplier)
+    assert T.shape == (len(rows), len(columns))
+    for i, j in zip(*np.nonzero(T), strict=True):
+        assert feature(rows[i]) == feature(columns[j]), (rows[i], columns[j])
+    for i, row in enumerate(rows):
+        if row in columns:
+            np.testing.assert_array_equal(T[i], np.eye(len(columns))[columns.index(row)], err_msg=row)

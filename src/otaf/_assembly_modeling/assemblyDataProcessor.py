@@ -5,7 +5,6 @@ __author__ = "Kramer84"
 __all__ = ["AssemblyDataProcessor"]
 
 
-import re
 import logging
 
 from copy import copy, deepcopy
@@ -20,7 +19,7 @@ import otaf.constants as  otaf_constants
 
 from otaf.common import validate_dict_keys
 from otaf.schema import SystemData, validate_point_dict, validate_system_data
-from otaf.geometry import point_dict_to_arrays, are_points_on_2d_plane, spheres_from_point_cloud, surface_from_planar_contour, open_cylinder_mesh
+from otaf.geometry import are_points_on_2d_plane, spheres_from_point_cloud, surface_from_planar_contour, open_cylinder_mesh
 from otaf.plotting import color_palette_3, hex_to_rgba, trimesh_scene_as_notebook_scene
 from ._assembly_topology import calculate_graph_layout
 
@@ -407,7 +406,7 @@ class AssemblyDataProcessor:
             NP = points.shape[0]
             points_to_check = np.vstack([surf_data["ORIGIN"], points])
             glob_const = self.system_data.get("GLOBAL_CONSTRAINTS", "3D")
-            
+
             if "2D" not in glob_const:
                 if len(points_to_check) < 3:
                     raise otaf_exceptions.GeometricConditionError("A 3D plane requires at least 3 points (Origin + 2 Contour points).")
@@ -417,7 +416,7 @@ class AssemblyDataProcessor:
                 # Optional strictness: Even in 2D, you might want to ensure points are actually on the constrained plane (e.g., Z=0)
                 # but are_points_on_2d_plane doesn't check specific Z constraints, just relative coplanarity.
                 pass
-            
+
             contour_point_dict = {
                 key_prefix + str(key): value for key, value in zip(list(range(1, NP + 1)), points)
             }
@@ -688,7 +687,7 @@ class AssemblyDataProcessor:
     def generate_sphere_clouds(
         self,
         radius: Union[float, int] = 0.5,
-        global_translation: Union[list, np.ndarray] = np.array([0, 0, 0]),
+        global_translation: Optional[Union[list, np.ndarray]] = None,
     ) -> list:
         """
         Generate sphere representations for each set of points in the system data.
@@ -740,8 +739,8 @@ class AssemblyDataProcessor:
         """Generate cylinders representing 2D lines for planar features in a 2D system."""
         try :
             import trimesh
-        except ImportError :
-            raise otaf_exceptions._raise_missing_dependency("trimesh", "generate_functional_lines")
+        except ImportError as err:
+            raise otaf_exceptions._raise_missing_dependency("trimesh", "generate_functional_lines") from err
 
         trimesh_lines = []
         for part_id, surfaces in self.system_data["PARTS"].items():
@@ -765,8 +764,8 @@ class AssemblyDataProcessor:
         """Generate open cylinders for 3D cylindrical features."""
         try :
             import trimesh
-        except ImportError :
-            raise otaf_exceptions._raise_missing_dependency("trimesh", "generate_functional_cylinders")
+        except ImportError as err:
+            raise otaf_exceptions._raise_missing_dependency("trimesh", "generate_functional_cylinders") from err
 
         trimesh_cylinders = []
         for part_id, surfaces in self.system_data["PARTS"].items():
@@ -879,8 +878,8 @@ class AssemblyDataProcessor:
         """
         try :
             import trimesh
-        except ImportError :
-            raise otaf_exceptions._raise_missing_dependency("trimesh", "get_notebook_scene_sphere_clouds")
+        except ImportError as err:
+            raise otaf_exceptions._raise_missing_dependency("trimesh", "get_notebook_scene_sphere_clouds") from err
 
         sphere_list = self.generate_sphere_clouds(radius=radius)
         plane_list = self.generate_functional_planes()

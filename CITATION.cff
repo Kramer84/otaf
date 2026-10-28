@@ -13,9 +13,11 @@ keywords:
   - Mechanical Engineering
 repository-code: "https://github.com/Kramer84/otaf"
 license: MIT
-version: 0.2.0
-doi: 10.5281/zenodo.14639555
-date-released: "2025-01-15"
+version: 0.3.0
+# Concept DOI: always resolves to the latest archived version on Zenodo.
+# Each release also gets its own version DOI (v0.0.1-alpha: 10.5281/zenodo.14639555).
+doi: 10.5281/zenodo.14639554
+date-released: "2026-10-28"
 cff-version: 1.2.0
 type: software
 message: "If you use this software, please cite it using the metadata from this file."

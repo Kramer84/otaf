@@ -12,8 +12,7 @@ import logging
 
 import numpy as np
 
-from beartype import beartype
-from beartype.typing import Dict, List, Tuple, Union, TYPE_CHECKING, Optional, Any
+from beartype.typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     import trimesh
@@ -30,13 +29,8 @@ MESH_VERTEX_ATOL = 1e-5
 def spheres_from_point_cloud(
     pc: np.ndarray,
     radius: float = 1.0,
-    color: np.ndarray | list[int] | tuple[int, int, int, int] = [
-        100,
-        100,
-        100,
-        255,
-    ],
-    global_translation: np.ndarray | list[float] = np.array([0, 0, 0]),
+    color: np.ndarray | list[int] | tuple[int, int, int, int] = (100, 100, 100, 255),
+    global_translation: np.ndarray | list[float] | None = None,
 ) -> list[trimesh.Trimesh]:
     """Generate Trimesh icospheres at each point in a point cloud.
 
@@ -67,9 +61,11 @@ def spheres_from_point_cloud(
     """
     try :
         import trimesh
-    except ImportError :
-        raise otaf_exceptions._raise_missing_dependency("trimesh", "spheres_from_point_cloud")
+    except ImportError as err:
+        raise otaf_exceptions._raise_missing_dependency("trimesh", "spheres_from_point_cloud") from err
 
+    if global_translation is None:
+        global_translation = np.zeros(3)
     spheres = []
     for i in range(pc.shape[0]):
         sph = trimesh.creation.icosphere(radius=radius)
@@ -81,9 +77,9 @@ def spheres_from_point_cloud(
 
 
 def open_cylinder_mesh(
-    radius: float, 
-    height: float, 
-    transform: np.ndarray, 
+    radius: float,
+    height: float,
+    transform: np.ndarray,
     sections: int = 64
 ) -> trimesh.Trimesh:
     """Create an open-ended cylinder mesh with a transformation.
@@ -117,8 +113,8 @@ def open_cylinder_mesh(
     """
     try :
         import trimesh
-    except ImportError :
-        raise otaf_exceptions._raise_missing_dependency("trimesh", "open_cylinder_mesh")
+    except ImportError as err:
+        raise otaf_exceptions._raise_missing_dependency("trimesh", "open_cylinder_mesh") from err
     temp_cyl = trimesh.creation.cylinder(radius=radius, height=height, sections=sections)
     # Identify cap center vertices (local Z is +/- height/2)
     z_limit = height / 2.0
@@ -173,13 +169,13 @@ def surface_from_planar_contour(
     """
     try :
         import triangle
-    except ImportError :
-        raise otaf_exceptions._raise_missing_dependency("triangle", "surface_from_planar_contour")
+    except ImportError as err:
+        raise otaf_exceptions._raise_missing_dependency("triangle", "surface_from_planar_contour") from err
 
     try :
         import trimesh
-    except ImportError :
-        raise otaf_exceptions._raise_missing_dependency("trimesh", "surface_from_planar_contour")
+    except ImportError as err:
+        raise otaf_exceptions._raise_missing_dependency("trimesh", "surface_from_planar_contour") from err
 
     vertices = np.array(vertices)
 

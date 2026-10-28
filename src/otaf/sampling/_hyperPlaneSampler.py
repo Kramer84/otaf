@@ -27,19 +27,19 @@ def project_samples_to_hyperplane(
     samples : ndarray
         Samples in (N-1)-dimensional space with shape (M, N-1).
     bounds : list of tuple, optional
-        Bounds for each dimension in the format [(min, max), ...]. 
-        Only samples whose projections fall within these bounds are 
+        Bounds for each dimension in the format [(min, max), ...].
+        Only samples whose projections fall within these bounds are
         returned.
 
     Returns
     -------
     ndarray
-        Projected samples in N-dimensional space that satisfy the 
+        Projected samples in N-dimensional space that satisfy the
         hyperplane equation.
 
     Notes
     -----
-    The function solves the hyperplane equation to calculate the 
+    The function solves the hyperplane equation to calculate the
     dependent coordinate ``x0`` before reconstructing the full vector:
 
     .. math:: a_0 x_0 + a_1 x_1 + \dots + a_{N-1} x_{N-1} = b

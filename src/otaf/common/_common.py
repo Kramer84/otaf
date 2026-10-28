@@ -177,14 +177,14 @@ def parse_matrix_string(matrix_str: str) -> Dict[str, Union[str, bool]]:
     Returns
     -------
     dict
-        A dictionary containing the parsed components of the matrix. 
-        Keys include ``type``, ``part``, ``surface1``, ``point1``, 
+        A dictionary containing the parsed components of the matrix.
+        Keys include ``type``, ``part``, ``surface1``, ``point1``,
         ``surface2``, ``point2``, ``inverse``, and ``mstring``.
 
     Raises
     ------
     ValueError
-        If the matrix string does not conform to the expected pattern 
+        If the matrix string does not conform to the expected pattern
         for its type or if an unsupported matrix type is encountered.
 
     Examples
@@ -436,20 +436,20 @@ def get_SE3_matrices_from_indices(
     Returns
     -------
     list of sympy.MatrixBase
-        A list of SE(3) base matrices, each scaled by the specified 
+        A list of SE(3) base matrices, each scaled by the specified
         multiplier.
 
     Notes
     -----
-    The indices are converted to strings and used to retrieve the 
-    corresponding SE(3) base matrices from the predefined ``BASIS_DICT`` 
+    The indices are converted to strings and used to retrieve the
+    corresponding SE(3) base matrices from the predefined ``BASIS_DICT``
     in the ``otaf.constants`` module.
     """
     return [multiplier * get_SE3_base(str(i)) for i in se3_indices]
 
 
 def validate_dict_keys(
-    dictionary: dict, keys: list[str], dictionary_name: str, value_checks: dict = {}
+    dictionary: dict, keys: list[str], dictionary_name: str, value_checks: dict | None = None
 ) -> None:
     """
     Validate presence of specific keys and optionally check their values.
@@ -463,8 +463,8 @@ def validate_dict_keys(
     dictionary_name : str
         The name of the dictionary used in error messages for clarity.
     value_checks : dict, optional
-        A dictionary where keys map to validation functions. Each 
-        function takes a value as input and returns a boolean indicating 
+        A dictionary where keys map to validation functions. Each
+        function takes a value as input and returns a boolean indicating
         validity. Default is {}.
 
     Raises
@@ -472,12 +472,12 @@ def validate_dict_keys(
     MissingKeyError
         If a required key is missing from the dictionary.
     ValueError
-        If a value associated with a key fails the validation function 
+        If a value associated with a key fails the validation function
         provided in `value_checks`.
 
     Notes
     -----
-    The `value_checks` parameter acts as an optional mechanism to 
+    The `value_checks` parameter acts as an optional mechanism to
     enforce additional constraints on nested dictionary values.
     """
     for key in keys:
@@ -495,8 +495,8 @@ def is_running_in_notebook() -> bool:
     """
     Check if the current code is running in a Jupyter notebook environment.
 
-    This function detects the type of IPython shell to determine whether 
-    the code is executed in a Jupyter notebook, a terminal, or a standard 
+    This function detects the type of IPython shell to determine whether
+    the code is executed in a Jupyter notebook, a terminal, or a standard
     Python interpreter.
 
     Returns
@@ -506,10 +506,10 @@ def is_running_in_notebook() -> bool:
 
     Notes
     -----
-    If the IPython shell cannot be detected, it is assumed the code is 
+    If the IPython shell cannot be detected, it is assumed the code is
     running in a standard Python interpreter.
 
-    This function relies on the built-in ``get_ipython()`` function, 
+    This function relies on the built-in ``get_ipython()`` function,
     which is available exclusively within IPython environments.
     """
     try:
@@ -531,13 +531,13 @@ def get_tqdm_range() -> callable:
     Returns
     -------
     callable
-        ``trange_notebook`` if running in a Jupyter notebook, 
+        ``trange_notebook`` if running in a Jupyter notebook,
         otherwise ``trange``.
 
     Notes
     -----
     This function checks the execution environment using the utility
-    ``is_running_in_notebook``. The ``trange_notebook`` variant is 
+    ``is_running_in_notebook``. The ``trange_notebook`` variant is
     selected for cleaner HTML progress bar rendering inside notebooks.
     """
     from tqdm import trange
@@ -706,9 +706,9 @@ def arrays_close_enough(
     Returns
     -------
     bool
-        True if the arrays are equal within the given tolerance, 
+        True if the arrays are equal within the given tolerance,
         False otherwise.
-        
+
     Raises
     ------
     ValueError

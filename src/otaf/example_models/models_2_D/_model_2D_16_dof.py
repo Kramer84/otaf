@@ -104,48 +104,6 @@ def get_assembly_data(
     RP2a = RP2c = R0
     RP2b = RP2d = np.array([-x_, -y_, z_]).T
     RP2e = np.array([-y_, x_, z_]).T
-    TP1cC0, TP1cC1, TP1cC2 = (
-        otaf.geometry.tfrt(RP1c, P1C0),
-        otaf.geometry.tfrt(RP1c, P1C1),
-        otaf.geometry.tfrt(RP1c, P1C2),
-    )
-    TP1aA0, TP1aA1, TP1aA2 = (
-        otaf.geometry.tfrt(RP1a, P1A0),
-        otaf.geometry.tfrt(RP1a, P1A1),
-        otaf.geometry.tfrt(RP1a, P1A2),
-    )
-    TP1bB0, TP1bB1, TP1bB2 = (
-        otaf.geometry.tfrt(RP1b, P1B0),
-        otaf.geometry.tfrt(RP1b, P1B1),
-        otaf.geometry.tfrt(RP1b, P1B2),
-    )
-    TP1dD0, TP1dD1, TP1dD2 = (
-        otaf.geometry.tfrt(RP1d, P1D0),
-        otaf.geometry.tfrt(RP1d, P1D1),
-        otaf.geometry.tfrt(RP1d, P1D2),
-    )
-    TP1eE0, TP1eE1 = (otaf.geometry.tfrt(RP1e, P1E0), otaf.geometry.tfrt(RP1e, P1E1))
-    TP2aA0, TP2aA1, TP2aA2 = (
-        otaf.geometry.tfrt(RP2a, P2A0),
-        otaf.geometry.tfrt(RP2a, P2A1),
-        otaf.geometry.tfrt(RP2a, P2A2),
-    )
-    TP2cC0, TP2cC1, TP2cC2 = (
-        otaf.geometry.tfrt(RP2c, P2C0),
-        otaf.geometry.tfrt(RP2c, P2C1),
-        otaf.geometry.tfrt(RP2c, P2C2),
-    )
-    TP2bB0, TP2bB1, TP2bB2 = (
-        otaf.geometry.tfrt(RP2b, P2B0),
-        otaf.geometry.tfrt(RP2b, P2B1),
-        otaf.geometry.tfrt(RP2b, P2B2),
-    )
-    TP2dD0, TP2dD1, TP2dD2 = (
-        otaf.geometry.tfrt(RP2d, P2D0),
-        otaf.geometry.tfrt(RP2d, P2D1),
-        otaf.geometry.tfrt(RP2d, P2D2),
-    )
-    TP2eE0, TP2eE1 = (otaf.geometry.tfrt(RP2e, P2E0), otaf.geometry.tfrt(RP2e, P2E1))
     system_data = {
         "PARTS": {
             "1": {

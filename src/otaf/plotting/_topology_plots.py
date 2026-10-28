@@ -54,10 +54,10 @@ def generate_topological_tikz(
     """
     try:
         import networkx as nx
-    except ImportError:
+    except ImportError as err:
         raise ImportError(
             "The 'networkx' library is required to calculate graph layouts."
-        )
+        ) from err
     parts = data.get("PARTS", {})
     loops = data.get("LOOPS", {}).get("COMPATIBILITY", {})
     G_feat = nx.Graph()
@@ -130,7 +130,7 @@ def generate_topological_tikz(
     output.append("\n  %% Loops")
     edge_bends = {}
     drawn_labels = set()
-    for l_idx, (l_id, path_str) in enumerate(loops.items()):
+    for l_idx, path_str in enumerate(loops.values()):
         c_idx = (loop_color_offset + l_idx) % len(color_palette)
         color = f"pal_{c_idx}"
         nodes = [n[:3] for n in path_str.split(" -> ")]

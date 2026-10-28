@@ -2,10 +2,8 @@ from __future__ import annotations
 
 __author__ = "Kramer84"
 __all__ = ["plot_deviation_domain"]
-import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import numpy as np
-from beartype import beartype
 from beartype.typing import Any, Optional, Sequence, Tuple
 from matplotlib.patches import Polygon
 

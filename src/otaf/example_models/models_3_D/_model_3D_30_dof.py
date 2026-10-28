@@ -9,7 +9,8 @@ __all__ = [
     "get_scaled_credal_set_constraints_function",
     "dim",
     "sample_multiplier",
-    "no_tol", 
+    "sample_multiplier_labels",
+    "no_tol",
     ]
 
 from typing import Tuple, Callable, Any
@@ -30,6 +31,8 @@ MatrixBundle = Tuple[
 NX = 30 # Number of defect variables
 NG = 17 # Number of clearance variables
 NC = 14 # Number of compatibility equations
+# Nominal lengths l1..l11 of Dumas (2014), table C.1.
+DEFAULT_LENGTHS = (100, 40, 30, 30, 20, 20, 120, 50, 40, 50, -30)
 
 
 def build_constraint_matrices(
@@ -264,19 +267,7 @@ x_mp_labels = [
 
 
 def get_mp_to_xfull_transformation_matrix(
-    L: np.ndarray | list[float] = [
-        100,
-        40,
-        30,
-        30,
-        20,
-        20,
-        120,
-        50,
-        40,
-        50,
-        -30,
-    ],
+    L: np.ndarray | list[float] | tuple[float, ...] = DEFAULT_LENGTHS,
 ) -> np.ndarray:
     """Compute the transformation matrix from MP to full defect space.
 
@@ -337,19 +328,7 @@ def get_mp_to_xfull_transformation_matrix(
 
 
 def get_system_of_constraints_assembly_model(
-    L: np.ndarray | list[float] = [
-        100,
-        40,
-        30,
-        30,
-        20,
-        20,
-        120,
-        50,
-        40,
-        50,
-        -30,
-    ],
+    L: np.ndarray | list[float] | tuple[float, ...] = DEFAULT_LENGTHS,
     Nd: int = 64,
     strategy: LinearizationStrategy = LinearizationStrategy.CIRCUMSCRIBED,
 ) -> otaf.SystemOfConstraintsAssemblyModel:
@@ -436,6 +415,35 @@ def get_distribution_params(
 
 dim = 30
 sample_multiplier = get_mp_to_xfull_transformation_matrix()
+
+
+def sample_multiplier_labels() -> tuple[list[str], list[str], list[str]]:
+    """Names of the rows and columns of ``sample_multiplier``.
+
+    The model samples the defects measured at points of the features (Dumas,
+    2014) and maps them to the defects of the features (translations and
+    rotations at the feature origin) with ``sample_multiplier``:
+    ``x_full = sample_multiplier @ x_measured``.
+
+    Returns
+    -------
+    rows : list of str
+        Defect of the feature produced by each row, in Dumas' notation
+        (``alpha_1a1``: rotation about x of feature a of part 1).
+    solver_rows : list of str
+        The same defects as named by the solver
+        (``SystemOfConstraintsAssemblyModel.deviation_symbols``).
+    columns : list of str
+        Measured defect sampled in each column, as labelled by
+        ``get_distribution_params`` (``w_1a1_C``: measured at point C).
+
+    Examples
+    --------
+    >>> rows, solver_rows, columns = sample_multiplier_labels()
+    >>> rows[1], solver_rows[1], [columns[j] for j in np.flatnonzero(sample_multiplier[1])]
+    ('alpha_1a1', 'beta_d_0', ['w_1a1', 'w_1a1_C', 'w_1a1_H'])
+    """
+    return list(x_full_labels), [x_full_labels_mapping[label] for label in x_full_labels], list(x_mp_labels)
 no_tol = True
 
 
@@ -463,18 +471,9 @@ def eval_credal_set_constraints(
     np.ndarray
         An array containing the evaluated constraint metrics.
     """
-    if param_set == 1:
-        mu_d_ext, sigma_d_ext = (20.0, 0.06)
-        mu_d_int, sigma_d_int = (19.8, 0.06)
-        mu_trans, sigma_trans = (0.0, 0.01)
-    elif param_set == 2:
-        mu_d_ext, sigma_d_ext = (20.0, 0.03)
-        mu_d_int, sigma_d_int = (19.8, 0.03)
-        mu_trans, sigma_trans = (0.0, 0.01)
-    else:
-        mu_d_ext, sigma_d_ext = (20.0, 0.02)
-        mu_d_int, sigma_d_int = (19.8, 0.02)
-        mu_trans, sigma_trans = (0.0, 0.01)
+    # Same parameter sets as get_distribution_params; only the standard deviations matter here.
+    sigma_d_ext = {1: 0.06, 2: 0.03}.get(param_set, 0.02)
+    sigma_trans = 0.01
     target0 = sigma_trans
     target1 = sigma_delta_circular_feature(0, sigma_d_ext / 2, sigma_trans, sigma_trans)
 

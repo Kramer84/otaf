@@ -423,8 +423,8 @@ class TransformationMatrix:
     def __init__(
         self,
         index: int = -1,
-        initial: np.ndarray = np.identity(4),
-        final: np.ndarray = np.identity(4),
+        initial: Optional[np.ndarray] = None,
+        final: Optional[np.ndarray] = None,
         name: str = "",
         matrix: Optional[Union[np.ndarray, sp.MatrixBase]] = None,
     ) -> None:
@@ -434,8 +434,8 @@ class TransformationMatrix:
         self.ID = index
         self.TYPE = "T"
         self.name = name
-        self._initial = initial
-        self._final = final
+        self._initial = np.identity(4) if initial is None else initial
+        self._final = np.identity(4) if final is None else final
         if matrix is not None:
             self._matrix = np.array(matrix, dtype="float64")
             assert is_affine_transformation_matrix(

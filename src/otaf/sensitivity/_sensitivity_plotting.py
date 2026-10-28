@@ -97,9 +97,9 @@ def plotSobolIndicesWithErr(
         plt.ion()
         fig = plt.figure(figsize=figsize)
         if n_dims <= 5:
-            n_cols = case = 1
+            case = 1
         elif n_dims > 5 and n_dims <= 10:
-            n_cols = case = 2
+            case = 2
         else:
             case = 3
         graphList = list()
@@ -182,7 +182,7 @@ def plotSobolIndicesWithErr(
                     cmap="plasma",
                     cbarlabel="Sobol' indices",
                 )
-                S_texts = annotate_heatmap(S_im, valfmt="{x:.2f} t")
+                annotate_heatmap(S_im, valfmt="{x:.2f} t")
                 errS_im, errS_cbar = heatmap(
                     errS,
                     dimNames,
@@ -191,7 +191,7 @@ def plotSobolIndicesWithErr(
                     cmap="plasma",
                     cbarlabel="Sobol' indices",
                 )
-                errS_texts = annotate_heatmap(errS_im, valfmt="{x:.2f} t")
+                annotate_heatmap(errS_im, valfmt="{x:.2f} t")
                 Stot_im, Stot_cbar = heatmap(
                     Stot,
                     dimNames,
@@ -200,7 +200,7 @@ def plotSobolIndicesWithErr(
                     cmap="plasma",
                     cbarlabel="Total Sobol' indices",
                 )
-                Stot_texts = annotate_heatmap(Stot_im, valfmt="{x:.2f} t")
+                annotate_heatmap(Stot_im, valfmt="{x:.2f} t")
                 errStot_im, errStot_cbar = heatmap(
                     errStot,
                     dimNames,
@@ -209,7 +209,7 @@ def plotSobolIndicesWithErr(
                     cmap="plasma",
                     cbarlabel="Total Sobol' indices",
                 )
-                errStot_texts = annotate_heatmap(errStot_im, valfmt="{x:.2f} t")
+                annotate_heatmap(errStot_im, valfmt="{x:.2f} t")
                 fig.tight_layout()
                 plt.show()
     if len(S.shape) == 3:
@@ -222,7 +222,7 @@ def heatmap(
     row_labels: list[str],
     col_labels: list[str],
     ax: Optional[Any] = None,
-    cbar_kw: dict[str, Any] = {},
+    cbar_kw: Optional[dict[str, Any]] = None,
     cbarlabel: str = "",
     **kwargs: Any,
 ) -> tuple[Any, Any]:
@@ -262,7 +262,7 @@ def heatmap(
     if not ax:
         ax = plt.gca()
     im = ax.imshow(data, **kwargs)
-    cbar = ax.figure.colorbar(im, ax=ax, **cbar_kw)
+    cbar = ax.figure.colorbar(im, ax=ax, **(cbar_kw or {}))
     cbar.ax.set_ylabel(cbarlabel, rotation=-90, va="bottom")
     ax.set_xticks(np.arange(data.shape[1]))
     ax.set_yticks(np.arange(data.shape[0]))

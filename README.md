@@ -51,6 +51,7 @@
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
+    <li><a href="#citing-and-changes">Citing and Changes</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
 <li><a href="#mathematical-literature-references">Mathematical & Literature References</a></li>
@@ -241,6 +242,12 @@ Contributions to refine algorithmic stability or expand analytical capabilities 
 ## License
 
 Distributed under the **MIT License**. See `LICENSE` for more information.
+
+## Citing and Changes
+
+Cite OTAF with the metadata of `CITATION.cff` (GitHub: "Cite this repository"). Every release is archived on Zenodo; the concept DOI [10.5281/zenodo.14639554](https://doi.org/10.5281/zenodo.14639554) always resolves to the latest version, and each release has its own version DOI. The installed version is `otaf.__version__`.
+
+Changes between versions, including the behaviour changes to check before upgrading, are listed in `CHANGELOG.md`. The comparison of OTAF with published results (Dumas, 2014) and with the thesis results is in the documentation, *Verification report*.
 
 ## Contact
 

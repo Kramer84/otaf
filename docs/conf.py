@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 
 # Add your project's `src` directory to the path
@@ -7,7 +8,9 @@ sys.path.insert(0, os.path.abspath('../src'))
 project = 'otaf'
 copyright = '2024, Kramer84'
 author = 'Kramer84'
-release = '0.1'
+# Version from the single source (src/otaf/_version.py), without importing otaf.
+release = re.search(r'__version__ = "(.+)"', open(os.path.join(os.path.dirname(__file__), '../src/otaf/_version.py')).read()).group(1)
+version = release
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -24,7 +27,8 @@ extensions = [
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '**.ipynb_checkpoints']
+# guide/_*.md are fragments included by other pages (e.g. the generated verification tables).
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '**.ipynb_checkpoints', 'guide/_*.md']
 
 # HTML Theme
 html_theme = 'sphinx_rtd_theme'  # Replace 'sphinx_rtd_theme' with 'furo'

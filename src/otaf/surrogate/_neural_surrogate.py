@@ -116,7 +116,7 @@ class NeuralRegressorNetwork(nn.Module):
         display_progress_disable: bool = True,
         input_normalization: bool = True,
         output_normalization: bool = True,
-        noise_dims: List[int] = [],
+        noise_dims: Optional[List[int]] = None,
         noise_level: float = 0.1,
         seed: Optional[int] = None,
     ) -> None:
@@ -197,7 +197,7 @@ class NeuralRegressorNetwork(nn.Module):
         self.best_weights = copy.deepcopy(self.state_dict())
         self.history_loss = []
         self.history_metric = []
-        self.noise_dims = noise_dims
+        self.noise_dims = noise_dims if noise_dims is not None else []
         self.noise_level = noise_level
 
     @classmethod
@@ -355,7 +355,6 @@ class NeuralRegressorNetwork(nn.Module):
             indicator.
         """
         with torch.no_grad():
-            N_FIN = 0
             X_std, X_mean = (
                 self.X_std.clone().detach().to(DEVICE),
                 self.X_mean.clone().detach().to(DEVICE),
@@ -669,7 +668,7 @@ def initialize_model_weights(
         If the provided `init_type` string does not match any known
         initialization routine.
     """
-    
+
     def init_func(m):
         classname = m.__class__.__name__
         if hasattr(m, "weight") and (

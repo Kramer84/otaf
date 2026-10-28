@@ -12,6 +12,7 @@ from typing import TYPE_CHECKING #as _TYPE_CHECKING
 
 # --- Eager core (small, foundational) ----------------------------------------
 from . import constants, exceptions, common, geometry
+from ._version import __version__
 
 # --- Lazy submodules ---------------------------------------------------------
 _lazy_submodules = {
@@ -55,13 +56,13 @@ def __getattr__(name: str):
     if modname is not None:
         mod = _importlib.import_module(f".{modname}", __name__)
         obj = getattr(mod, name)
-        
+
         # Explicitly mask the private module paths for clean API generation
         try:
             obj.__module__ = __name__
         except AttributeError:
             pass
-            
+
         globals()[name] = obj
         return obj
 
@@ -84,6 +85,7 @@ if TYPE_CHECKING:
     # from . import plotting
 
 __all__ = [
+    "__version__",
     # re-exported classes (resolve lazily at first access)
     "SystemOfConstraintsAssemblyModel", "AssemblyDataProcessor", "CompatibilityLoopHandling",
     "DeviationMatrix", "TransformationMatrix", "FirstOrderMatrixExpansion",
