@@ -602,7 +602,10 @@
 <span class="sd">        Verbosity level for debugging. Default is 0.</span>
 <span class="sd">    dtype : str, optional</span>
 <span class="sd">        Data type for the resulting optimized decision variable array.</span>
-<span class="sd">        Default is ``'float32'``.</span>
+<span class="sd">        Default is ``'float32'``, the dtype of the torch surrogates trained</span>
+<span class="sd">        on these results. The rounding (about 1e-8 relative) is below the</span>
+<span class="sd">        solver tolerance and never changes the sign of the slack; use</span>
+<span class="sd">        ``'float64'`` to compare results at the 1e-8 level.</span>
 <span class="sd">    return_status : bool, optional</span>
 <span class="sd">        Also return the ``scipy.optimize.milp`` status of every sample</span>
 <span class="sd">        (default False).</span>

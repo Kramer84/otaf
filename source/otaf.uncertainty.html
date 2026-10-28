@@ -289,7 +289,10 @@ relative to total available CPUs. Default is 1.</p></li>
 <li><p><strong>progress_bar</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to display a progress bar. Default is False.</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Verbosity level for debugging. Default is 0.</p></li>
 <li><p><strong>dtype</strong> (<em>str</em><em>, </em><em>optional</em>) – Data type for the resulting optimized decision variable array.
-Default is <code class="docutils literal notranslate"><span class="pre">'float32'</span></code>.</p></li>
+Default is <code class="docutils literal notranslate"><span class="pre">'float32'</span></code>, the dtype of the torch surrogates trained
+on these results. The rounding (about 1e-8 relative) is below the
+solver tolerance and never changes the sign of the slack; use
+<code class="docutils literal notranslate"><span class="pre">'float64'</span></code> to compare results at the 1e-8 level.</p></li>
 <li><p><strong>return_status</strong> (<em>bool</em><em>, </em><em>optional</em>) – Also return the <code class="docutils literal notranslate"><span class="pre">scipy.optimize.milp</span></code> status of every sample
 (default False).</p></li>
 </ul>
