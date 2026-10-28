@@ -99,6 +99,7 @@
     <span class="p">]</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterable</span>
 
@@ -107,6 +108,8 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">otaf</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">otaf.tolerances</span><span class="w"> </span><span class="kn">import</span> <span class="n">sigma_delta_3D_plane</span><span class="p">,</span> <span class="n">sigma_delta_cylindrical_feature</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="n">_VAR_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">"^([A-Za-z]+)_([A-Za-z0-9]+)$"</span><span class="p">)</span>
 <span class="n">_PREFIX_MAP</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
@@ -446,9 +449,7 @@
     <span class="k">if</span> <span class="n">length_subs</span><span class="p">:</span>
         <span class="n">remaining_symbols</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">free_symbols</span> <span class="o">|</span> <span class="n">B</span><span class="o">.</span><span class="n">free_symbols</span> <span class="o">|</span> <span class="n">C</span><span class="o">.</span><span class="n">free_symbols</span>
         <span class="k">if</span> <span class="n">remaining_symbols</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"Warning: Matrices still contain unbound symbols: </span><span class="si">{</span><span class="n">remaining_symbols</span><span class="si">}</span><span class="s2">"</span>
-            <span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">"Matrices still contain unbound symbols: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">remaining_symbols</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">)</span>
 
 

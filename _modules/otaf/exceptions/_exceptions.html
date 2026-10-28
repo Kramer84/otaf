@@ -113,11 +113,15 @@
     <span class="s2">"CylindricalInterferenceGeometricException"</span><span class="p">,</span>
     <span class="s2">"NoAxialOverlapException"</span><span class="p">,</span>
     <span class="s2">"InvalidAffineTransformException"</span><span class="p">,</span>
+    <span class="s2">"InconsistentContactConstraintsError"</span><span class="p">,</span>
+    <span class="s2">"SystemDataValidationError"</span><span class="p">,</span>
+    <span class="s2">"UncoveredContactWarning"</span><span class="p">,</span>
+    <span class="s2">"SolverFailureWarning"</span><span class="p">,</span>
     <span class="s2">"_raise_missing_dependency"</span><span class="p">,</span>
 <span class="p">]</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">otaf.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">BASE_SURFACE_TYPES</span><span class="p">,</span> <span class="n">SURFACE_DIRECTIONS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">otaf.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">SUPPORTED_SURFACE_TYPES</span><span class="p">,</span> <span class="n">SURFACE_DIRECTIONS</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_raise_missing_dependency</span><span class="p">(</span><span class="n">library_name</span><span class="p">,</span> <span class="n">method_name</span><span class="p">):</span>
@@ -227,7 +231,10 @@
 <div class="viewcode-block" id="UnsupportedSurfaceTypeError">
 <a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.UnsupportedSurfaceTypeError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">UnsupportedSurfaceTypeError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Raised when a surface ``TYPE`` is not one of ``otaf.constants.BASE_SURFACE_TYPES``.</span>
+<span class="w">    </span><span class="sd">"""Raised when a surface ``TYPE`` is not one of ``otaf.constants.SUPPORTED_SURFACE_TYPES``.</span>
+
+<span class="sd">    ``"cone"`` and ``"sphere"`` are listed in ``otaf.constants.BASE_SURFACE_TYPES``</span>
+<span class="sd">    but have no deviation or gap model yet, so they are rejected too.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -240,7 +247,10 @@
 <span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">,</span> <span class="n">surf_type</span><span class="p">):</span>
-        <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"The type </span><span class="si">{</span><span class="n">surf_type</span><span class="si">}</span><span class="s2"> defined for part </span><span class="si">{</span><span class="n">part_id</span><span class="si">}</span><span class="s2"> on surface </span><span class="si">{</span><span class="n">surf_id</span><span class="si">}</span><span class="s2"> is not a standard surface type and not supported.</span><span class="se">\n</span><span class="s2"> Standard types: </span><span class="si">{</span><span class="n">BASE_SURFACE_TYPES</span><span class="si">}</span><span class="s2">"</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"The type </span><span class="si">{</span><span class="n">surf_type</span><span class="si">!r}</span><span class="s2"> of surface </span><span class="si">{</span><span class="n">surf_id</span><span class="si">}</span><span class="s2"> on part </span><span class="si">{</span><span class="n">part_id</span><span class="si">}</span><span class="s2"> is not supported. "</span>
+            <span class="sa">f</span><span class="s2">"Supported types: </span><span class="si">{</span><span class="n">SUPPORTED_SURFACE_TYPES</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
 
 
@@ -577,6 +587,80 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="se">\n</span><span class="s2">Matrix:</span><span class="se">\n</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="si">}</span><span class="s2">"</span></div>
+
+
+
+<div class="viewcode-block" id="InconsistentContactConstraintsError">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.InconsistentContactConstraintsError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">InconsistentContactConstraintsError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Raised when the two surfaces of a contact carry different ``CONSTRAINTS_G``.</span>
+
+<span class="sd">    The contact type is looked up from both entries, so they must be equal. A</span>
+<span class="sd">    surface without the key counts as ``["FLOATING"]``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    part_id1, surf_id1 : str</span>
+<span class="sd">        First surface of the contact.</span>
+<span class="sd">    constraints1 : list of str</span>
+<span class="sd">        Its ``CONSTRAINTS_G`` (default included).</span>
+<span class="sd">    part_id2, surf_id2 : str</span>
+<span class="sd">        Second surface of the contact.</span>
+<span class="sd">    constraints2 : list of str</span>
+<span class="sd">        Its ``CONSTRAINTS_G`` (default included).</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id1</span><span class="p">,</span> <span class="n">surf_id1</span><span class="p">,</span> <span class="n">constraints1</span><span class="p">,</span> <span class="n">part_id2</span><span class="p">,</span> <span class="n">surf_id2</span><span class="p">,</span> <span class="n">constraints2</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"CONSTRAINTS_G differ on the two sides of the contact P</span><span class="si">{</span><span class="n">part_id1</span><span class="si">}{</span><span class="n">surf_id1</span><span class="si">}</span><span class="s2">-P</span><span class="si">{</span><span class="n">part_id2</span><span class="si">}{</span><span class="n">surf_id2</span><span class="si">}</span><span class="s2">: "</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">constraints1</span><span class="p">)</span><span class="si">}</span><span class="s2"> on P</span><span class="si">{</span><span class="n">part_id1</span><span class="si">}{</span><span class="n">surf_id1</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">constraints2</span><span class="p">)</span><span class="si">}</span><span class="s2"> on P</span><span class="si">{</span><span class="n">part_id2</span><span class="si">}{</span><span class="n">surf_id2</span><span class="si">}</span><span class="s2"> "</span>
+            <span class="s2">"(a missing key counts as ['FLOATING']). Give both surfaces the same entry."</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="SystemDataValidationError">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.SystemDataValidationError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SystemDataValidationError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Raised when the assembly dictionary does not match the input schema.</span>
+
+<span class="sd">    Lists every problem found, each prefixed by its location in the dictionary</span>
+<span class="sd">    (e.g. ``PARTS -&gt; 1 -&gt; a -&gt; RADIUS``).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    messages : list of str</span>
+<span class="sd">        One message per problem.</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">messages</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">messages</span><span class="p">)</span><span class="si">}</span><span class="s2"> problem(s) in the system data:</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  - </span><span class="si">{</span><span class="n">m</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">messages</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="UncoveredContactWarning">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.UncoveredContactWarning">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UncoveredContactWarning</span><span class="p">(</span><span class="ne">UserWarning</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Warns that a contact listed in ``INTERACTIONS`` is crossed by no compatibility loop.</span>
+
+<span class="sd">    Contact conditions are only written for the gaps that appear in the loops, so</span>
+<span class="sd">    such a contact has no condition at all.</span>
+<span class="sd">    """</span></div>
+
+
+
+<div class="viewcode-block" id="SolverFailureWarning">
+<a class="viewcode-back" href="../../../source/otaf.exceptions.html#otaf.exceptions.SolverFailureWarning">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SolverFailureWarning</span><span class="p">(</span><span class="ne">RuntimeWarning</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Warns that the optimisation failed for some samples of a batch.</span>
+
+<span class="sd">    Their rows of the result are NaN; the ``scipy.optimize.milp`` status of every</span>
+<span class="sd">    sample is available with ``return_status=True``.</span>
+<span class="sd">    """</span></div>
 
 </pre></div>
 

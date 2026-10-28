@@ -66,6 +66,7 @@
 <li class="toctree-l4"><a class="reference internal" href="otaf.optimization.html">otaf.optimization package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.plotting.html">otaf.plotting package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.sampling.html">otaf.sampling package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.schema.html">otaf.schema package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.sensitivity.html">otaf.sensitivity package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.surrogate.html">otaf.surrogate package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.tolerances.html">otaf.tolerances package</a></li>
@@ -159,6 +160,27 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>condition_name</strong> (<em>str</em>) – Name of the condition.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.InconsistentContactConstraintsError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">InconsistentContactConstraintsError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part_id1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surf_id1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraints1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">part_id2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surf_id2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraints2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#InconsistentContactConstraintsError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.InconsistentContactConstraintsError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+<p>Raised when the two surfaces of a contact carry different <code class="docutils literal notranslate"><span class="pre">CONSTRAINTS_G</span></code>.</p>
+<p>The contact type is looked up from both entries, so they must be equal. A
+surface without the key counts as <code class="docutils literal notranslate"><span class="pre">[&quot;FLOATING&quot;]</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>part_id1</strong> (<em>str</em>) – First surface of the contact.</p></li>
+<li><p><strong>surf_id1</strong> (<em>str</em>) – First surface of the contact.</p></li>
+<li><p><strong>constraints1</strong> (<em>list</em><em> of </em><em>str</em>) – Its <code class="docutils literal notranslate"><span class="pre">CONSTRAINTS_G</span></code> (default included).</p></li>
+<li><p><strong>part_id2</strong> (<em>str</em>) – Second surface of the contact.</p></li>
+<li><p><strong>surf_id2</strong> (<em>str</em>) – Second surface of the contact.</p></li>
+<li><p><strong>constraints2</strong> (<em>list</em><em> of </em><em>str</em>) – Its <code class="docutils literal notranslate"><span class="pre">CONSTRAINTS_G</span></code> (default included).</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -386,6 +408,15 @@
 </dd></dl>
 
 <dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.SolverFailureWarning">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">SolverFailureWarning</span></span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#SolverFailureWarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.SolverFailureWarning" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeWarning</span></code></p>
+<p>Warns that the optimisation failed for some samples of a batch.</p>
+<p>Their rows of the result are NaN; the <code class="docutils literal notranslate"><span class="pre">scipy.optimize.milp</span></code> status of every
+sample is available with <code class="docutils literal notranslate"><span class="pre">return_status=True</span></code>.</p>
+</dd></dl>
+
+<dl class="py exception">
 <dt class="sig sig-object py" id="otaf.exceptions.SurfaceNotFoundError">
 <span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">SurfaceNotFoundError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surf_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">part_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#SurfaceNotFoundError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.SurfaceNotFoundError" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
@@ -401,6 +432,29 @@
 </dd></dl>
 
 <dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.SystemDataValidationError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">SystemDataValidationError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">messages</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#SystemDataValidationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.SystemDataValidationError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+<p>Raised when the assembly dictionary does not match the input schema.</p>
+<p>Lists every problem found, each prefixed by its location in the dictionary
+(e.g. <code class="docutils literal notranslate"><span class="pre">PARTS</span> <span class="pre">-&gt;</span> <span class="pre">1</span> <span class="pre">-&gt;</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">RADIUS</span></code>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>messages</strong> (<em>list</em><em> of </em><em>str</em>) – One message per problem.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="otaf.exceptions.UncoveredContactWarning">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">UncoveredContactWarning</span></span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#UncoveredContactWarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.UncoveredContactWarning" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">UserWarning</span></code></p>
+<p>Warns that a contact listed in <code class="docutils literal notranslate"><span class="pre">INTERACTIONS</span></code> is crossed by no compatibility loop.</p>
+<p>Contact conditions are only written for the gaps that appear in the loops, so
+such a contact has no condition at all.</p>
+</dd></dl>
+
+<dl class="py exception">
 <dt class="sig sig-object py" id="otaf.exceptions.UniqueLabelSuffixError">
 <span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">UniqueLabelSuffixError</span></span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#UniqueLabelSuffixError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.UniqueLabelSuffixError" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
@@ -411,7 +465,9 @@
 <dt class="sig sig-object py" id="otaf.exceptions.UnsupportedSurfaceTypeError">
 <span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.exceptions.</span></span><span class="sig-name descname"><span class="pre">UnsupportedSurfaceTypeError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surf_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surf_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/exceptions/_exceptions.html#UnsupportedSurfaceTypeError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.exceptions.UnsupportedSurfaceTypeError" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
-<p>Raised when a surface <code class="docutils literal notranslate"><span class="pre">TYPE</span></code> is not one of <code class="docutils literal notranslate"><span class="pre">otaf.constants.BASE_SURFACE_TYPES</span></code>.</p>
+<p>Raised when a surface <code class="docutils literal notranslate"><span class="pre">TYPE</span></code> is not one of <code class="docutils literal notranslate"><span class="pre">otaf.constants.SUPPORTED_SURFACE_TYPES</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;cone&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;sphere&quot;</span></code> are listed in <code class="docutils literal notranslate"><span class="pre">otaf.constants.BASE_SURFACE_TYPES</span></code>
+but have no deviation or gap model yet, so they are rejected too.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

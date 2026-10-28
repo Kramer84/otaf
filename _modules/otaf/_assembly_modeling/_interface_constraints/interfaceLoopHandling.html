@@ -91,11 +91,14 @@
 
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">beartype.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Set</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">otaf.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">tree</span><span class="p">,</span> <span class="n">inverse_mstring</span><span class="p">,</span> <span class="n">parse_matrix_string</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">otaf.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">BASE_PART_SURF_PATTERN</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">otaf.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">UncoveredContactWarning</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">otaf.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearizationStrategy</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">..compatibilityLoopHandling</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompatibilityLoopHandling</span>
@@ -131,6 +134,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">surfaceInteractionManager</span><span class="o">.</span><span class="n">get_facing_point_dictionary</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">all_gap_matrix_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_all_gap_matrix_names</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">compatibility_gap_matrix_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_unique_gap_matrices_from_expanded_loops</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">warn_uncovered_contacts</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">filtered_gap_matrices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_gap_matrices</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">compatibility_gap_matrix_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_gap_matrix_names</span>
         <span class="p">)</span>
@@ -177,6 +181,48 @@
         <span class="p">}</span>
         <span class="n">gap_matrices</span> <span class="o">-=</span> <span class="n">gap_matrices_to_remove</span>
         <span class="k">return</span> <span class="n">gap_matrices</span></div>
+
+
+<div class="viewcode-block" id="InterfaceLoopHandling.uncovered_contacts">
+<a class="viewcode-back" href="../../../../source/otaf.html#otaf.InterfaceLoopHandling.uncovered_contacts">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">uncovered_contacts</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return the contacts listed in ``INTERACTIONS`` that no compatibility loop crosses.</span>
+
+<span class="sd">        Contact conditions are written only for the gaps of the loops, so these</span>
+<span class="sd">        contacts get none.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of tuple</span>
+<span class="sd">            Sorted ``((part1, surf1), (part2, surf2))`` pairs.</span>
+<span class="sd">        """</span>
+        <span class="n">covered</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">gap</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compatibility_gap_matrix_names</span><span class="p">:</span>
+            <span class="n">parsed</span> <span class="o">=</span> <span class="n">parse_matrix_string</span><span class="p">(</span><span class="n">gap</span><span class="p">)</span>
+            <span class="n">covered</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">([(</span><span class="n">parsed</span><span class="p">[</span><span class="s2">"part1"</span><span class="p">],</span> <span class="n">parsed</span><span class="p">[</span><span class="s2">"surface1"</span><span class="p">]),</span> <span class="p">(</span><span class="n">parsed</span><span class="p">[</span><span class="s2">"part2"</span><span class="p">],</span> <span class="n">parsed</span><span class="p">[</span><span class="s2">"surface2"</span><span class="p">])]))</span>
+            <span class="p">)</span>
+        <span class="n">listed</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ADP</span><span class="p">[</span><span class="s2">"PARTS"</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">surf_id</span><span class="p">,</span> <span class="n">surface</span> <span class="ow">in</span> <span class="n">part</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">interaction</span> <span class="ow">in</span> <span class="n">surface</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"INTERACTIONS"</span><span class="p">,</span> <span class="p">[]):</span>
+                    <span class="n">other</span> <span class="o">=</span> <span class="n">BASE_PART_SURF_PATTERN</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">interaction</span><span class="p">)</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+                    <span class="n">listed</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">([(</span><span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">),</span> <span class="n">other</span><span class="p">])))</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">listed</span> <span class="o">-</span> <span class="n">covered</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InterfaceLoopHandling.warn_uncovered_contacts">
+<a class="viewcode-back" href="../../../../source/otaf.html#otaf.InterfaceLoopHandling.warn_uncovered_contacts">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">warn_uncovered_contacts</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Warn (`otaf.exceptions.UncoveredContactWarning`) for each contact no loop crosses."""</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">s1</span><span class="p">),</span> <span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">uncovered_contacts</span><span class="p">():</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"The contact P</span><span class="si">{</span><span class="n">p1</span><span class="si">}{</span><span class="n">s1</span><span class="si">}</span><span class="s2">-P</span><span class="si">{</span><span class="n">p2</span><span class="si">}{</span><span class="n">s2</span><span class="si">}</span><span class="s2"> listed in INTERACTIONS is not crossed by any "</span>
+                <span class="s2">"compatibility loop, so it gets no contact condition. Add a loop through it "</span>
+                <span class="s2">"or remove it from INTERACTIONS."</span><span class="p">,</span>
+                <span class="n">UncoveredContactWarning</span><span class="p">,</span>
+                <span class="n">stacklevel</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="InterfaceLoopHandling.generate_all_gap_matrix_names">

@@ -1,0 +1,10 @@
+otaf.schema package
+===================
+
+Module contents
+---------------
+
+.. automodule:: otaf.schema
+   :members:
+   :show-inheritance:
+   :undoc-members:

@@ -66,6 +66,7 @@
 <li class="toctree-l4"><a class="reference internal" href="otaf.optimization.html">otaf.optimization package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.plotting.html">otaf.plotting package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.sampling.html">otaf.sampling package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.schema.html">otaf.schema package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.sensitivity.html">otaf.sensitivity package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.surrogate.html">otaf.surrogate package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.tolerances.html">otaf.tolerances package</a></li>
@@ -136,10 +137,9 @@ surface identifier string.</p>
 <dl class="py data">
 <dt class="sig sig-object py" id="otaf.constants.BASE_SURFACE_TYPES">
 <span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">BASE_SURFACE_TYPES</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['plane',</span> <span class="pre">'cylinder',</span> <span class="pre">'cone',</span> <span class="pre">'sphere']</span></span><a class="headerlink" href="#otaf.constants.BASE_SURFACE_TYPES" title="Link to this definition"></a></dt>
-<dd><p>List of supported surface types for geometric modeling.</p>
-<p>Accepted types include <code class="docutils literal notranslate"><span class="pre">'plane'</span></code>, <code class="docutils literal notranslate"><span class="pre">'cylinder'</span></code>, <code class="docutils literal notranslate"><span class="pre">'cone'</span></code>, and
-<code class="docutils literal notranslate"><span class="pre">'sphere'</span></code>. Only <code class="docutils literal notranslate"><span class="pre">'plane'</span></code> and <code class="docutils literal notranslate"><span class="pre">'cylinder'</span></code> are currently
-supported for interactions.</p>
+<dd><p>Surface types known to the geometry helpers.</p>
+<p>Only those of <cite>SUPPORTED_SURFACE_TYPES</cite> can be used in an assembly: <code class="docutils literal notranslate"><span class="pre">'cone'</span></code>
+and <code class="docutils literal notranslate"><span class="pre">'sphere'</span></code> have no deviation or gap model yet.</p>
 </dd></dl>
 
 <dl class="py data">
@@ -197,6 +197,13 @@ directional components.</p>
 </dd></dl>
 
 <dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.DIRECTION_ATOL">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">DIRECTION_ATOL</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1e-08</span></span><a class="headerlink" href="#otaf.constants.DIRECTION_ATOL" title="Link to this definition"></a></dt>
+<dd><p>Absolute tolerance on unit-vector dot products (parallel, perpendicular,
+coincident planes).</p>
+</dd></dl>
+
+<dl class="py data">
 <dt class="sig sig-object py" id="otaf.constants.D_MATRIX_MSTRING_PATTERN">
 <span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">D_MATRIX_MSTRING_PATTERN</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('^D(\\d+)([a-z]+)$')</span></span><a class="headerlink" href="#otaf.constants.D_MATRIX_MSTRING_PATTERN" title="Link to this definition"></a></dt>
 <dd><p>Regex for deviation matrix simplified naming, e.g., <code class="docutils literal notranslate"><span class="pre">D1a</span></code>.</p>
@@ -218,6 +225,36 @@ directional components.</p>
 <dt class="sig sig-object py" id="otaf.constants.D_MATRIX_PATTERN3">
 <span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">D_MATRIX_PATTERN3</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('^D(i*)(\\d+)([a-z]+)(\\d+)([a-z]+)$')</span></span><a class="headerlink" href="#otaf.constants.D_MATRIX_PATTERN3" title="Link to this definition"></a></dt>
 <dd><p>Regex for deviation matrix type 3, e.g., <code class="docutils literal notranslate"><span class="pre">D1a5b</span></code>.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.FRAME_ATOL">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">FRAME_ATOL</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1e-08</span></span><a class="headerlink" href="#otaf.constants.FRAME_ATOL" title="Link to this definition"></a></dt>
+<dd><p>Absolute tolerance of the rotation-matrix check of a <code class="docutils literal notranslate"><span class="pre">FRAME</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">F</span> <span class="pre">&#64;</span> <span class="pre">F.T</span></code> must equal the identity and <code class="docutils literal notranslate"><span class="pre">det(F)</span></code> must equal 1 within it (with
+the default relative tolerance of <cite>numpy.allclose</cite>).</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.GAP_ROTATION_BOUND">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">GAP_ROTATION_BOUND</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.7853981633974483</span></span><a class="headerlink" href="#otaf.constants.GAP_ROTATION_BOUND" title="Link to this definition"></a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">[-pi/4,</span> <span class="pre">pi/4]</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Bound (rad) of every gap rotation variable in the solver</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.GAP_TRANSLATION_BOUND">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">GAP_TRANSLATION_BOUND</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3.0</span></span><a class="headerlink" href="#otaf.constants.GAP_TRANSLATION_BOUND" title="Link to this definition"></a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">[-3,</span> <span class="pre">3]</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Bound (mm) of every gap translation variable in the solver</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py data">
@@ -243,6 +280,14 @@ cannot slide in a hole) do not close.</p>
 <dd class="field-odd"><p></p></dd>
 </dl>
 </section>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.GEOMETRIC_ATOL">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">GEOMETRIC_ATOL</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1e-09</span></span><a class="headerlink" href="#otaf.constants.GEOMETRIC_ATOL" title="Link to this definition"></a></dt>
+<dd><p>Absolute tolerance on lengths (model units, mm) in the geometry helpers.</p>
+<p>Two points closer than this are the same point, and overlaps shorter (or, for
+planes, smaller in area relative to the face size) than this are empty.</p>
 </dd></dl>
 
 <dl class="py data">
@@ -312,6 +357,12 @@ and rotational components.</p>
 </dd></dl>
 
 <dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.SUPPORTED_SURFACE_TYPES">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">SUPPORTED_SURFACE_TYPES</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['plane',</span> <span class="pre">'cylinder']</span></span><a class="headerlink" href="#otaf.constants.SUPPORTED_SURFACE_TYPES" title="Link to this definition"></a></dt>
+<dd><p>Surface types accepted in the assembly dictionary (<code class="docutils literal notranslate"><span class="pre">TYPE</span></code> key).</p>
+</dd></dl>
+
+<dl class="py data">
 <dt class="sig sig-object py" id="otaf.constants.SURFACE_DICT_VALUE_CHECKS">
 <span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">SURFACE_DICT_VALUE_CHECKS</span></span><a class="headerlink" href="#otaf.constants.SURFACE_DICT_VALUE_CHECKS" title="Link to this definition"></a></dt>
 <dd><p>Validation lambdas checking individual parameter values for surfaces.</p>
@@ -366,10 +417,22 @@ and rotational components.</p>
 </dd></dl>
 
 <dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.TAYLOR_COEFFICIENT_TOL">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">TAYLOR_COEFFICIENT_TOL</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1e-08</span></span><a class="headerlink" href="#otaf.constants.TAYLOR_COEFFICIENT_TOL" title="Link to this definition"></a></dt>
+<dd><p>Default tolerance of <cite>FirstOrderMatrixExpansion.compute_first_order_expansion</cite>.</p>
+</dd></dl>
+
+<dl class="py data">
 <dt class="sig sig-object py" id="otaf.constants.T_MATRIX_PATTERN">
 <span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">T_MATRIX_PATTERN</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('^TP(\\d+)([a-z]+)([A-Z]+\\d+)([a-z]+)([A-Z]+\\d+)$')</span></span><a class="headerlink" href="#otaf.constants.T_MATRIX_PATTERN" title="Link to this definition"></a></dt>
 <dd><p>Regex for coordinate transformation matrix matching (e.g.,
 <code class="docutils literal notranslate"><span class="pre">TP1aA0bB99</span></code>).</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="otaf.constants.ZERO_NORM_ATOL">
+<span class="sig-prename descclassname"><span class="pre">otaf.constants.</span></span><span class="sig-name descname"><span class="pre">ZERO_NORM_ATOL</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1e-10</span></span><a class="headerlink" href="#otaf.constants.ZERO_NORM_ATOL" title="Link to this definition"></a></dt>
+<dd><p>Vectors with a norm below this cannot be normalised.</p>
 </dd></dl>
 
 </section>

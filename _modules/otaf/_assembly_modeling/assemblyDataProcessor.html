@@ -105,6 +105,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">otaf.constants</span><span class="w"> </span><span class="k">as</span><span class="w">  </span><span class="nn">otaf_constants</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">otaf.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_dict_keys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">otaf.schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">SystemData</span><span class="p">,</span> <span class="n">validate_point_dict</span><span class="p">,</span> <span class="n">validate_system_data</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">otaf.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">point_dict_to_arrays</span><span class="p">,</span> <span class="n">are_points_on_2d_plane</span><span class="p">,</span> <span class="n">spheres_from_point_cloud</span><span class="p">,</span> <span class="n">surface_from_planar_contour</span><span class="p">,</span> <span class="n">open_cylinder_mesh</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">otaf.plotting</span><span class="w"> </span><span class="kn">import</span> <span class="n">color_palette_3</span><span class="p">,</span> <span class="n">hex_to_rgba</span><span class="p">,</span> <span class="n">trimesh_scene_as_notebook_scene</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">._assembly_topology</span><span class="w"> </span><span class="kn">import</span> <span class="n">calculate_graph_layout</span>
@@ -121,10 +122,11 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    system_data : dict, optional</span>
-<span class="sd">        A nested dictionary representing mechanical system data. If</span>
-<span class="sd">        not provided, an empty structure is initialized (the</span>
-<span class="sd">        default is None).</span>
+<span class="sd">    system_data : dict or otaf.schema.SystemData, optional</span>
+<span class="sd">        A nested dictionary representing mechanical system data (see</span>
+<span class="sd">        ``docs/guide/input_format.md``), validated against</span>
+<span class="sd">        `otaf.schema.SystemData`. If not provided, an empty structure is</span>
+<span class="sd">        initialized (the default is None).</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -135,8 +137,10 @@
 <span class="sd">        as None.</span>
 <span class="sd">    """</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">SystemData</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Initialize an AssemblyDataProcessor instance."""</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">system_data</span><span class="p">,</span> <span class="n">SystemData</span><span class="p">):</span>
+            <span class="n">system_data</span> <span class="o">=</span> <span class="n">system_data</span><span class="o">.</span><span class="n">to_system_data</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">system_data</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">deepcopy</span><span class="p">(</span><span class="n">system_data</span><span class="p">)</span> <span class="k">if</span> <span class="n">system_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_empty_system_data</span><span class="p">()</span>
         <span class="p">)</span>
@@ -258,9 +262,11 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">validate_system_data_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Validate the structure and integrity of the system data.</span>
 
-<span class="sd">        Ensures that the required keys and nested structures exist and</span>
-<span class="sd">        conform to expected standards, including part IDs, surface</span>
-<span class="sd">        labels, types, points, interactions, and constraints.</span>
+<span class="sd">        Checks the dictionary against the input schema</span>
+<span class="sd">        (`otaf.schema.validate_system_data`: labels, types, frames, points,</span>
+<span class="sd">        required keys per surface, interactions, contact constraints, loop</span>
+<span class="sd">        references), then generates the points of the surfaces given without</span>
+<span class="sd">        ``POINTS`` and sets ``ORIGIN`` from the origin point of the others.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -282,95 +288,27 @@
 <span class="sd">            If a surface direction is invalid.</span>
 <span class="sd">        otaf.exceptions.InvalidGlobalConstraintError</span>
 <span class="sd">            If the global constraint is not supported.</span>
+<span class="sd">        otaf.exceptions.InconsistentContactConstraintsError</span>
+<span class="sd">            If the two surfaces of a contact have different ``CONSTRAINTS_G``.</span>
+<span class="sd">        otaf.exceptions.SystemDataValidationError</span>
+<span class="sd">            For the other schema violations (e.g. a ``FRAME`` that is not a</span>
+<span class="sd">            rotation matrix).</span>
 <span class="sd">        """</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Validating system data dictionary structure."</span><span class="p">)</span>
-        <span class="n">required_top_level_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"PARTS"</span><span class="p">,</span> <span class="s2">"LOOPS"</span><span class="p">,</span> <span class="s2">"GLOBAL_CONSTRAINTS"</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">required_top_level_keys</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_data</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">MissingKeyError</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s2">"system_data"</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">"PARTS"</span><span class="p">:</span>
-                    <span class="n">part_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">system_data</span><span class="p">[</span><span class="s2">"PARTS"</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span>
-                        <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">isdigit</span><span class="p">(),</span> <span class="n">part_keys</span><span class="p">)</span>
-                    <span class="p">):</span>  <span class="c1"># Check if all part labels are integers</span>
-                        <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">InvalidPartLabelError</span><span class="p">()</span>
-                    <span class="k">for</span> <span class="n">part_id</span> <span class="ow">in</span> <span class="n">part_keys</span><span class="p">:</span>
-                        <span class="n">surf_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">system_data</span><span class="p">[</span><span class="s2">"PARTS"</span><span class="p">][</span><span class="n">part_id</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-                        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span>
-                            <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">islower</span><span class="p">()</span> <span class="ow">and</span> <span class="n">x</span><span class="o">.</span><span class="n">isalpha</span><span class="p">(),</span> <span class="n">surf_keys</span><span class="p">)</span>
-                        <span class="p">):</span>  <span class="c1"># Check if all surface labels are lowercase ascii</span>
-                            <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">InvalidSurfaceLabelError</span><span class="p">()</span>
-                        <span class="k">for</span> <span class="n">surf_id</span> <span class="ow">in</span> <span class="n">surf_keys</span><span class="p">:</span>
-                            <span class="n">part_surf_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_data</span><span class="p">[</span><span class="s2">"PARTS"</span><span class="p">][</span><span class="n">part_id</span><span class="p">][</span><span class="n">surf_id</span><span class="p">]</span>
-                            <span class="n">surf_params</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">part_surf_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-                            <span class="k">if</span> <span class="s2">"TYPE"</span> <span class="ow">in</span> <span class="n">surf_params</span><span class="p">:</span>
-                                <span class="k">if</span> <span class="ow">not</span> <span class="n">part_surf_dict</span><span class="p">[</span><span class="s2">"TYPE"</span><span class="p">]</span> <span class="ow">in</span> <span class="n">otaf_constants</span><span class="o">.</span><span class="n">BASE_SURFACE_TYPES</span><span class="p">:</span>
-                                    <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">UnsupportedSurfaceTypeError</span><span class="p">(</span>
-                                        <span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">,</span> <span class="n">part_surf_dict</span><span class="p">[</span><span class="s2">"TYPE"</span><span class="p">]</span>
-                                    <span class="p">)</span>
-                            <span class="k">else</span><span class="p">:</span>
-                                <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">MissingSurfaceTypeKeyError</span><span class="p">(</span><span class="n">surf_id</span><span class="p">,</span> <span class="n">part_id</span><span class="p">)</span>
-
-                            <span class="k">if</span> <span class="s2">"POINTS"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">surf_params</span><span class="p">:</span>
-                                <span class="bp">self</span><span class="o">.</span><span class="n">generate_points_for_surface</span><span class="p">(</span><span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">)</span>
-
-                            <span class="k">else</span><span class="p">:</span>
-                                <span class="n">point_dict</span> <span class="o">=</span> <span class="n">part_surf_dict</span><span class="p">[</span><span class="s2">"POINTS"</span><span class="p">]</span>
-                                <span class="bp">self</span><span class="o">.</span><span class="n">validate_point_dict</span><span class="p">(</span><span class="n">point_dict</span><span class="p">)</span>
-                                <span class="n">label_array</span><span class="p">,</span> <span class="n">point_array</span> <span class="o">=</span> <span class="n">point_dict_to_arrays</span><span class="p">(</span>
-                                    <span class="n">point_dict</span>
-                                <span class="p">)</span>
-                                <span class="n">label_origin</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-                                    <span class="nb">filter</span><span class="p">(</span>
-                                        <span class="n">otaf_constants</span><span class="o">.</span><span class="n">SURF_ORIGIN_PATTERN</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">,</span> <span class="n">label_array</span>
-                                    <span class="p">)</span>
-                                <span class="p">)</span>
-                                <span class="k">if</span> <span class="n">label_origin</span><span class="p">:</span>
-                                    <span class="n">part_surf_dict</span><span class="p">[</span><span class="s2">"ORIGIN"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-                                        <span class="n">point_dict</span><span class="p">[</span><span class="n">label_origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">"float64"</span>
-                                    <span class="p">)</span>
-                                <span class="k">else</span><span class="p">:</span>
-                                    <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">MissingOriginPointError</span><span class="p">(</span><span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">)</span>
-
-                            <span class="k">if</span> <span class="s2">"INTERACTIONS"</span> <span class="ow">in</span> <span class="n">surf_params</span><span class="p">:</span>
-                                <span class="k">for</span> <span class="n">interaction</span> <span class="ow">in</span> <span class="n">part_surf_dict</span><span class="p">[</span><span class="s2">"INTERACTIONS"</span><span class="p">]:</span>
-                                    <span class="k">if</span> <span class="ow">not</span> <span class="n">otaf_constants</span><span class="o">.</span><span class="n">BASE_PART_SURF_PATTERN</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span>
-                                        <span class="n">interaction</span>
-                                    <span class="p">):</span>
-                                        <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">InvalidInteractionFormatError</span><span class="p">(</span>
-                                            <span class="n">interaction</span>
-                                        <span class="p">)</span>
-
-                            <span class="k">if</span> <span class="s2">"SURFACE_DIRECTION"</span> <span class="ow">in</span> <span class="n">surf_params</span><span class="p">:</span>
-                                <span class="k">if</span> <span class="p">(</span>
-                                    <span class="n">part_surf_dict</span><span class="p">[</span><span class="s2">"SURFACE_DIRECTION"</span><span class="p">]</span>
-                                    <span class="ow">not</span> <span class="ow">in</span> <span class="n">otaf_constants</span><span class="o">.</span><span class="n">SURFACE_DIRECTIONS</span>
-                                <span class="p">):</span>
-                                    <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">InvalidSurfaceDirectionError</span><span class="p">(</span>
-                                        <span class="n">part_surf_dict</span><span class="p">[</span><span class="s2">"SURFACE_DIRECTION"</span><span class="p">]</span>
-                                    <span class="p">)</span>
-
-                            <span class="k">if</span> <span class="s2">"DIAMETER_DEVIATION"</span> <span class="ow">in</span> <span class="n">surf_params</span> <span class="ow">and</span> <span class="p">(</span>
-                                <span class="n">part_surf_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"TYPE"</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">"cylinder"</span>
-                                <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">part_surf_dict</span><span class="p">[</span><span class="s2">"DIAMETER_DEVIATION"</span><span class="p">],</span> <span class="nb">bool</span><span class="p">)</span>
-                            <span class="p">):</span>
-                                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                                    <span class="sa">f</span><span class="s2">"DIAMETER_DEVIATION of surface </span><span class="si">{</span><span class="n">surf_id</span><span class="si">}</span><span class="s2"> on part </span><span class="si">{</span><span class="n">part_id</span><span class="si">}</span><span class="s2"> "</span>
-                                    <span class="s2">"must be a bool and is only valid for cylinders."</span>
-                                <span class="p">)</span>
-
-                <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">"GLOBAL_CONSTRAINTS"</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">system_data</span><span class="p">[</span><span class="s2">"GLOBAL_CONSTRAINTS"</span><span class="p">]</span>
-                        <span class="ow">not</span> <span class="ow">in</span> <span class="n">otaf_constants</span><span class="o">.</span><span class="n">GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-                    <span class="p">):</span>
-                        <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">InvalidGlobalConstraintError</span><span class="p">(</span>
-                            <span class="n">otaf_constants</span><span class="o">.</span><span class="n">GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-                        <span class="p">)</span>
-                <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">"LOOPS"</span><span class="p">:</span>
-                    <span class="n">loop_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_data</span><span class="p">[</span><span class="s2">"LOOPS"</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-                    <span class="k">pass</span>  <span class="c1"># Not nice enough to continue working on this...</span></div>
+        <span class="n">validate_system_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">system_data</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_data</span><span class="p">[</span><span class="s2">"PARTS"</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">surf_id</span><span class="p">,</span> <span class="n">part_surf_dict</span> <span class="ow">in</span> <span class="n">part</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="s2">"POINTS"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">part_surf_dict</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">generate_points_for_surface</span><span class="p">(</span><span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">point_dict</span> <span class="o">=</span> <span class="n">part_surf_dict</span><span class="p">[</span><span class="s2">"POINTS"</span><span class="p">]</span>
+                    <span class="n">label_origin</span> <span class="o">=</span> <span class="p">[</span>
+                        <span class="n">label</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">point_dict</span>
+                        <span class="k">if</span> <span class="n">otaf_constants</span><span class="o">.</span><span class="n">SURF_ORIGIN_PATTERN</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+                    <span class="p">]</span>
+                    <span class="n">part_surf_dict</span><span class="p">[</span><span class="s2">"ORIGIN"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                        <span class="n">point_dict</span><span class="p">[</span><span class="n">label_origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">"float64"</span>
+                    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="AssemblyDataProcessor.validate_point_dict">
@@ -408,39 +346,7 @@
 <span class="sd">          and unique numeric suffixes.</span>
 <span class="sd">        - The coordinates for all points must be unique.</span>
 <span class="sd">        """</span>
-        <span class="n">label_array</span><span class="p">,</span> <span class="n">point_array</span> <span class="o">=</span> <span class="n">point_dict_to_arrays</span><span class="p">(</span><span class="n">point_dict</span><span class="p">)</span>
-        <span class="n">label_pattern_compliance</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-            <span class="nb">filter</span><span class="p">(</span><span class="n">otaf_constants</span><span class="o">.</span><span class="n">SURF_POINT_PATTERN</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">,</span> <span class="n">label_array</span><span class="p">)</span>
-        <span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">label_pattern_compliance</span><span class="p">)</span> <span class="o">!=</span> <span class="n">label_array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">LabelPatternError</span><span class="p">()</span>
-        <span class="n">label_prefixes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">X</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^[A-Z]+"</span><span class="p">,</span> <span class="n">X</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label_array</span><span class="p">))</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">label_prefixes</span><span class="p">)))</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">LabelPrefixError</span><span class="p">()</span>
-        <span class="n">label_suffixes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">X</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">"[0-9]+$"</span><span class="p">,</span> <span class="n">X</span><span class="p">)[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">label_array</span><span class="p">))</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">label_suffixes</span><span class="p">)))</span> <span class="o">&lt;</span> <span class="n">label_array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">UniqueLabelSuffixError</span><span class="p">()</span>
-        <span class="c1"># unique_points = np.unique(point_array, axis=0)</span>
-        <span class="c1"># if unique_points.shape[0] &lt; point_array.shape[0]:</span>
-        <span class="c1">#     raise otaf_exceptions.NonUniqueCoordinatesError()</span>
-        <span class="c1"># Finding duplicates with their labels and coordinates</span>
-        <span class="n">point_to_labels</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">point</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
-            <span class="n">label_array</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="n">point_array</span><span class="p">)</span>
-        <span class="p">):</span>  <span class="c1"># Convert numpy arrays to tuples for hashing</span>
-            <span class="n">point_to_labels</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
-
-        <span class="n">duplicates</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">point</span><span class="p">,</span> <span class="n">labels</span> <span class="ow">in</span> <span class="n">point_to_labels</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">duplicates</span><span class="p">[</span><span class="n">point</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels</span>
-
-        <span class="k">if</span> <span class="n">duplicates</span><span class="p">:</span>
-            <span class="c1"># Transforming point keys back to their original numpy array form for the error message</span>
-            <span class="n">duplicates_formatted</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">point</span><span class="p">)):</span> <span class="n">labels</span> <span class="k">for</span> <span class="n">point</span><span class="p">,</span> <span class="n">labels</span> <span class="ow">in</span> <span class="n">duplicates</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-            <span class="p">}</span>
-            <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">NonUniqueCoordinatesError</span><span class="p">(</span><span class="n">duplicates_formatted</span><span class="p">)</span></div>
+        <span class="n">validate_point_dict</span><span class="p">(</span><span class="n">point_dict</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="AssemblyDataProcessor.add_surface_points">
@@ -607,8 +513,8 @@
         <span class="n">point_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">key_prefix</span> <span class="o">+</span> <span class="s2">"0"</span><span class="p">:</span> <span class="n">surf_data</span><span class="p">[</span><span class="s2">"ORIGIN"</span><span class="p">]}</span>
         <span class="k">if</span> <span class="s2">"CONTOUR_GLOBAL"</span> <span class="ow">in</span> <span class="n">surf_data</span><span class="p">:</span>
             <span class="c1"># The contour of the surface has been defined in the global frame</span>
-            <span class="n">NP</span> <span class="o">=</span> <span class="n">surf_data</span><span class="p">[</span><span class="s2">"CONTOUR_GLOBAL"</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">points</span> <span class="o">=</span> <span class="n">surf_data</span><span class="p">[</span><span class="s2">"CONTOUR_GLOBAL"</span><span class="p">]</span>
+            <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">surf_data</span><span class="p">[</span><span class="s2">"CONTOUR_GLOBAL"</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">"float64"</span><span class="p">)</span>
+            <span class="n">NP</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">points_to_check</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">surf_data</span><span class="p">[</span><span class="s2">"ORIGIN"</span><span class="p">],</span> <span class="n">points</span><span class="p">])</span>
             <span class="n">glob_const</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"GLOBAL_CONSTRAINTS"</span><span class="p">,</span> <span class="s2">"3D"</span><span class="p">)</span>
             
@@ -652,10 +558,11 @@
         <span class="n">point_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">key_prefix</span> <span class="o">+</span> <span class="s2">"0"</span><span class="p">:</span> <span class="n">surf_data</span><span class="p">[</span><span class="s2">"ORIGIN"</span><span class="p">]}</span>
         <span class="k">if</span> <span class="s2">"CONTOUR_GLOBAL"</span> <span class="ow">in</span> <span class="n">surf_data</span><span class="p">:</span>
             <span class="c1"># The contour of the surface has been defined in the global frame</span>
-            <span class="n">NP</span> <span class="o">=</span> <span class="n">surf_data</span><span class="p">[</span><span class="s2">"CONTOUR_GLOBAL"</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">surf_data</span><span class="p">[</span><span class="s2">"CONTOUR_GLOBAL"</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">"float64"</span><span class="p">)</span>
+            <span class="n">NP</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">contour_point_dict</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="n">key_prefix</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">):</span> <span class="n">value</span>
-                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">NP</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">surf_data</span><span class="p">[</span><span class="s2">"CONTOUR_GLOBAL"</span><span class="p">])</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">NP</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">points</span><span class="p">)</span>
             <span class="p">}</span>
             <span class="n">point_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">contour_point_dict</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_surface_points</span><span class="p">(</span><span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">,</span> <span class="n">point_dict</span><span class="p">)</span>

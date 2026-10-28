@@ -102,6 +102,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">otaf.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">SURF_TYPE_TO_DEVIATION_DOF</span><span class="p">,</span> <span class="n">GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF</span><span class="p">,</span> <span class="n">GAP_TYPE_TO_NULLIFIED_NOMINAL_COMPONENTS</span><span class="p">,</span> <span class="n">CONTACT_TYPE_TO_GAP_DOF</span><span class="p">,</span> <span class="n">GLOBAL_CONSTRAINTS_TO_GAP_DOF</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">otaf.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_expressions_with_variables</span><span class="p">,</span> <span class="n">inverse_mstring</span><span class="p">,</span> <span class="n">parse_matrix_string</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">otaf.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">tfrt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">otaf.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InconsistentContactConstraintsError</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.assemblyDataProcessor</span><span class="w"> </span><span class="kn">import</span> <span class="n">AssemblyDataProcessor</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.assemblyModelingBaseObjects</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeviationMatrix</span><span class="p">,</span> <span class="n">GapMatrix</span><span class="p">,</span> <span class="n">TransformationMatrix</span><span class="p">,</span> <span class="n">I4</span><span class="p">,</span> <span class="n">J4</span>
@@ -533,8 +534,9 @@
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
-<span class="sd">        KeyError</span>
-<span class="sd">            If required surface or contact constraints are missing in the input data.</span>
+<span class="sd">        otaf.exceptions.InconsistentContactConstraintsError</span>
+<span class="sd">            If the two surfaces carry different ``CONSTRAINTS_G`` (a missing key</span>
+<span class="sd">            counts as ``["FLOATING"]``).</span>
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="n">el_info</span><span class="p">[</span><span class="s2">"mstring"</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gap_matrix_map</span><span class="p">:</span>
             <span class="n">g_mat_id_max</span> <span class="o">=</span> <span class="p">(</span>
@@ -572,7 +574,12 @@
             <span class="p">)</span>
 
             <span class="n">is_inverse</span> <span class="o">=</span> <span class="n">el_info</span><span class="p">[</span><span class="s2">"inverse"</span><span class="p">]</span>
-            <span class="n">gap_constraints</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">((</span><span class="o">*</span><span class="n">constraints1</span><span class="p">,</span> <span class="o">*</span><span class="n">constraints2</span><span class="p">)))</span>
+            <span class="k">if</span> <span class="nb">sorted</span><span class="p">({</span><span class="n">c</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">constraints1</span><span class="p">})</span> <span class="o">!=</span> <span class="nb">sorted</span><span class="p">({</span><span class="n">c</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">constraints2</span><span class="p">}):</span>
+                <span class="k">raise</span> <span class="n">InconsistentContactConstraintsError</span><span class="p">(</span>
+                    <span class="n">el_info</span><span class="p">[</span><span class="s2">"part1"</span><span class="p">],</span> <span class="n">el_info</span><span class="p">[</span><span class="s2">"surface1"</span><span class="p">],</span> <span class="n">constraints1</span><span class="p">,</span>
+                    <span class="n">el_info</span><span class="p">[</span><span class="s2">"part2"</span><span class="p">],</span> <span class="n">el_info</span><span class="p">[</span><span class="s2">"surface2"</span><span class="p">],</span> <span class="n">constraints2</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="n">gap_constraints</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">({</span><span class="n">c</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">constraints1</span><span class="p">})</span>
             <span class="n">contact_type</span> <span class="o">=</span> <span class="s2">"-"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="p">[</span><span class="n">surf_type1</span><span class="p">,</span> <span class="n">surf_type2</span><span class="p">,</span> <span class="o">*</span><span class="n">gap_constraints</span><span class="p">]))</span>
             <span class="n">manual_constraints_translation</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                 <span class="nb">set</span><span class="p">(</span><span class="n">translations_blocked_manual_1</span> <span class="o">+</span> <span class="n">translations_blocked_manual_2</span><span class="p">)</span>

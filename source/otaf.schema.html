@@ -1,0 +1,725 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>otaf.schema package &mdash; otaf 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=2a229e3d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="otaf.sensitivity package" href="otaf.sensitivity.html" />
+    <link rel="prev" title="otaf.sampling package" href="otaf.sampling.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            otaf
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guide/theory.html">Theory: system of constraints and slack variable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/input_format.html">Input format of the assembly dictionary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/limitations.html">Validity and limitations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">otaf</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="otaf.html">otaf package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="otaf.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="otaf.capabilities.html">otaf.capabilities package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.common.html">otaf.common package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.constants.html">otaf.constants package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.distribution.html">otaf.distribution package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.example_models.html">otaf.example_models package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.exceptions.html">otaf.exceptions package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.geometry.html">otaf.geometry package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.optimization.html">otaf.optimization package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.plotting.html">otaf.plotting package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.sampling.html">otaf.sampling package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">otaf.schema package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.sensitivity.html">otaf.sensitivity package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.surrogate.html">otaf.surrogate package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.tolerances.html">otaf.tolerances package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.uncertainty.html">otaf.uncertainty package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="otaf.html#module-otaf">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Ex1_2D_4dof_Analytical_Ref.html">Ex 1: Analytical Reference Model (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Ex1_2D_4dof_Opti_Manual.html">Ex 1: Optimization-Based Model &amp; Vector Loops (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Ex1_2D_4dof_Opti_Auto_Surrogate.html">Ex 1: Automatic Topological Generation &amp; Surrogate Optimization (2D / 4-DOF)</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">otaf</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">otaf</a></li>
+          <li class="breadcrumb-item"><a href="otaf.html">otaf package</a></li>
+      <li class="breadcrumb-item active">otaf.schema package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/source/otaf.schema.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="otaf-schema-package">
+<h1>otaf.schema package<a class="headerlink" href="#otaf-schema-package" title="Link to this heading"></a></h1>
+<section id="module-otaf.schema">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-otaf.schema" title="Link to this heading"></a></h2>
+<p>Input schema of the assembly dictionary (pydantic models).</p>
+<p>See <code class="docutils literal notranslate"><span class="pre">docs/guide/input_format.md</span></code> for the keys and their meaning. JSON schema:
+<code class="docutils literal notranslate"><span class="pre">otaf.schema.SystemData.model_json_schema()</span></code>.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="otaf.schema.ExtentLocal">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.schema.</span></span><span class="sig-name descname"><span class="pre">ExtentLocal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_max</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/schema/_models.html#ExtentLocal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.schema.ExtentLocal" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Axial extent of a cylinder along its local x axis, measured from <code class="docutils literal notranslate"><span class="pre">ORIGIN</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_min</strong> (<em>Annotated</em><em>[</em><em>float</em><em>, </em><em>PlainValidator</em><em>(</em><em>func=~otaf.schema._models._real</em><em>, </em><em>json_schema_input_type=~typing.Any</em><em>)</em><em>, </em><em>WithJsonSchema</em><em>(</em><em>json_schema={'type': 'number'}</em><em>, </em><em>mode=None</em><em>)</em><em>]</em>)</p></li>
+<li><p><strong>x_max</strong> (<em>Annotated</em><em>[</em><em>float</em><em>, </em><em>PlainValidator</em><em>(</em><em>func=~otaf.schema._models._real</em><em>, </em><em>json_schema_input_type=~typing.Any</em><em>)</em><em>, </em><em>WithJsonSchema</em><em>(</em><em>json_schema={'type': 'number'}</em><em>, </em><em>mode=None</em><em>)</em><em>]</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">x_min,</span> <span class="pre">x_max</span></span></dt>
+<dd><p>Ends of the extent, <code class="docutils literal notranslate"><span class="pre">x_max</span> <span class="pre">&gt;=</span> <span class="pre">x_min</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.schema.ExtentLocal.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'extra':</span> <span class="pre">'forbid'}</span></span><a class="headerlink" href="#otaf.schema.ExtentLocal.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.schema.ExtentLocal.x_max">
+<span class="sig-name descname"><span class="pre">x_max</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Number</span></span><a class="headerlink" href="#otaf.schema.ExtentLocal.x_max" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.schema.ExtentLocal.x_min">
+<span class="sig-name descname"><span class="pre">x_min</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Number</span></span><a class="headerlink" href="#otaf.schema.ExtentLocal.x_min" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="otaf.schema.Loops">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.schema.</span></span><span class="sig-name descname"><span class="pre">Loops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">COMPATIBILITY</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">extra_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/schema/_models.html#Loops"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.schema.Loops" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Compatibility loops: <code class="docutils literal notranslate"><span class="pre">LOOPS</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>COMPATIBILITY</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>)</p></li>
+<li><p><strong>extra_data</strong> (<em>Any</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.schema.Loops.COMPATIBILITY">
+<span class="sig-name descname"><span class="pre">COMPATIBILITY</span></span><a class="headerlink" href="#otaf.schema.Loops.COMPATIBILITY" title="Link to this definition"></a></dt>
+<dd><p>Loop name to loop string, elements <code class="docutils literal notranslate"><span class="pre">P&lt;part&gt;&lt;surface&gt;&lt;point&gt;</span></code> joined
+by <code class="docutils literal notranslate"><span class="pre">&quot;</span> <span class="pre">-&gt;</span> <span class="pre">&quot;</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict of str to str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">COMPATIBILITY</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.schema.Loops.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'extra':</span> <span class="pre">'allow'}</span></span><a class="headerlink" href="#otaf.schema.Loops.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="otaf.schema.Part">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.schema.</span></span><span class="sig-name descname"><span class="pre">Part</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PydanticUndefined</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/schema/_models.html#Part"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.schema.Part" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RootModel[Dict[str,</span> <span class="pre">Surface]]</span></code></p>
+<p>The surfaces of one part: <code class="docutils literal notranslate"><span class="pre">PARTS[part]</span></code>, keyed by lowercase surface labels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>root</strong> (<em>RootModelRootType</em>)</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.schema.Part.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></span><a class="headerlink" href="#otaf.schema.Part.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="otaf.schema.Surface">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.schema.</span></span><span class="sig-name descname"><span class="pre">Surface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">TYPE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FRAME</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ORIGIN</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">POINTS</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CONTOUR_GLOBAL</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RADIUS</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">EXTENT_LOCAL</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">INTERACTIONS</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CONSTRAINTS_D</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CONSTRAINTS_G</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">BLOCK_TRANSLATIONS_G</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">BLOCK_ROTATIONS_G</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SURFACE_DIRECTION</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DIAMETER_DEVIATION</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">extra_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/schema/_models.html#Surface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.schema.Surface" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>One feature (plane or cylinder) of a part: <code class="docutils literal notranslate"><span class="pre">PARTS[part][surface]</span></code>.</p>
+<p>The keys are those of the dictionary (see <code class="docutils literal notranslate"><span class="pre">docs/guide/input_format.md</span></code>).
+Keys that are not listed (e.g. <code class="docutils literal notranslate"><span class="pre">META</span></code>, <code class="docutils literal notranslate"><span class="pre">CAD_ID</span></code>) are kept and ignored.
+Which keys are required depends on the other keys and on the interactions;
+those checks need the part and surface labels and are made by <cite>SystemData</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>TYPE</strong> (<em>str</em>)</p></li>
+<li><p><strong>FRAME</strong> (<em>Annotated</em><em>[</em><em>ndarray</em><em>, </em><em>PlainValidator</em><em>(</em><em>func=~otaf.schema._models._frame</em><em>, </em><em>json_schema_input_type=~typing.Any</em><em>)</em><em>, </em><em>PlainSerializer</em><em>(</em><em>func=~otaf.schema._models._to_list</em><em>, </em><em>return_type=PydanticUndefined</em><em>, </em><em>when_used=json</em><em>)</em><em>, </em><em>WithJsonSchema</em><em>(</em><em>json_schema={'type': 'array'</em><em>, </em><em>'items': {'type': 'array'</em><em>, </em><em>'items': {'type': 'number'}</em><em>, </em><em>'minItems': 3</em><em>, </em><em>'maxItems': 3}</em><em>, </em><em>'minItems': 3</em><em>, </em><em>'maxItems': 3</em><em>, </em><em>'description': 'Rotation matrix; columns are the local axes.'}</em><em>, </em><em>mode=None</em><em>)</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>ORIGIN</strong> (<em>Annotated</em><em>[</em><em>ndarray</em><em>, </em><em>PlainValidator</em><em>(</em><em>func=~otaf.schema._models._vector3</em><em>, </em><em>json_schema_input_type=~typing.Any</em><em>)</em><em>, </em><em>PlainSerializer</em><em>(</em><em>func=~otaf.schema._models._to_list</em><em>, </em><em>return_type=PydanticUndefined</em><em>, </em><em>when_used=json</em><em>)</em><em>, </em><em>WithJsonSchema</em><em>(</em><em>json_schema={'type': 'array'</em><em>, </em><em>'items': {'type': 'number'}</em><em>, </em><em>'minItems': 3</em><em>, </em><em>'maxItems': 3}</em><em>, </em><em>mode=None</em><em>)</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>POINTS</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Annotated</em><em>[</em><em>ndarray</em><em>, </em><em>PlainValidator</em><em>(</em><em>func=~otaf.schema._models._vector3</em><em>, </em><em>json_schema_input_type=~typing.Any</em><em>)</em><em>, </em><em>PlainSerializer</em><em>(</em><em>func=~otaf.schema._models._to_list</em><em>, </em><em>return_type=PydanticUndefined</em><em>, </em><em>when_used=json</em><em>)</em><em>, </em><em>WithJsonSchema</em><em>(</em><em>json_schema={'type': 'array'</em><em>, </em><em>'items': {'type': 'number'}</em><em>, </em><em>'minItems': 3</em><em>, </em><em>'maxItems': 3}</em><em>, </em><em>mode=None</em><em>)</em><em>]</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>CONTOUR_GLOBAL</strong> (<em>Annotated</em><em>[</em><em>ndarray</em><em>, </em><em>PlainValidator</em><em>(</em><em>func=~otaf.schema._models._contour</em><em>, </em><em>json_schema_input_type=~typing.Any</em><em>)</em><em>, </em><em>PlainSerializer</em><em>(</em><em>func=~otaf.schema._models._to_list</em><em>, </em><em>return_type=PydanticUndefined</em><em>, </em><em>when_used=json</em><em>)</em><em>, </em><em>WithJsonSchema</em><em>(</em><em>json_schema={'type': 'array'</em><em>, </em><em>'items': {'type': 'array'</em><em>, </em><em>'items': {'type': 'number'}</em><em>, </em><em>'minItems': 3</em><em>, </em><em>'maxItems': 3}}</em><em>, </em><em>mode=None</em><em>)</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>RADIUS</strong> (<em>Annotated</em><em>[</em><em>float</em><em>, </em><em>PlainValidator</em><em>(</em><em>func=~otaf.schema._models._positive_real</em><em>, </em><em>json_schema_input_type=~typing.Any</em><em>)</em><em>, </em><em>WithJsonSchema</em><em>(</em><em>json_schema={'type': 'number'</em><em>, </em><em>'exclusiveMinimum': 0}</em><em>, </em><em>mode=None</em><em>)</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>EXTENT_LOCAL</strong> (<a class="reference internal" href="#otaf.schema.ExtentLocal" title="otaf.schema._models.ExtentLocal"><em>ExtentLocal</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>INTERACTIONS</strong> (<em>List</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>CONSTRAINTS_D</strong> (<em>List</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>CONSTRAINTS_G</strong> (<em>List</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>BLOCK_TRANSLATIONS_G</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>BLOCK_ROTATIONS_G</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>SURFACE_DIRECTION</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>DIAMETER_DEVIATION</strong> (<em>Annotated</em><em>[</em><em>bool</em><em>, </em><em>PlainValidator</em><em>(</em><em>func=~otaf.schema._models._strict_bool</em><em>, </em><em>json_schema_input_type=~typing.Any</em><em>)</em><em>, </em><em>WithJsonSchema</em><em>(</em><em>json_schema={'type': 'boolean'}</em><em>, </em><em>mode=None</em><em>)</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>extra_data</strong> (<em>Any</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.schema.Surface.TYPE">
+<span class="sig-name descname"><span class="pre">TYPE</span></span><a class="headerlink" href="#otaf.schema.Surface.TYPE" title="Link to this definition"></a></dt>
+<dd><p>One of <code class="docutils literal notranslate"><span class="pre">otaf.constants.SUPPORTED_SURFACE_TYPES</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.schema.Surface.FRAME">
+<span class="sig-name descname"><span class="pre">FRAME</span></span><a class="headerlink" href="#otaf.schema.Surface.FRAME" title="Link to this definition"></a></dt>
+<dd><p>Rotation matrix whose columns are the local axes (x: plane normal or
+cylinder axis).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray of shape (3, 3)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.schema.Surface.ORIGIN">
+<span class="sig-name descname"><span class="pre">ORIGIN</span></span><a class="headerlink" href="#otaf.schema.Surface.ORIGIN" title="Link to this definition"></a></dt>
+<dd><p>Origin of the surface frame. Taken from the origin point when <code class="docutils literal notranslate"><span class="pre">POINTS</span></code>
+is given.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray of shape (3,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.schema.Surface.POINTS">
+<span class="sig-name descname"><span class="pre">POINTS</span></span><a class="headerlink" href="#otaf.schema.Surface.POINTS" title="Link to this definition"></a></dt>
+<dd><p>Points of the feature, labelled <code class="docutils literal notranslate"><span class="pre">&lt;PREFIX&gt;&lt;int&gt;</span></code>; must contain the
+origin (suffix all zeros).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict of str to ndarray of shape (3,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.schema.Surface.CONTOUR_GLOBAL">
+<span class="sig-name descname"><span class="pre">CONTOUR_GLOBAL</span></span><a class="headerlink" href="#otaf.schema.Surface.CONTOUR_GLOBAL" title="Link to this definition"></a></dt>
+<dd><p>Contour points in global coordinates, used when <code class="docutils literal notranslate"><span class="pre">POINTS</span></code> is absent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray of shape (n, 3)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.schema.Surface.RADIUS">
+<span class="sig-name descname"><span class="pre">RADIUS</span></span><a class="headerlink" href="#otaf.schema.Surface.RADIUS" title="Link to this definition"></a></dt>
+<dd><p>Nominal radius of a cylinder, &gt; 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.schema.Surface.EXTENT_LOCAL">
+<span class="sig-name descname"><span class="pre">EXTENT_LOCAL</span></span><a class="headerlink" href="#otaf.schema.Surface.EXTENT_LOCAL" title="Link to this definition"></a></dt>
+<dd><p>Axial extent of a cylinder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#otaf.schema.ExtentLocal" title="otaf.schema.ExtentLocal">ExtentLocal</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.schema.Surface.INTERACTIONS">
+<span class="sig-name descname"><span class="pre">INTERACTIONS</span></span><a class="headerlink" href="#otaf.schema.Surface.INTERACTIONS" title="Link to this definition"></a></dt>
+<dd><p>Surfaces this one can touch, as <code class="docutils literal notranslate"><span class="pre">P&lt;part&gt;&lt;surface&gt;</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.schema.Surface.CONSTRAINTS_D">
+<span class="sig-name descname"><span class="pre">CONSTRAINTS_D</span></span><a class="headerlink" href="#otaf.schema.Surface.CONSTRAINTS_D" title="Link to this definition"></a></dt>
+<dd><p>Deviations of the feature: <code class="docutils literal notranslate"><span class="pre">NONE</span></code>, <code class="docutils literal notranslate"><span class="pre">PERFECT</span></code>, <code class="docutils literal notranslate"><span class="pre">TRANSLATION</span></code> or
+<code class="docutils literal notranslate"><span class="pre">ROTATION</span></code> (case-insensitive).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of one str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.schema.Surface.CONSTRAINTS_G">
+<span class="sig-name descname"><span class="pre">CONSTRAINTS_G</span></span><a class="headerlink" href="#otaf.schema.Surface.CONSTRAINTS_G" title="Link to this definition"></a></dt>
+<dd><p>Relative motion at the contact: <code class="docutils literal notranslate"><span class="pre">FLOATING</span></code>, <code class="docutils literal notranslate"><span class="pre">SLIDING</span></code> or <code class="docutils literal notranslate"><span class="pre">FIXED</span></code>
+(case-insensitive). Must be the same on both surfaces of a contact.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of one str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">BLOCK_TRANSLATIONS_G,</span> <span class="pre">BLOCK_ROTATIONS_G</span></span></dt>
+<dd><p>Extra blocked gap axes, letters among <code class="docutils literal notranslate"><span class="pre">xyz</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.schema.Surface.SURFACE_DIRECTION">
+<span class="sig-name descname"><span class="pre">SURFACE_DIRECTION</span></span><a class="headerlink" href="#otaf.schema.Surface.SURFACE_DIRECTION" title="Link to this definition"></a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">centripetal</span></code> (hole) or <code class="docutils literal notranslate"><span class="pre">centrifugal</span></code> (pin); cylinders only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.schema.Surface.DIAMETER_DEVIATION">
+<span class="sig-name descname"><span class="pre">DIAMETER_DEVIATION</span></span><a class="headerlink" href="#otaf.schema.Surface.DIAMETER_DEVIATION" title="Link to this definition"></a></dt>
+<dd><p>Diameter as a deviation variable; cylinders only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.schema.Surface.BLOCK_ROTATIONS_G">
+<span class="sig-name descname"><span class="pre">BLOCK_ROTATIONS_G</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#otaf.schema.Surface.BLOCK_ROTATIONS_G" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.schema.Surface.BLOCK_TRANSLATIONS_G">
+<span class="sig-name descname"><span class="pre">BLOCK_TRANSLATIONS_G</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#otaf.schema.Surface.BLOCK_TRANSLATIONS_G" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">CONSTRAINTS_D</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">CONSTRAINTS_G</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">CONTOUR_GLOBAL</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Contour</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">DIAMETER_DEVIATION</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">StrictBool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id4" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">EXTENT_LOCAL</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#otaf.schema.ExtentLocal" title="otaf.schema.ExtentLocal"><span class="pre">ExtentLocal</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id5" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">FRAME</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Frame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id6" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">INTERACTIONS</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id7" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">ORIGIN</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Vector3</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id8" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id9">
+<span class="sig-name descname"><span class="pre">POINTS</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Vector3</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id9" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id10">
+<span class="sig-name descname"><span class="pre">RADIUS</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">PositiveNumber</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id10" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id11">
+<span class="sig-name descname"><span class="pre">SURFACE_DIRECTION</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id11" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id12">
+<span class="sig-name descname"><span class="pre">TYPE</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#id12" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.schema.Surface.contact_constraint">
+<span class="sig-name descname"><span class="pre">contact_constraint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/schema/_models.html#Surface.contact_constraint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.schema.Surface.contact_constraint" title="Link to this definition"></a></dt>
+<dd><p>Return the <code class="docutils literal notranslate"><span class="pre">CONSTRAINTS_G</span></code> entry, upper case, <code class="docutils literal notranslate"><span class="pre">FLOATING</span></code> by default.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The entry used for the contact type.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.schema.Surface.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'extra':</span> <span class="pre">'allow'}</span></span><a class="headerlink" href="#otaf.schema.Surface.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="otaf.schema.SystemData">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">otaf.schema.</span></span><span class="sig-name descname"><span class="pre">SystemData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">PARTS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">LOOPS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GLOBAL_CONSTRAINTS</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">extra_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/schema/_models.html#SystemData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.schema.SystemData" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>The whole assembly dictionary.</p>
+<p>Validate a plain dictionary with <code class="docutils literal notranslate"><span class="pre">SystemData.model_validate(data)</span></code> or
+<cite>validate_system_data</cite> (which raises the <cite>otaf.exceptions</cite> errors). A
+<cite>SystemData</cite> can be passed to <cite>otaf.AssemblyDataProcessor</cite> in place of the
+dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>PARTS</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="#otaf.schema.Part" title="otaf.schema._models.Part"><em>Part</em></a><em>]</em>)</p></li>
+<li><p><strong>LOOPS</strong> (<a class="reference internal" href="#otaf.schema.Loops" title="otaf.schema._models.Loops"><em>Loops</em></a>)</p></li>
+<li><p><strong>GLOBAL_CONSTRAINTS</strong> (<em>Literal</em><em>[</em><em>'3D'</em><em>, </em><em>'2D_NX'</em><em>, </em><em>'2D_NY'</em><em>, </em><em>'2D_NZ'</em><em>]</em>)</p></li>
+<li><p><strong>extra_data</strong> (<em>Any</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.schema.SystemData.PARTS">
+<span class="sig-name descname"><span class="pre">PARTS</span></span><a class="headerlink" href="#otaf.schema.SystemData.PARTS" title="Link to this definition"></a></dt>
+<dd><p>Parts keyed by the string of an integer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict of str to Part</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.schema.SystemData.LOOPS">
+<span class="sig-name descname"><span class="pre">LOOPS</span></span><a class="headerlink" href="#otaf.schema.SystemData.LOOPS" title="Link to this definition"></a></dt>
+<dd><p>Compatibility loops.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#otaf.schema.Loops" title="otaf.schema.Loops">Loops</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.schema.SystemData.GLOBAL_CONSTRAINTS">
+<span class="sig-name descname"><span class="pre">GLOBAL_CONSTRAINTS</span></span><a class="headerlink" href="#otaf.schema.SystemData.GLOBAL_CONSTRAINTS" title="Link to this definition"></a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">3D</span></code>, <code class="docutils literal notranslate"><span class="pre">2D_NX</span></code>, <code class="docutils literal notranslate"><span class="pre">2D_NY</span></code> or <code class="docutils literal notranslate"><span class="pre">2D_NZ</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s2">"PARTS"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"1"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"a"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"TYPE"</span><span class="p">:</span> <span class="s2">"plane"</span><span class="p">,</span> <span class="s2">"FRAME"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+<span class="gp">... </span>                         <span class="s2">"POINTS"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"A0"</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">"A1"</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)}}}},</span>
+<span class="gp">... </span>    <span class="s2">"LOOPS"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"COMPATIBILITY"</span><span class="p">:</span> <span class="p">{}},</span>
+<span class="gp">... </span>    <span class="s2">"GLOBAL_CONSTRAINTS"</span><span class="p">:</span> <span class="s2">"2D_NZ"</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">SystemData</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">PARTS</span><span class="p">[</span><span class="s2">"1"</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s2">"a"</span><span class="p">]</span><span class="o">.</span><span class="n">TYPE</span>
+<span class="go">'plane'</span>
+</pre></div>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id13">
+<span class="sig-name descname"><span class="pre">GLOBAL_CONSTRAINTS</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'3D'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'2D_NX'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'2D_NY'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'2D_NZ'</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id13" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id14">
+<span class="sig-name descname"><span class="pre">LOOPS</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#otaf.schema.Loops" title="otaf.schema.Loops"><span class="pre">Loops</span></a></span><a class="headerlink" href="#id14" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id15">
+<span class="sig-name descname"><span class="pre">PARTS</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#otaf.schema.Part" title="otaf.schema.Part"><span class="pre">Part</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#id15" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.schema.SystemData.contact_pairs">
+<span class="sig-name descname"><span class="pre">contact_pairs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/schema/_models.html#SystemData.contact_pairs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.schema.SystemData.contact_pairs" title="Link to this definition"></a></dt>
+<dd><p>Return the contacts listed in <code class="docutils literal notranslate"><span class="pre">INTERACTIONS</span></code>, each pair once.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Sorted <code class="docutils literal notranslate"><span class="pre">((part1,</span> <span class="pre">surf1),</span> <span class="pre">(part2,</span> <span class="pre">surf2))</span></code> pairs.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="otaf.schema.SystemData.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'extra':</span> <span class="pre">'allow'}</span></span><a class="headerlink" href="#otaf.schema.SystemData.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.schema.SystemData.surface">
+<span class="sig-name descname"><span class="pre">surface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surf_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/schema/_models.html#SystemData.surface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.schema.SystemData.surface" title="Link to this definition"></a></dt>
+<dd><p>Return a surface by its labels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>part_id</strong> (<em>str</em>) – Labels of the part and of the surface.</p></li>
+<li><p><strong>surf_id</strong> (<em>str</em>) – Labels of the part and of the surface.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The surface.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#otaf.schema.Surface" title="otaf.schema.Surface">Surface</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.PartNotFoundError" title="otaf.exceptions.PartNotFoundError"><strong>otaf.exceptions.PartNotFoundError</strong></a><strong>, </strong><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.SurfaceNotFoundError" title="otaf.exceptions.SurfaceNotFoundError"><strong>otaf.exceptions.SurfaceNotFoundError</strong></a> – If the part or the surface does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="otaf.schema.SystemData.to_system_data">
+<span class="sig-name descname"><span class="pre">to_system_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/schema/_models.html#SystemData.to_system_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.schema.SystemData.to_system_data" title="Link to this definition"></a></dt>
+<dd><p>Return the plain dictionary (keys that were not given stay absent).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The system data, arrays as float64 NumPy arrays.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.schema.validate_point_dict">
+<span class="sig-prename descclassname"><span class="pre">otaf.schema.</span></span><span class="sig-name descname"><span class="pre">validate_point_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/schema/_models.html#validate_point_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.schema.validate_point_dict" title="Link to this definition"></a></dt>
+<dd><p>Check the labels and coordinates of a <code class="docutils literal notranslate"><span class="pre">POINTS</span></code> dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>point_dict</strong> (<em>dict</em>) – <code class="docutils literal notranslate"><span class="pre">{label:</span> <span class="pre">(x,</span> <span class="pre">y,</span> <span class="pre">z)}</span></code>.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.LabelPatternError" title="otaf.exceptions.LabelPatternError"><strong>otaf.exceptions.LabelPatternError</strong></a> – If a label does not match <code class="docutils literal notranslate"><span class="pre">otaf.constants.SURF_POINT_PATTERN</span></code>.</p></li>
+<li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.LabelPrefixError" title="otaf.exceptions.LabelPrefixError"><strong>otaf.exceptions.LabelPrefixError</strong></a> – If the labels do not all have the same upper-case prefix.</p></li>
+<li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.UniqueLabelSuffixError" title="otaf.exceptions.UniqueLabelSuffixError"><strong>otaf.exceptions.UniqueLabelSuffixError</strong></a> – If two labels have the same integer suffix (<code class="docutils literal notranslate"><span class="pre">A0</span></code> and <code class="docutils literal notranslate"><span class="pre">A00</span></code>).</p></li>
+<li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.NonUniqueCoordinatesError" title="otaf.exceptions.NonUniqueCoordinatesError"><strong>otaf.exceptions.NonUniqueCoordinatesError</strong></a> – If two points have the same coordinates.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">validate_point_dict</span><span class="p">({</span><span class="s2">"A0"</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">"A1"</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">validate_point_dict</span><span class="p">({</span><span class="s2">"A0"</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">"B1"</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)})</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">otaf.exceptions._exceptions.LabelPrefixError</span>: <span class="n">Some labels in the point dict do not comply to the expected pattern, all prefixes should be identical.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="otaf.schema.validate_system_data">
+<span class="sig-prename descclassname"><span class="pre">otaf.schema.</span></span><span class="sig-name descname"><span class="pre">validate_system_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/schema/_models.html#validate_system_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.schema.validate_system_data" title="Link to this definition"></a></dt>
+<dd><p>Validate an assembly dictionary against the input schema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>system_data</strong> (<em>dict</em><em> or </em><a class="reference internal" href="#otaf.schema.SystemData" title="otaf.schema.SystemData"><em>SystemData</em></a>) – The assembly dictionary (see <code class="docutils literal notranslate"><span class="pre">docs/guide/input_format.md</span></code>).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The validated model. The dictionary itself is not modified.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#otaf.schema.SystemData" title="otaf.schema.SystemData">SystemData</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.MissingKeyError" title="otaf.exceptions.MissingKeyError"><strong>otaf.exceptions.MissingKeyError</strong></a> – If a required key is missing (<code class="docutils literal notranslate"><span class="pre">MissingSurfaceTypeKeyError</span></code> for
+    <code class="docutils literal notranslate"><span class="pre">TYPE</span></code>).</p></li>
+<li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.InvalidPartLabelError" title="otaf.exceptions.InvalidPartLabelError"><strong>otaf.exceptions.InvalidPartLabelError</strong></a><strong>, </strong><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.InvalidSurfaceLabelError" title="otaf.exceptions.InvalidSurfaceLabelError"><strong>otaf.exceptions.InvalidSurfaceLabelError</strong></a> – For malformed part or surface labels.</p></li>
+<li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.UnsupportedSurfaceTypeError" title="otaf.exceptions.UnsupportedSurfaceTypeError"><strong>otaf.exceptions.UnsupportedSurfaceTypeError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">TYPE</span></code> is not <code class="docutils literal notranslate"><span class="pre">plane</span></code> or <code class="docutils literal notranslate"><span class="pre">cylinder</span></code>.</p></li>
+<li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.InconsistentContactConstraintsError" title="otaf.exceptions.InconsistentContactConstraintsError"><strong>otaf.exceptions.InconsistentContactConstraintsError</strong></a> – If the two surfaces of a contact have different <code class="docutils literal notranslate"><span class="pre">CONSTRAINTS_G</span></code>.</p></li>
+<li><p><strong>NotImplementedError</strong> – For a contact between a plane and a cylinder.</p></li>
+<li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.SystemDataValidationError" title="otaf.exceptions.SystemDataValidationError"><strong>otaf.exceptions.SystemDataValidationError</strong></a> – For any other problem; lists all of them.</p></li>
+<li><p><strong>Other otaf.exceptions errors</strong><strong> (</strong><strong>point labels</strong><strong>, </strong><strong>interaction format</strong><strong>, </strong><strong>missing</strong> – </p></li>
+<li><p><strong>origin point</strong><strong>, </strong><strong>unknown part</strong><strong> or </strong><strong>surface</strong><strong>, </strong><strong>...</strong><strong>) </strong><strong>are raised as they are</strong><strong>, </strong><strong>with the</strong> – </p></li>
+<li><p><strong>location</strong><strong> of </strong><strong>the problem in front</strong><strong> of </strong><strong>their message. When several problems</strong> – </p></li>
+<li><p><strong>are found</strong><strong>, </strong><strong>the first one is raised</strong><strong>, </strong><strong>chained to a</strong> – </p></li>
+<li><p><a class="reference internal" href="otaf.exceptions.html#otaf.exceptions.SystemDataValidationError" title="otaf.exceptions.SystemDataValidationError"><strong>SystemDataValidationError</strong></a> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="otaf.sampling.html" class="btn btn-neutral float-left" title="otaf.sampling package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="otaf.sensitivity.html" class="btn btn-neutral float-right" title="otaf.sensitivity package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kramer84.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

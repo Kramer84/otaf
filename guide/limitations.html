@@ -170,10 +170,10 @@ dictionary.</p>
 <td><p>Supported for a pin in a hole: the axes must be nominally collinear (<code class="docutils literal notranslate"><span class="pre">NonConcentricCylindersException</span></code> otherwise), the radii different (the same radius raises <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>), and the extents must overlap (<code class="docutils literal notranslate"><span class="pre">NoAxialOverlapException</span></code>). The contact is written at the two ends of the axial overlap. Conflicting or impossible <code class="docutils literal notranslate"><span class="pre">SURFACE_DIRECTION</span></code> raise <code class="docutils literal notranslate"><span class="pre">ConflictingSurfaceDirectionsException</span></code> or <code class="docutils literal notranslate"><span class="pre">CylindricalInterferenceGeometricException</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p>plane–cylinder</p></td>
-<td><p><strong>Not supported yet.</strong> A <code class="docutils literal notranslate"><span class="pre">NotImplementedError</span></code> is raised when the interaction is processed.</p></td>
+<td><p><strong>Not supported yet.</strong> A <code class="docutils literal notranslate"><span class="pre">NotImplementedError</span></code> is raised when the dictionary is validated.</p></td>
 </tr>
 <tr class="row-odd"><td><p>cone, sphere</p></td>
-<td><p>Accepted as a <code class="docutils literal notranslate"><span class="pre">TYPE</span></code> by the first check only; they have no deviation or gap model, and fail later with a <code class="docutils literal notranslate"><span class="pre">KeyError</span></code>.</p></td>
+<td><p><strong>Not supported.</strong> They have no deviation or gap model; <code class="docutils literal notranslate"><span class="pre">TYPE</span></code> accepts only <code class="docutils literal notranslate"><span class="pre">plane</span></code> and <code class="docutils literal notranslate"><span class="pre">cylinder</span></code> (<code class="docutils literal notranslate"><span class="pre">UnsupportedSurfaceTypeError</span></code>).</p></td>
 </tr>
 <tr class="row-even"><td><p>Any other combination</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">NotImplementedError</span></code>.</p></td>
@@ -250,17 +250,20 @@ of <span class="math notranslate nohighlight">\(N\)</span> per contact section),
 </section>
 <section id="input-checks">
 <h2>Input checks<a class="headerlink" href="#input-checks" title="Link to this heading"></a></h2>
-<p>The input dictionary is checked for labels, surface types, the presence of the keys needed to build
-the points, interactions, directions and the global constraints. It is not checked as a whole:</p>
+<p>The input dictionary is validated as a whole when <code class="docutils literal notranslate"><span class="pre">AssemblyDataProcessor</span></code> is created, against the
+pydantic models of <code class="docutils literal notranslate"><span class="pre">otaf.schema</span></code> (see <a class="reference internal" href="input_format.html"><span class="doc">Input format of the assembly dictionary</span></a>): labels, types, frames, the keys each
+surface needs, the references of <code class="docutils literal notranslate"><span class="pre">INTERACTIONS</span></code> and <code class="docutils literal notranslate"><span class="pre">LOOPS</span></code>, and the <code class="docutils literal notranslate"><span class="pre">CONSTRAINTS_G</span></code> of both sides
+of each contact. What it does not check:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">LOOPS</span></code> are checked only when they are expanded. A contact listed in <code class="docutils literal notranslate"><span class="pre">INTERACTIONS</span></code> that no
-loop crosses gets no contact condition, silently: removing the loop <code class="docutils literal notranslate"><span class="pre">L1</span></code> of the pocket example
-of <a class="reference internal" href="input_format.html"><span class="doc">Input format of the assembly dictionary</span></a> drops the two conditions of the right wall without any message.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">FRAME</span></code> is validated only when the points are generated from <code class="docutils literal notranslate"><span class="pre">ORIGIN</span></code>.</p></li>
-<li><p>Inconsistent <code class="docutils literal notranslate"><span class="pre">CONSTRAINTS_G</span></code> on the two sides of a pair raise a bare <code class="docutils literal notranslate"><span class="pre">KeyError</span></code>, such as
-<code class="docutils literal notranslate"><span class="pre">'plane-plane-floating-sliding'</span></code>.</p></li>
+<li><p>whether the loops close and are independent: that is only seen when the loops are expanded or
+the system is solved;</p></li>
+<li><p>whether every contact is crossed by a loop: this needs the expanded loops, so it is checked when
+<code class="docutils literal notranslate"><span class="pre">InterfaceLoopHandling</span></code> is built, and a contact that no loop crosses raises an
+<code class="docutils literal notranslate"><span class="pre">UncoveredContactWarning</span></code> (it gets no contact condition);</p></li>
+<li><p>the geometry of the contacts (parallel planes, concentric cylinders, overlap): checked when the
+contact points are computed, see the table above;</p></li>
+<li><p>the units and the direction convention of the plane normals.</p></li>
 </ul>
-<p>A schema with explicit errors is planned (see <code class="docutils literal notranslate"><span class="pre">ROADMAP.md</span></code>).</p>
 </section>
 <section id="statistics">
 <h2>Statistics<a class="headerlink" href="#statistics" title="Link to this heading"></a></h2>

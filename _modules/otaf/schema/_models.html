@@ -1,0 +1,809 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>otaf.schema._models &mdash; otaf 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=2a229e3d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            otaf
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/theory.html">Theory: system of constraints and slack variable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/input_format.html">Input format of the assembly dictionary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/limitations.html">Validity and limitations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/modules.html">otaf</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/Ex1_2D_4dof_Analytical_Ref.html">Ex 1: Analytical Reference Model (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/Ex1_2D_4dof_Opti_Manual.html">Ex 1: Optimization-Based Model &amp; Vector Loops (2D / 4-DOF)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/Ex1_2D_4dof_Opti_Auto_Surrogate.html">Ex 1: Automatic Topological Generation &amp; Surrogate Optimization (2D / 4-DOF)</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">otaf</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">otaf.schema._models</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for otaf.schema._models</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Pydantic models of the assembly dictionary (the *system data*).</span>
+
+<span class="sd">The models validate a plain dictionary up front: types, labels, frames, the keys</span>
+<span class="sd">each surface needs, references between surfaces and loops. They do not convert</span>
+<span class="sd">the dictionary: `otaf.AssemblyDataProcessor` keeps working on (a copy of) the</span>
+<span class="sd">dictionary it is given, so validation never changes a result.</span>
+
+<span class="sd">Errors are reported with the exceptions of `otaf.exceptions` where one applies</span>
+<span class="sd">(e.g. `~otaf.exceptions.InvalidPartLabelError`), their message prefixed by the</span>
+<span class="sd">location of the problem. Other problems raise</span>
+<span class="sd">`~otaf.exceptions.SystemDataValidationError`, which lists all of them.</span>
+<span class="sd">"""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">"Kramer84"</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">"Surface"</span><span class="p">,</span>
+    <span class="s2">"ExtentLocal"</span><span class="p">,</span>
+    <span class="s2">"Part"</span><span class="p">,</span>
+    <span class="s2">"Loops"</span><span class="p">,</span>
+    <span class="s2">"SystemData"</span><span class="p">,</span>
+    <span class="s2">"validate_system_data"</span><span class="p">,</span>
+    <span class="s2">"validate_point_dict"</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numbers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Real</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotated</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BaseModel</span><span class="p">,</span>
+    <span class="n">ConfigDict</span><span class="p">,</span>
+    <span class="n">PlainSerializer</span><span class="p">,</span>
+    <span class="n">PlainValidator</span><span class="p">,</span>
+    <span class="n">RootModel</span><span class="p">,</span>
+    <span class="n">ValidationError</span><span class="p">,</span>
+    <span class="n">WithJsonSchema</span><span class="p">,</span>
+    <span class="n">field_validator</span><span class="p">,</span>
+    <span class="n">model_validator</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">otaf.constants</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">otaf_constants</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">otaf.exceptions</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">otaf_exceptions</span>
+
+<span class="n">_SURFACE_LABEL_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^[a-z]+$"</span><span class="p">)</span>
+<span class="n">_AXES_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^[xyz]*$"</span><span class="p">)</span>
+
+<span class="c1"># Entries of CONSTRAINTS_D, from the keys of SURF_TYPE_TO_DEVIATION_DOF ("plane-none" -&gt; "NONE").</span>
+<span class="n">_DEVIATION_CONSTRAINTS</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+    <span class="p">{</span><span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"-"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">otaf_constants</span><span class="o">.</span><span class="n">SURF_TYPE_TO_DEVIATION_DOF</span><span class="p">}</span>
+<span class="p">)</span>
+
+
+<span class="c1"># -----------------------------------------------------------------------------</span>
+<span class="c1"># Value types</span>
+<span class="c1"># -----------------------------------------------------------------------------</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_float_array</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">"float64"</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be an array of numbers of shape </span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+    <span class="k">if</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">shape</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must have shape </span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">array</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be finite"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">array</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_vector3</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">_float_array</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,),</span> <span class="s2">"a point"</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_frame</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">_float_array</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="s2">"FRAME"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">frame</span> <span class="o">@</span> <span class="n">frame</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">atol</span><span class="o">=</span><span class="n">otaf_constants</span><span class="o">.</span><span class="n">FRAME_ATOL</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">frame</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="n">otaf_constants</span><span class="o">.</span><span class="n">FRAME_ATOL</span><span class="p">)</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">"FRAME must be a rotation matrix (orthonormal columns, determinant +1); "</span>
+            <span class="sa">f</span><span class="s2">"got max |F F^T - I| = </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">frame</span><span class="w"> </span><span class="o">@</span><span class="w"> </span><span class="n">frame</span><span class="o">.</span><span class="n">T</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s2">.3g</span><span class="si">}</span><span class="s2">, "</span>
+            <span class="sa">f</span><span class="s2">"det = </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span><span class="si">:</span><span class="s2">.6g</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">frame</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_contour</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">"float64"</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"CONTOUR_GLOBAL must be an array of numbers of shape (n, 3)"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+    <span class="k">if</span> <span class="n">array</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">3</span> <span class="ow">or</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"CONTOUR_GLOBAL must have shape (n, 3), got </span><span class="si">{</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">array</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"CONTOUR_GLOBAL must be finite"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">array</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_real</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="c1"># bool is an int subclass; a radius of True is a mistake.</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Real</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"expected a number, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"expected a finite number"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">value</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_positive_real</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">_real</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"must be &gt; 0, got </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">value</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_strict_bool</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"expected True or False, got </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_to_list</span><span class="p">(</span><span class="n">array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">array</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+
+<span class="n">_NUMBER_ARRAY</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"array"</span><span class="p">,</span> <span class="s2">"items"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"number"</span><span class="p">}}</span>
+
+<span class="n">Vector3</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">PlainValidator</span><span class="p">(</span><span class="n">_vector3</span><span class="p">),</span>
+    <span class="n">PlainSerializer</span><span class="p">(</span><span class="n">_to_list</span><span class="p">,</span> <span class="n">when_used</span><span class="o">=</span><span class="s2">"json"</span><span class="p">),</span>
+    <span class="n">WithJsonSchema</span><span class="p">({</span><span class="o">**</span><span class="n">_NUMBER_ARRAY</span><span class="p">,</span> <span class="s2">"minItems"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">"maxItems"</span><span class="p">:</span> <span class="mi">3</span><span class="p">}),</span>
+<span class="p">]</span>
+<span class="sd">"""Three finite floats, stored as a float64 array."""</span>
+
+<span class="n">Frame</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">PlainValidator</span><span class="p">(</span><span class="n">_frame</span><span class="p">),</span>
+    <span class="n">PlainSerializer</span><span class="p">(</span><span class="n">_to_list</span><span class="p">,</span> <span class="n">when_used</span><span class="o">=</span><span class="s2">"json"</span><span class="p">),</span>
+    <span class="n">WithJsonSchema</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"array"</span><span class="p">,</span>
+            <span class="s2">"items"</span><span class="p">:</span> <span class="p">{</span><span class="o">**</span><span class="n">_NUMBER_ARRAY</span><span class="p">,</span> <span class="s2">"minItems"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">"maxItems"</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
+            <span class="s2">"minItems"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">"maxItems"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Rotation matrix; columns are the local axes."</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">),</span>
+<span class="p">]</span>
+<span class="sd">"""3x3 rotation matrix (orthonormal, determinant +1)."""</span>
+
+<span class="n">Contour</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">PlainValidator</span><span class="p">(</span><span class="n">_contour</span><span class="p">),</span>
+    <span class="n">PlainSerializer</span><span class="p">(</span><span class="n">_to_list</span><span class="p">,</span> <span class="n">when_used</span><span class="o">=</span><span class="s2">"json"</span><span class="p">),</span>
+    <span class="n">WithJsonSchema</span><span class="p">({</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"array"</span><span class="p">,</span> <span class="s2">"items"</span><span class="p">:</span> <span class="p">{</span><span class="o">**</span><span class="n">_NUMBER_ARRAY</span><span class="p">,</span> <span class="s2">"minItems"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">"maxItems"</span><span class="p">:</span> <span class="mi">3</span><span class="p">}}),</span>
+<span class="p">]</span>
+<span class="sd">"""Array of shape (n, 3)."""</span>
+
+<span class="n">Number</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">PlainValidator</span><span class="p">(</span><span class="n">_real</span><span class="p">),</span> <span class="n">WithJsonSchema</span><span class="p">({</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"number"</span><span class="p">})]</span>
+<span class="n">PositiveNumber</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span>
+    <span class="nb">float</span><span class="p">,</span> <span class="n">PlainValidator</span><span class="p">(</span><span class="n">_positive_real</span><span class="p">),</span> <span class="n">WithJsonSchema</span><span class="p">({</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"number"</span><span class="p">,</span> <span class="s2">"exclusiveMinimum"</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
+<span class="p">]</span>
+<span class="n">StrictBool</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">PlainValidator</span><span class="p">(</span><span class="n">_strict_bool</span><span class="p">),</span> <span class="n">WithJsonSchema</span><span class="p">({</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"boolean"</span><span class="p">})]</span>
+
+
+<span class="c1"># -----------------------------------------------------------------------------</span>
+<span class="c1"># Point dictionaries</span>
+<span class="c1"># -----------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="validate_point_dict">
+<a class="viewcode-back" href="../../../source/otaf.schema.html#otaf.schema.validate_point_dict">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_point_dict</span><span class="p">(</span><span class="n">point_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Check the labels and coordinates of a ``POINTS`` dictionary.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    point_dict : dict</span>
+<span class="sd">        ``{label: (x, y, z)}``.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    otaf.exceptions.LabelPatternError</span>
+<span class="sd">        If a label does not match ``otaf.constants.SURF_POINT_PATTERN``.</span>
+<span class="sd">    otaf.exceptions.LabelPrefixError</span>
+<span class="sd">        If the labels do not all have the same upper-case prefix.</span>
+<span class="sd">    otaf.exceptions.UniqueLabelSuffixError</span>
+<span class="sd">        If two labels have the same integer suffix (``A0`` and ``A00``).</span>
+<span class="sd">    otaf.exceptions.NonUniqueCoordinatesError</span>
+<span class="sd">        If two points have the same coordinates.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; validate_point_dict({"A0": (0, 0, 0), "A1": (1, 0, 0)})</span>
+<span class="sd">    &gt;&gt;&gt; validate_point_dict({"A0": (0, 0, 0), "B1": (1, 0, 0)})</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">    ...</span>
+<span class="sd">    otaf.exceptions._exceptions.LabelPrefixError: Some labels in the point dict do not comply to the expected pattern, all prefixes should be identical.</span>
+<span class="sd">    """</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">label</span><span class="p">)</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">point_dict</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">otaf_constants</span><span class="o">.</span><span class="n">SURF_POINT_PATTERN</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">label</span><span class="p">)</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">LabelPatternError</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">({</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^[A-Z]+"</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">()</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">})</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">LabelPrefixError</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">({</span><span class="nb">int</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">"[0-9]+$"</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">())</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">})</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">UniqueLabelSuffixError</span><span class="p">()</span>
+    <span class="n">point_to_labels</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">point_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">point_to_labels</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">"float64"</span><span class="p">)),</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+    <span class="n">duplicates</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">point</span><span class="p">)):</span> <span class="n">labels</span> <span class="k">for</span> <span class="n">point</span><span class="p">,</span> <span class="n">labels</span> <span class="ow">in</span> <span class="n">point_to_labels</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">duplicates</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">NonUniqueCoordinatesError</span><span class="p">(</span><span class="n">duplicates</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># -----------------------------------------------------------------------------</span>
+<span class="c1"># Models</span>
+<span class="c1"># -----------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="ExtentLocal">
+<a class="viewcode-back" href="../../../source/otaf.schema.html#otaf.schema.ExtentLocal">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ExtentLocal</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Axial extent of a cylinder along its local x axis, measured from ``ORIGIN``.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x_min, x_max : float</span>
+<span class="sd">        Ends of the extent, ``x_max &gt;= x_min``.</span>
+<span class="sd">    """</span>
+
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">extra</span><span class="o">=</span><span class="s2">"forbid"</span><span class="p">)</span>
+
+    <span class="n">x_min</span><span class="p">:</span> <span class="n">Number</span>
+    <span class="n">x_max</span><span class="p">:</span> <span class="n">Number</span>
+
+    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">"after"</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_ordered</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"ExtentLocal"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_max</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_min</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"x_max (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">x_max</span><span class="si">}</span><span class="s2">) must be &gt;= x_min (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">x_min</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+
+<div class="viewcode-block" id="Surface">
+<a class="viewcode-back" href="../../../source/otaf.schema.html#otaf.schema.Surface">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Surface</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""One feature (plane or cylinder) of a part: ``PARTS[part][surface]``.</span>
+
+<span class="sd">    The keys are those of the dictionary (see ``docs/guide/input_format.md``).</span>
+<span class="sd">    Keys that are not listed (e.g. ``META``, ``CAD_ID``) are kept and ignored.</span>
+<span class="sd">    Which keys are required depends on the other keys and on the interactions;</span>
+<span class="sd">    those checks need the part and surface labels and are made by `SystemData`.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    TYPE : str</span>
+<span class="sd">        One of ``otaf.constants.SUPPORTED_SURFACE_TYPES``.</span>
+<span class="sd">    FRAME : ndarray of shape (3, 3)</span>
+<span class="sd">        Rotation matrix whose columns are the local axes (x: plane normal or</span>
+<span class="sd">        cylinder axis).</span>
+<span class="sd">    ORIGIN : ndarray of shape (3,)</span>
+<span class="sd">        Origin of the surface frame. Taken from the origin point when ``POINTS``</span>
+<span class="sd">        is given.</span>
+<span class="sd">    POINTS : dict of str to ndarray of shape (3,)</span>
+<span class="sd">        Points of the feature, labelled ``&lt;PREFIX&gt;&lt;int&gt;``; must contain the</span>
+<span class="sd">        origin (suffix all zeros).</span>
+<span class="sd">    CONTOUR_GLOBAL : ndarray of shape (n, 3)</span>
+<span class="sd">        Contour points in global coordinates, used when ``POINTS`` is absent.</span>
+<span class="sd">    RADIUS : float</span>
+<span class="sd">        Nominal radius of a cylinder, &gt; 0.</span>
+<span class="sd">    EXTENT_LOCAL : ExtentLocal</span>
+<span class="sd">        Axial extent of a cylinder.</span>
+<span class="sd">    INTERACTIONS : list of str</span>
+<span class="sd">        Surfaces this one can touch, as ``P&lt;part&gt;&lt;surface&gt;``.</span>
+<span class="sd">    CONSTRAINTS_D : list of one str</span>
+<span class="sd">        Deviations of the feature: ``NONE``, ``PERFECT``, ``TRANSLATION`` or</span>
+<span class="sd">        ``ROTATION`` (case-insensitive).</span>
+<span class="sd">    CONSTRAINTS_G : list of one str</span>
+<span class="sd">        Relative motion at the contact: ``FLOATING``, ``SLIDING`` or ``FIXED``</span>
+<span class="sd">        (case-insensitive). Must be the same on both surfaces of a contact.</span>
+<span class="sd">    BLOCK_TRANSLATIONS_G, BLOCK_ROTATIONS_G : str</span>
+<span class="sd">        Extra blocked gap axes, letters among ``xyz``.</span>
+<span class="sd">    SURFACE_DIRECTION : str</span>
+<span class="sd">        ``centripetal`` (hole) or ``centrifugal`` (pin); cylinders only.</span>
+<span class="sd">    DIAMETER_DEVIATION : bool</span>
+<span class="sd">        Diameter as a deviation variable; cylinders only.</span>
+<span class="sd">    """</span>
+
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">extra</span><span class="o">=</span><span class="s2">"allow"</span><span class="p">)</span>
+
+    <span class="n">TYPE</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">FRAME</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Frame</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">ORIGIN</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Vector3</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">POINTS</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Vector3</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">CONTOUR_GLOBAL</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Contour</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">RADIUS</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PositiveNumber</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">EXTENT_LOCAL</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ExtentLocal</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">INTERACTIONS</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">CONSTRAINTS_D</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">CONSTRAINTS_G</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">BLOCK_TRANSLATIONS_G</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">BLOCK_ROTATIONS_G</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">SURFACE_DIRECTION</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">DIAMETER_DEVIATION</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">StrictBool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@field_validator</span><span class="p">(</span><span class="s2">"TYPE"</span><span class="p">)</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_supported_type</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># Turned into UnsupportedSurfaceTypeError (which needs the labels) by validate_system_data.</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">otaf_constants</span><span class="o">.</span><span class="n">SUPPORTED_SURFACE_TYPES</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"unsupported surface type </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span>
+
+    <span class="nd">@field_validator</span><span class="p">(</span><span class="s2">"POINTS"</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"before"</span><span class="p">)</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_point_labels</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">validate_point_dict</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span>
+
+    <span class="nd">@field_validator</span><span class="p">(</span><span class="s2">"INTERACTIONS"</span><span class="p">)</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_interaction_format</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+        <span class="k">for</span> <span class="n">interaction</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">or</span> <span class="p">[]:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">otaf_constants</span><span class="o">.</span><span class="n">BASE_PART_SURF_PATTERN</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">interaction</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">InvalidInteractionFormatError</span><span class="p">(</span><span class="n">interaction</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span>
+
+    <span class="nd">@field_validator</span><span class="p">(</span><span class="s2">"CONSTRAINTS_D"</span><span class="p">,</span> <span class="s2">"CONSTRAINTS_G"</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"before"</span><span class="p">)</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_one_entry_list</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">))</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"must be a list with exactly one entry, e.g. ['NONE'], got </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="nd">@field_validator</span><span class="p">(</span><span class="s2">"CONSTRAINTS_D"</span><span class="p">)</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_deviation_constraint</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_DEVIATION_CONSTRAINTS</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">!r}</span><span class="s2"> is not one of </span><span class="si">{</span><span class="n">_DEVIATION_CONSTRAINTS</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span>
+
+    <span class="nd">@field_validator</span><span class="p">(</span><span class="s2">"CONSTRAINTS_G"</span><span class="p">)</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_contact_constraint</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">otaf_constants</span><span class="o">.</span><span class="n">CONTACT_TYPES</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">!r}</span><span class="s2"> is not one of </span><span class="si">{</span><span class="n">otaf_constants</span><span class="o">.</span><span class="n">CONTACT_TYPES</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span>
+
+    <span class="nd">@field_validator</span><span class="p">(</span><span class="s2">"BLOCK_TRANSLATIONS_G"</span><span class="p">,</span> <span class="s2">"BLOCK_ROTATIONS_G"</span><span class="p">)</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_axes</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">_AXES_PATTERN</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"must be a string of the axes x, y, z (e.g. 'xz'), got </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span>
+
+    <span class="nd">@field_validator</span><span class="p">(</span><span class="s2">"SURFACE_DIRECTION"</span><span class="p">)</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_direction</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">otaf_constants</span><span class="o">.</span><span class="n">SURFACE_DIRECTIONS</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">InvalidSurfaceDirectionError</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span>
+
+    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">"after"</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_cylinder_only_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"Surface"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">DIAMETER_DEVIATION</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">TYPE</span> <span class="o">!=</span> <span class="s2">"cylinder"</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"DIAMETER_DEVIATION is only valid for cylinders"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">SURFACE_DIRECTION</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">TYPE</span> <span class="o">!=</span> <span class="s2">"cylinder"</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"SURFACE_DIRECTION is only valid for cylinders"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">CONSTRAINTS_D</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">TYPE</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">CONSTRAINTS_D</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">otaf_constants</span><span class="o">.</span><span class="n">SURF_TYPE_TO_DEVIATION_DOF</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"CONSTRAINTS_D </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">CONSTRAINTS_D</span><span class="si">}</span><span class="s2"> is not defined for a </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">TYPE</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+<div class="viewcode-block" id="Surface.contact_constraint">
+<a class="viewcode-back" href="../../../source/otaf.schema.html#otaf.schema.Surface.contact_constraint">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">contact_constraint</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return the ``CONSTRAINTS_G`` entry, upper case, ``FLOATING`` by default.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            The entry used for the contact type.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">CONSTRAINTS_G</span> <span class="ow">or</span> <span class="p">[</span><span class="s2">"FLOATING"</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Part">
+<a class="viewcode-back" href="../../../source/otaf.schema.html#otaf.schema.Part">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Part</span><span class="p">(</span><span class="n">RootModel</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Surface</span><span class="p">]]):</span>
+<span class="w">    </span><span class="sd">"""The surfaces of one part: ``PARTS[part]``, keyed by lowercase surface labels."""</span>
+
+    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">"before"</span><span class="p">)</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_surface_labels</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">_SURFACE_LABEL_PATTERN</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">value</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">InvalidSurfaceLabelError</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">value</span></div>
+
+
+
+<div class="viewcode-block" id="Loops">
+<a class="viewcode-back" href="../../../source/otaf.schema.html#otaf.schema.Loops">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Loops</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Compatibility loops: ``LOOPS``.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    COMPATIBILITY : dict of str to str</span>
+<span class="sd">        Loop name to loop string, elements ``P&lt;part&gt;&lt;surface&gt;&lt;point&gt;`` joined</span>
+<span class="sd">        by ``" -&gt; "``.</span>
+<span class="sd">    """</span>
+
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">extra</span><span class="o">=</span><span class="s2">"allow"</span><span class="p">)</span>
+
+    <span class="n">COMPATIBILITY</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+
+    <span class="nd">@field_validator</span><span class="p">(</span><span class="s2">"COMPATIBILITY"</span><span class="p">)</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_loop_elements</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">loop</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">elements</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">" -&gt; "</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"loop </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> needs at least two elements joined by ' -&gt; '"</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">otaf_constants</span><span class="o">.</span><span class="n">LOOP_ELEMENT_PATTERN</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">element</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">"invalid element </span><span class="si">{</span><span class="n">element</span><span class="si">!r}</span><span class="s2"> in loop </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2">: expected "</span>
+                        <span class="s2">"P&lt;part&gt;&lt;surface&gt;&lt;POINT&gt;, e.g. P1aA0"</span>
+                    <span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span></div>
+
+
+
+<div class="viewcode-block" id="SystemData">
+<a class="viewcode-back" href="../../../source/otaf.schema.html#otaf.schema.SystemData">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SystemData</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The whole assembly dictionary.</span>
+
+<span class="sd">    Validate a plain dictionary with ``SystemData.model_validate(data)`` or</span>
+<span class="sd">    `validate_system_data` (which raises the `otaf.exceptions` errors). A</span>
+<span class="sd">    `SystemData` can be passed to `otaf.AssemblyDataProcessor` in place of the</span>
+<span class="sd">    dictionary.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    PARTS : dict of str to Part</span>
+<span class="sd">        Parts keyed by the string of an integer.</span>
+<span class="sd">    LOOPS : Loops</span>
+<span class="sd">        Compatibility loops.</span>
+<span class="sd">    GLOBAL_CONSTRAINTS : str</span>
+<span class="sd">        ``3D``, ``2D_NX``, ``2D_NY`` or ``2D_NZ``.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; data = {</span>
+<span class="sd">    ...     "PARTS": {"1": {"a": {"TYPE": "plane", "FRAME": np.eye(3),</span>
+<span class="sd">    ...                          "POINTS": {"A0": (0, 0, 0), "A1": (0, 1, 0)}}}},</span>
+<span class="sd">    ...     "LOOPS": {"COMPATIBILITY": {}},</span>
+<span class="sd">    ...     "GLOBAL_CONSTRAINTS": "2D_NZ",</span>
+<span class="sd">    ... }</span>
+<span class="sd">    &gt;&gt;&gt; SystemData.model_validate(data).PARTS["1"].root["a"].TYPE</span>
+<span class="sd">    'plane'</span>
+<span class="sd">    """</span>
+
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">extra</span><span class="o">=</span><span class="s2">"allow"</span><span class="p">)</span>
+
+    <span class="n">PARTS</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Part</span><span class="p">]</span>
+    <span class="n">LOOPS</span><span class="p">:</span> <span class="n">Loops</span>
+    <span class="n">GLOBAL_CONSTRAINTS</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"3D"</span><span class="p">,</span> <span class="s2">"2D_NX"</span><span class="p">,</span> <span class="s2">"2D_NY"</span><span class="p">,</span> <span class="s2">"2D_NZ"</span><span class="p">]</span>
+
+    <span class="nd">@field_validator</span><span class="p">(</span><span class="s2">"PARTS"</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"before"</span><span class="p">)</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_part_labels</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">k</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">value</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">InvalidPartLabelError</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">value</span>
+
+    <span class="nd">@field_validator</span><span class="p">(</span><span class="s2">"GLOBAL_CONSTRAINTS"</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"before"</span><span class="p">)</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_global_constraints</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">otaf_constants</span><span class="o">.</span><span class="n">GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">InvalidGlobalConstraintError</span><span class="p">(</span>
+                <span class="n">otaf_constants</span><span class="o">.</span><span class="n">GLOBAL_CONSTRAINTS_TO_DEVIATION_DOF</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span>
+
+<div class="viewcode-block" id="SystemData.surface">
+<a class="viewcode-back" href="../../../source/otaf.schema.html#otaf.schema.SystemData.surface">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">surface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Surface</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return a surface by its labels.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        part_id, surf_id : str</span>
+<span class="sd">            Labels of the part and of the surface.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Surface</span>
+<span class="sd">            The surface.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        otaf.exceptions.PartNotFoundError, otaf.exceptions.SurfaceNotFoundError</span>
+<span class="sd">            If the part or the surface does not exist.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">part_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">PARTS</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">PartNotFoundError</span><span class="p">(</span><span class="n">part_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">surf_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">PARTS</span><span class="p">[</span><span class="n">part_id</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">SurfaceNotFoundError</span><span class="p">(</span><span class="n">surf_id</span><span class="p">,</span> <span class="n">part_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">PARTS</span><span class="p">[</span><span class="n">part_id</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="n">surf_id</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="SystemData.contact_pairs">
+<a class="viewcode-back" href="../../../source/otaf.schema.html#otaf.schema.SystemData.contact_pairs">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">contact_pairs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Return the contacts listed in ``INTERACTIONS``, each pair once.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of tuple</span>
+<span class="sd">            Sorted ``((part1, surf1), (part2, surf2))`` pairs.</span>
+<span class="sd">        """</span>
+        <span class="n">pairs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">PARTS</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">surf_id</span><span class="p">,</span> <span class="n">surface</span> <span class="ow">in</span> <span class="n">part</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">interaction</span> <span class="ow">in</span> <span class="n">surface</span><span class="o">.</span><span class="n">INTERACTIONS</span> <span class="ow">or</span> <span class="p">[]:</span>
+                    <span class="n">other</span> <span class="o">=</span> <span class="n">otaf_constants</span><span class="o">.</span><span class="n">BASE_PART_SURF_PATTERN</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">interaction</span><span class="p">)</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+                    <span class="n">pairs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">([(</span><span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">),</span> <span class="n">other</span><span class="p">])))</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">pairs</span><span class="p">)</span></div>
+
+
+    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">"after"</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_surface_requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"SystemData"</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">PARTS</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">surf_id</span><span class="p">,</span> <span class="n">surface</span> <span class="ow">in</span> <span class="n">part</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">where</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"surface </span><span class="si">{</span><span class="n">surf_id</span><span class="si">}</span><span class="s2"> on part </span><span class="si">{</span><span class="n">part_id</span><span class="si">}</span><span class="s2">"</span>
+                <span class="k">if</span> <span class="n">surface</span><span class="o">.</span><span class="n">FRAME</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">MissingKeyError</span><span class="p">(</span><span class="s2">"FRAME"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Surface dictionary for </span><span class="si">{</span><span class="n">where</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">surface</span><span class="o">.</span><span class="n">POINTS</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"ORIGIN"</span><span class="p">,</span> <span class="s2">"INTERACTIONS"</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">MissingKeyError</span><span class="p">(</span>
+                                <span class="n">key</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Surface dictionary for </span><span class="si">{</span><span class="n">where</span><span class="si">}</span><span class="s2"> (no POINTS given)"</span>
+                            <span class="p">)</span>
+                <span class="k">elif</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span>
+                    <span class="n">otaf_constants</span><span class="o">.</span><span class="n">SURF_ORIGIN_PATTERN</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">label</span><span class="p">)</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">surface</span><span class="o">.</span><span class="n">POINTS</span>
+                <span class="p">):</span>
+                    <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">MissingOriginPointError</span><span class="p">(</span><span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">surface</span><span class="o">.</span><span class="n">TYPE</span> <span class="o">==</span> <span class="s2">"cylinder"</span> <span class="ow">and</span> <span class="n">surface</span><span class="o">.</span><span class="n">INTERACTIONS</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"RADIUS"</span><span class="p">,</span> <span class="s2">"EXTENT_LOCAL"</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">MissingKeyError</span><span class="p">(</span>
+                                <span class="n">key</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Surface dictionary for </span><span class="si">{</span><span class="n">where</span><span class="si">}</span><span class="s2"> (cylinder in an interaction)"</span>
+                            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">"after"</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_contacts</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"SystemData"</span><span class="p">:</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">s1</span><span class="p">),</span> <span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">contact_pairs</span><span class="p">():</span>
+            <span class="n">surf1</span><span class="p">,</span> <span class="n">surf2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">s1</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">surf1</span><span class="o">.</span><span class="n">TYPE</span> <span class="o">!=</span> <span class="n">surf2</span><span class="o">.</span><span class="n">TYPE</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Interaction between a </span><span class="si">{</span><span class="n">surf1</span><span class="o">.</span><span class="n">TYPE</span><span class="si">}</span><span class="s2"> (P</span><span class="si">{</span><span class="n">p1</span><span class="si">}{</span><span class="n">s1</span><span class="si">}</span><span class="s2">) and a </span><span class="si">{</span><span class="n">surf2</span><span class="o">.</span><span class="n">TYPE</span><span class="si">}</span><span class="s2"> "</span>
+                    <span class="sa">f</span><span class="s2">"(P</span><span class="si">{</span><span class="n">p2</span><span class="si">}{</span><span class="n">s2</span><span class="si">}</span><span class="s2">) is not supported."</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">surf1</span><span class="o">.</span><span class="n">contact_constraint</span><span class="p">()</span> <span class="o">!=</span> <span class="n">surf2</span><span class="o">.</span><span class="n">contact_constraint</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">InconsistentContactConstraintsError</span><span class="p">(</span>
+                    <span class="n">p1</span><span class="p">,</span> <span class="n">s1</span><span class="p">,</span> <span class="n">surf1</span><span class="o">.</span><span class="n">CONSTRAINTS_G</span> <span class="ow">or</span> <span class="p">[</span><span class="s2">"FLOATING"</span><span class="p">],</span> <span class="n">p2</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">surf2</span><span class="o">.</span><span class="n">CONSTRAINTS_G</span> <span class="ow">or</span> <span class="p">[</span><span class="s2">"FLOATING"</span><span class="p">]</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">"after"</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_loop_references</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"SystemData"</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">loop</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">LOOPS</span><span class="o">.</span><span class="n">COMPATIBILITY</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">loop</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">" -&gt; "</span><span class="p">):</span>
+                <span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">otaf_constants</span><span class="o">.</span><span class="n">LOC_STAMP_PATTERN</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">element</span><span class="p">)</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="p">(</span><span class="n">part_id</span><span class="p">,</span> <span class="n">surf_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+<div class="viewcode-block" id="SystemData.to_system_data">
+<a class="viewcode-back" href="../../../source/otaf.schema.html#otaf.schema.SystemData.to_system_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_system_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Return the plain dictionary (keys that were not given stay absent).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            The system data, arrays as float64 NumPy arrays.</span>
+<span class="sd">        """</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">exclude_unset</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">"PARTS"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">surface</span> <span class="ow">in</span> <span class="n">part</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="k">if</span> <span class="s2">"EXTENT_LOCAL"</span> <span class="ow">in</span> <span class="n">surface</span><span class="p">:</span>
+                    <span class="n">surface</span><span class="p">[</span><span class="s2">"EXTENT_LOCAL"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">surface</span><span class="p">[</span><span class="s2">"EXTENT_LOCAL"</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+</div>
+
+
+
+<span class="c1"># -----------------------------------------------------------------------------</span>
+<span class="c1"># Entry point</span>
+<span class="c1"># -----------------------------------------------------------------------------</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_location</span><span class="p">(</span><span class="n">loc</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s2">" -&gt; "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">loc</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_specific_error</span><span class="p">(</span><span class="n">error</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">Exception</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Return the `otaf.exceptions` error matching one pydantic error, if there is one."""</span>
+    <span class="n">loc</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">error</span><span class="p">[</span><span class="s2">"loc"</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">error</span><span class="p">[</span><span class="s2">"type"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"missing"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">loc</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"PARTS"</span> <span class="ow">and</span> <span class="n">loc</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"TYPE"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">MissingSurfaceTypeKeyError</span><span class="p">(</span><span class="n">loc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">loc</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">parent</span> <span class="o">=</span> <span class="n">_location</span><span class="p">(</span><span class="n">loc</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="ow">or</span> <span class="s2">"system_data"</span>
+        <span class="k">return</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">MissingKeyError</span><span class="p">(</span><span class="n">loc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">parent</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">loc</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"PARTS"</span> <span class="ow">and</span> <span class="n">loc</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"TYPE"</span> <span class="ow">and</span> <span class="n">error</span><span class="p">[</span><span class="s2">"type"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"value_error"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">UnsupportedSurfaceTypeError</span><span class="p">(</span><span class="n">loc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">loc</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">error</span><span class="p">[</span><span class="s2">"input"</span><span class="p">])</span>
+    <span class="n">cause</span> <span class="o">=</span> <span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ctx"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"error"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cause</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">cause</span><span class="p">)</span><span class="o">.</span><span class="vm">__module__</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"otaf.exceptions"</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">loc</span><span class="p">:</span>
+            <span class="n">cause</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">_location</span><span class="p">(</span><span class="n">loc</span><span class="p">)</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">cause</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="o">*</span><span class="n">cause</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="k">return</span> <span class="n">cause</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="validate_system_data">
+<a class="viewcode-back" href="../../../source/otaf.schema.html#otaf.schema.validate_system_data">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_system_data</span><span class="p">(</span><span class="n">system_data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SystemData</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Validate an assembly dictionary against the input schema.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    system_data : dict or SystemData</span>
+<span class="sd">        The assembly dictionary (see ``docs/guide/input_format.md``).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    SystemData</span>
+<span class="sd">        The validated model. The dictionary itself is not modified.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    otaf.exceptions.MissingKeyError</span>
+<span class="sd">        If a required key is missing (``MissingSurfaceTypeKeyError`` for</span>
+<span class="sd">        ``TYPE``).</span>
+<span class="sd">    otaf.exceptions.InvalidPartLabelError, otaf.exceptions.InvalidSurfaceLabelError</span>
+<span class="sd">        For malformed part or surface labels.</span>
+<span class="sd">    otaf.exceptions.UnsupportedSurfaceTypeError</span>
+<span class="sd">        If ``TYPE`` is not ``plane`` or ``cylinder``.</span>
+<span class="sd">    otaf.exceptions.InconsistentContactConstraintsError</span>
+<span class="sd">        If the two surfaces of a contact have different ``CONSTRAINTS_G``.</span>
+<span class="sd">    NotImplementedError</span>
+<span class="sd">        For a contact between a plane and a cylinder.</span>
+<span class="sd">    otaf.exceptions.SystemDataValidationError</span>
+<span class="sd">        For any other problem; lists all of them.</span>
+
+<span class="sd">    Other `otaf.exceptions` errors (point labels, interaction format, missing</span>
+<span class="sd">    origin point, unknown part or surface, ...) are raised as they are, with the</span>
+<span class="sd">    location of the problem in front of their message. When several problems</span>
+<span class="sd">    are found, the first one is raised, chained to a</span>
+<span class="sd">    `~otaf.exceptions.SystemDataValidationError` listing all of them.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">system_data</span><span class="p">,</span> <span class="n">SystemData</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">system_data</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">SystemData</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">system_data</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">errors</span><span class="p">()</span>
+        <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">_location</span><span class="p">(</span><span class="n">err</span><span class="p">[</span><span class="s1">'loc'</span><span class="p">])</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">'system_data'</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">err</span><span class="p">[</span><span class="s1">'msg'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">err</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">]</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="n">otaf_exceptions</span><span class="o">.</span><span class="n">SystemDataValidationError</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">err</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">:</span>
+            <span class="n">specific</span> <span class="o">=</span> <span class="n">_specific_error</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">specific</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">specific</span> <span class="kn">from</span><span class="w"> </span><span class="p">(</span><span class="n">summary</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">summary</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kramer84.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

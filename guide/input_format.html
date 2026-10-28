@@ -58,6 +58,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#global-constraints"><code class="docutils literal notranslate"><span class="pre">GLOBAL_CONSTRAINTS</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#loops"><code class="docutils literal notranslate"><span class="pre">LOOPS</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example-1-two-parts-in-2d">Example 1: two parts in 2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#validation">Validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example-2-a-pin-in-two-plates-3d">Example 2: a pin in two plates (3D)</a></li>
 </ul>
 </li>
@@ -102,16 +103,18 @@
 <h1>Input format of the assembly dictionary<a class="headerlink" href="#input-format-of-the-assembly-dictionary" title="Link to this heading"></a></h1>
 <p>The whole assembly is described by one nested dictionary, the <em>system data</em>. It is
 validated by <code class="docutils literal notranslate"><span class="pre">otaf.AssemblyDataProcessor</span></code>, which is the first step of the modelling
-pipeline (see <a class="reference internal" href="theory.html"><span class="doc">Theory: system of constraints and slack variable</span></a>). Lengths are in millimetres and angles in radians.</p>
+pipeline (see <a class="reference internal" href="theory.html"><span class="doc">Theory: system of constraints and slack variable</span></a>), against the pydantic models of <code class="docutils literal notranslate"><span class="pre">otaf.schema</span></code>
+(<code class="docutils literal notranslate"><span class="pre">SystemData</span></code>, <code class="docutils literal notranslate"><span class="pre">Part</span></code>, <code class="docutils literal notranslate"><span class="pre">Surface</span></code>, <code class="docutils literal notranslate"><span class="pre">ExtentLocal</span></code>, <code class="docutils literal notranslate"><span class="pre">Loops</span></code>). Lengths are in millimetres and
+angles in radians.</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>system_data
 ├── "PARTS"               {part id: {surface id: surface dictionary}}
 ├── "LOOPS"               {"COMPATIBILITY": {loop name: loop string}}
 └── "GLOBAL_CONSTRAINTS"  "3D" | "2D_NX" | "2D_NY" | "2D_NZ"
 </pre></div>
 </div>
-<p>The three top-level keys are required (<code class="docutils literal notranslate"><span class="pre">MissingKeyError</span></code> otherwise). The dictionary is
-copied, so the one you pass is never modified; read the completed data back from
-<code class="docutils literal notranslate"><span class="pre">AssemblyDataProcessor.system_data</span></code>.</p>
+<p>The three top-level keys are required (<code class="docutils literal notranslate"><span class="pre">MissingKeyError</span></code> otherwise); other keys are kept and
+ignored. The dictionary is copied, so the one you pass is never modified; read the completed data
+back from <code class="docutils literal notranslate"><span class="pre">AssemblyDataProcessor.system_data</span></code>. See <a class="reference internal" href="#validation"><span class="std std-ref">Validation</span></a> for the errors.</p>
 <section id="labels">
 <h2>Labels<a class="headerlink" href="#labels" title="Link to this heading"></a></h2>
 <table class="docutils align-default">
@@ -127,7 +130,7 @@ copied, so the one you pass is never modified; read the completed data back from
 <td><p><code class="docutils literal notranslate"><span class="pre">&quot;1&quot;</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p>Surface id</p></td>
-<td><p>lowercase letters only, unique within the part</p></td>
+<td><p>lowercase ASCII letters only, unique within the part</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">&quot;a&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;b&quot;</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p>Point label</p></td>
@@ -149,7 +152,8 @@ generated for it in the loops.</p>
 </section>
 <section id="surface-dictionary">
 <h2>Surface dictionary<a class="headerlink" href="#surface-dictionary" title="Link to this heading"></a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">PARTS[part][surface]</span></code> is a dictionary with the following keys.</p>
+<p><code class="docutils literal notranslate"><span class="pre">PARTS[part][surface]</span></code> is a dictionary with the following keys (model <code class="docutils literal notranslate"><span class="pre">otaf.schema.Surface</span></code>).
+Other keys, such as <code class="docutils literal notranslate"><span class="pre">META</span></code> or <code class="docutils literal notranslate"><span class="pre">CAD_ID</span></code>, are kept and ignored.</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Key</p></th>
@@ -161,12 +165,12 @@ generated for it in the loops.</p>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TYPE</span></code></p></td>
 <td><p>always</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">&quot;plane&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;cylinder&quot;</span></code></p></td>
-<td><p>Geometry of the feature. <code class="docutils literal notranslate"><span class="pre">&quot;cone&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;sphere&quot;</span></code> pass the first check (<code class="docutils literal notranslate"><span class="pre">otaf.constants.BASE_SURFACE_TYPES</span></code>) but are not supported later (see <a class="reference internal" href="limitations.html"><span class="doc">Validity and limitations</span></a>).</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;plane&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;cylinder&quot;</span></code> (<code class="docutils literal notranslate"><span class="pre">otaf.constants.SUPPORTED_SURFACE_TYPES</span></code>)</p></td>
+<td><p>Geometry of the feature. <code class="docutils literal notranslate"><span class="pre">&quot;cone&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;sphere&quot;</span></code> have no deviation or gap model and are rejected (<code class="docutils literal notranslate"><span class="pre">UnsupportedSurfaceTypeError</span></code>, see <a class="reference internal" href="limitations.html"><span class="doc">Validity and limitations</span></a>).</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">FRAME</span></code></p></td>
-<td><p>with <code class="docutils literal notranslate"><span class="pre">ORIGIN</span></code> (no <code class="docutils literal notranslate"><span class="pre">POINTS</span></code>); always for interactions</p></td>
-<td><p>3×3 array, orthonormal, determinant +1</p></td>
+<td><p>always</p></td>
+<td><p>3×3 array, orthonormal, determinant +1 (to <code class="docutils literal notranslate"><span class="pre">otaf.constants.FRAME_ATOL</span></code>)</p></td>
 <td><p>Local frame. <strong>Columns</strong> are the local axes. Local x (first column) is the plane normal, or the cylinder axis.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ORIGIN</span></code></p></td>
@@ -185,28 +189,28 @@ generated for it in the loops.</p>
 <td><p>Contour points in global coordinates. Labelled <code class="docutils literal notranslate"><span class="pre">&lt;SURFACE&gt;1</span> <span class="pre">…</span> <span class="pre">&lt;SURFACE&gt;n</span></code> after the origin <code class="docutils literal notranslate"><span class="pre">&lt;SURFACE&gt;0</span></code>. Coplanarity is checked in 3D.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">RADIUS</span></code></p></td>
-<td><p>cylinders in an interaction</p></td>
-<td><p>float &gt; 0</p></td>
+<td><p>cylinders with <code class="docutils literal notranslate"><span class="pre">INTERACTIONS</span></code></p></td>
+<td><p>number &gt; 0</p></td>
 <td><p>Nominal radius.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">EXTENT_LOCAL</span></code></p></td>
-<td><p>cylinders in an interaction</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">{&quot;x_min&quot;:</span> <span class="pre">float,</span> <span class="pre">&quot;x_max&quot;:</span> <span class="pre">float}</span></code></p></td>
+<td><p>cylinders with <code class="docutils literal notranslate"><span class="pre">INTERACTIONS</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">{&quot;x_min&quot;:</span> <span class="pre">number,</span> <span class="pre">&quot;x_max&quot;:</span> <span class="pre">number}</span></code>, no other key</p></td>
 <td><p>Axial extent along the local x axis, from <code class="docutils literal notranslate"><span class="pre">ORIGIN</span></code>. <code class="docutils literal notranslate"><span class="pre">x_max</span> <span class="pre">&gt;=</span> <span class="pre">x_min</span></code>.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">INTERACTIONS</span></code></p></td>
 <td><p>when <code class="docutils literal notranslate"><span class="pre">POINTS</span></code> is absent; required for contact</p></td>
-<td><p>list of <code class="docutils literal notranslate"><span class="pre">P&lt;part&gt;&lt;surface&gt;</span></code></p></td>
+<td><p>list of <code class="docutils literal notranslate"><span class="pre">P&lt;part&gt;&lt;surface&gt;</span></code>, existing surfaces of the same <code class="docutils literal notranslate"><span class="pre">TYPE</span></code></p></td>
 <td><p>Surfaces this one can touch. List the interaction on both surfaces.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CONSTRAINTS_D</span></code></p></td>
 <td><p>optional (default <code class="docutils literal notranslate"><span class="pre">[&quot;NONE&quot;]</span></code>)</p></td>
-<td><p>one of the values below</p></td>
+<td><p>list with one of the values below</p></td>
 <td><p>Which deviations the feature has.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CONSTRAINTS_G</span></code></p></td>
 <td><p>optional (default <code class="docutils literal notranslate"><span class="pre">[&quot;FLOATING&quot;]</span></code>)</p></td>
-<td><p>one of the values below</p></td>
+<td><p>list with one of the values below, the same on both surfaces of a contact</p></td>
 <td><p>Which relative motions the contact blocks.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">BLOCK_TRANSLATIONS_G</span></code>, <code class="docutils literal notranslate"><span class="pre">BLOCK_ROTATIONS_G</span></code></p></td>
@@ -215,21 +219,20 @@ generated for it in the loops.</p>
 <td><p>Extra blocked gap translations/rotations, added to those of <code class="docutils literal notranslate"><span class="pre">CONSTRAINTS_G</span></code>.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SURFACE_DIRECTION</span></code></p></td>
-<td><p>optional, cylinders</p></td>
+<td><p>optional, cylinders only</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">&quot;centripetal&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;centrifugal&quot;</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">&quot;centripetal&quot;</span></code>: the material is outside the cylinder (a hole). <code class="docutils literal notranslate"><span class="pre">&quot;centrifugal&quot;</span></code>: the material is inside (a pin). Deduced from the radii when absent on both cylinders of a pair.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">DIAMETER_DEVIATION</span></code></p></td>
-<td><p>optional, cylinders</p></td>
+<td><p>optional, cylinders only</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">True</span></code> / <code class="docutils literal notranslate"><span class="pre">False</span></code></p></td>
-<td><p>Whether the diameter is a deviation variable <code class="docutils literal notranslate"><span class="pre">d_d_&lt;k&gt;</span></code>. Only valid on cylinders (<code class="docutils literal notranslate"><span class="pre">ValueError</span></code> otherwise).</p></td>
+<td><p>Whether the diameter is a deviation variable <code class="docutils literal notranslate"><span class="pre">d_d_&lt;k&gt;</span></code>.</p></td>
 </tr>
 </tbody>
 </table>
-<p>When <code class="docutils literal notranslate"><span class="pre">POINTS</span></code> is absent, <code class="docutils literal notranslate"><span class="pre">TYPE</span></code>, <code class="docutils literal notranslate"><span class="pre">FRAME</span></code>, <code class="docutils literal notranslate"><span class="pre">ORIGIN</span></code> and <code class="docutils literal notranslate"><span class="pre">INTERACTIONS</span></code> must all be present
-(<code class="docutils literal notranslate"><span class="pre">MissingKeyError</span></code>), and <code class="docutils literal notranslate"><span class="pre">FRAME</span></code> and <code class="docutils literal notranslate"><span class="pre">ORIGIN</span></code> are checked. When <code class="docutils literal notranslate"><span class="pre">POINTS</span></code> is given, only the
-origin is looked for; <code class="docutils literal notranslate"><span class="pre">FRAME</span></code> is then used without further validation by the later steps, so
-make sure it is a rotation matrix.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">POINTS</span></code> is absent, <code class="docutils literal notranslate"><span class="pre">ORIGIN</span></code> and <code class="docutils literal notranslate"><span class="pre">INTERACTIONS</span></code> must be present (<code class="docutils literal notranslate"><span class="pre">MissingKeyError</span></code>). When
+<code class="docutils literal notranslate"><span class="pre">POINTS</span></code> is given, it must contain the origin point (<code class="docutils literal notranslate"><span class="pre">MissingOriginPointError</span></code>) and <code class="docutils literal notranslate"><span class="pre">ORIGIN</span></code> is
+taken from it. <code class="docutils literal notranslate"><span class="pre">FRAME</span></code> is checked in both cases.</p>
 <section id="constraints-d-deviations-of-a-feature">
 <h3><code class="docutils literal notranslate"><span class="pre">CONSTRAINTS_D</span></code>: deviations of a feature<a class="headerlink" href="#constraints-d-deviations-of-a-feature" title="Link to this heading"></a></h3>
 <p>The key is the value of <code class="docutils literal notranslate"><span class="pre">TYPE</span></code> combined with the entry, as in
@@ -267,9 +270,9 @@ with position and orientation deviations only.</p>
 </section>
 <section id="constraints-g-relative-motion-at-a-contact">
 <h3><code class="docutils literal notranslate"><span class="pre">CONSTRAINTS_G</span></code>: relative motion at a contact<a class="headerlink" href="#constraints-g-relative-motion-at-a-contact" title="Link to this heading"></a></h3>
-<p>Both surfaces of a pair must carry the <strong>same</strong> entry (if one has <code class="docutils literal notranslate"><span class="pre">&quot;SLIDING&quot;</span></code> and the other none,
-the missing one defaults to <code class="docutils literal notranslate"><span class="pre">&quot;FLOATING&quot;</span></code> and a <code class="docutils literal notranslate"><span class="pre">KeyError</span></code> such as
-<code class="docutils literal notranslate"><span class="pre">'plane-plane-floating-sliding'</span></code> is raised).</p>
+<p>Both surfaces of a pair must carry the <strong>same</strong> entry (case-insensitive). A surface without the
+key counts as <code class="docutils literal notranslate"><span class="pre">&quot;FLOATING&quot;</span></code>, so if one has <code class="docutils literal notranslate"><span class="pre">&quot;SLIDING&quot;</span></code> and the other none,
+<code class="docutils literal notranslate"><span class="pre">InconsistentContactConstraintsError</span></code> is raised.</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Entry</p></th>
@@ -345,11 +348,13 @@ it is closed by a transform inside that part.</p></li>
 the loop is closed by a gap between the last and first elements.</p></li>
 <li><p>A loop with two elements is a direct contact between two different parts.</p></li>
 </ul>
-<p>Each element must match <code class="docutils literal notranslate"><span class="pre">P&lt;digits&gt;&lt;letters&gt;&lt;LETTERS&gt;&lt;digits&gt;</span></code>, and a loop that stays in one part is
-rejected; both raise a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>. One loop is needed per independent closed chain of the
-assembly. Every contact that matters must be crossed by some loop: the contact conditions are
-generated for the gaps that appear in the loops, so a contact in <code class="docutils literal notranslate"><span class="pre">INTERACTIONS</span></code> that no loop
-crosses is ignored without a message.</p>
+<p>Each element must match <code class="docutils literal notranslate"><span class="pre">P&lt;digits&gt;&lt;letters&gt;&lt;LETTERS&gt;&lt;digits&gt;</span></code> (<code class="docutils literal notranslate"><span class="pre">SystemDataValidationError</span></code>
+otherwise) and name an existing part and surface (<code class="docutils literal notranslate"><span class="pre">PartNotFoundError</span></code>, <code class="docutils literal notranslate"><span class="pre">SurfaceNotFoundError</span></code>);
+a loop that stays in one part raises a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> when the loops are expanded. One loop is
+needed per independent closed chain of the assembly. Every contact must be crossed by some loop:
+the contact conditions are generated for the gaps that appear in the loops, so a contact in
+<code class="docutils literal notranslate"><span class="pre">INTERACTIONS</span></code> that no loop crosses gets no condition, and <code class="docutils literal notranslate"><span class="pre">InterfaceLoopHandling</span></code> warns about it
+(<code class="docutils literal notranslate"><span class="pre">otaf.exceptions.UncoveredContactWarning</span></code>).</p>
 </section>
 <section id="example-1-two-parts-in-2d">
 <h2>Example 1: two parts in 2D<a class="headerlink" href="#example-1-two-parts-in-2d" title="Link to this heading"></a></h2>
@@ -428,6 +433,72 @@ closing through a gap. <code class="docutils literal notranslate"><span class="p
 <p>The slack of the nominal assembly is half the clearance, <code class="docutils literal notranslate"><span class="pre">(X2</span> <span class="pre">-</span> <span class="pre">X1)</span> <span class="pre">/</span> <span class="pre">2</span> <span class="pre">=</span> <span class="pre">0.1</span></code> mm.
 It is positive, so the nominal assembly can be assembled. The deviation variables of
 <code class="docutils literal notranslate"><span class="pre">soc.deviation_symbols</span></code> are the inputs sampled by the uncertainty study.</p>
+</section>
+<section id="validation">
+<span id="id1"></span><h2>Validation<a class="headerlink" href="#validation" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">AssemblyDataProcessor</span></code> validates the dictionary before using it. The same check can be run on
+its own, and a model built once can be passed in place of the dictionary:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">otaf.schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">SystemData</span><span class="p">,</span> <span class="n">validate_system_data</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">validate_system_data</span><span class="p">(</span><span class="n">system_data</span><span class="p">)</span>  <span class="c1"># SystemData; system_data is not modified</span>
+<span class="k">assert</span> <span class="n">model</span><span class="o">.</span><span class="n">PARTS</span><span class="p">[</span><span class="s2">"1"</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s2">"c"</span><span class="p">]</span><span class="o">.</span><span class="n">CONSTRAINTS_G</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"SLIDING"</span><span class="p">]</span>
+<span class="k">assert</span> <span class="n">model</span><span class="o">.</span><span class="n">contact_pairs</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="p">((</span><span class="s2">"1"</span><span class="p">,</span> <span class="s2">"a"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"2"</span><span class="p">,</span> <span class="s2">"a"</span><span class="p">))</span>
+<span class="n">adp_from_model</span> <span class="o">=</span> <span class="n">otaf</span><span class="o">.</span><span class="n">AssemblyDataProcessor</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">json_schema</span> <span class="o">=</span> <span class="n">SystemData</span><span class="o">.</span><span class="n">model_json_schema</span><span class="p">()</span>  <span class="c1"># e.g. for a CAD converter or an editor</span>
+
+<span class="n">broken</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">system_data</span><span class="p">,</span> <span class="s2">"GLOBAL_CONSTRAINTS"</span><span class="p">:</span> <span class="s2">"2D"</span><span class="p">}</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">validate_system_data</span><span class="p">(</span><span class="n">broken</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">otaf</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidGlobalConstraintError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Errors that have their own class in <code class="docutils literal notranslate"><span class="pre">otaf.exceptions</span></code> are raised with it, their message
+prefixed by the location of the problem (<code class="docutils literal notranslate"><span class="pre">PARTS</span> <span class="pre">-&gt;</span> <span class="pre">1</span> <span class="pre">-&gt;</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">POINTS:</span> <span class="pre">...</span></code>):</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Problem</p></th>
+<th class="head"><p>Exception</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>missing key (top level, <code class="docutils literal notranslate"><span class="pre">TYPE</span></code>, keys required by the rules above)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MissingKeyError</span></code> (<code class="docutils literal notranslate"><span class="pre">MissingSurfaceTypeKeyError</span></code> for <code class="docutils literal notranslate"><span class="pre">TYPE</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>part or surface label</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">InvalidPartLabelError</span></code>, <code class="docutils literal notranslate"><span class="pre">InvalidSurfaceLabelError</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TYPE</span></code> not <code class="docutils literal notranslate"><span class="pre">plane</span></code> or <code class="docutils literal notranslate"><span class="pre">cylinder</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">UnsupportedSurfaceTypeError</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>point labels or duplicate points</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">LabelPatternError</span></code>, <code class="docutils literal notranslate"><span class="pre">LabelPrefixError</span></code>, <code class="docutils literal notranslate"><span class="pre">UniqueLabelSuffixError</span></code>, <code class="docutils literal notranslate"><span class="pre">NonUniqueCoordinatesError</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>no origin point in <code class="docutils literal notranslate"><span class="pre">POINTS</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MissingOriginPointError</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">INTERACTIONS</span></code> entry format, unknown target</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">InvalidInteractionFormatError</span></code>, <code class="docutils literal notranslate"><span class="pre">PartNotFoundError</span></code>, <code class="docutils literal notranslate"><span class="pre">SurfaceNotFoundError</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SURFACE_DIRECTION</span></code> value</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">InvalidSurfaceDirectionError</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GLOBAL_CONSTRAINTS</span></code> value</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">InvalidGlobalConstraintError</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>different <code class="docutils literal notranslate"><span class="pre">CONSTRAINTS_G</span></code> on the two sides of a contact</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">InconsistentContactConstraintsError</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>plane–cylinder contact</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">NotImplementedError</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>anything else (<code class="docutils literal notranslate"><span class="pre">FRAME</span></code> not a rotation, negative <code class="docutils literal notranslate"><span class="pre">RADIUS</span></code>, <code class="docutils literal notranslate"><span class="pre">CONSTRAINTS_D</span></code> not a one-entry list, …)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SystemDataValidationError</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>When several problems are found, the first is raised and chained to a
+<code class="docutils literal notranslate"><span class="pre">SystemDataValidationError</span></code> that lists all of them (<code class="docutils literal notranslate"><span class="pre">error.__cause__.messages</span></code>).</p>
 </section>
 <section id="example-2-a-pin-in-two-plates-3d">
 <h2>Example 2: a pin in two plates (3D)<a class="headerlink" href="#example-2-a-pin-in-two-plates-3d" title="Link to this heading"></a></h2>

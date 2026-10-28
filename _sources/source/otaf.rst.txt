@@ -17,6 +17,7 @@ Subpackages
    otaf.optimization
    otaf.plotting
    otaf.sampling
+   otaf.schema
    otaf.sensitivity
    otaf.surrogate
    otaf.tolerances

@@ -49,8 +49,8 @@ dictionary.
 |---|---|
 | plane–plane | Supported. The two planes must be parallel (within about 0.26 rad of the opposed normals, `are_planes_facing`) and overlap over a non-empty area; otherwise the pair is skipped with a warning, or `NoPlanarOverlapException` is raised if they face each other without overlap. The contact is written at the vertices of the overlap, which is exact for the linear model. |
 | cylinder–cylinder | Supported for a pin in a hole: the axes must be nominally collinear (`NonConcentricCylindersException` otherwise), the radii different (the same radius raises `ValueError`), and the extents must overlap (`NoAxialOverlapException`). The contact is written at the two ends of the axial overlap. Conflicting or impossible `SURFACE_DIRECTION` raise `ConflictingSurfaceDirectionsException` or `CylindricalInterferenceGeometricException`. |
-| plane–cylinder | **Not supported yet.** A `NotImplementedError` is raised when the interaction is processed. |
-| cone, sphere | Accepted as a `TYPE` by the first check only; they have no deviation or gap model, and fail later with a `KeyError`. |
+| plane–cylinder | **Not supported yet.** A `NotImplementedError` is raised when the dictionary is validated. |
+| cone, sphere | **Not supported.** They have no deviation or gap model; `TYPE` accepts only `plane` and `cylinder` (`UnsupportedSurfaceTypeError`). |
 | Any other combination | `NotImplementedError`. |
 
 Consequences for the geometries that can be modelled: planar contacts and pins in holes, with
@@ -90,17 +90,19 @@ Planes have no such error: their constraints are exactly linear.
 
 ## Input checks
 
-The input dictionary is checked for labels, surface types, the presence of the keys needed to build
-the points, interactions, directions and the global constraints. It is not checked as a whole:
+The input dictionary is validated as a whole when `AssemblyDataProcessor` is created, against the
+pydantic models of `otaf.schema` (see {doc}`input_format`): labels, types, frames, the keys each
+surface needs, the references of `INTERACTIONS` and `LOOPS`, and the `CONSTRAINTS_G` of both sides
+of each contact. What it does not check:
 
-- `LOOPS` are checked only when they are expanded. A contact listed in `INTERACTIONS` that no
-  loop crosses gets no contact condition, silently: removing the loop `L1` of the pocket example
-  of {doc}`input_format` drops the two conditions of the right wall without any message.
-- `FRAME` is validated only when the points are generated from `ORIGIN`.
-- Inconsistent `CONSTRAINTS_G` on the two sides of a pair raise a bare `KeyError`, such as
-  `'plane-plane-floating-sliding'`.
-
-A schema with explicit errors is planned (see `ROADMAP.md`).
+- whether the loops close and are independent: that is only seen when the loops are expanded or
+  the system is solved;
+- whether every contact is crossed by a loop: this needs the expanded loops, so it is checked when
+  `InterfaceLoopHandling` is built, and a contact that no loop crosses raises an
+  `UncoveredContactWarning` (it gets no contact condition);
+- the geometry of the contacts (parallel planes, concentric cylinders, overlap): checked when the
+  contact points are computed, see the table above;
+- the units and the direction convention of the plane normals.
 
 ## Statistics
 

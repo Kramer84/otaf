@@ -257,9 +257,9 @@
             <span class="n">conditioned_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">conditioned_array</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">conditioned_array</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error in condition_sample_array: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">"Error encountered in condition_sample_array:</span><span class="se">\n</span><span class="s2">sample_array: </span><span class="si">{</span><span class="n">sample_array</span><span class="si">}</span><span class="se">\n</span><span class="s2">feature_indices: </span><span class="si">{</span><span class="n">feature_indices</span><span class="si">}</span><span class="se">\n</span><span class="s2">squared_sum: </span><span class="si">{</span><span class="n">squared_sum</span><span class="si">}</span><span class="s2">"</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"Error in condition_sample_array: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="se">\n</span><span class="s2">sample_array: </span><span class="si">{</span><span class="n">sample_array</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="sa">f</span><span class="s2">"feature_indices: </span><span class="si">{</span><span class="n">feature_indices</span><span class="si">}</span><span class="se">\n</span><span class="s2">squared_sum: </span><span class="si">{</span><span class="n">squared_sum</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
         <span class="k">raise</span></div>
 

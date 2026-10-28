@@ -66,6 +66,7 @@
 <li class="toctree-l4"><a class="reference internal" href="otaf.optimization.html">otaf.optimization package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.plotting.html">otaf.plotting package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.sampling.html">otaf.sampling package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="otaf.schema.html">otaf.schema package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.sensitivity.html">otaf.sensitivity package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.surrogate.html">otaf.surrogate package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="otaf.tolerances.html">otaf.tolerances package</a></li>
@@ -132,7 +133,8 @@ variables.</p></li>
 <li><p><strong>threshold</strong> (<em>float</em><em>, </em><em>optional</em>) – The limit state threshold. Default is 0.0.</p></li>
 <li><p><strong>start_point</strong> (<em>ot.Point</em><em>, </em><em>optional</em>) – Initial starting point for the optimization algorithm in
 physical space. Default is None.</p></li>
-<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, print reliability diagnostics. Default is False.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, log reliability diagnostics at INFO level on the
+<code class="docutils literal notranslate"><span class="pre">otaf.uncertainty._reliability</span></code> logger. Default is False.</p></li>
 <li><p><strong>solver</strong> (<em>ot.OptimizationAlgorithm</em><em>, </em><em>optional</em>) – The optimization algorithm to find the design point. Uses
 <code class="docutils literal notranslate"><span class="pre">ot.Cobyla()</span></code> with strict convergence tolerances if None.</p></li>
 </ul>
@@ -158,7 +160,9 @@ object.</p>
 <li><p><strong>distribution</strong> (<em>JointDistribution</em>) – The input random vector distribution.</p></li>
 <li><p><strong>threshold</strong> (<em>float</em><em>, </em><em>optional</em>) – The threshold value. Default is 0.0.</p></li>
 <li><p><strong>quantile_level</strong> (<em>float</em><em>, </em><em>optional</em>) – The quantile level for the NAIS algorithm. Default is 0.001.</p></li>
-<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, print additional information. Default is False.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, log the estimate and its confidence interval at INFO
+level on the <code class="docutils literal notranslate"><span class="pre">otaf.uncertainty._reliability</span></code> logger. Default is
+False.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -184,7 +188,9 @@ object.</p>
 <li><p><strong>ot_python_function</strong> (<em>ot.PythonFunction</em>) – The performance function <code class="docutils literal notranslate"><span class="pre">g(X)</span></code>.</p></li>
 <li><p><strong>distribution</strong> (<em>JointDistribution</em>) – The input random vector distribution.</p></li>
 <li><p><strong>threshold</strong> (<em>float</em><em>, </em><em>optional</em>) – The threshold value. Default is 0.0.</p></li>
-<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, print additional information. Default is False.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, log the estimate and its confidence interval at INFO
+level on the <code class="docutils literal notranslate"><span class="pre">otaf.uncertainty._reliability</span></code> logger. Default is
+False.</p></li>
 <li><p><strong>proposal_range</strong> (<em>float</em><em>, </em><em>optional</em>) – The proposal range for the Markov chain Monte Carlo steps.
 Default is 2.0.</p></li>
 <li><p><strong>target_probability</strong> (<em>float</em><em>, </em><em>optional</em>) – The target probability for each conditional step. Default
@@ -264,7 +270,7 @@ input array.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.uncertainty.compute_gap_optimizations_on_sample_batch">
-<span class="sig-prename descclassname"><span class="pre">otaf.uncertainty.</span></span><span class="sig-name descname"><span class="pre">compute_gap_optimizations_on_sample_batch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">constraint_matrix_generator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deviation_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_cpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_bar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'float32'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/uncertainty/_reliability.html#compute_gap_optimizations_on_sample_batch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.uncertainty.compute_gap_optimizations_on_sample_batch" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">otaf.uncertainty.</span></span><span class="sig-name descname"><span class="pre">compute_gap_optimizations_on_sample_batch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">constraint_matrix_generator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deviation_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_cpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_bar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'float32'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/uncertainty/_reliability.html#compute_gap_optimizations_on_sample_batch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.uncertainty.compute_gap_optimizations_on_sample_batch" title="Link to this definition"></a></dt>
 <dd><p>Compute gap optimizations using batch processing and MILP.</p>
 <p>Perform parallel batch optimization for a system of
 constraints, grouping samples into batches to improve
@@ -284,21 +290,33 @@ relative to total available CPUs. Default is 1.</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Verbosity level for debugging. Default is 0.</p></li>
 <li><p><strong>dtype</strong> (<em>str</em><em>, </em><em>optional</em>) – Data type for the resulting optimized decision variable array.
 Default is <code class="docutils literal notranslate"><span class="pre">'float32'</span></code>.</p></li>
+<li><p><strong>return_status</strong> (<em>bool</em><em>, </em><em>optional</em>) – Also return the <code class="docutils literal notranslate"><span class="pre">scipy.optimize.milp</span></code> status of every sample
+(default False).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Optimized decision variables for all samples stacked into a
-single array.</p>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>x</strong> (<em>np.ndarray</em>) – Optimized decision variables for all samples stacked into a
+single array. A row is NaN when the solver returned no solution
+for that sample; the slack <code class="docutils literal notranslate"><span class="pre">x[:,</span> <span class="pre">-1]</span></code> is then NaN too, so count
+failures with <code class="docutils literal notranslate"><span class="pre">np.isnan</span></code> before computing a failure probability.</p></li>
+<li><p><strong>status</strong> (<em>np.ndarray of int</em>) – Only if <cite>return_status</cite>: the status of each sample, see
+<cite>MILP_STATUS_MESSAGES</cite> (0 is optimal).</p></li>
+</ul>
+</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dt class="field-odd">Warns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>otaf.exceptions.SolverFailureWarning</strong> – If some samples have no solution.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Union[np.ndarray, tuple]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="otaf.uncertainty.milp_batch_sequential">
-<span class="sig-prename descclassname"><span class="pre">otaf.uncertainty.</span></span><span class="sig-name descname"><span class="pre">milp_batch_sequential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_ub</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_ub</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_eq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_eq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/uncertainty/_reliability.html#milp_batch_sequential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.uncertainty.milp_batch_sequential" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">otaf.uncertainty.</span></span><span class="sig-name descname"><span class="pre">milp_batch_sequential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_ub</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_ub</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_eq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_eq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/otaf/uncertainty/_reliability.html#milp_batch_sequential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#otaf.uncertainty.milp_batch_sequential" title="Link to this definition"></a></dt>
 <dd><p>Optimize a batch of linear programming problems sequentially.</p>
 <p>Solve a sequence of Mixed-Integer Linear Programming (MILP)
 problems sharing common objective coefficients and constraint
@@ -315,14 +333,25 @@ variables.</p></li>
 constraint per problem.</p></li>
 <li><p><strong>a_eq</strong> (<em>np.ndarray</em>) – 2D array for the equality constraints.</p></li>
 <li><p><strong>b_eq</strong> (<em>np.ndarray</em>) – 2D array of equality constraint values per problem.</p></li>
+<li><p><strong>return_status</strong> (<em>bool</em><em>, </em><em>optional</em>) – Also return the <code class="docutils literal notranslate"><span class="pre">scipy.optimize.milp</span></code> status of every problem
+(default False).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>2D array of optimized decision variables for each problem in
-the batch.</p>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>x</strong> (<em>np.ndarray</em>) – 2D array of optimized decision variables for each problem in
+the batch. A row is NaN when the solver returned no solution
+(e.g. infeasible problem).</p></li>
+<li><p><strong>status</strong> (<em>np.ndarray of int</em>) – Only if <cite>return_status</cite>: the status of each problem, see
+<cite>MILP_STATUS_MESSAGES</cite> (0 is optimal).</p></li>
+</ul>
+</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dt class="field-odd">Warns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>otaf.exceptions.SolverFailureWarning</strong> – If some problems have no solution.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>ndarray</em> | tuple</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -330,7 +359,7 @@ the batch.</p>
 <code class="docutils literal notranslate"><span class="pre">scipy.optimize.milp</span></code>. Solver options are set to
 <code class="docutils literal notranslate"><span class="pre">disp=False</span></code> and <code class="docutils literal notranslate"><span class="pre">presolve=True</span></code> for efficiency. Problems
 share <cite>c</cite>, <cite>a_ub</cite>, and <cite>a_eq</cite>, while <cite>b_ub</cite> and <cite>b_eq</cite> vary per
-batch element.</p>
+batch element. A failed problem no longer aborts the batch.</p>
 </dd></dl>
 
 </section>
