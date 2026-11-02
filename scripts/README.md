@@ -37,8 +37,8 @@ The GLD fit and CDF run on the GPU through `gldpy-gpu` (`--gld-backend cpu` for 
 The launch command was not recorded; this was inferred from the figures and a recomputation with `model1_4_dof_surrogate.pth`.
 
 - Colour scale: `viridis`, 200 levels, from the smallest positive Pf (floored at 1e-5) to the largest Pf of each grid, so each alpha has its own scale. The bin spacing (`--norm-type`) cannot be read from the figures; `log` is the default.
-- Red region: value mode, i.e. Pf >= P_max - pct * (P_max - P_min), with pct between 0.005 and 0.01 (it depends on the grid resolution: about 0.005 at 20x20, about 0.008 at 40x40). It is not a quantile.
-- The exact grid resolution and Monte Carlo size of the original run are unknown. Re-plot from an exported grid to settle it.
+- Red region: value mode, i.e. Pf >= P_max - pct * (P_max - P_min), with pct = 0.005 on a 50x50 grid (see the scan below). It is not a quantile.
+- The Monte Carlo size of the original run is unknown; the scan below settles the grid resolution and threshold.
 
 ### Exported grids (in `artifacts/`, not tracked)
 
@@ -49,7 +49,22 @@ Both were produced with the GPU backend, seed 0, model 1 surrogate, alphas 0.0 0
 | `pf_model1_40x40_mc500k.npz` | 40x40 | 500 000 | 3.6 min |
 | `pf_model1_50x50_mc1M.npz` | 50x50 | 1 000 000 | 7.2 min |
 
-Their Pf ranges agree to within about 5 % at every alpha, so the grids are converged. The red-threshold percentage has not yet been scanned on them (open item: find the `--highlight-pct` that reproduces the tracked PNGs).
+Their Pf ranges agree to within about 5 % at every alpha, so the grids are converged. 
+
+### Highlight-percentage scan
+
+Each grid was re-plotted at `--highlight-pct` 0.003, 0.004, 0.005, 0.0075 and 0.01 (value mode, default `log` norm, same figure size, 3572x2011 px as the tracked PNGs), and the number of pure-red pixels was compared with the tracked figures (ratio new/tracked, alphas 0.0, 0.01, 0.025, 0.05, 0.075):
+
+| Grid | pct 0.004 | pct 0.005 | pct 0.0075 |
+|---|---|---|---|
+| 40x40, 500k | 1.06 1.37 1.18 0.74 0.81 | 1.31 1.64 1.40 1.01 0.93 | 1.90 2.30 1.94 1.83 1.17 |
+| 50x50, 1M | 0.88 0.82 0.90 0.76 0.89 | **1.08 1.04 1.10 1.05 0.99** | 1.59 1.64 1.60 1.86 1.22 |
+
+`--highlight-pct 0.005` on the 50x50 grid reproduces the red area of all five tracked figures to within 10 %. The 40x40 grid does not match at any single value, so the tracked figures most likely come from a grid of about 50x50 (the red area depends on the contour interpolation of the grid, not only on the threshold). The red-pixel comparison cannot tell the Monte Carlo size apart; 1M samples were used. To regenerate the figures:
+
+```bash
+python scripts/plot_pf_2d_4dof_model.py --load-grids pf_model1_50x50_mc1M --highlight-pct 0.005 --output-dir scripts
+```
 
 ## GPU setup notes
 
