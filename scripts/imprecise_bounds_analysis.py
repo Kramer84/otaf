@@ -1,8 +1,9 @@
 import argparse
+from pathlib import Path
 import numpy as np
 from scipy.optimize import NonlinearConstraint, Bounds, minimize
 import otaf
-from gldpy import GLD
+from gldpy_gpu import GLD
 
 # Here will be the set of codes to load the neural network based surrogates, 
 # define the constraints of the credal sets
@@ -287,7 +288,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Imprecise Bounds Analysis for OTAF Models.")
     parser.add_argument("--models", nargs="+", required=True, help="Models to run (e.g., model1_4_dof)")
     parser.add_argument("--slacks", nargs="+", required=True, help="Comma-separated slacks per model")
-    parser.add_argument("--surrogate-dir", type=str, default=".", help="Directory containing .pth files")
+    parser.add_argument("--surrogate-dir", type=str, default=str(Path(__file__).resolve().parent / "artifacts"), help="Directory containing .pth files")
     parser.add_argument("--output-dir", type=str, default=".", help="Directory to save CSV results")
     parser.add_argument("--maxiter", type=int, default=5000, help="Max iterations for COBYQA")
     parser.add_argument("--mc-size", type=int, default=100000, help="Monte Carlo sample size for GLD")

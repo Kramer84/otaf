@@ -34,7 +34,7 @@ dependencies = [
     "tqdm",
     "joblib",
     "beartype",
-    "gldpy",
+    "gldpy-gpu>=0.3.0",
     "pydantic>=2",
 ]
 

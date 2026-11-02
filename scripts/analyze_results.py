@@ -4,7 +4,7 @@ import argparse
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from gldpy import GLD
+from gldpy_gpu import GLD
 import otaf
 
 # --- Global plot style configuration ----------------------------------------
@@ -442,7 +442,7 @@ if __name__ == "__main__":
     import os
     import argparse
     import numpy as np
-    from gldpy import GLD
+    from gldpy_gpu import GLD
     import otaf
 
     parser = argparse.ArgumentParser(description="Analyze OTAF Optimization Results.")
