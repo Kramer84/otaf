@@ -350,7 +350,7 @@ def main():
     parser.add_argument("--grid-res", type=int, default=20, help="Resolution of the 2D grid")
     parser.add_argument("--seed", type=int, default=0, help="Seed of the Monte Carlo sample")
     parser.add_argument("--mc-size", type=int, default=100000, help="Monte Carlo sample size")
-    parser.add_argument("--norm-type", type=str, choices=["log", "linear", "power"], default="log", help="Contour normalization type")
+    parser.add_argument("--norm-type", type=str, choices=["log", "linear", "power"], default="power", help="Contour normalization type")
     parser.add_argument("--highlight-pct", type=float, default=0.05, help="Top percentage to color in red (e.g. 0.05 or 5.0)")
     parser.add_argument("--highlight-mode", type=str, choices=["value", "quantile"], default="value", help="Method to compute peak threshold")
     parser.add_argument("--save-grids", type=str, default=None, metavar="NAME_OR_PATH", help="Export the evaluated Pf grids to an .npz (a bare name goes to scripts/artifacts/)")

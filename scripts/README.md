@@ -36,7 +36,7 @@ The GLD fit and CDF run on the GPU through `gldpy-gpu` (`--gld-backend cpu` for 
 
 The launch command was not recorded; this was inferred from the figures and a recomputation with `model1_4_dof_surrogate.pth`.
 
-- Colour scale: `viridis`, 200 levels, from the smallest positive Pf (floored at 1e-5) to the largest Pf of each grid, so each alpha has its own scale. Bin spacing: `--norm-type power` (checked below); the script default is `log`.
+- Colour scale: `viridis`, 200 levels, from the smallest positive Pf (floored at 1e-5) to the largest Pf of each grid, so each alpha has its own scale. Bin spacing: `--norm-type power`, also the script default (checked below).
 - Red region: value mode, i.e. Pf >= P_max - pct * (P_max - P_min), with pct = 0.005 on a 50x50 grid (see the scan below). It is not a quantile.
 - The Monte Carlo size of the original run is unknown; the scan below settles the grid resolution and threshold.
 
@@ -63,7 +63,7 @@ Each grid was re-plotted at `--highlight-pct` 0.003, 0.004, 0.005, 0.0075 and 0.
 The red area does not depend on the norm type (the threshold is computed before it). `--highlight-pct 0.005` on the 50x50 grid reproduces the red area of all five tracked figures to within 10 %. The 40x40 grid does not match at any single value, so the tracked figures most likely come from a grid of about 50x50 (the red area depends on the contour interpolation of the grid, not only on the threshold). The red-pixel comparison cannot tell the Monte Carlo size apart; 1M samples were used. The norm type was found separately, from the colours: with the 50x50 grid and pct 0.005, the mean absolute pixel difference to the tracked figure is 0.0144 (alpha 0.025) and 0.0015 (alpha 0.075) for `power`, against 0.183 / 0.143 for `log` and 0.173 / 0.120 for `linear`. To regenerate the figures:
 
 ```bash
-python scripts/plot_pf_2d_4dof_model.py --load-grids pf_model1_50x50_mc1M --highlight-pct 0.005 --norm-type power --output-dir scripts
+python scripts/plot_pf_2d_4dof_model.py --load-grids pf_model1_50x50_mc1M --highlight-pct 0.005 --output-dir scripts
 ```
 
 ## GPU setup notes
