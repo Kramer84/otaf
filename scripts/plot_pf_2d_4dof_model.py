@@ -1,10 +1,13 @@
 import argparse
+import json
+from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 from matplotlib.colors import ListedColormap
 from matplotlib.ticker import FuncFormatter
-from gldpy import GLD
+import torch
+from gldpy_gpu import GLD, gpu as gld_gpu
 import otaf
 
 # Import the model definition you provided
@@ -285,6 +288,31 @@ def plot_single_pf_grid(
 
 ###################################################
 
+def pf_at_alphas(eval_vals, alphas, gld, backend):
+    """P(eval_vals < alpha) from a VSL GLD fitted by L-moments, for each alpha.
+
+    Falls back to the empirical probability when the fit fails (NaN parameters or CDF error).
+    """
+    if backend == "gpu":
+        data = torch.as_tensor(eval_vals, dtype=torch.float32, device=gld.device)
+        params = gld.fit_LMM(data)
+        fit_ok = bool(torch.isfinite(params).all())
+        cdf = lambda a: float(gld.CDF_num(a, params, xtol=1e-6))
+    else:
+        params = gld.fit_LMM(eval_vals, disp_fit=False, disp_optimizer=False)
+        fit_ok = not np.any(np.isnan(params))
+        # gld.CDF_num returns a tuple (cdf_val, abserr)
+        cdf = lambda a: float(gld.CDF_num(a, params, xtol=1e-6)[0])
+    pfs = []
+    for alpha in alphas:
+        try:
+            pf = cdf(alpha) if fit_ok else float((eval_vals < alpha).mean())
+        except Exception:
+            pf = float((eval_vals < alpha).mean())
+        pfs.append(float(np.clip(pf, 0.0, 1.0)))
+    return pfs
+
+
 def get_model_evaluator(sample, mu_vect, neural_model):
     def evaluate(x):
         x_transformed = (sample - mu_vect) * x + mu_vect
@@ -292,18 +320,106 @@ def get_model_evaluator(sample, mu_vect, neural_model):
         return np.squeeze(prediction.numpy())
     return evaluate
 
+ARTIFACTS_DIR = Path(__file__).resolve().parent / "artifacts"
+
+
+def save_pf_grids(path, U4_grid, U5_grid, PF_grids, meta):
+    """Write the evaluated Pf grids and the parameters that produced them to an ``.npz``."""
+    alphas = np.array(list(PF_grids.keys()), dtype=float)
+    np.savez(
+        path,
+        U4_grid=U4_grid,
+        U5_grid=U5_grid,
+        alphas=alphas,
+        PF=np.stack([PF_grids[a] for a in PF_grids]),
+        meta=json.dumps(meta),
+    )
+
+
+def load_pf_grids(path):
+    """Read a file written by :func:`save_pf_grids`; returns ``(U4_grid, U5_grid, PF_grids, meta)``."""
+    with np.load(path, allow_pickle=False) as data:
+        PF_grids = {float(a): pf for a, pf in zip(data["alphas"], data["PF"])}
+        return data["U4_grid"], data["U5_grid"], PF_grids, json.loads(str(data["meta"]))
+
+
 def main():
     parser = argparse.ArgumentParser(description="Grid Evaluation for 4-DOF OTAF Model")
-    parser.add_argument("--surrogate-path", type=str, default="./model1_4_dof_surrogate.pth", help="Path to the .pth surrogate file")
-    parser.add_argument("--alphas", type=float, nargs="+", default=[0.0, 0.5, 1.0], help="List of failure limits/alphas")
+    parser.add_argument("--surrogate-path", type=str, default=str(ARTIFACTS_DIR / "model1_4_dof_surrogate.pth"), help="Path to the .pth surrogate file")
+    parser.add_argument("--alphas", type=float, nargs="+", default=None, help="List of failure limits/alphas (default: 0.0 0.5 1.0 when evaluating, all stored ones with --load-grids)")
     parser.add_argument("--grid-res", type=int, default=20, help="Resolution of the 2D grid")
     parser.add_argument("--seed", type=int, default=0, help="Seed of the Monte Carlo sample")
     parser.add_argument("--mc-size", type=int, default=100000, help="Monte Carlo sample size")
-    parser.add_argument("--norm-type", type=str, choices=["log", "linear", "power"], default="log", help="Contour normalization type")
+    parser.add_argument("--norm-type", type=str, choices=["log", "linear", "power"], default="power", help="Contour normalization type")
     parser.add_argument("--highlight-pct", type=float, default=0.05, help="Top percentage to color in red (e.g. 0.05 or 5.0)")
     parser.add_argument("--highlight-mode", type=str, choices=["value", "quantile"], default="value", help="Method to compute peak threshold")
+    parser.add_argument("--save-grids", type=str, default=None, metavar="NAME_OR_PATH", help="Export the evaluated Pf grids to an .npz (a bare name goes to scripts/artifacts/)")
+    parser.add_argument("--load-grids", type=str, default=None, metavar="NAME_OR_PATH", help="Skip the evaluation and plot the Pf grids of a file written by --save-grids")
+    parser.add_argument("--gld-backend", type=str, choices=["gpu", "cpu"], default="gpu", help="GLD fit/CDF backend: gldpy-gpu (torch, float32) or the NumPy/SciPy one")
+    parser.add_argument("--output-dir", type=str, default=".", help="Directory to save the PNG figures")
     args = parser.parse_args()
 
+    def resolve_grid_path(name):
+        p = Path(name)
+        if p.suffix != ".npz":
+            p = p.with_suffix(".npz")
+        return p if p.parent != Path(".") else ARTIFACTS_DIR / p
+
+    if args.load_grids:
+        if args.save_grids:
+            parser.error("--save-grids has no effect together with --load-grids")
+        U4_grid, U5_grid, PF_grids, meta = load_pf_grids(resolve_grid_path(args.load_grids))
+        print(f"Loaded Pf grids for alphas {sorted(PF_grids)} (evaluated with {meta}).")
+        if args.alphas is not None:
+            missing = [a for a in args.alphas if a not in PF_grids]
+            if missing:
+                parser.error(f"alphas {missing} are not in the loaded file (available: {sorted(PF_grids)})")
+            PF_grids = {a: PF_grids[a] for a in args.alphas}
+    else:
+        if args.alphas is None:
+            args.alphas = [0.0, 0.5, 1.0]
+        U4_grid, U5_grid, PF_grids = evaluate_pf_grids(args)
+        if args.save_grids:
+            grid_path = resolve_grid_path(args.save_grids)
+            grid_path.parent.mkdir(parents=True, exist_ok=True)
+            meta = {k: getattr(args, k) for k in ("surrogate_path", "grid_res", "seed", "mc_size", "gld_backend")}
+            save_pf_grids(grid_path, U4_grid, U5_grid, PF_grids, meta)
+            print(f"Saved Pf grids to {grid_path}")
+
+    # Plot the Results
+    print("Generating individual contour plots...")
+    out_dir = Path(args.output_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    for alpha in PF_grids:
+        plot_filename = out_dir / f"Pf_Grid_alpha_{alpha}.png"
+        print(f"Saving {plot_filename}...")
+
+        fig, ax = plot_single_pf_grid(
+            U4_grid,
+            U5_grid,
+            PF_grids[alpha],
+            alpha=alpha,
+            norm_type=args.norm_type,
+            n_levels=200,
+            highlight_pct=args.highlight_pct,
+            highlight_mode=args.highlight_mode,
+            highlight_color="#FF0000",
+            base_cmap="viridis",
+            log_min_floor=1e-5,
+            save=True,
+            save_path=str(plot_filename),
+            dpi=600,
+            show=False,
+            usetex=True,
+            transparent=True
+        )
+
+        plt.close(fig)
+
+
+def evaluate_pf_grids(args):
+    """Evaluate Pf on the 2D allocation grid with the surrogate; returns ``(U4_grid, U5_grid, PF_grids)``."""
     # 1. Setup Models and Distributions
     print("Loading surrogate model and distributions...")
     model_sur = otaf.surrogate.NeuralRegressorNetwork.from_checkpoint(args.surrogate_path)
@@ -313,7 +429,7 @@ def main():
     sample_gld = np.array(jointDist.getSample(args.mc_size))
     
     model_eval_fn = get_model_evaluator(sample_gld, mu_vect, model_sur)
-    gld = GLD('VSL')
+    gld = gld_gpu.GLD('VSL') if args.gld_backend == "gpu" else GLD('VSL')
 
     # 2. Construct the Grid
     print(f"Building {args.grid_res}x{args.grid_res} evaluation grid for alphas: {args.alphas}...")
@@ -338,58 +454,13 @@ def main():
             # Evaluate model via surrogate ONCE per spatial coordinate
             eval_vals = model_eval_fn(x_scaled)
             
-            # Compute GLD parameters ONCE per spatial coordinate
-            gld_params = gld.fit_LMM(eval_vals, disp_fit=False, disp_optimizer=False)
-            
-            # Apply the evaluated distribution against all alpha thresholds
-            for alpha in args.alphas:
-                if np.any(np.isnan(gld_params)):
-                    # Fallback to empirical probability if GLD fails
-                    pf_raw = (eval_vals < alpha).mean()
-                else:
-                    try:
-                        pf_raw = gld.CDF_num(alpha, gld_params, xtol=1e-6)
-                    except Exception:
-                        pf_raw = (eval_vals < alpha).mean()
-                
-                # Extract scalar float (gld.CDF_num returns a tuple (cdf_val, abserr))
-                if isinstance(pf_raw, (tuple, list, np.ndarray)):
-                    pf_val = float(pf_raw[0])
-                else:
-                    pf_val = float(pf_raw)
-                    
-                PF_grids[alpha][i, j] = float(np.clip(pf_val, 0.0, 1.0))
-                
+            # Fit the GLD ONCE per spatial coordinate, then evaluate it for all alphas
+            for alpha, pf_val in zip(args.alphas, pf_at_alphas(eval_vals, args.alphas, gld, args.gld_backend)):
+                PF_grids[alpha][i, j] = pf_val
+
         print(f"Row {i+1}/{args.grid_res} completed.")
 
-    # 4. Plot the Results
-    print("Generating individual contour plots...")
-    
-    for alpha in args.alphas:
-        plot_filename = f"Pf_Grid_alpha_{alpha}.png"
-        print(f"Saving {plot_filename}...")
-        
-        fig, ax = plot_single_pf_grid(
-            U4_grid, 
-            U5_grid, 
-            PF_grids[alpha], 
-            alpha=alpha,
-            norm_type=args.norm_type,
-            n_levels=200,
-            highlight_pct=args.highlight_pct,
-            highlight_mode=args.highlight_mode,
-            highlight_color="#FF0000",
-            base_cmap="viridis",
-            log_min_floor=1e-5,
-            save=True, 
-            save_path=plot_filename, 
-            dpi=600,
-            show=False,
-            usetex=True,
-            transparent=True
-        )
-        
-        plt.close(fig)
+    return U4_grid, U5_grid, PF_grids
 
 if __name__ == "__main__":
     main()

@@ -1,8 +1,9 @@
 import argparse
+from pathlib import Path
 import numpy as np
 from scipy.optimize import NonlinearConstraint, Bounds, minimize
 import otaf
-from gldpy import GLD
+from gldpy_gpu import GLD, gpu as gld_gpu
 
 # Here will be the set of codes to load the neural network based surrogates, 
 # define the constraints of the credal sets
@@ -95,7 +96,35 @@ def get_model_evaluator(sample, mu_vect, neural_model):
         return np.squeeze(prediction.numpy())
     return evaluate
 
-@otaf.optimization.scaling(scale_factor=1.0)
+def make_gld(backend):
+    """VSL GLD: gldpy-gpu's torch class in float64, or its NumPy/SciPy class."""
+    return gld_gpu.GLD('VSL', dtype='float64') if backend == "gpu" else GLD('VSL')
+
+
+def fit_gld_pf(gld, slack, failure_slack):
+    """Fit a GLD to `slack` by L-moments, and return (parameters as an ndarray, P(X <= failure_slack)).
+
+    Both are NaN where gldpy-gpu rejects the data or the fitted parameters with a ValueError.
+    """
+    params = np.full(4, np.nan)
+    pf = np.nan
+    try:
+        if isinstance(gld, GLD):
+            fitted = gld.fit_LMM(slack, disp_fit=False, disp_optimizer=False)
+        else:
+            fitted = gld.fit_LMM(slack)
+        params = fitted.detach().cpu().numpy() if hasattr(fitted, "detach") else np.asarray(fitted)
+        if not np.any(np.isnan(params)):
+            cdf = gld.CDF_num(failure_slack, fitted, xtol=1e-6)
+            cdf = cdf.detach().cpu().numpy() if hasattr(cdf, "detach") else np.asarray(cdf)
+            # CDF_num returns a 1-element array; NumPy >= 2.5 refuses float() on it
+            pf = float(cdf.ravel()[0])
+    except ValueError as exc:
+        print(f"GLD fit or CDF failed: {exc}")
+    return params, pf
+
+
+@otaf.common.scaling(scale_factor=1.0)
 def optimization_function(
         x, 
         failure_slack=0.0,
@@ -110,16 +139,14 @@ def optimization_function(
     multiplier = 1 if minimize else -1
 
     slack = model(x)
-    gld_params = gld.fit_LMM(slack, disp_fit=False, disp_optimizer=False)
+    gld_params, fp_gld = fit_gld_pf(gld, slack, failure_slack)
     
     fp_slack = np.where(slack < failure_slack, 1, 0).mean()
-    fp_gld = np.nan
     
-    if np.any(np.isnan(gld_params)):
-        print("GLD Parameters are NaN, returning estimated Pf")
+    if np.isnan(fp_gld):
+        print("GLD Pf is NaN, returning estimated Pf")
         fp_out = fp_slack
     else:
-        fp_gld = gld.CDF_num(failure_slack, gld_params, xtol=1e-6)
         fp_out = fp_gld
         
     print(f"Pf ({mode_label}) is {fp_out}, GLD Pf is {fp_gld}, estimated PF is {fp_slack} , log prob is {np.log(1e-16+fp_out)} ")
@@ -146,10 +173,11 @@ def pf_min_max_optimizer(
         constraint_factory=None,
         x0=None,
         dim=None,
-        maxiter=10000):
+        maxiter=10000,
+        gld_backend="gpu"):
     
     # 1. Instantiate GLD here so it can be passed to the objective function
-    gld = GLD('VSL')
+    gld = make_gld(gld_backend)
     
     normalized_bounds = Bounds(1e-9, 1.0, keep_feasible=True)
     print(f"\n--- Starting optimization sequence for Slack: {failure_slack} ---\n")
@@ -221,7 +249,7 @@ def run_reduced_analysis(m_name, model_class, args, base_model_fun, max_std_vect
     opt_dim = len(active_indices)
     
     tracker = otaf.optimization.OptimizationTracker(
-        bounds=Bounds(1e-7, 1.0), constraint_tolerance=1e-5, precision_decimals=8
+        bounds=Bounds(1e-9, 1.0), constraint_tolerance=1e-5, precision_decimals=8
     )
 
     # 1. Wrap the MLP Evaluator
@@ -273,7 +301,8 @@ def run_reduced_analysis(m_name, model_class, args, base_model_fun, max_std_vect
             constraint_factory=create_directional_constraint, 
             x0=x0_reduced,
             dim=opt_dim,                            # Optimizer operates in reduced space
-            maxiter=args.maxiter
+            maxiter=args.maxiter,
+            gld_backend=args.gld_backend
         )
         
     df = tracker.to_dataframe()
@@ -287,11 +316,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Imprecise Bounds Analysis for OTAF Models.")
     parser.add_argument("--models", nargs="+", required=True, help="Models to run (e.g., model1_4_dof)")
     parser.add_argument("--slacks", nargs="+", required=True, help="Comma-separated slacks per model")
-    parser.add_argument("--surrogate-dir", type=str, default=".", help="Directory containing .pth files")
+    parser.add_argument("--surrogate-dir", type=str, default=str(Path(__file__).resolve().parent / "artifacts"), help="Directory containing .pth files")
     parser.add_argument("--output-dir", type=str, default=".", help="Directory to save CSV results")
     parser.add_argument("--maxiter", type=int, default=5000, help="Max iterations for COBYQA")
     parser.add_argument("--mc-size", type=int, default=100000, help="Monte Carlo sample size for GLD")
     parser.add_argument("--seed", type=int, default=0, help="Seed of the Monte Carlo sample used for the GLD fits")
+    parser.add_argument("--gld-backend", type=str, choices=["gpu", "cpu"], default="gpu", help="GLD fit/CDF backend: gldpy-gpu (torch, float64) or the NumPy/SciPy one")
     parser.add_argument("--reduced-mode", action="store_true", help="Run reduced variable subsets for model3 and model4")
 
     args = parser.parse_args()
@@ -338,7 +368,7 @@ if __name__ == "__main__":
             if args.reduced_mode:
                 print(f"No reduced mapping for {m_name}, falling back to full dimension.")
                 
-            tracker = otaf.optimization.OptimizationTracker(bounds=Bounds(1e-7, 1.0), constraint_tolerance=1e-5, precision_decimals=8)
+            tracker = otaf.optimization.OptimizationTracker(bounds=Bounds(1e-9, 1.0), constraint_tolerance=1e-5, precision_decimals=8)
             
             def create_directional_constraint(tr, expKey, is_minimization):
                 lb = 0.0 if is_minimization else -np.inf
@@ -366,7 +396,8 @@ if __name__ == "__main__":
                     constraint_factory=create_directional_constraint, 
                     x0=x0,
                     dim=model.dim,
-                    maxiter=args.maxiter
+                    maxiter=args.maxiter,
+                    gld_backend=args.gld_backend
                 )
                 
             df = tracker.to_dataframe()

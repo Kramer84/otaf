@@ -4,7 +4,7 @@ import argparse
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from gldpy import GLD
+from gldpy_gpu import GLD
 import otaf
 
 # --- Global plot style configuration ----------------------------------------
@@ -190,6 +190,13 @@ def load_and_clean_data(csv_path, strict_tol=5e-4):
         # Ensures ALL features are either exactly at target OR explicitly deactivated
         return np.all(on_boundary | inactive)
 
+    # The optimizer works in [1e-9, 1] while the tracker flags points outside [1e-7, 1], so
+    # a feature switched off (x = 1e-9) was flagged out of bounds. Check the box directly.
+    if "point" in df.columns:
+        df["bounds_respected"] = df["point"].apply(
+            lambda x: isinstance(x, np.ndarray) and bool(np.all((x >= -1e-6) & (x <= 1.0 + 1e-6)))
+        )
+
     if "constraint_values" in df.columns:
         df["strict_constraints"] = df["constraint_values"].apply(is_strictly_on_boundary)
         valid_mask = (df["bounds_respected"]) & (df["strict_constraints"])
@@ -201,7 +208,10 @@ def load_and_clean_data(csv_path, strict_tol=5e-4):
 
 def get_valid_gld_params(df):
     """Extracts a clean 2D numpy array of GLD parameters."""
-    params = np.stack(df["GLD_PARAMS"].values)
+    # Rows without a fit (missing value, or a vector of another length) are dropped
+    rows = [np.asarray(p, dtype=float) for p in df["GLD_PARAMS"].values
+            if isinstance(p, np.ndarray) and p.shape == (4,)]
+    params = np.stack(rows)
     # Filter out invalid GLD fits (e.g., Lambda 4 close to 0 or invalid scale)
     safe_mask = (np.abs(params[:, 3]) > 1e-8) & (params[:, 1] > 0)
     return params[safe_mask]
@@ -442,7 +452,7 @@ if __name__ == "__main__":
     import os
     import argparse
     import numpy as np
-    from gldpy import GLD
+    from gldpy_gpu import GLD
     import otaf
 
     parser = argparse.ArgumentParser(description="Analyze OTAF Optimization Results.")

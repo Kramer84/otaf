@@ -2,9 +2,12 @@ from __future__ import annotations
 
 import numpy as np
 import argparse
+from pathlib import Path
 
 import otaf
 import torch
+
+ARTIFACTS_DIR = Path(__file__).resolve().parent / "artifacts"
 
 #These sripts will load the models then train the neural network, then save it.
 #Let's start with some generalistic functions.
@@ -39,7 +42,7 @@ class SurrogateTrainer:
         self.lr = lr
         self.max_epochs = max_epochs
         self.batch_size = batch_size
-        self.save_path = save_path if save_path else f"{model_name}_surrogate.pth"
+        self.save_path = save_path if save_path else str(ARTIFACTS_DIR / f"{model_name}_surrogate.pth")
         self.sample_multiplier = sample_multiplier if sample_multiplier is not None else np.eye(self.dim)
 
 
@@ -183,7 +186,7 @@ if __name__ == "__main__":
         mult = get_param(args.mults, i, 1.25)
         sample_size = get_param(args.sample_sizes, i, 100000)
         arch_str = get_param(args.architectures, i, "dim,100,70,30,1")
-        save_path = get_param(args.save_paths, i, f"{model_name}_surrogate.pth")
+        save_path = get_param(args.save_paths, i, str(ARTIFACTS_DIR / f"{model_name}_surrogate.pth"))
 
         architecture = arch_str.split(',')
 
