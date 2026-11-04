@@ -30,7 +30,7 @@ python scripts/plot_pf_2d_4dof_model.py --load-grids pf_model1 \
     --highlight-mode value --highlight-pct 0.005 --output-dir /tmp/pf_test
 ```
 
-The GLD fit and CDF run on the GPU through `gldpy-gpu` (`--gld-backend cpu` for the NumPy/SciPy version; they agree to about 1e-5 relative, the GPU one is about 100x faster at 500k samples). `--alphas` with `--load-grids` selects among the stored alphas. The file also stores `grid_res`, `seed`, `mc_size` and the surrogate path. The figures are written to `--output-dir` (default: the current directory), so re-plotting with the default overwrites the tracked `Pf_Grid_alpha_*.png`.
+The GLD fit and CDF run on the GPU through `gldpy-gpu` (`--gld-backend cpu` for the NumPy/SciPy version; with gldpy-gpu 0.4.0 they agree to within about 5e-5 relative in float32, measured on one Gumbel fit down to Pf = 1.6e-9, and the GPU one is about 100x faster at 500k samples). `--alphas` with `--load-grids` selects among the stored alphas. The file also stores `grid_res`, `seed`, `mc_size` and the surrogate path. The figures are written to `--output-dir` (default: the current directory), so re-plotting with the default overwrites the tracked `Pf_Grid_alpha_*.png`.
 
 ### How the tracked `Pf_Grid_alpha_*.png` were (most likely) generated
 
@@ -68,6 +68,7 @@ python scripts/plot_pf_2d_4dof_model.py --load-grids pf_model1_50x50_mc1M --high
 
 ## GPU setup notes
 
-- The GLD part uses `gldpy-gpu>=0.3.0` (import name `gldpy_gpu`). The scripts that do not use the GPU import its NumPy-compatible `GLD`.
+- The GLD part uses `gldpy-gpu>=0.4.0` (import name `gldpy_gpu`). `plot_pf_2d_4dof_model.py` (float32) and `imprecise_bounds_analysis.py` (float64) use its GPU class by default; `--gld-backend cpu` selects the NumPy class. `analyze_results.py` and the notebooks use the NumPy `GLD`, which gives the same tail values, because they evaluate few points. gldpy-gpu no longer installs torch: it comes from otaf's `surrogate` extra.
+- 0.4.0 removed the CDF floors of 0.3.0 (5.363e-07 and 8.697e-07 for the CPU class), so `OptimizationResults_*.csv` produced before it can hold these values instead of the real lower bound.
 - A GTX 10xx (compute capability 6.1) needs a torch build for CUDA 12.6 (`https://download.pytorch.org/whl/cu126`); the default wheel has no kernels for it and fails with `CUBLAS_STATUS_ARCH_MISMATCH`. Add the index in a local, uncommitted `[tool.uv.sources]` block of `pyproject.toml`.
 - `uv sync` without `--inexact` removes extras that are not listed (pytest, ruff, ...); use `uv sync --inexact --extra surrogate --extra test --extra dev --extra viz`.
