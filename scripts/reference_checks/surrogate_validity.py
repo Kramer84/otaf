@@ -5,7 +5,7 @@ Ex3 only lambda = 1) a fresh sample is drawn (seed 123, independent of the train
 samples) and the surrogate slack is compared with the linear-program slack: bias and RMSE of the slack, the same in
 the band |s| < 0.02 around the limit state, the fraction of samples on the wrong side of s = 0 and, in the last
 column, the Pf from the surrogate and from the linear program on the same sample.
-Usage: python scripts/reference_checks/surrogate_validity.py [n_ex12] [n_ex3] [n_ex4]
+Usage: python scripts/reference_checks/surrogate_validity.py [n_ex12] [n_ex3] [n_ex4] [artifacts_dir]
 """
 import sys
 from multiprocessing import Pool
@@ -18,6 +18,7 @@ import classical_allocations_ex3_ex4 as C
 from baseline_cases import solve_slack
 
 NS = [int(a) for a in sys.argv[1:4]] if len(sys.argv) > 3 else [20000, 10000, 4000]
+ART = sys.argv[4] if len(sys.argv) > 4 else "artifacts"
 FILES = {"model1": "model1_4_dof", "model2": "model2_16_dof", "model3": "model3_30_dof", "model4": "model4_50_dof"}
 _soc = {}
 
@@ -44,7 +45,7 @@ def main():
     for name, n in zip(["model1", "model2", "model3", "model4"], NS[:1] + NS[:1] + NS[1:2] + NS[2:3]):
         model = getattr(otaf.example_models, name)
         dist, sym, ms, mu = model.get_distribution_params()
-        sur = otaf.surrogate.NeuralRegressorNetwork.from_checkpoint(f"artifacts/{FILES[name]}_surrogate.pth")
+        sur = otaf.surrogate.NeuralRegressorNetwork.from_checkpoint(f"{ART}/{FILES[name]}_surrogate.pth")
         otaf.common.set_seed(123)
         smp = np.array(dist.getSample(n))
         ev = IB.get_model_evaluator(smp, mu, sur)
