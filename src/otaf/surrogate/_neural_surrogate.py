@@ -250,9 +250,12 @@ class NeuralRegressorNetwork(nn.Module):
             input_dim if str(a).lower() == "dim" else int(a)
             for a in checkpoint["architecture"]
         ]
+        activation_class = {"gelu": torch.nn.GELU, "relu": torch.nn.ReLU}[
+            checkpoint.get("activation", "gelu")
+        ]
         instance.model = torch.nn.Sequential(
             *otaf.surrogate.get_custom_mlp_layers(
-                parsed_arch, activation_class=torch.nn.GELU
+                parsed_arch, activation_class=activation_class
             )
         )
         instance.model.load_state_dict(checkpoint["model_state_dict"])

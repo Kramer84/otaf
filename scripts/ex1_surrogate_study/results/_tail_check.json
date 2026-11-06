@@ -1,0 +1,282 @@
+{
+ "F_relu16_credal_200k_s0/TT": {
+  "max_all": 0.0008009470999240931,
+  "s_at_max": 0.18308980241417885,
+  "max_in_band": 0.00012736245989800055,
+  "share_gt_1e4": 1.4e-05,
+  "share_in_band": 0.4449498
+ },
+ "F_relu16_credal_200k_s0/RR": {
+  "max_all": 1.650080084800165e-05,
+  "s_at_max": 0.09328667297959328,
+  "max_in_band": 1.650080084800165e-05,
+  "share_gt_1e4": 0.0,
+  "share_in_band": 0.890339
+ },
+ "F_relu16_credal_200k_s0/EE": {
+  "max_all": 0.00205137357115745,
+  "s_at_max": -0.07893395945429801,
+  "max_in_band": 0.0005037918686866816,
+  "share_gt_1e4": 1.92e-05,
+  "share_in_band": 0.691367
+ },
+ "F_relu16_credal_200k_s0/credal": {
+  "max_all": 0.00039443150162696283,
+  "s_at_max": -0.05380303934216499,
+  "max_in_band": 0.00033021429553628523,
+  "share_gt_1e4": 8.2e-06,
+  "share_in_band": 0.7496229999999999
+ },
+ "F_relu16_credal_200k_s1/TT": {
+  "max_all": 0.00026692301034927923,
+  "s_at_max": 0.060713148117065435,
+  "max_in_band": 0.00026692301034927923,
+  "share_gt_1e4": 7e-06,
+  "share_in_band": 0.4449498
+ },
+ "F_relu16_credal_200k_s1/RR": {
+  "max_all": 6.89657405018862e-05,
+  "s_at_max": 0.0999752314761281,
+  "max_in_band": 3.407709300573547e-07,
+  "share_gt_1e4": 0.0,
+  "share_in_band": 0.890339
+ },
+ "F_relu16_credal_200k_s1/EE": {
+  "max_all": 0.00012426581233740408,
+  "s_at_max": 0.08391854669898749,
+  "max_in_band": 0.00012426581233740408,
+  "share_gt_1e4": 2e-07,
+  "share_in_band": 0.691367
+ },
+ "F_relu16_credal_200k_s1/credal": {
+  "max_all": 7.451036944985945e-05,
+  "s_at_max": 0.09914249638095499,
+  "max_in_band": 4.0991371497517415e-05,
+  "share_gt_1e4": 0.0,
+  "share_in_band": 0.7496229999999999
+ },
+ "F_relu16_credal_200k_s2/TT": {
+  "max_all": 2.7173757553095035e-05,
+  "s_at_max": 0.07376630455255509,
+  "max_in_band": 2.7173757553095035e-05,
+  "share_gt_1e4": 0.0,
+  "share_in_band": 0.4449498
+ },
+ "F_relu16_credal_200k_s2/RR": {
+  "max_all": 7.2740018367822845e-06,
+  "s_at_max": 0.0908963404595852,
+  "max_in_band": 7.2740018367822845e-06,
+  "share_gt_1e4": 0.0,
+  "share_in_band": 0.890339
+ },
+ "F_relu16_credal_200k_s2/EE": {
+  "max_all": 0.0005720522254705485,
+  "s_at_max": 0.18260088227689267,
+  "max_in_band": 0.00025555733591317575,
+  "share_gt_1e4": 1.76e-05,
+  "share_in_band": 0.691367
+ },
+ "F_relu16_credal_200k_s2/credal": {
+  "max_all": 0.00038310410454869825,
+  "s_at_max": 0.1866331201978028,
+  "max_in_band": 0.00032461991067975204,
+  "share_gt_1e4": 1.0199999999999999e-05,
+  "share_in_band": 0.7496229999999999
+ },
+ "F_relu16_credal_200k_s3/TT": {
+  "max_all": 0.0002516195178031977,
+  "s_at_max": 0.10702815502882004,
+  "max_in_band": 2.054870128637143e-06,
+  "share_gt_1e4": 0.0005394,
+  "share_in_band": 0.4449498
+ },
+ "F_relu16_credal_200k_s3/RR": {
+  "max_all": 3.264322876930792e-05,
+  "s_at_max": 0.09999949708580971,
+  "max_in_band": 2.3221597075517852e-06,
+  "share_gt_1e4": 0.0,
+  "share_in_band": 0.890339
+ },
+ "F_relu16_credal_200k_s3/EE": {
+  "max_all": 0.002004896849393839,
+  "s_at_max": -0.07893395945429801,
+  "max_in_band": 2.2568181157117673e-05,
+  "share_gt_1e4": 0.0003674,
+  "share_in_band": 0.691367
+ },
+ "F_relu16_credal_200k_s3/credal": {
+  "max_all": 0.0013435777276754324,
+  "s_at_max": -0.06360200010240077,
+  "max_in_band": 2.318238839507658e-05,
+  "share_gt_1e4": 0.00034439999999999997,
+  "share_in_band": 0.7496229999999999
+ },
+ "F_relu16_credal_200k_s4/TT": {
+  "max_all": 0.036620667576789834,
+  "s_at_max": 0.295247545838356,
+  "max_in_band": 2.829730510717221e-06,
+  "share_gt_1e4": 9.8e-06,
+  "share_in_band": 0.4449498
+ },
+ "F_relu16_credal_200k_s4/RR": {
+  "max_all": 9.02660191059168e-05,
+  "s_at_max": 0.09999949708580971,
+  "max_in_band": 4.194108769298155e-05,
+  "share_gt_1e4": 0.0,
+  "share_in_band": 0.890339
+ },
+ "F_relu16_credal_200k_s4/EE": {
+  "max_all": 0.00020554559305310804,
+  "s_at_max": -0.058587432932108635,
+  "max_in_band": 0.00011816844344139654,
+  "share_gt_1e4": 3.7199999999999996e-05,
+  "share_in_band": 0.691367
+ },
+ "F_relu16_credal_200k_s4/credal": {
+  "max_all": 0.00020467597059906084,
+  "s_at_max": -0.04988895249553024,
+  "max_in_band": 0.0001104964991100188,
+  "share_gt_1e4": 1.06e-05,
+  "share_in_band": 0.7496229999999999
+ },
+ "F_relu16_credal_1M_s0/TT": {
+  "max_all": 0.0003657437860965784,
+  "s_at_max": 0.18308980241417885,
+  "max_in_band": 2.776607871055048e-05,
+  "share_gt_1e4": 1e-06,
+  "share_in_band": 0.4449498
+ },
+ "F_relu16_credal_1M_s0/RR": {
+  "max_all": 0.00020587854087353308,
+  "s_at_max": 0.09761796556413174,
+  "max_in_band": 1.8077529966825656e-05,
+  "share_gt_1e4": 2e-07,
+  "share_in_band": 0.890339
+ },
+ "F_relu16_credal_1M_s0/EE": {
+  "max_all": 0.0012146331369876917,
+  "s_at_max": 0.23789460435509682,
+  "max_in_band": 0.00011443663388491232,
+  "share_gt_1e4": 6e-07,
+  "share_in_band": 0.691367
+ },
+ "F_relu16_credal_1M_s0/credal": {
+  "max_all": 0.00010477790110599572,
+  "s_at_max": 0.03376945146792423,
+  "max_in_band": 0.00010477790110599572,
+  "share_gt_1e4": 2e-07,
+  "share_in_band": 0.7496229999999999
+ },
+ "F_relu16_credal_1M_s1/TT": {
+  "max_all": 0.00014794096350670416,
+  "s_at_max": 0.05243826881051064,
+  "max_in_band": 0.00014794096350670416,
+  "share_gt_1e4": 6e-07,
+  "share_in_band": 0.4449498
+ },
+ "F_relu16_credal_1M_s1/RR": {
+  "max_all": 7.774904370308477e-05,
+  "s_at_max": -0.08757877871394157,
+  "max_in_band": 2.8430018574054916e-06,
+  "share_gt_1e4": 0.0,
+  "share_in_band": 0.890339
+ },
+ "F_relu16_credal_1M_s1/EE": {
+  "max_all": 7.232641801238615e-05,
+  "s_at_max": 0.11101127779111267,
+  "max_in_band": 4.8280134797101804e-05,
+  "share_gt_1e4": 0.0,
+  "share_in_band": 0.691367
+ },
+ "F_relu16_credal_1M_s1/credal": {
+  "max_all": 9.100432507694323e-05,
+  "s_at_max": 0.10993451173417271,
+  "max_in_band": 2.575027756393511e-05,
+  "share_gt_1e4": 0.0,
+  "share_in_band": 0.7496229999999999
+ },
+ "F_relu16_credal_1M_s2/TT": {
+  "max_all": 2.14256346225683e-05,
+  "s_at_max": 0.07486666962504387,
+  "max_in_band": 2.14256346225683e-05,
+  "share_gt_1e4": 0.0,
+  "share_in_band": 0.4449498
+ },
+ "F_relu16_credal_1M_s2/RR": {
+  "max_all": 9.564273059367578e-05,
+  "s_at_max": 0.09479209072887898,
+  "max_in_band": 9.564273059367578e-05,
+  "share_gt_1e4": 0.0,
+  "share_in_band": 0.890339
+ },
+ "F_relu16_credal_1M_s2/EE": {
+  "max_all": 0.00016735251992941458,
+  "s_at_max": 0.10198213662952185,
+  "max_in_band": 0.00012399964034556787,
+  "share_gt_1e4": 7.2e-06,
+  "share_in_band": 0.691367
+ },
+ "F_relu16_credal_1M_s2/credal": {
+  "max_all": 0.0001645324751734789,
+  "s_at_max": 0.10874233525246382,
+  "max_in_band": 0.00014522494748234194,
+  "share_gt_1e4": 1.2e-05,
+  "share_in_band": 0.7496229999999999
+ },
+ "F_relu16_credal_1M_s3/TT": {
+  "max_all": 0.0007708877325057761,
+  "s_at_max": 0.295247545838356,
+  "max_in_band": 1.6804784536417205e-06,
+  "share_gt_1e4": 4e-07,
+  "share_in_band": 0.4449498
+ },
+ "F_relu16_credal_1M_s3/RR": {
+  "max_all": 2.318844199181158e-05,
+  "s_at_max": 0.09999949708580971,
+  "max_in_band": 3.2916199415866654e-06,
+  "share_gt_1e4": 0.0,
+  "share_in_band": 0.890339
+ },
+ "F_relu16_credal_1M_s3/EE": {
+  "max_all": 0.0006147272884845789,
+  "s_at_max": 0.23789460435509682,
+  "max_in_band": 0.0001170575618743841,
+  "share_gt_1e4": 1.6e-06,
+  "share_in_band": 0.691367
+ },
+ "F_relu16_credal_1M_s3/credal": {
+  "max_all": 0.00010433457791805822,
+  "s_at_max": 0.14525459371507168,
+  "max_in_band": 0.00010089492425321978,
+  "share_gt_1e4": 4e-07,
+  "share_in_band": 0.7496229999999999
+ },
+ "F_relu16_credal_1M_s4/TT": {
+  "max_all": 0.03448062241077421,
+  "s_at_max": 0.295247545838356,
+  "max_in_band": 4.122406244283505e-06,
+  "share_gt_1e4": 8.2e-06,
+  "share_in_band": 0.4449498
+ },
+ "F_relu16_credal_1M_s4/RR": {
+  "max_all": 9.127929806709845e-05,
+  "s_at_max": 0.09999949708580971,
+  "max_in_band": 3.9653293788438626e-05,
+  "share_gt_1e4": 0.0,
+  "share_in_band": 0.890339
+ },
+ "F_relu16_credal_1M_s4/EE": {
+  "max_all": 8.355490863323767e-05,
+  "s_at_max": 0.08209118656814099,
+  "max_in_band": 8.355490863323767e-05,
+  "share_gt_1e4": 0.0,
+  "share_in_band": 0.691367
+ },
+ "F_relu16_credal_1M_s4/credal": {
+  "max_all": 8.923271670938093e-05,
+  "s_at_max": 0.09914249638095499,
+  "max_in_band": 8.237384608947296e-05,
+  "share_gt_1e4": 0.0,
+  "share_in_band": 0.7496229999999999
+ }
+}
