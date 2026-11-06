@@ -1,0 +1,6 @@
+6561 vertices, n=200000, threshold=0.0, 1094s
+homogeneous T: Pf=0.0003
+homogeneous R: Pf=0.0012
+homogeneous E: Pf=0.0013
+lowest 5: [('TTTTTTTT', 0.0003), ('TTTTTTET', 0.0004), ('TTRTTTET', 0.0004), ('TRTTTTTT', 0.0004), ('TTETTTET', 0.0004)]
+highest 5: [('ETRTERER', 0.0014), ('ETREERER', 0.0014), ('ETTEERER', 0.0014), ('ETETERER', 0.0014), ('ETEEERER', 0.0014)]

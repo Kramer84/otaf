@@ -1,0 +1,11 @@
+WARNING:root:No mu_dict passed, initializing all unspecified means to 0.0
+/home/kramer84/otaf/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+min from T: 5.2300e-04 -> 5.2000e-04  (84 evals)
+min from E: 1.2360e-03 -> 5.1900e-04  (110 evals)
+== min: optimisation sample 5.1900e-04 | independent surrogate sample 5.1600e-04 | exact 3.6300e-04
+   phi (deg): [1.3, 0.0, 0.7, 0.0, 0.0, 0.0, 1.4, 0.0]
+max from E: 1.2360e-03 -> 1.3370e-03  (128 evals)
+max from R: 1.2310e-03 -> 1.3910e-03  (118 evals)
+== max: optimisation sample 1.3910e-03 | independent surrogate sample 1.2390e-03 | exact 1.1740e-03
+   phi (deg): [89.7, 89.9, 29.6, 90.0, 72.7, 61.8, 42.9, 71.7]

@@ -1,0 +1,8 @@
+min from TTTTTTTT: start 0.00035 -> 0.00035
+min from TTTTTTET: start 0.00042 -> 0.00035
+min from TTRTTTET: start 0.00043 -> 0.00035
+== min: Pf=3.50000e-04 (opt sample), 3.13000e-04 (independent n=2000000); phi/pi*180 = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+max from ETTEERER: start 0.00142 -> 0.00146
+max from ETETERER: start 0.00143 -> 0.00151
+max from ETEEERER: start 0.00143 -> 0.00151
+== max: Pf=1.51000e-03 (opt sample), 1.27550e-03 (independent n=2000000); phi/pi*180 = [44.1, 0.0, 56.4, 18.1, 56.6, 89.6, 31.8, 90.0]

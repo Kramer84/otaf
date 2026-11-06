@@ -1,0 +1,15 @@
+/home/kramer84/otaf/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+/home/kramer84/otaf/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+WARNING:root:No mu_dict passed, initializing all unspecified means to 0.0
+WARNING:root:No mu_dict passed, initializing all unspecified means to 0.0
+/home/kramer84/otaf/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+/home/kramer84/otaf/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+WARNING:root:No mu_dict passed, initializing all unspecified means to 0.0
+WARNING:root:No mu_dict passed, initializing all unspecified means to 0.0
+ex2 homogeneous (GLD, direct MC): {'T': ('2.908e-04', '6.000e-04'), 'R': ('5.572e-04', '1.360e-03'), 'E': ('8.856e-04', '1.170e-03')}
+lowest 3: [('TTTTRRRR', '2.132e-04'), ('RRTTTTRR', '2.256e-04'), ('RRTTTERR', '2.728e-04')]  highest 3: [('TRRETRER', '1.063e-03'), ('ETRETREE', '1.065e-03'), ('TRRETREE', '1.066e-03')]
+range over combos (GLD): 2.132e-04 1.066e-03

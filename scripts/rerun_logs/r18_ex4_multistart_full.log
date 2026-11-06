@@ -1,0 +1,31 @@
+/home/kramer84/otaf/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+[50-dim] Warm start — max constraint: -0.133975 (feasible ✓)
+Positive directional derivative for linesearch    (Exit mode 8)
+            Current function value: 7.836216356073656
+            Iterations: 157
+            Function evaluations: 960
+            Gradient evaluations: 153
+
+Result — mean: 0.6248, min: 0.4581, max: 1.0000
+
+Constraint values (must all be <= 0):
+  Cons_0  : +1.56e-08  ✗
+  Cons_1  : +5.96e-08  ✗
+  Cons_2  : +4.96e-06  ✗
+  Cons_3  : +7.85e-06  ✗
+  Cons_4  : +1.91e-06  ✗
+  Cons_5  : +1.38e-05  ✗
+  Cons_6  : +3.48e-06  ✗
+  Cons_7  : +3.78e-06  ✗
+  Cons_8  : +3.68e-06  ✗
+  Cons_9  : +3.17e-06  ✗
+  Cons_10 : -1.98e-16  ✓
+  Cons_11 : +0.00e+00  ✓
+  Cons_12 : +0.00e+00  ✓
+  Cons_13 : +0.00e+00  ✓
+
+Feasible : False
+Solver note: Positive directional derivative for linesearch
+start warm : Pf(GLD) 2.100e-04 -> best feasible (c<=0.01) 1.025e-02  (max constraint +9.6e-03, 1324 evals)
+start R    : Pf(GLD) 1.623e-02 -> best feasible (c<=0.01) 1.623e-02  (max constraint +0.0e+00, 897 evals)

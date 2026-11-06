@@ -1,0 +1,5 @@
+T: 3.4650e-04 +- 1.2e-05
+R: 1.1809e-03 +- 2.1e-05
+E: 1.2275e-03 +- 2.2e-05
+lowest of the 40 candidates on an independent 5e6 sample: TTTTTTTT 3.4060e-04 +- 1.6e-05; candidates span 3.4060e-04 to 7.0120e-04
+highest of the 40 candidates on an independent 5e6 sample: ETTEERRR 1.3256e-03 +- 3.2e-05; candidates span 1.2230e-03 to 1.3256e-03

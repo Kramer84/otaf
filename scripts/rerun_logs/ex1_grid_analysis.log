@@ -1,0 +1,25 @@
+/home/kramer84/otaf/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+Exact surface (quadrature)
+alpha=0.0    TT 3.0983e-03 RR 6.1967e-03 max 6.1967e-03 at l1=0.29,l2=0.04  RR/max 1.0000  share of grid within 0.5% of range below max 0.81
+alpha=0.01   TT 6.8800e-03 RR 1.3760e-02 max 1.3760e-02 at l1=0.04,l2=0.02  RR/max 1.0000  share of grid within 0.5% of range below max 0.74
+alpha=0.025  TT 2.0042e-02 RR 4.0083e-02 max 4.0083e-02 at l1=0.18,l2=0.06  RR/max 1.0000  share of grid within 0.5% of range below max 0.62
+alpha=0.05   TT 8.5563e-02 RR 1.7113e-01 max 1.7113e-01 at l1=0.00,l2=0.00  RR/max 1.0000  share of grid within 0.5% of range below max 0.39
+alpha=0.075  TT 2.4689e-01 RR 4.9379e-01 max 4.9379e-01 at l1=0.00,l2=0.00  RR/max 1.0000  share of grid within 0.5% of range below max 0.15
+
+Relative errors over the 2500 grid points (May surrogate = chapter's; n=5e6)
+GLD on surrogate vs sampling on surrogate          med -0.029 p5 -0.184 p95 +0.052 min -0.586 max +0.058 share|e|>5% 0.438
+GLD on closed form vs sampling on closed form      med -0.030 p5 -0.069 p95 +0.013 min -0.276 max +0.018 share|e|>5% 0.062
+sampling on surrogate vs sampling on closed form   med +0.003 p5 -0.004 p95 +0.006 min -0.014 max +0.134 share|e|>5% 0.000
+GLD on surrogate vs sampling on closed form        med -0.025 p5 -0.183 p95 +0.048 min -0.530 max +0.054 share|e|>5% 0.363
+
+Surrogate error vs distance to the kink, x = 5|g4-g5| (mm), lambda = 1
+  x in [0,0.002): n=   43840 bias -2.79e-03
+  x in [0.002,0.005): n=   65668 bias -1.81e-03
+  x in [0.005,0.01): n=  108427 bias -6.91e-04
+  x in [0.01,0.02): n=  213538 bias +9.47e-05
+  x in [0.02,0.05): n=  580775 bias -3.20e-04
+  x in [0.05,0.1): n=  644720 bias +3.39e-05
+  x in [0.1,0.2): n=  330632 bias -2.70e-05
+  x in [0.2,1): n=   12400 bias +9.26e-05
+analysis exit 0

@@ -1,0 +1,61 @@
+/home/kramer84/otaf/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+Loading surrogate model and distributions...
+Building 50x50 evaluation grid for alphas: [0.0, 0.01, 0.025, 0.05, 0.075]...
+Row 1/50 completed.
+Row 2/50 completed.
+Row 3/50 completed.
+Row 4/50 completed.
+Row 5/50 completed.
+Row 6/50 completed.
+Row 7/50 completed.
+Row 8/50 completed.
+Row 9/50 completed.
+Row 10/50 completed.
+Row 11/50 completed.
+Row 12/50 completed.
+Row 13/50 completed.
+Row 14/50 completed.
+Row 15/50 completed.
+Row 16/50 completed.
+Row 17/50 completed.
+Row 18/50 completed.
+Row 19/50 completed.
+Row 20/50 completed.
+Row 21/50 completed.
+Row 22/50 completed.
+Row 23/50 completed.
+Row 24/50 completed.
+Row 25/50 completed.
+Row 26/50 completed.
+Row 27/50 completed.
+Row 28/50 completed.
+Row 29/50 completed.
+Row 30/50 completed.
+Row 31/50 completed.
+Row 32/50 completed.
+Row 33/50 completed.
+Row 34/50 completed.
+Row 35/50 completed.
+Row 36/50 completed.
+Row 37/50 completed.
+Row 38/50 completed.
+Row 39/50 completed.
+Row 40/50 completed.
+Row 41/50 completed.
+Row 42/50 completed.
+Row 43/50 completed.
+Row 44/50 completed.
+Row 45/50 completed.
+Row 46/50 completed.
+Row 47/50 completed.
+Row 48/50 completed.
+Row 49/50 completed.
+Row 50/50 completed.
+Saved Pf grids to /home/kramer84/otaf/scripts/artifacts/pf_model1_50x50_mc1M_rerun.npz
+Generating individual contour plots...
+Saving /home/kramer84/otaf/scripts/artifacts/pf_rerun_default/Pf_Grid_alpha_0.0.png...
+Saving /home/kramer84/otaf/scripts/artifacts/pf_rerun_default/Pf_Grid_alpha_0.01.png...
+Saving /home/kramer84/otaf/scripts/artifacts/pf_rerun_default/Pf_Grid_alpha_0.025.png...
+Saving /home/kramer84/otaf/scripts/artifacts/pf_rerun_default/Pf_Grid_alpha_0.05.png...
+Saving /home/kramer84/otaf/scripts/artifacts/pf_rerun_default/Pf_Grid_alpha_0.075.png...

@@ -1,0 +1,49 @@
+sigma_u,max=0.05167  sigma_g,max=0.01033
+
+alpha=0.0: failure when gap < 0.0
+  feature4=T feature5=T: Pf=3.09835e-03
+  feature4=T feature5=R: Pf=6.18710e-03
+  feature4=T feature5=E: Pf=5.94010e-03
+  feature4=R feature5=T: Pf=6.18710e-03
+  feature4=R feature5=R: Pf=6.19670e-03
+  feature4=R feature5=E: Pf=6.19669e-03
+  feature4=E feature5=T: Pf=5.94010e-03
+  feature4=E feature5=R: Pf=6.19669e-03
+  feature4=E feature5=E: Pf=6.18710e-03
+  credal-set range (41x41): min=3.09835e-03 at u4=1.000,u5=1.000; max=6.19670e-03 at u4=0.325,u5=0.325
+
+alpha=0.025: failure when gap < 0.05
+  feature4=T feature5=T: Pf=2.00416e-02
+  feature4=T feature5=R: Pf=3.96815e-02
+  feature4=T feature5=E: Pf=3.66861e-02
+  feature4=R feature5=T: Pf=3.96815e-02
+  feature4=R feature5=R: Pf=4.00832e-02
+  feature4=R feature5=E: Pf=4.00812e-02
+  feature4=E feature5=T: Pf=3.66861e-02
+  feature4=E feature5=R: Pf=4.00812e-02
+  feature4=E feature5=E: Pf=3.96815e-02
+  credal-set range (41x41): min=2.00416e-02 at u4=1.000,u5=1.000; max=4.00832e-02 at u4=0.025,u5=0.050
+
+alpha=0.05: failure when gap < 0.1
+  feature4=T feature5=T: Pf=8.55631e-02
+  feature4=T feature5=R: Pf=1.63805e-01
+  feature4=T feature5=E: Pf=1.45143e-01
+  feature4=R feature5=T: Pf=1.63805e-01
+  feature4=R feature5=R: Pf=1.71126e-01
+  feature4=R feature5=E: Pf=1.70704e-01
+  feature4=E feature5=T: Pf=1.45143e-01
+  feature4=E feature5=R: Pf=1.70704e-01
+  feature4=E feature5=E: Pf=1.63805e-01
+  credal-set range (41x41): min=8.55631e-02 at u4=1.000,u5=1.000; max=1.71126e-01 at u4=0.000,u5=0.000
+
+alpha=0.075: failure when gap < 0.15
+  feature4=T feature5=T: Pf=2.46894e-01
+  feature4=T feature5=R: Pf=4.32831e-01
+  feature4=T feature5=E: Pf=3.75671e-01
+  feature4=R feature5=T: Pf=4.32831e-01
+  feature4=R feature5=R: Pf=4.93788e-01
+  feature4=R feature5=E: Pf=4.76505e-01
+  feature4=E feature5=T: Pf=3.75671e-01
+  feature4=E feature5=R: Pf=4.76505e-01
+  feature4=E feature5=E: Pf=4.32831e-01
+  credal-set range (41x41): min=2.46894e-01 at u4=1.000,u5=1.000; max=4.93788e-01 at u4=0.000,u5=0.000

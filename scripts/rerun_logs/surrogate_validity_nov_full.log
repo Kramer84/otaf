@@ -1,0 +1,14 @@
+/home/kramer84/otaf/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+example / allocation            N      bias     RMSE RMSE|s|<.02 bias|s|<.02 wrong sign    Pf sur     Pf LP
+model1 T                   100000 -3.41e-03 3.42e-03    4.40e-03   -4.40e-03   1.26e-03  4.31e-03  3.05e-03
+model1 R                   100000 -3.25e-05 8.33e-04    3.04e-04   +2.14e-04   1.30e-04  6.54e-03  6.67e-03
+model1 E                   100000 -8.37e-07 9.67e-04    3.76e-04   -2.01e-05   1.80e-04  6.37e-03  6.31e-03
+WARNING:root:No mu_dict passed, initializing all unspecified means to 0.0
+model2 T                   100000 -3.08e-03 3.16e-03    2.64e-03   -2.60e-03   2.30e-04  5.80e-04  3.50e-04
+model2 R                   100000 +8.47e-05 9.95e-04    5.83e-04   -2.60e-05   1.50e-04  1.26e-03  1.31e-03
+model2 E                   100000 -3.00e-05 1.01e-03    5.93e-04   +2.68e-05   1.30e-04  1.20e-03  1.23e-03
+model3 all lambda=1         50000 -8.34e-05 5.85e-04    5.02e-04   -9.89e-05   1.10e-03  5.78e-02  5.74e-02
+model4 T                    20000 -1.60e-03 4.24e-03    4.50e-03   -2.57e-04   0.00e+00  0.00e+00  0.00e+00
+model4 R                    20000 +2.14e-04 1.24e-03    9.67e-04   +7.18e-05   1.45e-03  1.78e-02  1.75e-02
+model4 E                    20000 +5.24e-05 1.87e-03    8.73e-04   +1.53e-04   0.00e+00  6.00e-04  6.00e-04

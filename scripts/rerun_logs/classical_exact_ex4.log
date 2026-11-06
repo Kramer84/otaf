@@ -1,0 +1,2 @@
+Ex4 50 dim, pure rotation, LP: Pf=1.642e-02 +- 1.2e-03 (657 failures / 40000)
+Ex4 32 dim, pure rotation, LP: Pf=1.150e-03 +- 3.3e-04 (46 failures / 40000)
