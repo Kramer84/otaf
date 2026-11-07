@@ -14,8 +14,8 @@ keywords:
 repository-code: "https://github.com/Kramer84/otaf"
 license: MIT
 version: 0.2.0
-doi: 10.5281/zenodo.14639555
-date-released: "2025-01-15"
+doi: 10.5281/zenodo.14639554
+date-released: "2026-11-07"
 cff-version: 1.2.0
 type: software
 message: "If you use this software, please cite it using the metadata from this file."
